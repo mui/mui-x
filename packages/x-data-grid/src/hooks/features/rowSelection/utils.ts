@@ -12,7 +12,10 @@ import type {
   GridPrivateApiCommunity,
   GridApiCommunity,
 } from '../../../models/api/gridApiCommunity';
-import type { GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
+import type {
+  GridRowSelectionModel,
+  GridRowSelectionPropagation,
+} from '../../../models/gridRowSelectionModel';
 import type { RowSelectionManager } from '../../../models/gridRowSelectionManager';
 import type { GridRowParams } from '../../../models/params/gridRowParams';
 import { gridColumnDefinitionsSelector } from '../columns';
@@ -145,6 +148,24 @@ export const checkboxPropsSelector = createSelector(
     };
   },
 );
+
+export function areRowSelectionModelsEqual(
+  modelA: GridRowSelectionModel,
+  modelB: GridRowSelectionModel,
+) {
+  if (modelA === modelB) {
+    return true;
+  }
+  if (modelA.type !== modelB.type || modelA.ids.size !== modelB.ids.size) {
+    return false;
+  }
+  for (const id of modelA.ids) {
+    if (!modelB.ids.has(id)) {
+      return false;
+    }
+  }
+  return true;
+}
 
 export function isMultipleRowSelectionEnabled(
   props: Pick<
@@ -287,9 +308,8 @@ export const findRowsToDeselect = (
   autoSelectDescendants: boolean,
   autoSelectParents: boolean,
   removeRow: (rowId: GridRowId) => void,
+  rowSelectionManager: RowSelectionManager = gridRowSelectionManagerSelector(apiRef),
 ) => {
-  const rowSelectionManager = gridRowSelectionManagerSelector(apiRef);
-
   if (!autoSelectParents && !autoSelectDescendants) {
     return;
   }

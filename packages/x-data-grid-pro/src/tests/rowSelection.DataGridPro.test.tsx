@@ -186,6 +186,63 @@ describe('<DataGridPro /> - Row selection', () => {
     expect(getSelectedRowIds()).to.deep.equal([1]);
   });
 
+  it('should restart the Shift + arrow keys range when a row of the range moves', async () => {
+    const { user } = render(<TestDataGridSelection rowLength={6} />);
+    await user.click(getCell(2, 0));
+    await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+    expect(apiRef.current?.getSelectedRows()).to.have.keys([2, 3]);
+
+    // Row 3 moves below row 4, row 4 is now between the anchor and the focused row
+    await act(async () => apiRef.current?.setRowIndex(3, 4));
+
+    await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+    // The range restarts from row 3 instead of selecting row 4, which the user never went over
+    expect(apiRef.current?.getSelectedRows()).to.have.keys([2, 3, 5]);
+  });
+
+  it('should extend the Shift + navigation keys range up to the pinned rows', async () => {
+    const { user } = render(
+      <TestDataGridSelection
+        rowLength={4}
+        pinnedRows={{ top: [{ id: 'top' }], bottom: [{ id: 'bottom' }] }}
+      />,
+    );
+    // Row 1, the top pinned row is the first row of the DOM
+    await user.click(getCell(2, 0));
+    // The focus moves to the bottom pinned row
+    await user.keyboard('{Shift>}[End]{/Shift}');
+    expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3]);
+
+    // The focus moves from the bottom pinned row to the top pinned row
+    await user.keyboard('{Shift>}[Home]{/Shift}');
+    expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 1]);
+  });
+
+  it('should restart the Shift + arrow keys range when a controlled selection changed after Shift + click', async () => {
+    function ControlledGrid() {
+      const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>(
+        includeRowSelection([]),
+      );
+      return (
+        <TestDataGridSelection
+          rowLength={8}
+          rowSelectionModel={rowSelectionModel}
+          onRowSelectionModelChange={setRowSelectionModel}
+        />
+      );
+    }
+    const { user } = render(<ControlledGrid />);
+    await user.click(getCell(1, 0));
+    await user.keyboard('{Shift>}');
+    await user.click(getCell(3, 0));
+    await user.keyboard('{/Shift}');
+    expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3]);
+
+    await act(async () => apiRef.current?.selectRow(6));
+    await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+    expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 6]);
+  });
+
   it('should keep the previously selected tree data parent selected if it becomes leaf after filtering', async () => {
     const { user } = render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
 
@@ -963,6 +1020,23 @@ describe('<DataGridPro /> - Row selection', () => {
 
       // The parent row (Mary, id: 8) should be among the selected rows
       expect(apiRef.current?.getSelectedRows()).to.have.keys([9, 10, 11, 12, 8, 13, 14]);
+    });
+
+    it('should update the parent when extending and reducing a range with Shift + arrow keys', async () => {
+      const { user } = render(
+        <SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />,
+      );
+
+      // Robert, the first child of Thomas
+      await user.click(getCell(2, 2));
+      await user.keyboard(
+        '{Shift>}[ArrowDown][ArrowDown][ArrowDown][ArrowDown][ArrowDown]{/Shift}',
+      );
+      // All the children of Thomas are selected, so Thomas is selected too
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+
+      await user.keyboard('{Shift>}[ArrowUp]{/Shift}');
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6]);
     });
 
     it('should deselect auto selected parent if one of the children is deselected', async () => {

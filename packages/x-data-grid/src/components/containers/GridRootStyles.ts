@@ -137,6 +137,34 @@ export const GridRootStyles = styled('div', {
     },
   });
 
+  // A selected cell in a selected row stacks both overlays, like the pinned cells do,
+  // so the cell selection stays visible over the row selection.
+  const selectedCellInSelectedRowStyles = {
+    backgroundColor: mix(
+      selectedBackground,
+      selectedColor,
+      selectedOpacity,
+      fallbackColors.selected,
+    ),
+    '&:hover': {
+      backgroundColor: mix(
+        selectedHoverBackground,
+        selectedColor,
+        selectedOpacity,
+        fallbackColors.selectedHover,
+      ),
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        backgroundColor: mix(
+          selectedBackground,
+          selectedColor,
+          selectedOpacity,
+          fallbackColors.selected,
+        ),
+      },
+    },
+  };
+
   const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedHoverBackground);
   const pinnedSelectedStyles = getPinnedBackgroundStyles(pinnedSelectedBackground);
   const pinnedSelectedHoverStyles = getPinnedBackgroundStyles(pinnedSelectedHoverBackground);
@@ -623,6 +651,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['cell--rangeRight']}`]: {
       '--range-right': `inset -2px 0 0 0 ${vars.colors.interactive.focus}`,
     },
+    [`& .${c.row}.Mui-selected .${c.cell}.Mui-selected`]: selectedCellInSelectedRowStyles,
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
@@ -905,6 +934,52 @@ export const GridRootStyles = styled('div', {
         backgroundColor: vars.colors.interactive.focus,
         cursor: 'crosshair',
         zIndex: 50,
+      },
+    },
+    /* Marks the corner that moves when the range is extended with Shift */
+    [`& .${c['cell--rangeEnd']}`]: {
+      '--range-end-size': '10px',
+      position: 'relative',
+      // Pinned cells must stay sticky, otherwise their `left`/`right` offset displaces them
+      [`&.${c['cell--pinnedLeft']}, &.${c['cell--pinnedRight']}`]: {
+        position: 'sticky',
+      },
+      // The fill handle covers the same corner, the triangle must stay visible around it
+      [`&.${c['cell--withFillHandle']}`]: {
+        '--range-end-size': '16px',
+      },
+      // The triangle points away from the anchor of the range.
+      // The end cell is on the edges of the range that are opposite to the anchor,
+      // or on both edges when the range spans a single row or column.
+      // Logical borders draw the triangle, so it follows the text direction.
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        bottom: 0,
+        insetInlineEnd: 0,
+        width: 0,
+        height: 0,
+        borderStyle: 'solid',
+        borderColor: 'transparent',
+        borderWidth: 0,
+        borderBlockEndWidth: 'var(--range-end-size)',
+        borderBlockEndColor: vars.colors.interactive.focus,
+        borderInlineStartWidth: 'var(--range-end-size)',
+        pointerEvents: 'none',
+        zIndex: 40,
+      },
+      [`&.${c['cell--rangeTop']}:not(.${c['cell--rangeBottom']})::before`]: {
+        top: 0,
+        bottom: 'auto',
+        borderBlockEndWidth: 0,
+        borderBlockStartWidth: 'var(--range-end-size)',
+        borderBlockStartColor: vars.colors.interactive.focus,
+      },
+      [`&.${c['cell--rangeLeft']}:not(.${c['cell--rangeRight']})::before`]: {
+        insetInlineStart: 0,
+        insetInlineEnd: 'auto',
+        borderInlineStartWidth: 0,
+        borderInlineEndWidth: 'var(--range-end-size)',
       },
     },
     // The cells a click can reference while a formula is edited. Pinned rows are outside

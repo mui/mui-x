@@ -99,6 +99,18 @@ export function isEventTargetTextEntryElement(event: React.SyntheticEvent | Even
   return target.isContentEditable === true;
 }
 
+/**
+ * Checks if a key press in a cell or a header belongs to its content instead of to a grid shortcut:
+ * a text field, a native select, or an element rendered in a portal, like a menu.
+ */
+export function isEventForCellContent(event: React.SyntheticEvent) {
+  return (
+    isEventTargetInPortal(event) ||
+    isEventTargetTextEntryElement(event) ||
+    (event.target as HTMLElement).tagName === 'SELECT'
+  );
+}
+
 export function getFieldFromHeaderElem(colCellEl: Element): string {
   return colCellEl.getAttribute('data-field')!;
 }

@@ -387,6 +387,21 @@ describe('<DataGridPremium /> - Cell selection', () => {
       expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeBottom']);
     });
 
+    it('should mark the cell where the range ends', async () => {
+      const { user } = render(<TestDataGridSelection />);
+      const cell = getCell(0, 0);
+      cell.focus();
+      await user.click(cell);
+      expect(cell).not.to.have.class(gridClasses['cell--rangeEnd']);
+
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 2));
+      await user.keyboard('{/Shift}');
+
+      expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeEnd']);
+      expect(document.querySelectorAll(`.${gridClasses['cell--rangeEnd']}`)).to.have.length(1);
+    });
+
     it('should keep the focus on first clicked cell', async () => {
       const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
@@ -454,6 +469,45 @@ describe('<DataGridPremium /> - Cell selection', () => {
   });
 
   describe('Shift + arrow keys', () => {
+    it('should extend the range from the cell where the drag ends', async () => {
+      const { user } = render(<TestDataGridSelection />);
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: getCell(0, 0) },
+        { target: getCell(1, 1) },
+        { keys: '[/MouseLeft]' },
+      ]);
+      expect(getCell(1, 1)).to.have.class(gridClasses['cell--rangeEnd']);
+
+      await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
+      expect(apiRef.current?.getCellSelectionModel()).to.deep.equal({
+        0: { id: true, currencyPair: true },
+        1: { id: true, currencyPair: true },
+        2: { id: true, currencyPair: true },
+      });
+      expect(getCell(2, 1)).to.have.class(gridClasses['cell--rangeEnd']);
+    });
+
+    it('should move the range end mark with the extended corner', async () => {
+      const { user } = render(<TestDataGridSelection />);
+      const cell = getCell(1, 1);
+      await act(() => {
+        cell.focus();
+      });
+      await user.click(cell);
+      await user.keyboard('{Shift>}{ArrowDown}{ArrowLeft}{/Shift}');
+
+      expect(getCell(2, 0)).to.have.class(gridClasses['cell--rangeEnd']);
+      expect(document.querySelectorAll(`.${gridClasses['cell--rangeEnd']}`)).to.have.length(1);
+
+      await user.keyboard('{Shift>}{ArrowUp}{/Shift}');
+      expect(getCell(1, 0)).to.have.class(gridClasses['cell--rangeEnd']);
+      expect(getCell(2, 0)).not.to.have.class(gridClasses['cell--rangeEnd']);
+
+      // Back on the anchor, nothing to mark
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+      expect(document.querySelectorAll(`.${gridClasses['cell--rangeEnd']}`)).to.have.length(0);
+    });
+
     it('should call selectCellRange when ArrowDown is pressed', async () => {
       const { user } = render(<TestDataGridSelection />);
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
@@ -513,6 +567,502 @@ describe('<DataGridPremium /> - Cell selection', () => {
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
       expect(cell).toHaveFocus();
+    });
+  });
+
+  describe('keyboard shortcuts', () => {
+    const getSelectedRowIds = () =>
+      Array.from(apiRef.current!.getSelectedRows().keys()).sort((a, b) => Number(a) - Number(b));
+
+    async function focusCell(rowIndex: number, colIndex: number) {
+      const cell = getCell(rowIndex, colIndex);
+      await act(() => cell.focus());
+      return cell;
+    }
+
+    describe('Space', () => {
+      it('should select only the focused cell', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await focusCell(0, 1);
+        await user.keyboard('[Space]');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { currencyPair: true },
+        });
+
+        await user.keyboard('[ArrowDown][Space]');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true },
+        });
+      });
+
+      it('should not select the row', async () => {
+        const { user } = render(<TestDataGridSelection rowSelection />);
+        await focusCell(0, 1);
+        await user.keyboard('[Space]');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { currencyPair: true },
+        });
+        expect(getSelectedRowIds()).to.deep.equal([]);
+      });
+
+      // The viewport page size is 0 in JSDOM, so Space does not navigate there
+      it.skipIf(isJSDOM)('should not navigate to the next page', async () => {
+        const { user } = render(<TestDataGridSelection rowLength={30} />);
+        await focusCell(0, 1);
+        await user.keyboard('[Space]');
+        expect(getCell(0, 1)).toHaveFocus();
+      });
+
+      it('should not select the cell when the focus is on an element inside of the cell', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            columns={[
+              { field: 'id' },
+              { field: 'action', renderCell: () => <button type="button">Action</button> },
+            ]}
+            rows={[{ id: 0 }]}
+          />,
+        );
+        await act(() => screen.getByRole('button', { name: 'Action' }).focus());
+        await user.keyboard('[Space]');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({});
+      });
+
+      it('should expand the group instead of selecting the grouping cell', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            columns={[{ field: 'id' }, { field: 'category' }]}
+            rows={[
+              { id: 0, category: 'A' },
+              { id: 1, category: 'A' },
+            ]}
+            rowGroupingModel={['category']}
+          />,
+        );
+        await focusCell(0, 0);
+        await user.keyboard('[Space]');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({});
+        expect(apiRef.current!.getRowNode('auto-generated-row-category/A')).to.have.property(
+          'childrenExpanded',
+          true,
+        );
+      });
+    });
+
+    describe('Shift + Space', () => {
+      it('should select the focused cell', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await focusCell(1, 1);
+        await user.keyboard('{Shift>}[Space]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true },
+        });
+      });
+
+      it('should select the focused cell and toggle the row when the row selection is enabled', async () => {
+        const { user } = render(<TestDataGridSelection rowSelection />);
+        await focusCell(1, 1);
+        await user.keyboard('{Shift>}[Space]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true },
+        });
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
+    });
+
+    describe('Ctrl/Cmd + Shift + Space', () => {
+      it('should toggle only the row when the row selection is enabled', async () => {
+        const { user } = render(<TestDataGridSelection rowSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Control>}');
+        await user.click(getCell(3, 2));
+        await user.keyboard('{/Control}');
+        const cellSelectionModel = { 1: { currencyPair: true }, 3: { price1M: true } };
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal(cellSelectionModel);
+        expect(getSelectedRowIds()).to.deep.equal([1, 3]);
+
+        await user.keyboard('{Control>}{Shift>}[Space]{/Shift}{/Control}');
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal(cellSelectionModel);
+
+        await user.keyboard('{Meta>}{Shift>}[Space]{/Shift}{/Meta}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 3]);
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal(cellSelectionModel);
+      });
+
+      it('should select all the cells of the row when the row selection is disabled', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await focusCell(1, 1);
+        await user.keyboard('{Control>}{Shift>}[Space]{/Shift}{/Control}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { id: true, currencyPair: true, price1M: true },
+        });
+        expect(getCell(1, 1)).toHaveFocus();
+      });
+    });
+
+    describe('Ctrl/Cmd + Shift + vertical navigation keys', () => {
+      it('should extend only the selected rows when the row selection is enabled', async () => {
+        const { user } = render(<TestDataGridSelection rowSelection />);
+        await user.click(getCell(1, 1));
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+
+        await user.keyboard('{Control>}{Shift>}[ArrowDown]{/Shift}{/Control}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+        expect(getCell(2, 1)).toHaveFocus();
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true },
+        });
+
+        await user.keyboard('{Meta>}{Shift>}[ArrowUp][ArrowUp]{/Shift}{/Meta}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1]);
+        expect(getCell(0, 1)).toHaveFocus();
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true },
+        });
+
+        await user.keyboard('{Control>}{Shift>}[End]{/Shift}{/Control}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
+      });
+
+      it('should extend the selected rows up to the last row when the aggregation footer is focused', async () => {
+        const { user } = render(
+          <TestDataGridSelection rowSelection aggregationModel={{ price1M: 'sum' }} />,
+        );
+        await user.click(getCell(0, 1));
+        await user.keyboard('{Control>}{Shift>}[End]{/Shift}{/Control}');
+        // The focus moves to the aggregation footer, a pinned row
+        expect(document.activeElement!.closest('[role="row"]')).to.have.attribute(
+          'data-id',
+          'auto-generated-group-footer-root',
+        );
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      });
+
+      it('should select all the cells of the rows when the row selection is disabled', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.click(getCell(1, 1));
+
+        await user.keyboard('{Control>}{Shift>}[ArrowDown]{/Shift}{/Control}');
+        const allFields = { id: true, currencyPair: true, price1M: true };
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: allFields,
+          2: allFields,
+        });
+        expect(getCell(1, 1)).toHaveFocus();
+
+        await user.keyboard('{Control>}{Shift>}[Home]{/Shift}{/Control}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: allFields,
+          1: allFields,
+        });
+
+        await user.keyboard('{Control>}{Shift>}[End]{/Shift}{/Control}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: allFields,
+          2: allFields,
+          3: allFields,
+        });
+      });
+
+      it('should extend the cells when pressing Ctrl/Cmd + Shift + ArrowRight', async () => {
+        const { user } = render(<TestDataGridSelection rowSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Control>}{Shift>}[ArrowRight]{/Shift}{/Control}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true, price1M: true },
+        });
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
+    });
+
+    describe('Shift + Home / End / PageUp / PageDown', () => {
+      it('should extend the cells to the first and last columns', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.click(getCell(1, 1));
+
+        await user.keyboard('{Shift>}[End]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true, price1M: true },
+        });
+
+        await user.keyboard('{Shift>}[Home]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { id: true, currencyPair: true },
+        });
+        expect(getCell(1, 1)).toHaveFocus();
+      });
+
+      it('should extend the cells and keep the rows unchanged when the row selection is enabled', async () => {
+        const { user } = render(<TestDataGridSelection rowSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[End]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true, price1M: true },
+        });
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
+
+      // The viewport page size is 0 in JSDOM
+      it.skipIf(isJSDOM)('should extend the cells by one page', async () => {
+        const { user } = render(<TestDataGridSelection rowLength={30} />);
+        await user.click(getCell(0, 1));
+        await user.keyboard('{Shift>}[PageDown]{/Shift}');
+        const selectedRowIds = Object.keys(apiRef.current!.getCellSelectionModel()).map(Number);
+        // A page of rows is selected, from the focused row
+        expect(selectedRowIds.length).to.be.greaterThan(1);
+        expect(selectedRowIds.length).to.be.lessThan(30);
+        expect(selectedRowIds).to.deep.equal(selectedRowIds.map((_, index) => index));
+
+        await user.keyboard('{Shift>}[PageUp]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { currencyPair: true },
+        });
+        expect(getCell(0, 1)).toHaveFocus();
+      });
+    });
+
+    describe('cells that cannot be selected', () => {
+      const columnsWithActions: GridColDef[] = [
+        { field: 'id' },
+        { field: 'actions', type: 'actions', getActions: () => [] },
+        { field: 'name' },
+        { field: 'other', type: 'actions', getActions: () => [] },
+      ];
+      const rowsWithActions = [
+        { id: 0, name: 'Alice' },
+        { id: 1, name: 'Bob' },
+      ];
+
+      it('should keep the range when there is no selectable column in that direction', async () => {
+        const { user } = render(
+          <TestDataGridSelection columns={columnsWithActions} rows={rowsWithActions} />,
+        );
+        await user.click(getCell(0, 2));
+
+        await user.keyboard('{Shift>}[ArrowRight]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({ 0: { name: true } });
+
+        // A single key press extends the range in the other direction
+        await user.keyboard('{Shift>}[ArrowLeft]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { id: true, name: true },
+        });
+      });
+
+      it('should skip the columns that cannot be selected', async () => {
+        const { user } = render(
+          <TestDataGridSelection columns={columnsWithActions} rows={rowsWithActions} />,
+        );
+        await user.click(getCell(0, 0));
+
+        await user.keyboard('{Shift>}[ArrowRight]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { id: true, name: true },
+        });
+
+        await user.keyboard('{Shift>}[ArrowLeft]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({ 0: { id: true } });
+
+        await user.keyboard('{Shift>}[End]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { id: true, name: true },
+        });
+
+        await user.keyboard('{Shift>}[ArrowLeft]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({ 0: { id: true } });
+      });
+
+      it('should keep the range when the next row cannot be selected', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            columns={[
+              { field: 'id' },
+              { field: 'category' },
+              { field: 'quantity', type: 'number' },
+            ]}
+            rows={[
+              { id: 0, category: 'A', quantity: 1 },
+              { id: 1, category: 'A', quantity: 2 },
+            ]}
+            rowGroupingModel={['category']}
+            defaultGroupingExpansionDepth={-1}
+            aggregationModel={{ quantity: 'sum' }}
+            getAggregationPosition={() => 'footer'}
+          />,
+        );
+        // The rows are the group, the two leaves and the group footer
+        await user.click(getCell(2, 3));
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({ 1: { quantity: true } });
+
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({ 1: { quantity: true } });
+
+        await user.keyboard('{Shift>}[ArrowUp]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { quantity: true },
+          1: { quantity: true },
+        });
+      });
+    });
+
+    it('should ignore the shortcuts on pinned rows', async () => {
+      const { user } = render(
+        <TestDataGridSelection
+          pinnedRows={{ bottom: [{ id: 'pinned', currencyPair: 'Pinned', price1M: 0 }] }}
+        />,
+      );
+      const pinnedCell = document.querySelector<HTMLElement>(
+        '[data-id="pinned"] [data-field="currencyPair"]',
+      )!;
+      await user.click(pinnedCell);
+      await user.keyboard(
+        '[Space]{Shift>}[Space][ArrowUp][End]{/Shift}{Control>}{Shift>}[Space][ArrowUp]{/Shift}{/Control}',
+      );
+      expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({});
+    });
+
+    it('should extend the cells in the visual direction in RTL', async () => {
+      const { user } = renderRtl(<TestDataGridSelection />);
+      await user.click(getCell(0, 1));
+
+      await user.keyboard('{Shift>}[ArrowLeft]{/Shift}');
+      expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+        0: { currencyPair: true, price1M: true },
+      });
+
+      await user.keyboard('{Shift>}[ArrowRight][ArrowRight]{/Shift}');
+      expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+        0: { id: true, currencyPair: true },
+      });
+    });
+
+    describe('range restart', () => {
+      it('should restart the range from the focused cell when a row of the range moves', async () => {
+        const { user } = render(<TestDataGridSelection rowLength={6} />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true },
+          2: { currencyPair: true },
+        });
+
+        // Row 2 moves below row 3, row 3 is now between the focused cell and the end of the range
+        await act(async () => apiRef.current!.setRowIndex(2, 3));
+
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true },
+          3: { currencyPair: true },
+        });
+      });
+
+      it('should restart the range from the focused cell when a column of the range moves', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            columns={[{ field: 'id' }, { field: 'a' }, { field: 'b' }, { field: 'c' }]}
+            rows={[{ id: 0, a: 'a', b: 'b', c: 'c' }]}
+          />,
+        );
+        await user.click(getCell(0, 0));
+        await user.keyboard('{Shift>}[ArrowRight]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { id: true, a: true },
+        });
+
+        // Column `a` moves after column `b`, `b` is now between the focused cell and the end of the range
+        await act(async () => apiRef.current!.setColumnIndex('a', 2));
+
+        await user.keyboard('{Shift>}[ArrowRight]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { id: true, b: true },
+        });
+      });
+    });
+
+    describe('keys for the content of the cell', () => {
+      it.each([
+        ['a text field', () => <input />],
+        [
+          'a native select',
+          () => (
+            <select>
+              <option>a</option>
+            </select>
+          ),
+        ],
+      ])('should leave the keys pressed in %s to the element', async (_, renderCell) => {
+        render(
+          <TestDataGridSelection
+            columns={[{ field: 'id' }, { field: 'content', renderCell }, { field: 'other' }]}
+            rows={[{ id: 0 }, { id: 1 }, { id: 2 }]}
+          />,
+        );
+        const element = getCell(1, 1).querySelector<HTMLElement>('input, select')!;
+        await act(() => element.focus());
+
+        const keys = [
+          { key: ' ', shiftKey: true },
+          { key: 'ArrowDown', shiftKey: true },
+          { key: 'ArrowRight', shiftKey: true },
+          { key: 'ArrowDown', shiftKey: true, ctrlKey: true },
+          { key: 'a', keyCode: 65, ctrlKey: true },
+        ];
+        for (const key of keys) {
+          // `false` if the default action of the element was prevented
+          expect(fireEvent.keyDown(element, key)).to.equal(true);
+        }
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({});
+      });
+
+      it('should handle the keys pressed in the pre-mounted editor of `imeFastEdit`', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            columns={[{ field: 'id' }, { field: 'name', editable: true }]}
+            rows={[
+              { id: 0, name: 'Alice' },
+              { id: 1, name: 'Bob' },
+            ]}
+            experimentalFeatures={{ imeFastEdit: true }}
+          />,
+        );
+        const cell = getCell(0, 1);
+        await user.click(cell);
+        await act(() => apiRef.current!.setCellSelectionModel({}));
+        expect(cell.contains(document.activeElement)).to.equal(true);
+        expect(document.activeElement).not.to.equal(cell);
+
+        await user.keyboard('[Space]');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({ 0: { name: true } });
+
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { name: true },
+          1: { name: true },
+        });
+      });
+    });
+
+    it('should not change the cell selection when pressing the arrow keys in edit mode', async () => {
+      const { user } = render(
+        <TestDataGridSelection
+          columns={[{ field: 'id' }, { field: 'name', editable: true }]}
+          rows={[
+            { id: 0, name: 'Alice' },
+            { id: 1, name: 'Bob' },
+          ]}
+        />,
+      );
+      await user.click(getCell(0, 1));
+      await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+      const cellSelectionModel = { 0: { name: true }, 1: { name: true } };
+      expect(apiRef.current!.getCellSelectionModel()).to.deep.equal(cellSelectionModel);
+
+      await user.keyboard('[Enter]');
+      expect(apiRef.current!.getCellMode(0, 'name')).to.equal('edit');
+
+      await user.keyboard('{Shift>}[ArrowLeft]{/Shift}[ArrowLeft]{Shift>}[Space]{/Shift}');
+      expect(apiRef.current!.getCellSelectionModel()).to.deep.equal(cellSelectionModel);
     });
   });
 

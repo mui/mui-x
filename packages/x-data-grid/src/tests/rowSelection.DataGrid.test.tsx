@@ -816,6 +816,258 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
+    describe('range selection with Shift + navigation keys', () => {
+      // Small rows so that all the rows are rendered in the browser, `getSelectedRowIds` reads the DOM
+      const rangeData = { ...getBasicGridData(6, 2), rowHeight: 30, hideFooter: true };
+
+      // Context: https://github.com/mui/mui-x/issues/13631
+      it('should extend the range from the last selected row without unselecting the other rows', async () => {
+        const { user } = render(<TestDataGridSelection {...rangeData} checkboxSelection />);
+        await user.click(getCell(0, 1));
+        await user.click(getCell(2, 1));
+        expect(getSelectedRowIds()).to.deep.equal([0, 2]);
+
+        await user.keyboard('{Shift>}[ArrowDown][ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 2, 3, 4]);
+
+        await user.keyboard('{Shift>}[ArrowUp][ArrowUp][ArrowUp][ArrowUp]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+      });
+
+      it('should restore the rows outside of the range when moving back past the anchor', async () => {
+        const { user } = render(<TestDataGridSelection {...rangeData} checkboxSelection />);
+        await user.click(getCell(2, 1));
+
+        await user.keyboard('{Shift>}[ArrowDown][ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([2, 3, 4]);
+
+        await user.keyboard('{Shift>}[ArrowUp][ArrowUp][ArrowUp]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+      });
+
+      it('should extend the range from the row toggled with Shift+Space', async () => {
+        const { user } = render(
+          <TestDataGridSelection {...rangeData} checkboxSelection disableRowSelectionOnClick />,
+        );
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[Space][ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+      });
+
+      it('should unselect the range when the row has been unselected with Shift+Space', async () => {
+        const { user } = render(
+          <TestDataGridSelection {...rangeData} checkboxSelection disableRowSelectionOnClick />,
+        );
+        const cell = getCell(1, 1);
+        await user.click(cell);
+        fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3, 4, 5]);
+
+        await user.keyboard('{Shift>}[Space]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 2, 3, 4, 5]);
+
+        await user.keyboard('{Shift>}[ArrowDown][ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 4, 5]);
+      });
+
+      it('should start a new range after navigating without Shift', async () => {
+        const { user } = render(<TestDataGridSelection {...rangeData} checkboxSelection />);
+        await user.click(getCell(0, 1));
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1]);
+
+        await user.keyboard('[ArrowDown][ArrowDown]');
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 3, 4]);
+
+        // Moving back to the new anchor does not change the first range
+        await user.keyboard('{Shift>}[ArrowUp]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 3]);
+      });
+
+      it('should start a new range when the selection is changed by something else', async () => {
+        let apiRef: RefObject<GridApi | null>;
+        function Test() {
+          apiRef = useGridApiRef();
+          return <TestDataGridSelection {...rangeData} apiRef={apiRef} checkboxSelection />;
+        }
+        const { user } = render(<Test />);
+        await user.click(getCell(0, 1));
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1]);
+
+        await act(() => apiRef.current!.selectRow(4));
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 4]);
+
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 4]);
+      });
+
+      it('should continue the range selected with Shift + click', async () => {
+        const { user } = render(<TestDataGridSelection {...rangeData} checkboxSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}');
+        await user.click(getCell(3, 1));
+        await user.keyboard('{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
+
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2, 3, 4]);
+        await user.keyboard('{Shift>}[ArrowUp][ArrowUp][ArrowUp][ArrowUp]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1]);
+      });
+
+      it('should not continue the range selected with Shift + click after another click', async () => {
+        const { user } = render(<TestDataGridSelection {...rangeData} checkboxSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}');
+        await user.click(getCell(3, 1));
+        await user.keyboard('{/Shift}');
+        await user.click(getCell(5, 1));
+        expect(getSelectedRowIds()).to.deep.equal([1, 2, 3, 5]);
+
+        // Unselect the last row of the range, the focus goes back to it
+        await user.click(getCell(3, 0).querySelector('input')!);
+        expect(getSelectedRowIds()).to.deep.equal([1, 2, 5]);
+
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2, 3, 4, 5]);
+      });
+
+      it('should support Ctrl/Cmd + Shift + navigation keys', async () => {
+        const { user } = render(<TestDataGridSelection {...rangeData} checkboxSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Control>}{Shift>}[ArrowDown]{/Shift}{/Control}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+
+        await user.keyboard('{Meta>}{Shift>}[ArrowDown]{/Shift}{/Meta}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
+
+        await user.keyboard('{Control>}{Shift>}[Space]{/Shift}{/Control}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+      });
+
+      it('should extend the range to the last and first rows with Shift+End and Shift+Home', async () => {
+        const { user } = render(<TestDataGridSelection {...rangeData} checkboxSelection />);
+        await user.click(getCell(2, 1));
+
+        await user.keyboard('{Shift>}[End]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([2, 3, 4, 5]);
+
+        await user.keyboard('{Shift>}[Home]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+      });
+
+      it('should keep the focus on the first row when pressing Shift+ArrowUp', async () => {
+        const { user } = render(<TestDataGridSelection {...rangeData} checkboxSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[ArrowUp][ArrowUp]{/Shift}');
+        expect(getActiveCell()).to.equal('0-1');
+        expect(getActiveColumnHeader()).to.equal(null);
+        expect(getSelectedRowIds()).to.deep.equal([0, 1]);
+
+        await user.keyboard('{Shift>}[PageUp]{/Shift}');
+        expect(getActiveCell()).to.equal('0-1');
+        expect(getActiveColumnHeader()).to.equal(null);
+      });
+
+      it('should skip the rows that are not selectable', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            {...rangeData}
+            checkboxSelection
+            isRowSelectable={(params) => params.id !== 1}
+          />,
+        );
+        await user.click(getCell(0, 1));
+        await user.keyboard('{Shift>}[ArrowDown][ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([0, 2]);
+      });
+
+      it('should extend and shrink the range with a controlled selection model', async () => {
+        const onRowSelectionModelChange = vi.fn();
+        function ControlledTest() {
+          const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>(
+            includeRowSelection([]),
+          );
+          return (
+            <TestDataGridSelection
+              {...rangeData}
+              checkboxSelection
+              disableRowSelectionOnClick
+              rowSelectionModel={rowSelectionModel}
+              onRowSelectionModelChange={(model) => {
+                onRowSelectionModelChange(model);
+                setRowSelectionModel(model);
+              }}
+            />
+          );
+        }
+        const { user } = render(<ControlledTest />);
+        await user.click(getCell(3, 1));
+        await user.keyboard('{Shift>}[Space][ArrowUp][ArrowUp]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
+
+        await user.keyboard('{Shift>}[ArrowDown][ArrowDown][ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([3, 4]);
+        expect(onRowSelectionModelChange.mock.calls.length).to.equal(6);
+      });
+
+      it.each([
+        ['a text field', () => <input />],
+        [
+          'a native select',
+          () => (
+            <select>
+              <option>a</option>
+            </select>
+          ),
+        ],
+      ])('should not change the selection with the keys pressed in %s', async (_, renderCell) => {
+        const { user } = render(
+          <TestDataGridSelection
+            {...rangeData}
+            columns={[...rangeData.columns, { field: 'content', renderCell }]}
+            checkboxSelection
+            disableRowSelectionOnClick
+          />,
+        );
+        const keys = [
+          '{Shift>}[Space]{/Shift}',
+          '{Shift>}[ArrowDown]{/Shift}',
+          '{Control>}{Shift>}[ArrowDown]{/Shift}{/Control}',
+          '{Control>}a{/Control}',
+        ];
+        for (const key of keys) {
+          // Click again, the keyboard navigation can move the focus out of the element
+          // eslint-disable-next-line no-await-in-loop
+          await user.click(getCell(1, 3).querySelector<HTMLElement>('input:not([type]), select')!);
+          // eslint-disable-next-line no-await-in-loop
+          await user.keyboard(key);
+        }
+        expect(getSelectedRowIds()).to.deep.equal([]);
+      });
+
+      it('should handle the keys pressed in the pre-mounted editor of `imeFastEdit`', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            {...rangeData}
+            columns={rangeData.columns.map((column) => ({ ...column, editable: true }))}
+            experimentalFeatures={{ imeFastEdit: true }}
+            checkboxSelection
+            disableRowSelectionOnClick
+          />,
+        );
+        const cell = getCell(1, 2);
+        await user.click(cell);
+        expect(cell.contains(document.activeElement)).to.equal(true);
+        expect(document.activeElement).not.to.equal(cell);
+
+        await user.keyboard('{Shift>}[Space][ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+      });
+    });
+
     // Skip on everything as this is failing on all environments on ubuntu/CI
     describe.todo('ripple', () => {
       // JSDOM doesn't fire "blur" when .focus is called in another element

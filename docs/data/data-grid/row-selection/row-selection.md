@@ -16,6 +16,8 @@ On the Data Grid Pro and Data Grid Premium components, you can select multiple r
 
 - To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key while selecting rows.
 - To select a range of rows, hold the <kbd class="key">Shift</kbd> key while selecting rows.
+  With the keyboard, select a row with <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd>, then hold <kbd class="key">Shift</kbd> and press <kbd class="key">Arrow Up</kbd> or <kbd class="key">Arrow Down</kbd> to extend the selection.
+  See the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection) for more options.
 - To disable multiple row selection, use `disableMultipleRowSelection={true}`.
 
 Unselect one of the selected rows by holding the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key and clicking on the selected row.
