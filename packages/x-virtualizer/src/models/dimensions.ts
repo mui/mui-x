@@ -85,10 +85,9 @@ export interface RowsMetaState {
    */
   rowCount: number;
   /**
-   * The height shared by every row of the current page, or `null` if the rows have
-   * different heights.
+   * Whether every row of the current page has the same height.
    */
-  uniformRowHeight: number | null;
+  hasUniformRowHeight: boolean;
   /**
    * The position of each row.
    * With uniform rows, the array is only built on first access: prefer `RowsMeta.getPosition`.
@@ -128,8 +127,7 @@ export const RowsMeta = {
   create: (
     rowsMeta: Omit<RowsMetaState, 'positions'> & { positions: number[] | null },
   ): RowsMetaState => {
-    const { uniformRowHeight, rowCount, positions } = rowsMeta;
-    if (uniformRowHeight === null || positions !== null) {
+    if (!rowsMeta.hasUniformRowHeight) {
       return rowsMeta as RowsMetaState;
     }
     let lazyPositions: number[] | undefined;
@@ -137,17 +135,23 @@ export const RowsMeta = {
     return Object.defineProperty(rowsMeta, 'positions', {
       enumerable: true,
       get: () => {
-        lazyPositions ??= Array.from({ length: rowCount }, (_, i) => i * uniformRowHeight);
+        const rowHeight = RowsMeta.getUniformRowHeight(rowsMeta as RowsMetaState);
+        lazyPositions ??= Array.from({ length: rowsMeta.rowCount }, (_, i) => i * rowHeight);
         return lazyPositions;
       },
     }) as RowsMetaState;
   },
+  /** Height of every row, when `hasUniformRowHeight` is set. */
+  getUniformRowHeight: (rowsMeta: RowsMetaState): number =>
+    rowsMeta.rowCount > 0 ? rowsMeta.currentPageTotalHeight / rowsMeta.rowCount : 0,
   /** Position of the row at `index`, or `undefined` out of range, like an array lookup. */
   getPosition: (rowsMeta: RowsMetaState, index: number): number | undefined => {
-    if (rowsMeta.uniformRowHeight === null) {
+    if (!rowsMeta.hasUniformRowHeight) {
       return rowsMeta.positions[index];
     }
-    return index >= 0 && index < rowsMeta.rowCount ? index * rowsMeta.uniformRowHeight : undefined;
+    return index >= 0 && index < rowsMeta.rowCount
+      ? index * RowsMeta.getUniformRowHeight(rowsMeta)
+      : undefined;
   },
   /** Height of the slot of the row at `index` (spacing and detail included), or 0 out of range. */
   getSlotHeight: (rowsMeta: RowsMetaState, index: number): number => {

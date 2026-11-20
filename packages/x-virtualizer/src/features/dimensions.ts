@@ -730,7 +730,7 @@ function useRowsMeta(
 
 // Lays out `rowCount` rows of the given heights. The positions array is only built once a
 // row height differs from the previous ones: with uniform heights, the positions follow
-// from `uniformRowHeight` alone (see `RowsMeta.getPosition`).
+// from the row count and total height alone (see `RowsMeta.getPosition`).
 function measureRows(
   rowCount: number,
   defaultRowHeight: number,
@@ -753,7 +753,7 @@ function measureRows(
 
   return {
     rowCount,
-    uniformRowHeight: positions === null ? firstRowHeight : null,
+    hasUniformRowHeight: positions === null,
     positions,
     currentPageTotalHeight,
   };
@@ -762,7 +762,7 @@ function measureRows(
 function uniformRows(rowCount: number, rowHeight: number) {
   return {
     rowCount,
-    uniformRowHeight: rowHeight,
+    hasUniformRowHeight: true,
     positions: null,
     currentPageTotalHeight: rowCount * rowHeight,
   };

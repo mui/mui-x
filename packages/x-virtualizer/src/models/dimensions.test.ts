@@ -5,7 +5,7 @@ import { RowsMeta } from './dimensions';
 const createUniform = () =>
   RowsMeta.create({
     rowCount: 3,
-    uniformRowHeight: 50,
+    hasUniformRowHeight: true,
     positions: null,
     currentPageTotalHeight: 150,
     pinnedTopRowsTotalHeight: 0,
@@ -16,7 +16,7 @@ const uniform = createUniform();
 
 const variable: RowsMetaState = {
   rowCount: 3,
-  uniformRowHeight: null,
+  hasUniformRowHeight: false,
   positions: [0, 50, 130],
   currentPageTotalHeight: 180,
   pinnedTopRowsTotalHeight: 0,
@@ -33,6 +33,47 @@ describe('RowsMeta', () => {
 
     it('keeps the positions key when the state is spread', () => {
       expect({ ...createUniform() }.positions).to.deep.equal([0, 50, 100]);
+    });
+  });
+
+  describe('getUniformRowHeight', () => {
+    it('derives the row height from the total height', () => {
+      expect(RowsMeta.getUniformRowHeight(uniform)).to.equal(50);
+    });
+
+    it('is 0 without rows', () => {
+      const empty = RowsMeta.create({
+        rowCount: 0,
+        hasUniformRowHeight: true,
+        positions: null,
+        currentPageTotalHeight: 0,
+        pinnedTopRowsTotalHeight: 0,
+        pinnedBottomRowsTotalHeight: 0,
+      });
+      expect(RowsMeta.getUniformRowHeight(empty)).to.equal(0);
+      expect(RowsMeta.getPosition(empty, 0)).to.equal(undefined);
+      expect(empty.positions).to.deep.equal([]);
+    });
+
+    it('positions fractional rows within rounding of their summed height', () => {
+      const rowCount = 1000;
+      const rowHeight = 33.3;
+      let totalHeight = 0;
+      for (let i = 0; i < rowCount; i += 1) {
+        totalHeight += rowHeight;
+      }
+      const rowsMeta = RowsMeta.create({
+        rowCount,
+        hasUniformRowHeight: true,
+        positions: null,
+        currentPageTotalHeight: totalHeight,
+        pinnedTopRowsTotalHeight: 0,
+        pinnedBottomRowsTotalHeight: 0,
+      });
+      expect(RowsMeta.getPosition(rowsMeta, rowCount - 1)).to.be.closeTo(
+        (rowCount - 1) * rowHeight,
+        1e-6,
+      );
     });
   });
 
