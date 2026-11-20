@@ -1,5 +1,6 @@
 import * as ReactDOM from 'react-dom';
 import useEventCallback from '@mui/utils/useEventCallback';
+import ownerDocument from '@mui/utils/ownerDocument';
 import useTimeout from '@mui/utils/useTimeout';
 import type {
   InferFieldSection,
@@ -164,6 +165,14 @@ export function useFieldRootProps(
           newSectionValue,
           shouldGoToNextSection: false,
         });
+        break;
+      }
+
+      // Let the browser move the focus out of the field from the focused section
+      case event.key === 'Tab': {
+        // Firefox starts the sequential focus navigation from the selection: with the content of
+        // a section after the first one selected, the focus would move back to the top of the page.
+        ownerDocument(event.currentTarget).getSelection()?.removeAllRanges();
         break;
       }
     }
