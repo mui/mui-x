@@ -5,6 +5,7 @@ import type {
   GridRowModelReplace,
   GridValidRowModel,
   GridTreeNode,
+  GridGroupNode,
 } from '../gridRows';
 
 export type RowReorderDropPosition = 'above' | 'below' | 'inside';
@@ -106,6 +107,14 @@ export interface GridRowApi {
   unstable_replaceRows: (firstRowToReplace: number, newRows: GridRowModel[]) => void;
 }
 
+/**
+ * Returns whether a group row should be expanded.
+ * @param {GridGroupNode} node The group row node.
+ * @param {boolean} isExpanded Whether the group row is currently expanded.
+ * @returns {boolean} `true` to expand the group row, `false` to collapse it.
+ */
+export type GridRowExpansionSetter = (node: GridGroupNode, isExpanded: boolean) => boolean;
+
 export interface GridRowProApi {
   /**
    * Moves a row from its original position to the position given by `targetIndex`.
@@ -151,6 +160,11 @@ export interface GridRowProApi {
    * Collapse all rows. Works for the client side data only.
    */
   collapseAllRows: () => void;
+  /**
+   * Sets the expansion of all the group rows in a single update. Works for the client side data only.
+   * @param {GridRowExpansionSetter} shouldExpand A function called for each group row that returns `true` to expand it or `false` to collapse it.
+   */
+  setRowsExpansion: (shouldExpand: GridRowExpansionSetter) => void;
 }
 
 export interface GridUpdateNestedRowsOptions {

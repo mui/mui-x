@@ -524,6 +524,7 @@
   { "name": "GridRowEditStopReasons", "kind": "Enum" },
   { "name": "GridRowEntry", "kind": "Interface" },
   { "name": "GridRowEventLookup", "kind": "Interface" },
+  { "name": "GridRowExpansionSetter", "kind": "TypeAlias" },
   { "name": "GridRowGroupChildrenGetterParams", "kind": "Interface" },
   { "name": "gridRowGroupingNameSelector", "kind": "Variable" },
   { "name": "GridRowHeightParams", "kind": "Interface" },

@@ -284,6 +284,31 @@ The `apiRef.current.setRowChildrenExpansion()` method is not compatible with [se
 Use `apiRef.current.dataSource.fetchRows()` instead.
 :::
 
+Use the `expandAllRows()` and `collapseAllRows()` methods to expand or collapse every group at once.
+To change the expansion of several groups in a single update, use the `setRowsExpansion()` method.
+It calls the provided callback for each group with the group node and its current expansion state, and expects `true` to expand the group or `false` to collapse it:
+
+```tsx
+// Expand the first level of groups and collapse the deeper ones
+apiRef.current.setRowsExpansion((node) => node.depth < 1);
+
+// Collapse the groups of a given field and keep the expansion of the other groups
+apiRef.current.setRowsExpansion((node, isExpanded) =>
+  node.groupingField === 'director' ? false : isExpanded,
+);
+```
+
+Unlike the `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` props, which only apply to newly created groups, these methods update the groups that are already rendered.
+Each call emits at most one `rowExpansionChange` event, instead of one event per group.
+
+The demo below uses these methods to expand the company groups only, or the whole tree:
+
+{{"demo": "RowGroupingSetRowsExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+The `expandAllRows()`, `collapseAllRows()`, and `setRowsExpansion()` methods only work with client-side data.
+:::
+
 ### Customize grouping cell indent
 
 Use the `--DataGrid-cellOffsetMultiplier` CSS variable to change the default cell indentation, as shown here:
