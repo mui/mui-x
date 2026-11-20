@@ -89,7 +89,9 @@ describe('<DataGridPremium /> - History', () => {
       await user.click(getCell(1, 2));
 
       // Undo should be available
-      expect(apiRef.current!.history.canUndo()).to.equal(true);
+      await waitFor(() => {
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+      });
 
       await act(async () => {
         apiRef.current!.history.clear();
@@ -111,6 +113,9 @@ describe('<DataGridPremium /> - History', () => {
       await user.dblClick(cell);
       await user.keyboard('10000');
       await user.click(getCell(4, 2));
+      await waitFor(() => {
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+      });
 
       let result: boolean | undefined;
       await act(async () => {

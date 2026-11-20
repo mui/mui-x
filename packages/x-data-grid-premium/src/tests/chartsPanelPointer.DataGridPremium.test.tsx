@@ -111,9 +111,9 @@ const configurationOptions: GridChartsConfigurationOptions = {
 };
 
 describe('<DataGridPremium /> - Charts panel with pointer events', () => {
-  // With React 18, the StrictMode effects of `GridChartsRendererProxy` reset the chart it registers:
+  // Before React 19, StrictMode resets the chart that `GridChartsRendererProxy` registers:
   // its type, dimensions and values from the initial state are lost.
-  const { render } = createRenderer({ strictEffects: reactMajor >= 19 });
+  const { render } = createRenderer({ strict: reactMajor >= 19 });
 
   let apiRef: RefObject<GridApiPremium | null>;
 

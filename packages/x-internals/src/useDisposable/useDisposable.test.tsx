@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { vi, expect, describe, it } from 'vitest';
 import type { Mock } from 'vitest';
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { createRenderer, act, reactMajor } from '@mui/internal-test-utils';
 import { disposeSymbol } from '../disposable';
 import { useDisposable } from './useDisposable';
 
@@ -70,24 +70,28 @@ describe('useDisposable', () => {
     };
   }
 
-  it('survives the StrictMode double mount and disposes once on the real unmount', () => {
-    const { factory, getInstance, getEffectMounts, TestComponent } = setup();
+  // React 17 StrictMode does not replay effects.
+  it.skipIf(reactMajor < 18)(
+    'survives the StrictMode double mount and disposes once on the real unmount',
+    () => {
+      const { factory, getInstance, getEffectMounts, TestComponent } = setup();
 
-    const { unmount } = render(<TestComponent />);
+      const { unmount } = render(<TestComponent />);
 
-    // Guard the test itself: StrictMode must have replayed the mount cycle,
-    // otherwise the assertions below wouldn't actually cover the double mount.
-    expect(getEffectMounts()).to.equal(2);
-    // The committed instance survives the cycle (React 18 adds a throwaway create).
-    expect(factory.mock.calls.length).to.equal(expected.factoryCallCount);
-    // ...and the simulated unmount does not dispose the committed instance.
-    expect(getInstance().dispose.mock.calls.length).to.equal(0);
+      // Guard the test itself: StrictMode must have replayed the mount cycle,
+      // otherwise the assertions below wouldn't actually cover the double mount.
+      expect(getEffectMounts()).to.equal(2);
+      // The committed instance survives the cycle (React 18 adds a throwaway create).
+      expect(factory.mock.calls.length).to.equal(expected.factoryCallCount);
+      // ...and the simulated unmount does not dispose the committed instance.
+      expect(getInstance().dispose.mock.calls.length).to.equal(0);
 
-    unmount();
+      unmount();
 
-    // The real unmount disposes exactly once, even inside `<StrictMode>`.
-    expect(getInstance().dispose.mock.calls.length).to.equal(1);
-  });
+      // The real unmount disposes exactly once, even inside `<StrictMode>`.
+      expect(getInstance().dispose.mock.calls.length).to.equal(1);
+    },
+  );
 
   it('creates the instance once and disposes it on unmount (without StrictMode)', () => {
     const { factory, getInstance, getEffectMounts, TestComponent } = setup();
@@ -112,71 +116,75 @@ describe('useDisposable', () => {
   // re-render between the simulated unmount and the remount, so the render-body
   // factory never re-runs inside the cycle — the component stays committed
   // against the instance it rendered with, which the cleanup has just disposed.
-  it('should commit against a disposed instance if the hook recreated on remount instead of detecting StrictMode', () => {
-    const timeline: string[] = [];
-    const created: TestDisposable[] = [];
-    let committedInstance: TestDisposable | undefined;
+  // React 17 StrictMode does not replay effects.
+  it.skipIf(reactMajor < 18)(
+    'should commit against a disposed instance if the hook recreated on remount instead of detecting StrictMode',
+    () => {
+      const timeline: string[] = [];
+      const created: TestDisposable[] = [];
+      let committedInstance: TestDisposable | undefined;
 
-    // Romain's proposed shape, verbatim: rebuild in the effect, null on cleanup.
-    function useDisposableRecreate(factory: () => TestDisposable): TestDisposable {
-      const ref = React.useRef<TestDisposable | null>(null);
-      if (ref.current === null) {
-        ref.current = factory();
-      }
-      React.useEffect(() => {
+      // Romain's proposed shape, verbatim: rebuild in the effect, null on cleanup.
+      function useDisposableRecreate(factory: () => TestDisposable): TestDisposable {
+        const ref = React.useRef<TestDisposable | null>(null);
         if (ref.current === null) {
           ref.current = factory();
         }
-        timeline.push('mount');
-        return () => {
-          timeline.push('cleanup');
-          ref.current![disposeSymbol]();
-          ref.current = null;
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []);
-      return ref.current;
-    }
+        React.useEffect(() => {
+          if (ref.current === null) {
+            ref.current = factory();
+          }
+          timeline.push('mount');
+          return () => {
+            timeline.push('cleanup');
+            ref.current![disposeSymbol]();
+            ref.current = null;
+          };
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
+        return ref.current;
+      }
 
-    function TestComponent() {
-      timeline.push('render');
-      committedInstance = useDisposableRecreate(() => {
-        const inst = createDisposable();
-        created.push(inst);
-        return inst;
-      });
-      return null;
-    }
+      function TestComponent() {
+        timeline.push('render');
+        committedInstance = useDisposableRecreate(() => {
+          const inst = createDisposable();
+          created.push(inst);
+          return inst;
+        });
+        return null;
+      }
 
-    const { unmount } = render(<TestComponent />); // StrictMode by default.
+      const { unmount } = render(<TestComponent />); // StrictMode by default.
 
-    // Root cause: React goes straight from the simulated unmount to the remount
-    // with no render in between, so the `ref.current === null` rebuild in the
-    // render body can never fire inside the StrictMode cycle.
-    const cleanupIndex = timeline.indexOf('cleanup');
-    expect(cleanupIndex).to.be.greaterThan(-1);
-    expect(timeline[cleanupIndex + 1]).to.equal('mount');
-    expect(timeline.slice(0, cleanupIndex + 2)).to.deep.equal([
-      'render',
-      'render',
-      'mount',
-      'cleanup',
-      'mount',
-    ]);
+      // Root cause: React goes straight from the simulated unmount to the remount
+      // with no render in between, so the `ref.current === null` rebuild in the
+      // render body can never fire inside the StrictMode cycle.
+      const cleanupIndex = timeline.indexOf('cleanup');
+      expect(cleanupIndex).to.be.greaterThan(-1);
+      expect(timeline[cleanupIndex + 1]).to.equal('mount');
+      expect(timeline.slice(0, cleanupIndex + 2)).to.deep.equal([
+        'render',
+        'render',
+        'mount',
+        'cleanup',
+        'mount',
+      ]);
 
-    // Consequence: the component is committed against an instance the cleanup
-    // disposed. React 18's throwaway create sits at index 0, shifting committed to 1.
-    expect(created).to.have.length(expected.createdCount);
-    expect(committedInstance).to.equal(created[expected.committedIndex]);
-    expect(created[expected.committedIndex].dispose.mock.calls.length).to.equal(1);
-    // The live, non-disposed instance is the last one, rebuilt in the remount
-    // effect — the component never re-rendered to pick it up (split-brain).
-    const live = created[created.length - 1];
-    expect(live).to.not.equal(committedInstance);
-    expect(live.dispose.mock.calls.length).to.equal(0);
+      // Consequence: the component is committed against an instance the cleanup
+      // disposed. React 18's throwaway create sits at index 0, shifting committed to 1.
+      expect(created).to.have.length(expected.createdCount);
+      expect(committedInstance).to.equal(created[expected.committedIndex]);
+      expect(created[expected.committedIndex].dispose.mock.calls.length).to.equal(1);
+      // The live, non-disposed instance is the last one, rebuilt in the remount
+      // effect — the component never re-rendered to pick it up (split-brain).
+      const live = created[created.length - 1];
+      expect(live).to.not.equal(committedInstance);
+      expect(live.dispose.mock.calls.length).to.equal(0);
 
-    unmount();
-  });
+      unmount();
+    },
+  );
 
   // The flip side of the test above, and why detection (not recreation) is the
   // right call: a real fiber-preserving remount DOES re-render. `<Activity>`

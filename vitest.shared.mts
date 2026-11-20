@@ -1,4 +1,5 @@
 import { resolve, dirname } from 'node:path';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
@@ -8,9 +9,25 @@ import type { Page } from '@playwright/test';
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
+export const REACT_MAJOR = Number(
+  createRequire(import.meta.url)('react/package.json').version.split('.')[0],
+);
+
+// React 17 has no `exports` map, so native ESM cannot resolve `react/jsx-runtime` in these packages.
+export const react17InlineDeps = REACT_MAJOR < 18 ? [/@mui\//, /@base-ui\//] : [];
+
 const pendingPrintFonts = new WeakMap<Page, { url: string; resolve: (fail: boolean) => void }>();
 
 export const alias = [
+  // React 17 has no `react-dom/client`.
+  ...(REACT_MAJOR < 18
+    ? [
+        {
+          find: 'react-dom/client',
+          replacement: resolve(WORKSPACE_ROOT, './test/reactDomClient17.js'),
+        },
+      ]
+    : []),
   // Generates resolver aliases for all packages and their plans.
   ...[
     { lib: 'x-charts', plans: ['pro', 'premium'] },
@@ -68,7 +85,7 @@ export default defineConfig({
     // @TODO: Remove once https://github.com/mui/material-ui/pull/48645 is merged.
     server: {
       deps: {
-        inline: [/@mui\/material/, /react-transition-group/],
+        inline: [/@mui\/material/, /react-transition-group/, ...react17InlineDeps],
       },
     },
     // Required for some tests that contain early returns or conditional tests.

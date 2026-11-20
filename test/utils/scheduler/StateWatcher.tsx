@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 
 export function StateWatcher({
   Context,
@@ -14,9 +15,7 @@ export function StateWatcher({
     throw new Error('StateWatcher must be used inside the matching Provider');
   }
 
-  const getSelected = React.useCallback(() => selector(store.getSnapshot()), [store, selector]);
-
-  const value = React.useSyncExternalStore(store.subscribe, getSelected, getSelected);
+  const value = useStore(store, selector);
 
   React.useEffect(() => {
     onValueChange(value);

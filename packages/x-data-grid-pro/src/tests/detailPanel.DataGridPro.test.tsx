@@ -320,7 +320,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     // from React 19 it is:
     //   2x during state initialization
     // + 2x when sortedRowsSet is fired
-    const expectedCallCount = reactMajor >= 19 ? 6 : 10;
+    let expectedCallCount = reactMajor >= 19 ? 6 : 10;
+    if (reactMajor < 18) {
+      // React 17 StrictMode does not replay effects.
+      expectedCallCount = 8;
+    }
 
     expect(getDetailPanelContent.mock.calls.length).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
@@ -362,7 +366,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     // from React 19 it is:
     //   2x during state initialization
     // + 2x when sortedRowsSet is fired
-    const expectedCallCount = reactMajor >= 19 ? 6 : 10;
+    let expectedCallCount = reactMajor >= 19 ? 6 : 10;
+    if (reactMajor < 18) {
+      // React 17 StrictMode does not replay effects.
+      expectedCallCount = 8;
+    }
 
     expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
@@ -435,7 +443,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     // from React 19 it is:
     //   1x during state initialization
     // + 1x when sortedRowsSet is fired
-    const expectedCallCount = reactMajor >= 19 ? 3 : 5;
+    let expectedCallCount = reactMajor >= 19 ? 3 : 5;
+    if (reactMajor < 18) {
+      // React 17 StrictMode does not replay effects.
+      expectedCallCount = 4;
+    }
 
     expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
     expect(getDetailPanelHeight.mock.lastCall?.[0].id).to.equal(0);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
@@ -118,7 +118,7 @@ describe('EventDialogForm', () => {
       const list = screen.getByRole('list', { name: 'title errors' });
       expect(list.children).to.have.length(0);
 
-      await React.act(async () => {
+      await act(async () => {
         expect(await formStore!.validateAll()).to.equal(false);
       });
       expect(Array.from(list.children, (item) => item.textContent)).to.deep.equal([
@@ -144,7 +144,7 @@ describe('EventDialogForm', () => {
         </EventDialogFormProvider>,
       );
 
-      await React.act(async () => {
+      await act(async () => {
         expect(await formStore!.validateAll()).to.equal(false);
       });
       expect(screen.getByRole('alert')).to.have.text('Too long');
@@ -194,7 +194,7 @@ describe('EventDialogForm', () => {
       );
       expect(screen.getByLabelText('notes')).to.have.value('default');
 
-      await React.act(async () => {
+      await act(async () => {
         formStore!.setValue('notes', undefined);
       });
       // The rendered value must match what would be submitted, not the default.
@@ -277,13 +277,13 @@ describe('EventDialogForm', () => {
         </EventDialogFormProvider>,
       );
 
-      await React.act(async () => {
+      await act(async () => {
         expect(await formStore!.validateAll()).to.equal(false);
       });
 
       setProps({ children: grabber });
 
-      await React.act(async () => {
+      await act(async () => {
         expect(await formStore!.validateAll()).to.equal(true);
       });
     });

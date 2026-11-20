@@ -10,7 +10,14 @@ import type {
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, screen, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  act,
+  screen,
+  waitFor,
+  reactMajor,
+} from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { onTestFinished, vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -721,47 +728,52 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(onRowModesModelChange.mock.lastCall?.[0]).to.deep.equal({ 0: { mode: 'edit' } });
       });
 
-      it('should pass the new value through all value setters before calling processRowUpdate', async () => {
-        const valueSetter1 = vi.fn<GridValueSetter>((value, row) => ({
-          ...row,
-          _currencyPair: value,
-        }));
-        const valueSetter2 = vi.fn<GridValueSetter>((value, row) => ({
-          ...row,
-          _price1M: value,
-        }));
-        const processRowUpdate = vi.fn((newRow) => newRow);
-        render(
-          <TestCase
-            processRowUpdate={processRowUpdate}
-            column1Props={{ valueSetter: valueSetter1 }}
-            column2Props={{ valueSetter: valueSetter2 }}
-          />,
-        );
-        act(() => apiRef.current?.startRowEditMode({ id: 0 }));
-        await act(() =>
-          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
-        );
-        act(() => apiRef.current?.stopRowEditMode({ id: 0 }));
-        await act(() => Promise.resolve());
-        expect(processRowUpdate.mock.lastCall?.[0]).to.deep.equal({
-          ...defaultData.rows[0],
-          currencyPair: 'USDGBP',
-          _currencyPair: 'USD GBP',
-          price1M: 1,
-          _price1M: 1,
-        });
-        expect(valueSetter1.mock.lastCall?.[0]).to.equal('USD GBP');
-        expect(valueSetter1.mock.lastCall?.[1]).to.deep.equal(defaultData.rows[0]);
+      // React 17 does not batch the updates after `processRowUpdate`, so an extra render calls
+      // the setters again with the updated row.
+      it.skipIf(reactMajor < 18)(
+        'should pass the new value through all value setters before calling processRowUpdate',
+        async () => {
+          const valueSetter1 = vi.fn<GridValueSetter>((value, row) => ({
+            ...row,
+            _currencyPair: value,
+          }));
+          const valueSetter2 = vi.fn<GridValueSetter>((value, row) => ({
+            ...row,
+            _price1M: value,
+          }));
+          const processRowUpdate = vi.fn((newRow) => newRow);
+          render(
+            <TestCase
+              processRowUpdate={processRowUpdate}
+              column1Props={{ valueSetter: valueSetter1 }}
+              column2Props={{ valueSetter: valueSetter2 }}
+            />,
+          );
+          act(() => apiRef.current?.startRowEditMode({ id: 0 }));
+          await act(() =>
+            apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          );
+          act(() => apiRef.current?.stopRowEditMode({ id: 0 }));
+          await act(() => Promise.resolve());
+          expect(processRowUpdate.mock.lastCall?.[0]).to.deep.equal({
+            ...defaultData.rows[0],
+            currencyPair: 'USDGBP',
+            _currencyPair: 'USD GBP',
+            price1M: 1,
+            _price1M: 1,
+          });
+          expect(valueSetter1.mock.lastCall?.[0]).to.equal('USD GBP');
+          expect(valueSetter1.mock.lastCall?.[1]).to.deep.equal(defaultData.rows[0]);
 
-        expect(valueSetter2.mock.lastCall?.[0]).to.equal(1);
-        expect(valueSetter2.mock.lastCall?.[1]).to.deep.equal({
-          // Ensure that the row contains the values from the previous setter);
-          ...defaultData.rows[0],
-          currencyPair: 'USDGBP',
-          _currencyPair: 'USD GBP',
-        });
-      });
+          expect(valueSetter2.mock.lastCall?.[0]).to.equal(1);
+          expect(valueSetter2.mock.lastCall?.[1]).to.deep.equal({
+            // Ensure that the row contains the values from the previous setter);
+            ...defaultData.rows[0],
+            currencyPair: 'USDGBP',
+            _currencyPair: 'USD GBP',
+          });
+        },
+      );
 
       it('should move focus to the cell below when cellToFocusAfter=below', () => {
         render(<TestCase />);

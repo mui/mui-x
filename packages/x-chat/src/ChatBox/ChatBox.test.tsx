@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import {
+  act,
+  createRenderer,
+  fireEvent,
+  reactMajor,
+  screen,
+  waitFor,
+} from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createEchoAdapter, useChatStatus } from '@mui/x-chat-headless';
@@ -1484,11 +1491,10 @@ describe('ChatBox', () => {
       });
 
       expect(screen.getByText('Answer for c1')).not.toBe(null);
-      expect(listMessages.mock.calls.map(([arg]) => arg.conversationId)).toEqual([
-        'c1',
-        'c1',
-        'c1',
-      ]);
+      // React 17 StrictMode does not replay the mount effect, so it loads `c1` once on mount.
+      expect(listMessages.mock.calls.map(([arg]) => arg.conversationId)).toEqual(
+        reactMajor >= 18 ? ['c1', 'c1', 'c1'] : ['c1', 'c1'],
+      );
     });
   });
 
