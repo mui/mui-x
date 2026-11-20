@@ -97,6 +97,7 @@ export function useMessageListBehavior(parameters: {
   const topLoadInFlightRef = React.useRef(false);
   const resizeFrameRef = React.useRef(0);
   const isMountedRef = React.useRef(true);
+  const hasMountedRef = React.useRef(false);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
@@ -317,9 +318,16 @@ export function useMessageListBehavior(parameters: {
   ]);
 
   React.useLayoutEffect(() => {
-    updateIsAtBottom();
-    anchorRef.current = captureAnchor(itemIdsRef.current);
-  }, [captureAnchor, updateIsAtBottom]);
+    // Scroll before the first `updateIsAtBottom()` so the latch stays true and `onReachBottom` doesn't fire;
+    // `instant` overrides CSS smooth scrolling so the scroll is synchronous.
+    if (!hasMountedRef.current && autoScrollEnabled && itemIdsRef.current.length > 0) {
+      scrollToBottom({ behavior: 'instant' });
+    } else {
+      updateIsAtBottom();
+      anchorRef.current = captureAnchor(itemIdsRef.current);
+    }
+    hasMountedRef.current = true;
+  }, [autoScrollEnabled, captureAnchor, scrollToBottom, updateIsAtBottom]);
 
   React.useLayoutEffect(() => {
     const previousItemIds = previousItemIdsRef.current;
