@@ -60,7 +60,7 @@ const RESULT_TYPE_LABELS: Record<Exclude<GridComputedColumnType, 'string'>, stri
   dateTime: 'a date',
 };
 
-function toResolvedValue(result: GridFormulaResult): FormulaScalar | FormulaErrorValue {
+export function toResolvedValue(result: GridFormulaResult): FormulaScalar | FormulaErrorValue {
   return result.type === 'error' ? createFormulaError(result.code, result.message) : result.value;
 }
 

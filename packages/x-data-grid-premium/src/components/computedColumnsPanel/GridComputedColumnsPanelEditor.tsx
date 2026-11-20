@@ -15,6 +15,7 @@ import {
 import type { GridColDef, GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
+import useEventCallback from '@mui/utils/useEventCallback';
 import useId from '@mui/utils/useId';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -472,6 +473,10 @@ function inferColumnType(value: unknown): GridComputedColumnType | null {
   return null;
 }
 
+function inferPreviewType(result: GridFormulaResult | null): GridComputedColumnType | null {
+  return result === null || result.type === 'error' ? null : inferColumnType(result.value);
+}
+
 /**
  * The editor view of the computed columns panel: a local draft of one
  * definition (name, field, formula, result type and number format), validated
@@ -663,24 +668,38 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   // A new column before it has a name: the reference model and the preview need an owner cell.
   const ownerField = draftDefinition.field === '' ? DRAFT_COMPUTED_FIELD : draftDefinition.field;
 
+  // A type that follows the preview is inferred without coercing the other rows to it:
+  // inferring could flip it back and forth.
+  const previewType = typeTouched ? draftDefinition.type : undefined;
   const computePreview = React.useCallback(
-    (rowId: GridRowId) =>
+    (rowId: GridRowId, type?: GridComputedColumnType, onOtherRowEvaluated?: () => void) =>
       previewComputedColumnResult(apiRef, rowId, draftDefinition.field, `=${expression}`, {
         ignoreField,
+        type,
+        onOtherRowEvaluated,
       }),
     [apiRef, draftDefinition.field, expression, ignoreField],
   );
+  // The type Apply gives a draft whose type follows the preview.
+  const getInferredType = useEventCallback(
+    (result: GridFormulaResult | null) => inferPreviewType(result) ?? draftDefinition.type,
+  );
+  // With the draft cells of the other rows coerced to the type Apply gives them.
+  const [appliedPreview, setAppliedPreview] = React.useState<GridFormulaResult | null>(null);
 
   // What the result depends on besides the draft, none of which a render of the
   // editor tells by itself:
   // - the data of the preview row (`updateRows`, a replaced `rows` prop) — the
   //   row-scoped selector ignores the updates of the other rows;
+  // - the data of the other rows, once the draft is evaluated on them for the
+  //   cell formulas that read it;
   // - the revision: the getters of the referenced columns (computed or not) and
   //   the function registry;
   // - a formula cell of the preview row re-evaluated: the row object is not
   //   touched, and the revision only follows the fields the STORED computed
   //   columns reference.
   const previewRow = useGridSelector(apiRef, gridRowSelector, previewRowId as GridRowId);
+  const readsOtherRowsRef = React.useRef(false);
   const revision = useGridSelector(apiRef, gridComputedColumnsRevisionSelector);
   const [evaluationTick, setEvaluationTick] = React.useState(0);
   const handleFormulaEvaluated: GridEventListener<'formulaEvaluated'> = ({ changedCells }) => {
@@ -689,17 +708,44 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     }
   };
   useGridEvent(apiRef, 'formulaEvaluated', handleFormulaEvaluated);
+  const handleRowsSet = () => {
+    if (readsOtherRowsRef.current) {
+      setEvaluationTick((prev) => prev + 1);
+    }
+  };
+  useGridEvent(apiRef, 'rowsSet', handleRowsSet);
 
   React.useEffect(() => {
     if (previewRowId === null || expression === '') {
+      readsOtherRowsRef.current = false;
       setRawPreview(null);
+      setAppliedPreview(null);
       return undefined;
     }
     const timer = setTimeout(() => {
-      setRawPreview(computePreview(previewRowId));
+      let otherRowEvaluated = false;
+      const result = computePreview(previewRowId, previewType, () => {
+        otherRowEvaluated = true;
+      });
+      readsOtherRowsRef.current = otherRowEvaluated;
+      setRawPreview(result);
+      setAppliedPreview(
+        otherRowEvaluated && previewType === undefined
+          ? computePreview(previewRowId, getInferredType(result))
+          : result,
+      );
     }, PREVIEW_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [previewRowId, expression, computePreview, previewRow, revision, evaluationTick]);
+  }, [
+    previewRowId,
+    expression,
+    computePreview,
+    previewType,
+    getInferredType,
+    previewRow,
+    revision,
+    evaluationTick,
+  ]);
 
   React.useEffect(() => {
     if (typeTouched || rawPreview === null || rawPreview.type === 'error') {
@@ -747,10 +793,10 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   }, [draftDefinition, previewFormatValid, liveEditable, computedColDef]);
 
   const preview = React.useMemo(() => {
-    if (rawPreview === null || previewRowId === null) {
+    if (appliedPreview === null || previewRowId === null) {
       return null;
     }
-    const result = coerceComputedResult(rawPreview, draftDefinition.type);
+    const result = coerceComputedResult(appliedPreview, draftDefinition.type);
     if (result.type === 'error') {
       return { text: result.code, error: true };
     }
@@ -772,7 +818,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     // Like the cell, which renders the value when the formatter returns nothing.
     const shown = formatted ?? result.value;
     return { text: shown == null ? '' : String(shown), error: false };
-  }, [apiRef, rawPreview, previewRowId, draftDefinition.type, previewColDefs]);
+  }, [apiRef, appliedPreview, previewRowId, draftDefinition.type, previewColDefs]);
 
   // The parse error's span, shifted from the normalized source to the text the
   // editable displays (leading whitespace, a missing `=`); shown with the
@@ -928,9 +974,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     // The type follows the debounced preview: an Apply faster than the debounce
     // resolves it from the formula as it is now, not as it was 150 ms ago.
     if (!typeTouched && previewRowId !== null && expression !== '') {
-      const result = computePreview(previewRowId);
-      const inferred =
-        result === null || result.type === 'error' ? null : inferColumnType(result.value);
+      const inferred = inferPreviewType(computePreview(previewRowId));
       if (inferred !== null && inferred !== draft.type) {
         const finalDraft = { ...draft, type: inferred };
         definition = buildDefinition(finalDraft, storedDefinition);
