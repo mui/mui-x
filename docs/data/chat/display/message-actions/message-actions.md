@@ -40,7 +40,9 @@ The action bar is hidden by default and becomes visible when:
 - The user drills into the focused message with <kbd>Enter</kbd> (the message list sets `data-actionable="true"` on the row — see [keyboard navigation](/x/react-chat/material/message-list/#keyboard-navigation))
 - Focus is inside the action bar itself (`:focus-within`)
 
-While hidden, the bar uses `visibility: hidden` in addition to `opacity: 0`, so the action buttons are removed from the tab order and from hit-testing — tabbing through the chat never stops on an invisible control.
+Inside a message list with roving focus (the default), the hidden bar also uses `visibility: hidden`, so the action buttons stay out of the tab order until the user drills into the message — tabbing through the chat never stops on an invisible control.
+Without roving focus (`enableRovingFocus={false}` or a standalone `ChatMessage`), the buttons keep their natural tab order: tabbing onto one reveals the bar through `:focus-within`.
+In that mode the hidden bar also sets `pointer-events: none`, so the transparent buttons ignore the pointer until the row is hovered; a custom override that reveals the bar there should also set `pointer-events: auto`.
 The reveal uses a short opacity transition; when the user prefers reduced motion, the transition is disabled.
 
 ```css
@@ -50,6 +52,7 @@ The reveal uses a short opacity transition; when the user prefers reduced motion
 .MuiChatMessage-actions:focus-within {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto; /* only needed without roving focus */
 }
 ```
 
