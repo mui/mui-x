@@ -157,6 +157,9 @@ const nbNOCalendar: SchedulerCalendarTranslations = {
   // WeekView
   allDay: 'Hele dagen',
   // dayGridLabel: 'All-day and multi-day events',
+
+  // MonthView
+  // goToDay: date => `Go to ${date}`,
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} til..`,
   nextTimeSpan: (timeSpan) => `Neste ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Forrige ${timeSpan}`,

@@ -158,6 +158,9 @@ const esESCalendar: SchedulerCalendarTranslations = {
   // WeekView
   allDay: 'Todo el día',
   dayGridLabel: 'Todo el día y varios días',
+
+  // MonthView
+  // goToDay: date => `Go to ${date}`,
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} más..`,
   nextTimeSpan: (timeSpan) => `Siguiente ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,

@@ -156,6 +156,9 @@ const ptPTCalendar: SchedulerCalendarTranslations = {
   // WeekView
   allDay: 'Todo o dia',
   // dayGridLabel: 'All-day and multi-day events',
+
+  // MonthView
+  // goToDay: date => `Go to ${date}`,
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} mais…`,
   nextTimeSpan: (timeSpan) => `${timeSpan} seguinte`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
