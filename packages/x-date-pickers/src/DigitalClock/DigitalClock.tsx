@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
@@ -88,13 +89,20 @@ export const DigitalClockItem = styled(MenuItem, {
     '&:focus-visible, &:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible && {
+      '&.Mui-focusVisible': materialStyles.private_applyChildrenFocusVisible?.(
+        `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+      ),
+    }),
   },
-  '&.Mui-focusVisible': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity,
-    ),
-  },
+  ...(!theme.focusVisible && {
+    '&.Mui-focusVisible': {
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        (theme.vars || theme).palette.action.focusOpacity,
+      ),
+    },
+  }),
 }));
 
 type DigitalClockComponent = ((

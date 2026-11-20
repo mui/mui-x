@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import type { Theme } from '@mui/material/styles';
 import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -107,11 +108,17 @@ const ClockClock = styled('div', {
 const ClockWrapper = styled('div', {
   name: 'MuiClock',
   slot: 'Wrapper',
-})({
+})(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  borderRadius: '50%',
   '&:focus': {
     outline: 'none',
   },
-});
+  ...(theme.focusVisible && {
+    '&:focus-visible': { ...materialStyles.private_outsetFocusRing, ...theme.focusVisible },
+  }),
+}));
 
 const ClockSquareMask = styled('div', {
   name: 'MuiClock',
