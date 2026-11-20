@@ -1669,6 +1669,54 @@ describe('<DataGrid /> - Layout & warnings', () => {
       }
     },
   );
+
+  it.skipIf(isJSDOM)(
+    'should restore the vertical scrollbar after a short skeleton loading overlay',
+    async () => {
+      let mockTime = 1000;
+      const performanceNowStub = vi.spyOn(performance, 'now').mockImplementation(() => mockTime);
+      try {
+        function TestCase({ loading }: { loading: boolean }) {
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid
+                rows={Array.from({ length: 20 }, (_, i) => ({ id: i, brand: `b${i}` }))}
+                columns={[{ field: 'brand' }]}
+                loading={loading}
+                slotProps={{ loadingOverlay: { variant: 'skeleton', noRowsVariant: 'skeleton' } }}
+              />
+            </div>
+          );
+        }
+        const { setProps } = render(<TestCase loading={false} />);
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+        });
+        mockTime += 200;
+        setProps({ loading: true });
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+        });
+        const nextFrame = () =>
+          act(
+            () =>
+              new Promise<void>((resolve) => {
+                requestAnimationFrame(() => resolve());
+              }),
+          );
+        await nextFrame();
+        await nextFrame();
+        mockTime += 30;
+        setProps({ loading: false });
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+        });
+      } finally {
+        performanceNowStub.mockRestore();
+      }
+    },
+  );
+
   // See https://github.com/mui/mui-x/issues/23573
   // Need layout
   it.skipIf(isJSDOM)(
