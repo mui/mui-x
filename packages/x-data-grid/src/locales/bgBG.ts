@@ -170,7 +170,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Header filter operators text
   headerFilterOperatorContains: 'Съдържа',
   headerFilterOperatorDoesNotContain: 'Не съдържа',
-  headerFilterOperatorEquals: 'Равнo',
+  headerFilterOperatorEquals: 'Равно',
   headerFilterOperatorDoesNotEqual: 'Не е равно',
   headerFilterOperatorStartsWith: 'Започва с',
   headerFilterOperatorEndsWith: 'Завършва с',
