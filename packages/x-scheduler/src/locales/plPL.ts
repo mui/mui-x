@@ -196,6 +196,8 @@ const plPLCalendar: SchedulerCalendarTranslations = {
 const plPLTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',
+  // timelineResourceExpand: 'Expand resource',
+  // timelineResourceCollapse: 'Collapse resource',
 
   // Dependency dialog
   // dependencyEditTitle: 'Edit dependency',

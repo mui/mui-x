@@ -195,6 +195,8 @@ const ukUACalendar: SchedulerCalendarTranslations = {
 const ukUATimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
+  // timelineResourceExpand: 'Expand resource',
+  // timelineResourceCollapse: 'Collapse resource',
 
   // Dependency dialog
   // dependencyEditTitle: 'Edit dependency',

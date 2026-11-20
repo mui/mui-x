@@ -123,7 +123,7 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
           const height = getRowHeight(rows[i]);
           return typeof height === 'number' ? height : rowHeight;
         })
-      : measureRows(rowCount, rowHeight, () => rowHeight);
+      : uniformRows(rowCount, rowHeight);
   const { currentPageTotalHeight } = rowsLayout;
 
   // Reflect the pinned zone sizes in the container heights at initialization, mirroring
@@ -576,6 +576,12 @@ function useRowsMeta(
 
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
+    // Without per-row heights, every row has the base height and needs no height entry. Entries
+    // left from earlier per-row heights no longer apply.
+    const hasPerRowHeights = Boolean(getRowHeightProp || getRowSpacing || applyRowHeight);
+    if (!hasPerRowHeights) {
+      heightCache.clear();
+    }
 
     const pinnedTopRowsTotalHeight =
       pinnedRows?.top.reduce((acc, row) => {
@@ -589,10 +595,13 @@ function useRowsMeta(
         return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
       }, 0) ?? 0;
 
-    const rowsLayout = measureRows(rows.length, selectors.rowHeight(store.state), (i) => {
-      const entry = processHeightEntry(rows[i]);
-      return entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
-    });
+    const baseRowHeight = selectors.dimensions(store.state).rowHeight;
+    const rowsLayout = hasPerRowHeights
+      ? measureRows(rows.length, baseRowHeight, (i) => {
+          const entry = processHeightEntry(rows[i]);
+          return entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+        })
+      : uniformRows(rows.length, baseRowHeight);
 
     if (!hasRowWithAutoHeight.current) {
       // No row has height=auto, so all rows are already measured
@@ -616,7 +625,17 @@ function useRowsMeta(
     }
 
     isHeightMetaValid.current = true;
-  }, [store, pinnedRows, rows, processHeightEntry, updateDimensions]);
+  }, [
+    store,
+    heightCache,
+    getRowHeightProp,
+    getRowSpacing,
+    applyRowHeight,
+    pinnedRows,
+    rows,
+    processHeightEntry,
+    updateDimensions,
+  ]);
   const hydrateRowsMetaLatest = useEventCallback(hydrateRowsMeta);
 
   const getRowHeight = (rowId: RowId) => {
@@ -737,6 +756,15 @@ function measureRows(
     uniformRowHeight: positions === null ? firstRowHeight : null,
     positions,
     currentPageTotalHeight,
+  };
+}
+
+function uniformRows(rowCount: number, rowHeight: number) {
+  return {
+    rowCount,
+    uniformRowHeight: rowHeight,
+    positions: null,
+    currentPageTotalHeight: rowCount * rowHeight,
   };
 }
 

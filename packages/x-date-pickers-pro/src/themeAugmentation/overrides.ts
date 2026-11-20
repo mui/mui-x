@@ -8,6 +8,10 @@ import type {
 import type { MultiInputDateRangeFieldClassKey } from '../MultiInputDateRangeField';
 import type { MultiInputDateTimeRangeFieldClassKey } from '../MultiInputDateTimeRangeField';
 import type { MultiInputTimeRangeFieldClassKey } from '../MultiInputTimeRangeField';
+import type {
+  TimeRangePickerTabsClassKey,
+  TimeRangePickerToolbarClassKey,
+} from '../TimeRangePicker';
 
 // prettier-ignore
 export interface PickersProComponentNameToClassKey {
@@ -17,6 +21,9 @@ export interface PickersProComponentNameToClassKey {
 
   MuiDateTimeRangePickerTabs: DateTimeRangePickerTabsClassKey;
   MuiDateTimeRangePickerToolbar: DateTimeRangePickerToolbarClassKey;
+
+  MuiTimeRangePickerTabs: TimeRangePickerTabsClassKey;
+  MuiTimeRangePickerToolbar: TimeRangePickerToolbarClassKey;
 
   // Multi input range fields
   MuiMultiInputDateRangeField: MultiInputDateRangeFieldClassKey;	

@@ -185,6 +185,8 @@ const esESCalendar: SchedulerCalendarTranslations = {
 const esESTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Nombre del recurso',
+  // timelineResourceExpand: 'Expand resource',
+  // timelineResourceCollapse: 'Collapse resource',
 
   // Dependency dialog
   // dependencyEditTitle: 'Edit dependency',

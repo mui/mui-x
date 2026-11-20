@@ -26,6 +26,10 @@ export interface GetEventAccessibleNameParameters {
    * Name of the resource to announce, or `null` to announce none.
    */
   resourceName: string | null;
+  /**
+   * The timezone the occurrence is displayed in.
+   */
+  displayTimezone: string;
 }
 
 /**
@@ -34,9 +38,10 @@ export interface GetEventAccessibleNameParameters {
  * @example "Running, 7:30 AM to 8:30 AM, Monday, May 26, 2025, Resource: Sport, Recurring"
  */
 export function getEventAccessibleName(parameters: GetEventAccessibleNameParameters): string {
-  const { occurrence, locale, ampm, localeText, isRecurring, resourceName } = parameters;
+  const { occurrence, locale, ampm, localeText, isRecurring, resourceName, displayTimezone } =
+    parameters;
   const { start, end } = occurrence;
-  const isMultiDay = isOccurrenceMultiDay(occurrence);
+  const isMultiDay = isOccurrenceMultiDay(occurrence, displayTimezone);
 
   const formatDate = (date: BaseTemporal.PlainDate) => formatFullDate(locale, date);
   const formatDateTime = (date: SchedulerProcessedDate) =>
@@ -64,7 +69,7 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
     // The end of an all-day occurrence is the start of the day after its last day.
     date = localeText.eventAriaLabelDateRange(
       formatDate(start.plainDateTime.toPlainDate()),
-      formatDate(plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence))),
+      formatDate(plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, displayTimezone))),
     );
   } else {
     date = localeText.eventAriaLabelDateRange(formatDateTime(start), formatDateTime(end));

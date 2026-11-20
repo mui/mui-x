@@ -232,8 +232,8 @@ catalogs:
       specifier: ^9.5.0
       version: 9.5.0
     '@mui/x-internal-exceljs-fork':
-      specifier: 5.0.0
-      version: 5.0.0
+      specifier: 5.0.1
+      version: 5.0.1
     '@playwright/test':
       specifier: 1.65.0
       version: 1.65.0
@@ -1066,7 +1066,7 @@ importers:
         version: link:../x-charts-vendor/build
       '@mui/x-internal-exceljs-fork':
         specifier: 'catalog:'
-        version: 5.0.0
+        version: 5.0.1
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1546,7 +1546,7 @@ importers:
         version: link:../x-data-grid-pro/build
       '@mui/x-internal-exceljs-fork':
         specifier: 'catalog:'
-        version: 5.0.0
+        version: 5.0.1
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1624,6 +1624,9 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
+      use-sync-external-store:
+        specifier: 'catalog:'
+        version: 1.7.0(react@19.3.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1640,6 +1643,9 @@ importers:
       '@types/react-transition-group':
         specifier: 'catalog:'
         version: 4.4.12(@types/react@19.3.0)
+      '@types/use-sync-external-store':
+        specifier: 'catalog:'
+        version: 1.7.0
       react:
         specifier: 'catalog:'
         version: 19.3.1
@@ -2408,8 +2414,8 @@ importers:
         specifier: 'catalog:'
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
       '@mui/internal-benchmark':
-        specifier: 0.1.1-canary.14
-        version: 0.1.1-canary.14(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
+        specifier: 0.1.1-canary.15
+        version: 0.1.1-canary.15(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -4571,8 +4577,8 @@ packages:
     peerDependencies:
       '@babel/core': ^8.0.0
 
-  '@mui/internal-benchmark@0.1.1-canary.14':
-    resolution: {integrity: sha512-Ea6lfH8qi0L5QmtGuLxrN9TCDQt26O95KTDTnxeJ7e3AyIjdFTYbeEy7crFxZWWx3Z53x/kLEiwu3sFmIpnbSA==}
+  '@mui/internal-benchmark@0.1.1-canary.15':
+    resolution: {integrity: sha512-eLITxfkfArD88R6pNPJbf1gSd9f5zk2V/ojnz/tF9EtEZNhwm6+ijOjOygXrHrp6cVbGGDovC/om4gec9rlkRw==}
     hasBin: true
     peerDependencies:
       '@playwright/test': '>=1.50.0'
@@ -4816,8 +4822,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/x-internal-exceljs-fork@5.0.0':
-    resolution: {integrity: sha512-gn73zruZbZFspNDRGVxhXG500VNHvCUrqTk/pL9c4Jh7NX/O2wg1OCBl73jxAjZgwP4QAVX/4LnjVIQlM/RWNA==}
+  '@mui/x-internal-exceljs-fork@5.0.1':
+    resolution: {integrity: sha512-xVTYBRo5CA90gCX8/XMQ8KiA7ksXgCF9hPLupzfnwjxVzdHK045ux9BvnzsCTwbXawMNXrAPn+iSpNyXmZzMlQ==}
     engines: {node: '>=14.17.0'}
 
   '@mui/x-internals@7.29.0':
@@ -5828,8 +5834,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@14.18.63':
-    resolution: {integrity: sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==}
+  '@types/node@20.19.43':
+    resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
 
   '@types/node@22.20.5':
     resolution: {integrity: sha512-U2+DNr+wSjpsTS/wZGYHq7GcwfuSmKiKvoPvK22zwTlRhU91yOniN4qRR5KhIjvif7ysw/dz/hKmfDH0Ris4aA==}
@@ -13519,7 +13525,7 @@ snapshots:
       '@babel/core': 8.1.0
       resolve: 1.22.14
 
-  '@mui/internal-benchmark@0.1.1-canary.14(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)':
+  '@mui/internal-benchmark@0.1.1-canary.15(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)':
     dependencies:
       '@babel/runtime': 8.1.0
       '@playwright/test': 1.65.0
@@ -13976,9 +13982,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@mui/x-internal-exceljs-fork@5.0.0':
+  '@mui/x-internal-exceljs-fork@5.0.1':
     dependencies:
-      '@types/node': 14.18.63
+      '@types/node': 20.19.43
       dayjs: 1.11.23
       fast-csv: 5.0.8
       jszip: 3.10.2
@@ -14945,7 +14951,9 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
-  '@types/node@14.18.63': {}
+  '@types/node@20.19.43':
+    dependencies:
+      undici-types: 6.21.0
 
   '@types/node@22.20.5':
     dependencies:
