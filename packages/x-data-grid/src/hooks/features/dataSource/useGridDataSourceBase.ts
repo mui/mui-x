@@ -430,6 +430,18 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     debouncedFetchRows();
   }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]);
 
+  const handleSortOrPageChange = React.useCallback(() => {
+    if (
+      apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) ===
+      DataSourceRowsUpdateStrategy.GroupedData
+    ) {
+      // Sorting and pagination reset the loaded tree without changing its hierarchy.
+      // Include loaded ancestors so retained descendants stay connected after the reset.
+      apiRef.current.retainRowSelection(GRID_ROOT_GROUP_ID);
+    }
+    handleFetchRowsOnParamsChange();
+  }, [apiRef, handleFetchRowsOnParamsChange]);
+
   const hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef);
   const handleFetchRowsOnFilterModelChange = React.useCallback<
     GridEventListener<'filterModelChange'>
@@ -438,9 +450,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       if (!hasFilterModelChanged(newFilterModel)) {
         return;
       }
+      apiRef.current.clearRowSelectionRetention();
       handleFetchRowsOnParamsChange();
     },
-    [hasFilterModelChanged, handleFetchRowsOnParamsChange],
+    [apiRef, hasFilterModelChanged, handleFetchRowsOnParamsChange],
   );
 
   const isFirstRender = React.useRef(true);
@@ -551,12 +564,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     cache,
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
-      sortModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
+      sortModelChange: runIf(standardRowsUpdateStrategyActive, handleSortOrPageChange),
       filterModelChange: runIf(
         standardRowsUpdateStrategyActive,
         handleFetchRowsOnFilterModelChange,
       ),
-      paginationModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
+      paginationModelChange: runIf(standardRowsUpdateStrategyActive, handleSortOrPageChange),
     },
   };
 };

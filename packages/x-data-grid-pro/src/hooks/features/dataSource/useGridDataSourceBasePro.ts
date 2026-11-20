@@ -129,6 +129,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       const tree = gridRowTreeSelector(apiRef);
       const rowsLookup = gridRowsLookupSelector(apiRef);
       const fetchedRowIds = new Set(rows.map((row) => gridRowIdSelector(apiRef, row)));
+      apiRef.current.reconcileRowSelectionRetention(groupId, fetchedRowIds);
       const currentGroupRows = getTreeNodeDescendants(tree, groupId, false, true);
       const rowsToDelete: GridRowModelUpdate[] = [];
 
@@ -359,6 +360,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       rowNode.children.forEach(traverse);
 
       if (removedRows.length > 0) {
+        apiRef.current.retainRowSelection(parentId);
         apiRef.current.updateNestedRows(removedRows, (rowNode as GridDataSourceGroupNode).path);
       }
     },
@@ -383,6 +385,25 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       }
 
       if (keepChildrenExpanded === false) {
+        apiRef.current.retainRowSelection(GRID_ROOT_GROUP_ID);
+      }
+      // A group missing from one page may still exist on another.
+      const rootCount = response.rowCount ?? props.rowCount;
+      const firstRangeMayHaveMoreRows =
+        response.pageInfo?.hasNextPage ??
+        (props.pagination || response.rows.length >= params.fetchParams.end + 1);
+      const hasAllRootRows =
+        rootCount !== undefined && rootCount >= 0
+          ? response.rows.length === rootCount
+          : params.fetchParams.start === 0 && !firstRangeMayHaveMoreRows;
+      if (hasAllRootRows) {
+        apiRef.current.reconcileRowSelectionRetention(
+          GRID_ROOT_GROUP_ID,
+          new Set(response.rows.map((row) => gridRowIdSelector(apiRef, row))),
+        );
+      }
+
+      if (keepChildrenExpanded === false) {
         apiRef.current.setRows(response.rows);
       } else {
         const tree = gridRowTreeSelector(apiRef);
@@ -398,6 +419,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         });
         const rowsToDelete: GridRowModelUpdate[] = [];
         if (parentRowsToDelete.size > 0) {
+          if (!hasAllRootRows) {
+            apiRef.current.retainRowSelection(GRID_ROOT_GROUP_ID);
+          }
           parentRowsToDelete.forEach((parentRowId) => {
             const descendants = getTreeNodeDescendants(tree, parentRowId, false, false);
             for (let i = descendants.length - 1; i >= 0; i -= 1) {
@@ -421,7 +445,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       );
       startPolling();
     },
-    [apiRef, startPolling],
+    [apiRef, props.pagination, props.rowCount, startPolling],
   );
 
   const handleNestedDataUpdate = React.useCallback<
@@ -461,6 +485,17 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     resetDataSourceState,
     removeChildrenRows,
   };
+
+  const previousMode = React.useRef({ lazyLoading: props.lazyLoading, treeData: props.treeData });
+  React.useEffect(() => {
+    if (
+      previousMode.current.lazyLoading !== props.lazyLoading ||
+      previousMode.current.treeData !== props.treeData
+    ) {
+      apiRef.current.clearRowSelectionRetention();
+      previousMode.current = { lazyLoading: props.lazyLoading, treeData: props.treeData };
+    }
+  }, [apiRef, props.lazyLoading, props.treeData]);
 
   React.useEffect(() => {
     if (
