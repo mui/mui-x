@@ -1,9 +1,11 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import type { RefObject } from '@mui/x-internals/types';
 import { errorOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
@@ -126,7 +128,14 @@ export const useGridCellEditing = (
         return;
       }
       const newParams = { ...params, reason: GridCellEditStopReasons.cellFocusOut };
-      apiRef.current.publishEvent('cellEditStop', newParams, event);
+      const publish = () => apiRef.current.publishEvent('cellEditStop', newParams, event);
+      // React 17 and React 18 legacy roots do not batch updates in native listeners. Without the
+      // batch, the row commits before the undo history and other `cellEditStop` listeners run.
+      if (isReactVersionAtLeast(19)) {
+        publish();
+      } else {
+        ReactDOM.unstable_batchedUpdates(publish);
+      }
     },
     [apiRef],
   );
