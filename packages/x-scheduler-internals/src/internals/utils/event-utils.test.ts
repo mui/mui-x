@@ -24,6 +24,7 @@ import {
 import { getDayListFromPlainDates } from '../../get-day-list';
 import { BaseTemporal } from './base-temporal';
 import { getDayNumber } from './plain-date-utils/plainDate';
+import { toEpochMs } from './plain-date-utils/timeZone';
 import { createEventRangeIndex } from './event-range-index';
 
 describe('event-utils', () => {
@@ -33,7 +34,7 @@ describe('event-utils', () => {
       lastPlainDate: BaseTemporal.PlainDate.from('2024-01-18'),
       timezone: 'default',
     });
-    const dayNumbers = days.map((day) => getDayNumber(day.plainDate));
+    const dayNumbers = days.map((day) => getDayNumber(day));
 
     const dayKeys = ['2024-01-14', '2024-01-15', '2024-01-16', '2024-01-17', '2024-01-18'];
 
@@ -42,7 +43,7 @@ describe('event-utils', () => {
         .span('2024-01-15', '2024-01-18', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toEqual([dayKeys[1], dayKeys[2], dayKeys[3]]);
     });
 
@@ -51,7 +52,7 @@ describe('event-utils', () => {
         .span('2024-01-10', '2024-01-13', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toHaveLength(0);
     });
 
@@ -60,7 +61,7 @@ describe('event-utils', () => {
         .span('2024-01-20', '2024-01-23', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toHaveLength(0);
     });
 
@@ -69,7 +70,7 @@ describe('event-utils', () => {
         .span('2024-01-13', '2024-01-17', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toEqual([dayKeys[0], dayKeys[1], dayKeys[2]]);
     });
 
@@ -78,7 +79,7 @@ describe('event-utils', () => {
         .span('2024-01-16', '2024-01-20', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toEqual([dayKeys[2], dayKeys[3], dayKeys[4]]);
     });
   });
@@ -127,25 +128,26 @@ describe('event-utils', () => {
           lastPlainDate: firstPlainDate.add({ days: 6 }),
           timezone,
         });
-        const dayNumbers = days.map((item) => getDayNumber(item.plainDate));
+        const dayNumbers = days.map((item) => getDayNumber(item));
+        const dayKeys = days.map((item) => item.toString());
 
         for (const recurringEventsPlugin of [null, schedulerRecurringEventsPlugin]) {
           const [occurrence] = getOccurrencesFromEvents({
-            start: days[0].timestamp,
-            end: days[days.length - 1].timestamp,
+            start: toEpochMs(days[0], timezone),
+            end: toEpochMs(days[days.length - 1], timezone),
             eventRangeIndex: createEventRangeIndex([event], recurringEventsPlugin != null),
             visibleResources: {},
             displayTimezone: timezone,
             recurringEventsPlugin,
           });
 
-          expect(occurrence.end.plainDateTime.toString()).to.equal(end);
-          expect(getOccurrenceLastDayNumber(occurrence, timezone)).to.equal(
+          expect(occurrence.end.toPlainDateTime().toString()).to.equal(end);
+          expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
             getDayNumber(BaseTemporal.PlainDate.from(lastDay)),
           );
-          expect(
-            getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers, timezone),
-          ).to.deep.equal(expectedDays);
+          expect(getDaysTheOccurrenceIsVisibleOn(occurrence, dayNumbers, dayKeys)).to.deep.equal(
+            expectedDays,
+          );
         }
       },
     );
@@ -157,7 +159,7 @@ describe('event-utils', () => {
         .toOccurrence();
 
       // A timed occurrence ending at midnight covers the start of the next day.
-      expect(getOccurrenceLastDayNumber(occurrence, 'UTC')).to.equal(
+      expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
         getDayNumber(BaseTemporal.PlainDate.from('2026-03-29')),
       );
     });
@@ -266,7 +268,7 @@ describe('event-utils', () => {
           recurringEventsPlugin: mode === 'recurring' ? schedulerRecurringEventsPlugin : null,
         });
 
-        expect(result.map((occurrence) => occurrence.start.plainDateTime.day)).to.deep.equal(
+        expect(result.map((occurrence) => occurrence.start.day)).to.deep.equal(
           mode === 'recurring' ? [15, 17] : [15],
         );
         for (const occurrence of result) {

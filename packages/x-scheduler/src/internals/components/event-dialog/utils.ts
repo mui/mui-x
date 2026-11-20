@@ -186,9 +186,11 @@ function readDateFieldExclusiveEndMs(rawDate: string, timezone: string): number 
 }
 
 /**
- * Formats a date-time for the `yyyy-MM-dd` and `HH:mm` fields.
+ * Formats a date-time or a zoned date-time for the `yyyy-MM-dd` and `HH:mm` fields.
  */
-export function formatDateAndTimeFields(value: BaseTemporal.PlainDateTime): {
+export function formatDateAndTimeFields(
+  value: BaseTemporal.PlainDateTime | BaseTemporal.ZonedDateTime,
+): {
   date: string;
   time: string;
 } {
@@ -420,7 +422,7 @@ export function getRecurrenceRuleBound(
   bound: 'start' | 'end',
 ): number {
   if (!resent || findInvalidRangeField(values, displayTimezone) != null) {
-    return occurrence[bound].timestamp;
+    return occurrence[bound].epochMilliseconds;
   }
   return computeRange(values, displayTimezone)[bound];
 }

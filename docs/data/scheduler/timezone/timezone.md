@@ -95,16 +95,17 @@ Read its day in `displayTimezone`, as the timezone of the browser can put it on 
 ## Reading occurrence dates
 
 Callbacks such as `onEventEditingStart` and hooks such as `useEventDialogOccurrence()` provide an occurrence with resolved `start` and `end` values.
-Each bound contains:
+Each bound is a `BaseTemporal.ZonedDateTime` in `displayTimezone`:
 
-- `plainDateTime`: a `BaseTemporal.PlainDateTime` with the date and wall-clock time in `displayTimezone`.
-- `timestamp`: the instant as milliseconds since the Unix epoch.
+- Its date and time fields, such as `year`, `month`, `day`, `hour` and `minute`, are the wall-clock time in `displayTimezone`.
+- `epochMilliseconds` is the instant, in milliseconds since the Unix epoch.
+- `timeZoneId` is the display timezone, which is the timezone of the system for `"default"`, and `offset` is its offset from UTC at this instant.
 
 For all-day occurrences, `end` is exclusive: an occurrence covering July 1 ends at the start of July 2 in the display timezone.
-Its last day is the day before the date of `end`: `occurrence.end.plainDateTime.toPlainDate().add({ days: -1 })`.
-The event models use the same exclusive end, as `YYYY-MM-DD` dates: to write an all-day occurrence back to a model, use `occurrence.start.plainDateTime.toPlainDate().toString()` and `occurrence.end.plainDateTime.toPlainDate().toString()`.
+Its last day is the day before the date of `end`: `occurrence.end.toPlainDate().add({ days: -1 })`.
+The event models use the same exclusive end, as `YYYY-MM-DD` dates: to write an all-day occurrence back to a model, use `occurrence.start.toPlainDate().toString()` and `occurrence.end.toPlainDate().toString()`.
 All-day events are not affected by `displayTimezone` nor by their `timezone`: they cover the same dates everywhere.
-The date and time fields have no UTC offset; use `timestamp` to distinguish the two instances of an hour repeated by a daylight saving transition.
+The `offset` tells apart the two instances of an hour repeated by a daylight saving transition.
 
 Import `BaseTemporal` to read and compare these values:
 
@@ -112,32 +113,27 @@ Import `BaseTemporal` to read and compare these values:
 import { BaseTemporal } from '@mui/x-scheduler/base-temporal';
 
 const firstDay = BaseTemporal.PlainDate.from('2025-07-01');
-occurrence.start.plainDateTime.toPlainDate().equals(firstDay);
-BaseTemporal.PlainDateTime.compare(
-  occurrence.start.plainDateTime,
-  occurrence.end.plainDateTime,
-);
+occurrence.start.toPlainDate().equals(firstDay);
+BaseTemporal.ZonedDateTime.compare(occurrence.start, occurrence.end);
 ```
 
 The same namespace is available from `@mui/x-scheduler-premium/base-temporal`.
 It provides a subset of Temporal for reading and comparing dates.
-To format a date as the Scheduler displays it, format its fields, which are already in `displayTimezone`.
-Reading them in UTC keeps the timezone of the browser out:
+To format a date as the Scheduler displays it, format its instant in its timezone:
 
 ```ts
-const { plainDateTime: date } = occurrence.start;
 const label = new Intl.DateTimeFormat('en-US', {
   dateStyle: 'medium',
   timeStyle: 'short',
-  timeZone: 'UTC',
-}).format(Date.UTC(date.year, date.month - 1, date.day, date.hour, date.minute));
+  timeZone: occurrence.start.timeZoneId,
+}).format(occurrence.start.epochMilliseconds);
 ```
 
-Use `timestamp` for instants and durations:
+Use `epochMilliseconds` for instants and durations:
 
 ```ts
 const durationMinutes =
-  (occurrence.end.timestamp - occurrence.start.timestamp) / 60_000;
+  (occurrence.end.epochMilliseconds - occurrence.start.epochMilliseconds) / 60_000;
 ```
 
 The occurrence's `timezone` and `rrule` describe the original event; the rule of a timed event is evaluated in its timezone, the rule of an all-day event on its dates.

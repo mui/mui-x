@@ -238,8 +238,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       const edited = store.state.editingOccurrence!.occurrence;
       // The display timezone is UTC.
-      expect(edited.start.plainDateTime.toString()).to.equal('2025-07-03T10:00:00');
-      expect(edited.end.plainDateTime.toString()).to.equal('2025-07-03T11:00:00');
+      expect(edited.start.toPlainDateTime().toString()).to.equal('2025-07-03T10:00:00');
+      expect(edited.end.toPlainDateTime().toString()).to.equal('2025-07-03T11:00:00');
     });
 
     it('should keep a pushed all-day successor all-day and day-aligned once serialized', () => {
@@ -586,7 +586,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         rejection: { code: 'unwritableEventMovedError', params: { title: eventB.title } },
       });
       expect(onEventsChange.mock.calls.length).to.equal(0);
-      expect(store.state.processedEventLookup.get('a')!.end.timestamp).to.equal(
+      expect(store.state.processedEventLookup.get('a')!.end.epochMilliseconds).to.equal(
         date('2025-07-03T10:00:00Z').getTime(),
       );
     });

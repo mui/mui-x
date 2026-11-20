@@ -1,4 +1,4 @@
-import type { BaseTemporal } from '../base-temporal';
+import { BaseTemporal } from '../base-temporal';
 import { isoDateToDayNumber, MS_PER_DAY } from './dayNumber';
 import {
   getDayNumber,
@@ -56,7 +56,13 @@ function readOffset(format: TimezoneOffsets['format'], epochMs: number): number 
  * The IANA identifier of a timezone, the timezone of the system for `'default'`.
  */
 export function getTimezoneId(timezone: string): string {
-  return timezone === 'default' ? Intl.DateTimeFormat().resolvedOptions().timeZone : timezone;
+  if (timezone !== 'default') {
+    return timezone;
+  }
+  const systemTimezone: string | undefined = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // An unknown `TZ`, on a server for example, leaves the timezone of the system without an
+  // identifier, and `Date` reads it as UTC.
+  return systemTimezone == null || systemTimezone === 'Etc/Unknown' ? 'UTC' : systemTimezone;
 }
 
 function getSystemTimezoneOffsetMs(epochMs: number): number {
@@ -122,6 +128,20 @@ export function toLocalMs(epochMs: number, timezone: string): number {
  */
 export function toPlainDate(epochMs: number, timezone: string): BaseTemporal.PlainDate {
   return plainDateFromDayNumber(toLocalDayNumber(epochMs, timezone));
+}
+
+const NANOSECONDS_PER_MILLISECOND = 1_000_000n;
+
+/**
+ * The zoned date-time of an instant in `timezone`.
+ * `'default'` reads the identifier of the timezone of the system with `Intl`, which takes tens of
+ * microseconds: the stores hold their display timezone by its identifier, read once.
+ */
+export function toZonedDateTime(epochMs: number, timezone: string): BaseTemporal.ZonedDateTime {
+  return new BaseTemporal.ZonedDateTime(
+    BigInt(epochMs) * NANOSECONDS_PER_MILLISECOND,
+    getTimezoneId(timezone),
+  );
 }
 
 /**
@@ -196,6 +216,22 @@ function isPlainDateTime(
   value: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
 ): value is BaseTemporal.PlainDateTime {
   return 'hour' in value;
+}
+
+/**
+ * The instants the days from `first` to `last` cover in `timezone`: the first instant of `first`,
+ * and the last instant before the day after `last` starts. The first instant of a day whose
+ * midnight a DST transition skips is the end of the gap.
+ */
+export function getPlainDateRangeMs(
+  first: BaseTemporal.PlainDate,
+  last: BaseTemporal.PlainDate,
+  timezone: string,
+): { start: number; end: number } {
+  return {
+    start: toEpochMs(first, timezone),
+    end: toEpochMs(last.add({ days: 1 }), timezone) - 1,
+  };
 }
 
 /**

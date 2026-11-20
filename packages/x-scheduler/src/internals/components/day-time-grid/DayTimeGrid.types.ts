@@ -1,13 +1,11 @@
-import type {
-  EventCalendarTimeGridEvents,
-  SchedulerProcessedDay,
-} from '@mui/x-scheduler-internals/models';
+import type { EventCalendarTimeGridEvents } from '@mui/x-scheduler-internals/models';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 export interface DayTimeGridProps extends ExportedDayTimeGridProps {
   /**
-   * The days to render in the time grid view.
+   * The days to render in the time grid view, read in the display timezone.
    */
-  days: SchedulerProcessedDay[];
+  days: BaseTemporal.PlainDate[];
   /**
    * Inclusive start of the hour range displayed in the time grid (whole hour between
    * 0 and 24, validated by `getDisplayedHourRange`).
