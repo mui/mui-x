@@ -8,7 +8,7 @@ import { PickerContext } from '../hooks/usePickerContext';
 describe('<PickersActionBar />', () => {
   const { render } = createPickerRenderer();
 
-  const renderWithContext = (element: React.ReactElement) => {
+  const renderWithContext = (element: React.ReactElement, disabled = false) => {
     const spys = {
       setValue: vi.fn(),
       setView: vi.fn(),
@@ -20,6 +20,7 @@ describe('<PickersActionBar />', () => {
       goToNextStep: vi.fn(),
       goToPreviousStep: vi.fn(),
       hasNextStep: false,
+      disabled,
     } as any;
 
     const { user } = render(
@@ -65,6 +66,17 @@ describe('<PickersActionBar />', () => {
 
     await user.click(screen.getByText(/today/i));
     expect(setValueToToday.mock.calls.length).to.equal(1);
+  });
+
+  it('disables the action buttons when the picker is disabled', () => {
+    renderWithContext(
+      <PickersActionBar actions={['clear', 'cancel', 'accept', 'today', 'next', 'nextOrAccept']} />,
+      true,
+    );
+
+    const buttons = screen.getAllByRole<HTMLButtonElement>('button');
+    expect(buttons.length).to.equal(6);
+    expect(buttons.every((button) => button.disabled)).to.equal(true);
   });
 
   it('should respect actions order', () => {
