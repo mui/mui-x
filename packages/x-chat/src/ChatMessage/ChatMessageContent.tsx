@@ -439,7 +439,6 @@ const ChatToolPartHeader = styled('summary', {
   // Chevron renders at the end of the header (after icon, title, state).
   '&::after': {
     content: '""',
-    boxSizing: 'border-box',
     display: 'inline-block',
     width: 5,
     height: 5,
@@ -670,7 +669,6 @@ const ChatToolPartSectionSummaryStyled = styled('summary', {
   // Compact chevron — uses CSS-border square so it scales with currentColor.
   '&::before': {
     content: '""',
-    boxSizing: 'border-box',
     display: 'inline-block',
     width: 5,
     height: 5,
@@ -790,7 +788,6 @@ const ChatToolPartSectionContentWrapper = styled('div', {
 }));
 
 const ChatToolPartSectionContentPre = styled('pre')(({ theme }) => ({
-  boxSizing: 'border-box',
   margin: 0,
   padding: theme.spacing(1, 1.25),
   paddingRight: theme.spacing(4.5), // reserve room for the copy button
@@ -1007,7 +1004,6 @@ const ChatReasoningPartSummaryStyled = styled('summary', {
   },
   '&::after': {
     content: '""',
-    boxSizing: 'border-box',
     display: 'inline-block',
     width: 5,
     height: 5,
