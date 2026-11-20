@@ -25,7 +25,7 @@
     "@emotion/styled": "catalog:",
     "@mui/icons-material": "catalog:",
     "@mui/internal-core-docs": "catalog:",
-    "@mui/internal-docs-infra": "0.13.1-canary.29",
+    "@mui/internal-docs-infra": "catalog:",
     "@mui/material": "catalog:",
     "@mui/material-nextjs": "^9.5.0",
     "@mui/stylis-plugin-rtl": "catalog:",
@@ -89,7 +89,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
-    "@mui/internal-docs-utils": "4.0.1-canary.0",
+    "@mui/internal-docs-utils": "4.0.1-canary.1",
     "@types/chance": "catalog:",
     "@types/d3-scale-chromatic": "3.1.0",
     "@types/luxon": "catalog:",

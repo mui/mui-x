@@ -1,0 +1,32 @@
+import { DataGrid } from '@mui/x-data-grid';
+
+const rows = [
+  {
+    id: 1,
+    username: '@MUI',
+    age: 20,
+  },
+];
+
+export default function ColumnSizingGrid() {
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      {/* @focus-start */}
+      <DataGrid
+        columns={[
+          { field: 'id' },
+          {
+            field: 'username',
+            width: 125,
+            minWidth: 150,
+            maxWidth: 200,
+            rowHeader: true,
+          },
+          { field: 'age', resizable: false },
+        ]}
+        rows={rows}
+      />
+      {/* @focus-end */}
+    </div>
+  );
+}

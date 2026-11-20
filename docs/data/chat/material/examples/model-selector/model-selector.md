@@ -14,7 +14,7 @@ No new component is needed—drop any Material UI control into `slots.conversat
 
 The demo below shows a `Select` mounted in the `conversationHeaderActions` slot, with model state owned by the selector component:
 
-{{"demo": "ModelSelector.js", "bg": "inline"}}
+{{"component": "file://./demos/model-selector/index.ts", "bg": "inline"}}
 
 ## Mounting the model selector
 

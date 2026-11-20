@@ -76,7 +76,7 @@ For standard rendering, the built-in hooks (`useChat()`, `useMessageIds()`, `use
 
 The demo below shows how to combine `useChatStore()` with `chatSelectors` to render live counts and streaming state:
 
-{{"demo": "AdvancedStoreAccessHeadlessChat.js"}}
+{{"component": "file://./demos/advanced-store-access-headless-chat/index.ts"}}
 
 ## Key takeaways
 

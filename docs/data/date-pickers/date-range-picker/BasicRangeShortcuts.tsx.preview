@@ -1,9 +1,0 @@
-<StaticDateRangePicker
-  slotProps={{
-    shortcuts: {
-      items: shortcutsItems,
-    },
-    actionBar: { actions: [] },
-  }}
-  calendars={2}
-/>

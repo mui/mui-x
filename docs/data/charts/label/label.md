@@ -17,7 +17,7 @@ The label appears in different locations such as the legend and tooltip.
 The Pie chart has specific behavior described in [Pie chart labels](#pie-chart-labels) below.
 :::
 
-{{"demo": "BasicLabel.js"}}
+{{"component": "file://./demos/basic-label/index.ts"}}
 
 ## Conditional formatting
 
@@ -27,7 +27,7 @@ The function receives `location` as its first argument, which can have the follo
 - `'legend'`: Format the label in the [Legend](/x/react-charts/legend/)
 - `'tooltip'`: Format the label in the [Tooltip](/x/react-charts/tooltip/)
 
-{{"demo": "FunctionLabel.js"}}
+{{"component": "file://./demos/function-label/index.ts"}}
 
 ## Pie chart labels
 
@@ -41,4 +41,4 @@ The `location` argument can have the following values:
 - `'tooltip'`: Format the label in the [Tooltip](/x/react-charts/tooltip/)
 - `'arc'`: Format the [Arc label](/x/react-charts/pie/#labels) when `arcLabel` is set to `'label'`
 
-{{"demo": "PieLabel.js"}}
+{{"component": "file://./demos/pie-label/index.ts"}}

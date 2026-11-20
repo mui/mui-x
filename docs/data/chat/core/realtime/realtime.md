@@ -14,7 +14,7 @@ The runtime calls it on mount and cleans it up on unmount, keeping the subscript
 
 The demo below shows real-time events flowing into the runtime:
 
-{{"demo": "../examples/realtime/RealtimeHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/realtime/demos/realtime-headless-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Subscription lifecycle
 

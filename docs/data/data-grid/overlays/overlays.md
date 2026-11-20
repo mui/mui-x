@@ -34,19 +34,19 @@ The type of loading overlay to display can be set via `slotProps.loadingOverlay`
 
 An animated placeholder of the Data Grid.
 
-{{"demo": "LoadingOverlaySkeleton.js", "bg": "inline"}}
+{{"component": "file://./demos/loading-overlay-skeleton/index.ts", "bg": "inline"}}
 
 ### Linear progress
 
 An indeterminate linear progress bar.
 
-{{"demo": "LoadingOverlayLinearProgress.js", "bg": "inline"}}
+{{"component": "file://./demos/loading-overlay-linear-progress/index.ts", "bg": "inline"}}
 
 ### Circular progress
 
 A circular loading spinner.
 
-{{"demo": "LoadingOverlayCircularProgress.js", "bg": "inline"}}
+{{"component": "file://./demos/loading-overlay-circular-progress/index.ts", "bg": "inline"}}
 
 ### Custom component
 
@@ -54,7 +54,7 @@ If you want to customize the no-rows overlay, a component can be passed to the `
 
 In the following demo, a labeled determinate [CircularProgress](/material-ui/react-progress/#circular-determinate) component is rendered in place of the default loading overlay, with some additional _Loading rows…_ text.
 
-{{"demo": "LoadingOverlayCustom.js", "bg": "inline"}}
+{{"component": "file://./demos/loading-overlay-custom/index.ts", "bg": "inline"}}
 
 ## No columns overlay
 
@@ -62,7 +62,7 @@ The no-columns overlay is displayed when the Data Grid has no columns, or when a
 
 The "Manage columns" button is displayed when all columns are hidden and `disableColumnSelector` is `false`.
 
-{{"demo": "NoColumnsOverlay.js", "bg": "inline"}}
+{{"component": "file://./demos/no-columns-overlay/index.ts", "bg": "inline"}}
 
 ### Custom component
 
@@ -70,13 +70,13 @@ If you want to customize the no-columns overlay, a component can be passed to th
 
 In the following demo, an illustration is added on top of the default "No columns" message.
 
-{{"demo": "NoColumnsOverlayCustom.js", "bg": "inline"}}
+{{"component": "file://./demos/no-columns-overlay-custom/index.ts", "bg": "inline"}}
 
 ## No rows overlay
 
 The no-rows overlay is displayed when the Data Grid has no rows.
 
-{{"demo": "NoRowsOverlay.js", "bg": "inline"}}
+{{"component": "file://./demos/no-rows-overlay/index.ts", "bg": "inline"}}
 
 ### Custom component
 
@@ -84,13 +84,13 @@ If you want to customize the no-rows overlay, a component can be passed to the `
 
 In the following demo, an illustration is added on top of the default "No rows" message.
 
-{{"demo": "NoRowsOverlayCustom.js", "bg": "inline"}}
+{{"component": "file://./demos/no-rows-overlay-custom/index.ts", "bg": "inline"}}
 
 ## No results overlay
 
 The no-results overlay is displayed when the Data Grid has no results after filtering.
 
-{{"demo": "NoResultsOverlay.js", "bg": "inline"}}
+{{"component": "file://./demos/no-results-overlay/index.ts", "bg": "inline"}}
 
 ### Custom component
 
@@ -98,13 +98,13 @@ If you want to customize the no results overlay, a component can be passed to th
 
 In the following demo, an illustration is added on top of the default "No results found" message.
 
-{{"demo": "NoResultsOverlayCustom.js", "bg": "inline"}}
+{{"component": "file://./demos/no-results-overlay-custom/index.ts", "bg": "inline"}}
 
 ## Empty pivot overlay
 
 The empty pivot overlay is displayed when pivot mode is enabled but fields have been added to the rows section.
 
-{{"demo": "EmptyPivotOverlay.js", "bg": "inline"}}
+{{"component": "file://./demos/empty-pivot-overlay/index.ts", "bg": "inline"}}
 
 ### Custom component
 

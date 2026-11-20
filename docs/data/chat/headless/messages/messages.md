@@ -14,7 +14,7 @@ githubLabel: 'scope: chat'
 
 The demo below shows a grouped message timeline composed from `MessageGroup`, `Message.Root`, and the default subparts:
 
-{{"demo": "../examples/grouped-message-timeline/GroupedMessageTimeline.js", "hideToolbar": true}}
+{{"component": "file://../examples/grouped-message-timeline/demos/grouped-message-timeline/index.ts", "hideToolbar": true}}
 
 ## Message surface primitives
 

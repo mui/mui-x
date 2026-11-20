@@ -20,7 +20,7 @@ function CustomLegend() {
 }
 ```
 
-{{"demo": "UseLegend.js"}}
+{{"component": "file://./demos/use-legend/index.ts"}}
 
 ## Return value
 

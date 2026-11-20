@@ -20,9 +20,9 @@ Selected files are queued as draft attachments and previewed in the composer are
 The demos below let you tune the attach button and the pending-attachment list:
 The attachment-list playground seeds draft attachments directly into the chat store so that every status can be previewed without uploading files — in an app, attachments are added through the file picker or `addAttachment()`.
 
-{{"demo": "ChatComposerAttachButtonPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-composer-attach-button-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
-{{"demo": "ChatComposerAttachmentListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-composer-attachment-list-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Disabling attachments
 
@@ -33,7 +33,7 @@ To hide the attach button entirely, set the `attachments` feature flag to `false
 <ChatBox adapter={adapter} features={{ attachments: false }} />
 ```
 
-{{"demo": "../../material/composer/ComposerHiddenAttachButton.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/composer/demos/composer-hidden-attach-button/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Validating attachments
 
@@ -59,7 +59,7 @@ Pass a configuration object to the `attachments` feature flag to control which f
 
 Try attaching a file that is not an image or PDF, or one larger than 500 KB:
 
-{{"demo": "AttachmentValidation.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/attachment-validation/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Attachments configuration reference
 

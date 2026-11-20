@@ -19,7 +19,7 @@ The actions area occupies the `actions` grid area of the message row; the reveal
 
 Toggle action buttons, variant, and density to preview the hover-revealed toolbar:
 
-{{"demo": "ChatMessageActionsPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-actions-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Import
 
@@ -82,14 +82,14 @@ There are three ways to customize message actions:
 - The standalone `ChatMessageActions` component (custom layouts) exposes an `actions` slot whose slot props callback receives the message [owner state](#owner-state).
   :::
 
-{{"demo": "BasicMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/basic-message-actions/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Accessing message context
 
 The component you pass to the `messageActions` slot receives a `messageId` prop. Pass it to the `useMessage()` hook (exported from `@mui/x-chat/headless`) to read the current message and show different actions for user and assistant messages.
 Reach the runtime actions with [`useChatActions()`](/x/react-chat/core/hooks/)—it returns `sendMessage`, `retry`, `regenerate`, and the rest without subscribing to message state, so the toolbar does not re-render while a response streams:
 
-{{"demo": "RoleBasedMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/role-based-message-actions/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Adding actions declaratively
 
@@ -97,7 +97,7 @@ Instead of replacing the `messageActions` slot component, pass a function to `sl
 The function receives the message context, so you can target specific rows—for example, a working "Regenerate" button on assistant replies.
 Each action's `onClick` receives `(event, { message, chat })`; call `chat.regenerate(message.id)` to request a fresh reply through the runtime:
 
-{{"demo": "ExtraActionsMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/extra-actions-message-actions/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Owner state
 

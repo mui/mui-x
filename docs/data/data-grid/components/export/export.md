@@ -17,7 +17,7 @@ You can use the Export and [Toolbar](/x/react-data-grid/components/toolbar/) com
 
 The demo below shows how to add export triggers to a custom toolbar.
 
-{{"demo": "GridExportTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-export-trigger/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 
@@ -53,7 +53,7 @@ Below are some ways the Export components can be used.
 
 The demo below shows how to display export options within a menu on the toolbar.
 
-{{"demo": "GridExportMenu.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-export-menu/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Custom elements
 

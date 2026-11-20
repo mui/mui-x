@@ -1,0 +1,16 @@
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
+
+export default function BasicTimeRangePicker() {
+  return (
+    // @focus-start @padding 2
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['TimeRangePicker']}>
+        <TimeRangePicker />
+      </DemoContainer>
+    </LocalizationProvider>
+    // @focus-end
+  );
+}

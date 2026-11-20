@@ -62,7 +62,7 @@ The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `outp
 
 The demo below shows how `onToolCall` observes state transitions and feeds an external audit log:
 
-{{"demo": "ToolCallEventsHeadlessChat.js"}}
+{{"component": "file://./demos/tool-call-events-headless-chat/index.ts"}}
 
 ## Key takeaways
 

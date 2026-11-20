@@ -32,13 +32,13 @@ Use the content slot to customize the content of a `TreeItem` or replace it with
 The `slotProps` prop lets you pass props to the content component.
 The demo below shows how to pass an `sx` handler to the content of a `TreeItem`:
 
-{{"demo": "ContentSlotProps.js"}}
+{{"component": "file://./demos/content-slot-props/index.ts"}}
 
 #### Slot
 
 The demo below shows how to replace the content slot with a custom component.
 
-{{"demo": "ContentSlot.js"}}
+{{"component": "file://./demos/content-slot/index.ts"}}
 
 ### Label
 
@@ -49,13 +49,13 @@ Use the label slot to customize the `TreeItem` label or replace it with a custom
 The `slotProps` prop lets you pass props to the label component.
 The demo below shows how to pass an `id` attribute to the `TreeItem` label:
 
-{{"demo": "LabelSlotProps.js"}}
+{{"component": "file://./demos/label-slot-props/index.ts"}}
 
 #### Slot
 
 The demo below shows how to replace the label slot with a custom component.
 
-{{"demo": "LabelSlot.js"}}
+{{"component": "file://./demos/label-slot/index.ts"}}
 
 ### Checkbox
 
@@ -65,13 +65,13 @@ The checkbox is present on the items when `checkboxSelection` is enabled on the 
 
 You can pass props to the checkbox slot using the `slotProps` on the `TreeItem2` component.
 
-{{"demo": "CheckboxSlotProps.js"}}
+{{"component": "file://./demos/checkbox-slot-props/index.ts"}}
 
 #### Slot
 
 The demo below shows how to replace the checkbox slot with a custom component.
 
-{{"demo": "CheckboxSlot.js"}}
+{{"component": "file://./demos/checkbox-slot/index.ts"}}
 
 ## Basics
 
@@ -80,7 +80,7 @@ The demo below shows how to replace the checkbox slot with a custom component.
 Use the `itemChildrenIndentation` prop to change the indentation of nested items.
 By default, a nested item is indented 12 px from its parent item.
 
-{{"demo": "ItemChildrenIndentationProp.js"}}
+{{"component": "file://./demos/item-children-indentation-prop/index.ts"}}
 
 :::success
 If you're using a custom `TreeItem` and you want to override the padding, apply the following padding to your `content` element:
@@ -109,7 +109,7 @@ This makes it possible to build a fully custom layout for `TreeItem` components.
 
 The demo below shows how to get the props needed for each slot, and how to pass them correctly.
 
-{{"demo": "useTreeItemHookProperties.js"}}
+{{"component": "file://./demos/use-tree-item-hook-properties/index.ts"}}
 
 You can pass additional props to a slot—or override existing slots—by passing an object argument to the slot's props resolver, as shown below:
 
@@ -147,14 +147,14 @@ You can use these statuses to apply custom styling to the item or conditionally 
 `indeterminate` is `true` when the item isn't selected but some of its selectable descendants are.
 :::
 
-{{"demo": "useTreeItemHookStatus.js"}}
+{{"component": "file://./demos/use-tree-item-hook-status/index.ts"}}
 
 #### Imperative API
 
 The `publicAPI` object provides a number of methods to programmatically interact with the Tree View.
 You can use the `useTreeItem()` hook to access the `publicAPI` object from within a `TreeItem`.
 
-{{"demo": "useTreeItemHookPublicAPI.js"}}
+{{"component": "file://./demos/use-tree-item-hook-public-api/index.ts"}}
 
 See the Imperative API section on each feature page to learn more about the public API methods available to the Tree View.
 
@@ -184,7 +184,7 @@ To override the default interactions of `TreeItem`, set `event.defaultMuiPrevent
 You can select a `TreeItem` in a Tree View by clicking its content slot.
 The demo below shows how to handle selection when the user clicks on an icon.
 
-{{"demo": "HandleSelectionDemo.js"}}
+{{"component": "file://./demos/handle-selection-demo/index.ts"}}
 
 #### Checkbox selection
 
@@ -192,7 +192,7 @@ By default, checkbox selection is skipped if a `TreeItem` is disabled or if `dis
 You can create a custom handler for the `onChange` event on the checkbox slot to bypass these conditions.
 The demo below shows how to implement custom checkbox selection behavior.
 
-{{"demo": "HandleCheckboxSelectionDemo.js"}}
+{{"component": "file://./demos/handle-checkbox-selection-demo/index.ts"}}
 
 Visit the corresponding [`RichTreeView`](/x/react-tree-view/rich-tree-view/selection/) or [`SimpleTreeView`](/x/react-tree-view/simple-tree-view/selection/) docs, respectively, for more details on the selection API.
 
@@ -206,7 +206,7 @@ Use the `handleExpansion` interaction method for deeper customization of the `Tr
 
 The demo below shows how to introduce a new element that expands and collapses the `TreeItem`.
 
-{{"demo": "HandleExpansionDemo.js"}}
+{{"component": "file://./demos/handle-expansion-demo/index.ts"}}
 
 #### Label editing
 
@@ -235,4 +235,4 @@ The `useTreeItemModel()` hook lets you access the item model (the object passed 
 const item = useTreeItemModel(itemId);
 ```
 
-{{"demo": "LabelSlot.js"}}
+{{"component": "file://./demos/label-slot/index.ts"}}

@@ -1,1 +1,0 @@
-<DataGridPremium columns={columns} rows={rows} disableColumnMenu hideFooter />

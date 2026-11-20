@@ -14,7 +14,7 @@ The demo below shows how this feature works.
 Click the filter icon to open the menu and add the first filter—the Data Grid dynamically responds as you enter a value.
 Then click **Add Filter** to apply additional criteria.
 
-{{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-example-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Implementing multi-filters
 
@@ -24,7 +24,7 @@ The multi-filter feature is available by default with the Data Grid Pro and does
 
 To limit the user to only applying one filter to any given column, you can use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available to `slotProps.filterPanel` as shown in the demo below:
 
-{{"demo": "DisableMultiFiltersDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disable-multi-filters-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Disabling multi-filters
 
@@ -38,7 +38,7 @@ To disable multi-filtering, pass the `disableMultipleColumnsFiltering` to the Da
 
 To disable the **Add Filter** or **Remove All** buttons, pass `disableAddFilterButton` or `disableRemoveAllButton`, respectively, to `componentsProps.filterPanel` as shown below:
 
-{{"demo": "DisableActionButtonsDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disable-action-buttons-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## API
 

@@ -1,0 +1,17 @@
+import Box from '@mui/material/Box';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { MUI_X_PRODUCTS } from '../../../datasets/products';
+
+export default function ItemChildrenIndentationProp() {
+  return (
+    <Box sx={{ minHeight: 352, minWidth: 350 }}>
+      {/* @focus-start */}
+      <RichTreeView
+        items={MUI_X_PRODUCTS}
+        itemChildrenIndentation={24}
+        defaultExpandedItems={['grid']}
+      />
+      {/* @focus-end */}
+    </Box>
+  );
+}

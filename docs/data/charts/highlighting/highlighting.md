@@ -25,7 +25,7 @@ axisHighlight={{
 }}
 ```
 
-{{"demo": "BandHighlight.js" }}
+{{"component": "file://./demos/band-highlight/index.ts"}}
 
 ### Highlight axis value
 
@@ -40,7 +40,7 @@ This component accept the following props:
 - `axisId`: the id of the axis highlighted. By default the first axis.
 - `labelPosition`: `'start' | 'end' | 'both' | 'none'` the position of the label.
 
-{{"demo": "AxisValueHighlight.js" }}
+{{"component": "file://./demos/axis-value-highlight/index.ts"}}
 
 ### Customize highlighted axis value
 
@@ -54,7 +54,7 @@ The following demo shows:
 - Green labels: By default labels are limited to the axis range (right label). The left one shows you how to let label overflow by setting the `translate` property.
 - Red labels: Demonstrate how to use the `--space` to limit label size.
 
-{{"demo": "AxisValueHighlightCustomization.js" }}
+{{"component": "file://./demos/axis-value-highlight-customization/index.ts"}}
 
 ## Highlighting series
 
@@ -77,14 +77,14 @@ For Line charts, you can increase the interaction area by using slots.
 See [Line demos—Larger interaction area](/x/react-charts/line-demo/#larger-interaction-area) for an example of this.
 :::
 
-{{"demo": "ElementHighlights.js"}}
+{{"component": "file://./demos/element-highlights/index.ts"}}
 
 ## Controlled item highlight
 
 You can control the highlighted item using the `highlightedItem` and `onHighlightChange` props.
 You can set the `highlightedItem` value based on inputs, and sync it when the user hovers over an item.
 
-{{"demo": "ControlledHighlight.js"}}
+{{"component": "file://./demos/controlled-highlight/index.ts"}}
 
 ## Controlled axis highlight
 
@@ -119,11 +119,11 @@ const Component = ({ data }) => {
 
 :::
 
-{{"demo": "ControlledAxisHighlight.js"}}
+{{"component": "file://./demos/controlled-axis-highlight/index.ts"}}
 
 ## Synchronizing highlights
 
 With controlled highlights, you can synchronize them across multiple charts.
 Ensure that the `series` have the same IDs and that the data is in the same order.
 
-{{"demo": "SyncHighlight.js"}}
+{{"component": "file://./demos/sync-highlight/index.ts"}}

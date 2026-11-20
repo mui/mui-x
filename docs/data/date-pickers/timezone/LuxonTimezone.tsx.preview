@@ -1,4 +1,0 @@
-<DateTimePicker value={value} onChange={setValue} />
-<Typography>
-  Stored value: {value == null ? 'null' : value.toISO()}
-</Typography>

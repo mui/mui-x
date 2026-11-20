@@ -20,7 +20,7 @@ To customize Chart animations, you may need to override CSS classes or implement
 You can override the default CSS classes to customize CSS-based animations.
 The demo below shows how you can increase the label's animation duration to two seconds:
 
-{{"demo": "CSSAnimationCustomization.js"}}
+{{"component": "file://./demos/css-animation-customization/index.ts"}}
 
 ## Customizing JavaScript animations
 
@@ -37,7 +37,7 @@ The Charts package provides the following animation hooks:
 
 The demo below illustrates how to use these hooks by animating the bar labels to match the bar animation—click **Run Animation** to see it in action:
 
-{{"demo": "JSDefaultAnimation.js"}}
+{{"component": "file://./demos/js-default-animation/index.ts"}}
 
 ### The useAnimate() hook
 
@@ -60,7 +60,7 @@ You can find more detailed explanations in the hook's JSDoc.
 
 In the example below, labels are positioned above the bars they refer to and are animated with the `useAnimate()` hook:
 
-{{"demo": "JSAnimationCustomization.js"}}
+{{"component": "file://./demos/js-animation-customization/index.ts"}}
 
 ## Third-party animation libraries
 
@@ -75,10 +75,10 @@ It's essential to test the performance of your charts with your chosen animation
 
 The demo below shows how to integrate [React Spring](https://www.react-spring.dev/docs/getting-started) to add a bounce effect to the bar label animation:
 
-{{"demo": "ReactSpringAnimationCustomization.js"}}
+{{"component": "file://./demos/react-spring-animation-customization/index.ts"}}
 
 ### Motion
 
 The following demo uses the [Motion library](https://motion.dev/docs/react) for a fade-in effect on the points and lines in the chart:
 
-{{"demo": "MotionAnimationCustomization.js"}}
+{{"component": "file://./demos/motion-animation-customization/index.ts"}}

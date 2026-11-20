@@ -22,7 +22,7 @@ The demos on this page render only the composer plus the provider context it dep
 
 Try the `ChatComposer` props live: toggle variant, attachments, helper text, and placeholder:
 
-{{"demo": "ChatComposerPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-composer-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Import
 
@@ -64,7 +64,7 @@ ChatComposer                  ← <form> element, border-top divider
 
 The variant can also come from the surrounding chat context; an explicit prop wins over the context value.
 
-{{"demo": "ComposerVariantsStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-variants-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Text area
 
@@ -77,7 +77,7 @@ Use `maxRows` to cap the auto-grow: the textarea starts at one row and grows up 
 
 Customize the placeholder directly on `ChatComposerTextArea`:
 
-{{"demo": "ComposerCustomPlaceholderStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-custom-placeholder-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### IME composition
 
@@ -100,7 +100,7 @@ Selected files are queued as draft attachments and previewed in the composer are
 
 Omit `ChatComposerAttachButton` from the toolbar when attachments are not part of the surface:
 
-{{"demo": "ComposerHiddenAttachButtonStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-hidden-attach-button-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Files that exceed the configured limits (`maxFileCount`, `maxFileSize`, `acceptedMimeTypes`) are not queued and there is no built-in rejection UI — handle the `onAttachmentReject` callback to surface feedback.
 
@@ -111,20 +111,20 @@ See [Attachments](/x/react-chat/behavior/attachments/) for details on accepted M
 A helper text line appears below the composer.
 Use it for legal disclaimers, character counts, or contextual hints.
 
-{{"demo": "ComposerHelperTextStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-helper-text-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Controlled composer value
 
 Control the composer value externally through `ChatProvider` state.
 The demo below mirrors the current composer value above the standalone composer:
 
-{{"demo": "ComposerControlledStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-controlled-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Accessing composer state with a hook
 
 For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
-{{"demo": "ComposerHookStateStandalone.js", "defaultCodeOpen": true, "bg": "inline"}}
+{{"component": "file://./demos/composer-hook-state-standalone/index.ts", "bg": "inline", "initialExpanded": true}}
 
 The hook returns:
 
@@ -144,7 +144,7 @@ The hook returns:
 Pass `disabled` to `ChatComposer` to prevent all interaction.
 When disabled, the text area is read-only and the send button is inert.
 
-{{"demo": "ComposerDisabledStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-disabled-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Accessibility
 

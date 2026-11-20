@@ -1,7 +1,0 @@
-<EventTimelinePremium
-  events={events}
-  resources={resourcesWithColors}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
-  defaultPreset="dayAndMonth"
-/>

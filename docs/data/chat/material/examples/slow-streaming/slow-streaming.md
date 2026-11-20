@@ -19,7 +19,7 @@ The `ChatBox` adapter emits one chunk every 500 ms so the streaming behavior is 
 
 The demo below illustrates each of these behaviors:
 
-{{"demo": "SlowStreaming.js", "bg": "inline"}}
+{{"component": "file://./demos/slow-streaming/index.ts", "bg": "inline"}}
 
 ## API
 

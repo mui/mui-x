@@ -1,3 +1,0 @@
-<PieChart series={[{ data, innerRadius: 80 }]} {...size}>
-  <PieCenterLabel>Center label</PieCenterLabel>
-</PieChart>

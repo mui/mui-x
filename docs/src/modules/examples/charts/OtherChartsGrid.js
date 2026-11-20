@@ -1,7 +1,7 @@
-import ArcDesign from 'docs/data/charts/gauge/ArcDesign';
-import CompositionExample from 'docs/data/charts/gauge/CompositionExample';
-import BasicSparkLine from 'docs/data/charts/sparkline/BasicSparkLine';
-import NpmSparkLine from 'docs/data/charts/sparkline/NpmSparkLine';
+import ArcDesign from 'docs/data/charts/gauge/demos/arc-design/ArcDesign';
+import CompositionExample from 'docs/data/charts/gauge/demos/composition-example/CompositionExample';
+import BasicSparkLine from 'docs/data/charts/sparkline/demos/basic-spark-line/BasicSparkLine';
+import NpmSparkLine from 'docs/data/charts/sparkline/demos/npm-spark-line/NpmSparkLine';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 
 const chartData = [

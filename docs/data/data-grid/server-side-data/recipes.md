@@ -16,7 +16,7 @@ There are two approaches to implement:
 The following example demonstrates the blocking approach by controlling the `paginationModel` state.
 It is only updated when the previous page's response arrives, ensuring that the cursor is always available for the next request.
 
-{{"demo": "ServerSideCursorBlocking.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-cursor-blocking/index.ts", "bg": "inline"}}
 
 ### Non-blocking approach
 
@@ -30,7 +30,7 @@ The cache is cleared whenever the filter or sort model changes to ensure data co
 For error handling, the example simulates a server error when requesting page 8.
 When an error occurs, the cache entry for that request is deleted, and the `paginationModel` is reverted to the previous page to maintain a consistent state.
 
-{{"demo": "ServerSideCursorNonBlocking.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-cursor-non-blocking/index.ts", "bg": "inline"}}
 
 ## Tree data nested pagination
 
@@ -45,4 +45,4 @@ Check the [Server-side data—Nested lazy loading](/x/react-data-grid/server-sid
 
 :::
 
-{{"demo": "ServerSideTreeDataNestedPagination.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-tree-data-nested-pagination/index.ts", "bg": "inline"}}

@@ -10,41 +10,41 @@ components: BarChart, BarElement, BarPlot
 
 ## TinyBarChart
 
-{{"demo": "TinyBarChart.js"}}
+{{"component": "file://./demos/tiny-bar-chart/index.ts"}}
 
 ## SimpleBarChart
 
-{{"demo": "SimpleBarChart.js"}}
+{{"component": "file://./demos/simple-bar-chart/index.ts"}}
 
 ## StackedBarChart
 
-{{"demo": "StackedBarChart.js"}}
+{{"component": "file://./demos/stacked-bar-chart/index.ts"}}
 
 ## MixedBarChart
 
-{{"demo": "MixedBarChart.js"}}
+{{"component": "file://./demos/mixed-bar-chart/index.ts"}}
 
 ## PositiveAndNegativeBarChart
 
-{{"demo": "PositiveAndNegativeBarChart.js"}}
+{{"component": "file://./demos/positive-and-negative-bar-chart/index.ts"}}
 
 ## BarChartStackedBySign
 
-{{"demo": "BarChartStackedBySign.js"}}
+{{"component": "file://./demos/bar-chart-stacked-by-sign/index.ts"}}
 
 ## BiaxialBarChart
 
-{{"demo": "BiaxialBarChart.js"}}
+{{"component": "file://./demos/biaxial-bar-chart/index.ts"}}
 
 ## Population pyramid
 
-{{"demo": "PopulationPyramidBarChart.js"}}
+{{"component": "file://./demos/population-pyramid-bar-chart/index.ts"}}
 
 ## Waterfall chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The following demo shows a waterfall chart built with a [range bar chart](/x/react-charts/range-bar/).
 
-{{"demo": "WaterfallChart.js"}}
+{{"component": "file://./demos/waterfall-chart/index.ts"}}
 
 ## Histogram
 
@@ -54,4 +54,4 @@ The Bar Chart has no built-in histogram, so split your dataset into equal-width 
 Use a `band` x-axis with `categoryGapRatio` and `barGapRatio` set to `0` so adjacent bars touch — what makes a histogram readable.
 To avoid artifacts between bars, set the `shape-rendering` to `'crispEdges'` for the bars.
 
-{{"demo": "HistogramBarChart.js"}}
+{{"component": "file://./demos/histogram-bar-chart/index.ts"}}

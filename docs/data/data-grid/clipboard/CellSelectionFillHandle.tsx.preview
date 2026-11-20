@@ -1,8 +1,0 @@
-<DataGridPremium
-  rows={rows}
-  columns={columns}
-  rowSelection={false}
-  cellSelection
-  cellSelectionFillHandle
-  processRowUpdate={processRowUpdate}
-/>

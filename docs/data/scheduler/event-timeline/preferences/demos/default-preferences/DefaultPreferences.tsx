@@ -1,0 +1,33 @@
+import * as React from 'react';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { EventTimelinePremiumPreferences } from '@mui/x-scheduler-premium/models';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import {
+  initialEvents,
+  resources,
+  defaultVisibleDate,
+} from '../../../../datasets/company-roadmap';
+
+const defaultPreferences: Partial<EventTimelinePremiumPreferences> = {
+  ampm: false,
+  weekStartsOn: 1,
+};
+
+export default function DefaultPreferences() {
+  // @focus-start @padding 1
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
+
+  return (
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+      <EventTimelinePremium
+        events={events}
+        resources={resources}
+        defaultPreferences={defaultPreferences}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+        defaultPreset="dayAndWeek"
+      />
+    </div>
+  );
+  // @focus-end
+}

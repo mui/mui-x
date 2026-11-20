@@ -13,7 +13,7 @@ githubLabel: 'scope: chat'
 
 The message list is a single Tab stop: a roving tabindex over the `role="article"` messages keeps only one message in the tab order at a time, so tabbing from the composer to the rest of the application never walks through every message.
 
-{{"demo": "../material/message-list/KeyboardNavigation.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../material/message-list/demos/keyboard-navigation/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 | Key                                              | Action                                                                                           |
 | :----------------------------------------------- | :----------------------------------------------------------------------------------------------- |

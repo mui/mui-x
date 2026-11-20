@@ -15,7 +15,7 @@ components: EventTimelinePremium
 You can move events to a different time slot by dragging them, and resize them by dragging their start or end edge.
 Both are enabled by default:
 
-{{"demo": "BasicDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-drag-and-drop/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Disable event dragging
 
@@ -25,7 +25,7 @@ Use the `areEventsDraggable` property to prevent dragging events to a different 
 <EventTimelinePremium areEventsDraggable={false} />
 ```
 
-{{"demo": "DisableDragging.js", "bg": "inline"}}
+{{"component": "file://./demos/disable-dragging/index.ts", "bg": "inline"}}
 
 ## Disable event resizing
 
@@ -35,7 +35,7 @@ Use the `areEventsResizable` property to prevent resizing events by dragging the
 <EventTimelinePremium areEventsResizable={false} />
 ```
 
-{{"demo": "DisableResizing.js", "bg": "inline"}}
+{{"component": "file://./demos/disable-resizing/index.ts", "bg": "inline"}}
 
 :::success
 Set the `areEventsResizable` property to `"start"` or `"end"` to enable resizing only for one side:
@@ -156,4 +156,4 @@ Use the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props to d
 When `canDragEventsFromTheOutside` is `true`, you can drop events created with `StandaloneEvent` into the Event Timeline.
 When `canDropEventsToTheOutside` is `true`, you can drag events out of the Event Timeline.
 
-{{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/external-drag-and-drop/index.ts", "bg": "inline", "collapseToEmpty": true}}

@@ -96,7 +96,7 @@ const columns: GridColDef[] = [
 
 With the component and utilities imported, and rows and columns defined, you're now ready to render the Data Grid as shown below:
 
-{{"demo": "RenderComponent.js", "defaultCodeOpen": true, "bg": "inline"}}
+{{"component": "file://./demos/render-component/index.ts", "bg": "inline", "initialExpanded": true}}
 
 :::warning
 You must set [intrinsic dimensions](/x/react-data-grid/layout/) on the Data Grid's parent container.

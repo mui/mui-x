@@ -21,7 +21,7 @@ Use it during initial data fetching or when loading older messages via [history 
 
 Use the demo below to adjust the number of shimmer lines:
 
-{{"demo": "ChatMessageSkeletonPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-skeleton-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Importing the component
 
@@ -53,7 +53,7 @@ Nothing renders the skeleton automatically — you decide where it appears.
 Render skeletons in the message area while the fetch is in flight, then swap to `ChatMessageList` once the data arrives.
 Set `aria-busy` on the swapping container and `aria-hidden` on each skeleton so assistive technology treats the placeholders as decorative.
 
-{{"demo": "LoadingSkeletonInList.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/loading-skeleton-in-list/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 When older messages are being fetched via history pagination, render a skeleton at the top of the list instead.
 The `isLoadingHistory` flag from `useChat()` reports when a page is in flight.
@@ -148,7 +148,7 @@ if (messages.length === 0) {
 
 The message area below is intentionally empty — only the conversation header and the composer render:
 
-{{"demo": "../../material/examples/empty-state/EmptyState.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/examples/empty-state/demos/empty-state/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Key characteristics of the empty state:
 
@@ -161,7 +161,7 @@ Key characteristics of the empty state:
 
 Provide custom empty state content by composing the thread from individual components. A common pattern is to display suggested prompts that help users start a conversation:
 
-{{"demo": "CustomEmptyState.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/custom-empty-state/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Streaming indicator
 

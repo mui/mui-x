@@ -21,7 +21,7 @@ ChatBox ships full keyboard navigation and screen-reader support out of the box�
 
 Try the `ChatBox` props live—toggle variant, density, layout mode, and the built-in features:
 
-{{"demo": "ChatBoxPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-box-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The playground starts with `features.conversationList` enabled to showcase the full surface; on `ChatBox` itself the conversation list is off by default.
 
@@ -47,7 +47,7 @@ No additional configuration is needed—`ChatBox` reads `palette`, `typography`,
 
 The demo below shows `ChatBox` picking up the active Material UI theme:
 
-{{"demo": "../../material/examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://../../material/examples/basic-ai-chat/demos/basic-ai-chat/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## ChatBox vs. ChatProvider
 
@@ -56,17 +56,17 @@ The demo below shows `ChatBox` picking up the active Material UI theme:
 `ChatBox` is the right choice when you want a complete chat surface with minimal setup.
 It creates a `ChatProvider` internally, so all [hooks](/x/react-chat/resources/hooks/) work inside any component rendered as a child or descendant of `ChatBox`:
 
-{{"demo": "../../material/context/ChatBoxWithHooks.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/context/demos/chat-box-with-hooks/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Using ChatProvider for a custom layout
 
 When you need full control over the markup, use `ChatProvider` directly and compose only the pieces you need—here, just the message list and a composer:
 
-{{"demo": "../../material/context/ChatProviderCustomLayout.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/context/demos/chat-provider-custom-layout/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The same approach scales up to a full inbox layout—a conversation list in a sidebar next to the active thread. See the [Layout](/x/react-chat/basics/layout/) page for the building blocks:
 
-{{"demo": "../layout/LayoutTwoPaneStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../layout/demos/layout-two-pane-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 `ChatBox` always creates its own internal `ChatProvider`.
@@ -96,7 +96,7 @@ Everything you saw in the all-in-one surface above is governed by the `features`
 
 The demo below enables `dateDivider` and `unreadMarker`—the divider marks the day boundary and the marker sits above the first unread message:
 
-{{"demo": "ChatBoxFeatureFlags.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/chat-box-feature-flags/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The `conversationList`, `dateDivider`, and `unreadMarker` flags each have a dedicated page: [Conversation list](/x/react-chat/multi-conversation/conversation-list/), [Date divider](/x/react-chat/display/date-divider/), and [Unread marker](/x/react-chat/display/unread-marker/).
 
@@ -174,4 +174,4 @@ For example, control the active conversation while letting the internal store ma
 Each `ChatBox` creates its own isolated store.
 To render multiple independent chat surfaces side by side, use separate `ChatBox` instances:
 
-{{"demo": "../../material/context/MultipleInstances.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/context/demos/multiple-instances/index.ts", "bg": "inline", "collapseToEmpty": true}}

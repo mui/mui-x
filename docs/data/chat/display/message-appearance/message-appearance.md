@@ -23,7 +23,7 @@ By default, all consecutive messages from the same author are grouped together, 
 To split groups by time, pass `createTimeWindowGroupKey(windowMs)` (from `@mui/x-chat/headless`; the window defaults to 5 minutes) as the group's `groupKey` through `slotProps.messageGroup`.
 The demo below uses a 1-minute window:
 
-{{"demo": "../../material/message-list/MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/message-list/demos/message-grouping/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 By default, a new group starts when:
 
@@ -38,7 +38,7 @@ Dividers are disabled by default—enable them with `features={{ dateDivider: tr
 
 The demo below enables the feature and customizes the date format through `slotProps`:
 
-{{"demo": "../../material/message-list/DateDividerFormat.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/message-list/demos/date-divider-format/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Date dividers render with `role="separator"` and are not focusable; message rows remain individually focusable — see [Accessibility](/x/react-chat/accessibility/) for the focus model.
 
@@ -53,7 +53,7 @@ Avatar resolution follows the same rules as the built-in message primitives:
 
 The avatar is omitted entirely (the component returns `null`, no placeholder) in two cases: for every message after the first in a group, and for the first message when no `avatarUrl` resolves and no custom `messageAvatar` slot is provided.
 
-{{"demo": "../../basics/messages/ChatMessageAvatarPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://../../basics/messages/demos/chat-message-avatar-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Timestamps and metadata
 
@@ -64,11 +64,11 @@ Both derive the timestamp from `createdAt` and the edited label from `editedAt`.
 
 The default variant renders inline meta inside the bubble:
 
-{{"demo": "../../basics/messages/ChatMessageInlineMetaPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://../../basics/messages/demos/chat-message-inline-meta-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The compact variant renders external meta beside the message:
 
-{{"demo": "../../basics/messages/ChatMessageMetaPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://../../basics/messages/demos/chat-message-meta-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Component anatomy
 
@@ -92,7 +92,7 @@ ChatMessageList                     ← scrollable container
 Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout with no bubbles, left-aligned messages, and group header timestamps.
 In the compact layout the inline meta is replaced by the external `ChatMessageMeta` rendered beside the message (use the `messageMeta` slot to customize it; in the default variant use `messageInlineMeta` instead).
 
-{{"demo": "../../material/message-list/CompactVariant.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/message-list/demos/compact-variant/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 See [Variants and density](/x/react-chat/basics/variants-and-density/) for details.
 
@@ -100,7 +100,7 @@ See [Variants and density](/x/react-chat/basics/variants-and-density/) for detai
 
 The `density` prop controls the vertical spacing between messages independently of the variant. Three values are available: `compact`, `standard` (default), and `comfortable`.
 
-{{"demo": "../../material/message-list/DensityProp.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/message-list/demos/density-prop/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 See [Variants and density](/x/react-chat/basics/variants-and-density/) for details.
 

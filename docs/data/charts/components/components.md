@@ -33,7 +33,7 @@ import { useDrawingArea } from '@mui/x-charts';
 const { left, top, width, height } = useDrawingArea();
 ```
 
-{{"demo": "BasicScaleDemo.js"}}
+{{"component": "file://./demos/basic-scale-demo/index.ts"}}
 
 ### Scales
 
@@ -66,7 +66,7 @@ const xAxisScale = useXScale();
 const xOrigin = xAxisScale(0);
 ```
 
-{{"demo": "OriginDemo.js"}}
+{{"component": "file://./demos/origin-demo/index.ts"}}
 
 #### Coordinate to value
 
@@ -79,7 +79,7 @@ By using `invert()`, the value associated with the current mouse coordinate `y` 
 <text>{leftAxisScale.invert(yCoordinate).toFixed(0)}</text>
 ```
 
-{{"demo": "ScaleDemo.js"}}
+{{"component": "file://./demos/scale-demo/index.ts"}}
 
 ### Series
 
@@ -89,7 +89,7 @@ These hooks return the order of the series and their configuration, including da
 You can use that information to create custom charts.
 For example, you can use `useLineSeries()` to obtain the series of a Line Chart and display an indicator of the minimum and maximum values of each series:
 
-{{"demo": "SeriesDemo.js"}}
+{{"component": "file://./demos/series-demo/index.ts"}}
 
 ## Custom slot props with TypeScript
 
@@ -207,7 +207,7 @@ This lets you create HTML components that interact with the data.
 In the next example, notice that the `MyCustomLegend` component displays the series names and colors.
 This creates an HTML `<table>` element, which can be customized in any way.
 
-{{"demo": "HtmlLegend.js"}}
+{{"component": "file://./demos/html-legend/index.ts"}}
 
 :::warning
 Note that the HTML components are not part of the SVG hierarchy.

@@ -12,7 +12,7 @@ The demo below lets you explore all the operators for each built-in column type.
 
 _See [the dedicated section](/x/react-data-grid/filtering/customization/) to learn how to create your own custom filter operator._
 
-{{"demo": "BasicExampleDataGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-example-data-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Single and multi-filters
 
@@ -85,7 +85,7 @@ To initialize the filters without controlling them, provide the model to the `in
 />
 ```
 
-{{"demo": "InitialFilters.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/initial-filters/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Controlled filters
 
@@ -101,7 +101,7 @@ You can use the `onFilterModelChange` prop to listen to changes to the filters a
 />
 ```
 
-{{"demo": "ControlledFilters.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/controlled-filters/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Disable the filters
 
@@ -113,7 +113,7 @@ Filters are enabled by default, but you can easily disable this feature by setti
 <DataGrid disableColumnFilter />
 ```
 
-{{"demo": "DisableFilteringGridAllColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disable-filtering-grid-all-columns/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### For some columns
 
@@ -125,7 +125,7 @@ In the example below, the _rating_ column cannot be filtered.
 <DataGrid columns={[...columns, { field: 'rating', filterable: false }]} />
 ```
 
-{{"demo": "DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disable-filtering-grid-some-columns/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Filter non-filterable columns programmatically
 
@@ -145,7 +145,7 @@ const columns = [
 />
 ```
 
-{{"demo": "ReadOnlyFilters.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/read-only-filters/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Ignore diacritics (accents)
 
@@ -172,7 +172,7 @@ See [API object](/x/react-data-grid/api-object/) for more details.
 This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
-{{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/filter-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## Selectors
 

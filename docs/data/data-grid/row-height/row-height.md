@@ -9,7 +9,7 @@ This matches the normal height in the [Material Design guidelines](https://m2.ma
 
 Use the `rowHeight` prop to change this default value, as shown below:
 
-{{"demo": "DenseHeightGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/dense-height-grid/index.ts", "bg": "inline"}}
 
 ## Variable row height
 
@@ -17,7 +17,7 @@ If you need some rows to have different row heights, this can be achieved using 
 This function is called for each visible row and if the return value is a `number` then that `number` will be set as that row's `rowHeight`.
 If the return value is `null` or `undefined`, then the `rowHeight` prop will take effect for the given row.
 
-{{"demo": "VariableRowHeightGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/variable-row-height-grid/index.ts", "bg": "inline"}}
 
 :::warning
 Changing the Data Grid density does not affect the rows with variable row height.
@@ -46,7 +46,7 @@ To do so, return `"auto"` on the function passed to the `getRowHeight` prop.
 
 The following demo shows this feature in action:
 
-{{"demo": "DynamicRowHeightGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/dynamic-row-height-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The dynamic row height implementation is based on a lazy approach, which means that the rows are measured as they are rendered.
 Because of this, you may see the size of the scrollbar thumb changing during scroll.
@@ -59,7 +59,7 @@ It's recommended to pass this prop if the content deviates too much from the def
 <DataGrid getRowHeight={() => 'auto'} getEstimatedRowHeight={() => 200} />
 ```
 
-{{"demo": "ExpandableCells.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/expandable-cells/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 When the height of a row is set to `"auto"`, the final height will follow exactly the content size and ignore the density.
@@ -86,7 +86,7 @@ If you need column virtualization, you can set the `virtualizeColumnsWithAutoRow
 With this approach, the Data Grid measures the row height based on the visible columns.
 However, the row height might change during horizontal scrolling.
 
-{{"demo": "VirtualizeColumnsWithAutoRowHeight.js", "bg": "inline" }}
+{{"component": "file://./demos/virtualize-columns-with-auto-row-height/index.ts", "bg": "inline"}}
 
 ## Row density
 
@@ -108,7 +108,7 @@ const getRowSpacing = React.useCallback((params: GridRowSpacingParams) => {
 }, []);
 ```
 
-{{"demo": "RowMarginGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-margin-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 By default, setting `getRowSpacing` will change the `marginXXX` CSS properties of each row.
 To add a border instead, set `rowSpacingType` to `"border"` and customize the color and style.

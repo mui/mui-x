@@ -18,13 +18,13 @@ All the topics covered below are applicable to both `SingleInputTimeRangeField` 
 
 You can render your Time Range Field with either one input using `SingleInputTimeRangeField` or two inputs using `MultiInputTimeRangeField` as shown below.
 
-{{"demo": "BasicTimeRangeField.js"}}
+{{"component": "file://./demos/basic-time-range-field/index.ts"}}
 
 ## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "TimeRangeFieldValue.js"}}
+{{"component": "file://./demos/time-range-field-value/index.ts"}}
 
 :::info
 

@@ -1,0 +1,64 @@
+import * as React from 'react';
+import type { GridColumnMenuItemProps, GridColumnMenuProps } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColumnMenuFilterItem,
+  GridColumnMenuSortItem,
+  GridColumnMenuColumnsItem,
+} from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+import MenuList from '@mui/material/MenuList';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+
+function MenuCloseComponent(props: GridColumnMenuItemProps) {
+  return (
+    <Button color="primary" onClick={props.onClick}>
+      Close Menu
+    </Button>
+  );
+}
+
+function CustomColumnMenu(props: GridColumnMenuProps) {
+  const itemProps = {
+    colDef: props.colDef,
+    onClick: props.hideMenu,
+  };
+  return (
+    <React.Fragment>
+      <MenuList>
+        <GridColumnMenuSortItem {...itemProps} />
+        {/* Only provide filtering on desk */}
+        {itemProps.colDef.field === 'desk' ? (
+          <GridColumnMenuFilterItem {...itemProps} />
+        ) : null}
+      </MenuList>
+      <Divider />
+      <MenuList>
+        <GridColumnMenuColumnsItem {...itemProps} />
+        <MenuCloseComponent {...itemProps} />
+      </MenuList>
+    </React.Fragment>
+  );
+}
+
+export default function CustomColumnMenuGrid() {
+  // @focus-start @padding 1
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 20,
+    maxColumns: 5,
+  });
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        {...data}
+        slots={{
+          columnMenu: CustomColumnMenu,
+        }}
+      />
+    </div>
+  );
+  // @focus-end
+}
