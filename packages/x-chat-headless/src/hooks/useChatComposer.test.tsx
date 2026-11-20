@@ -305,6 +305,141 @@ describe('useChatComposer', () => {
     expect(result.current.attachments[0].file).toBe(attachmentFile);
   });
 
+  it('keeps the draft when submitted while an async onFinish is still running', async () => {
+    let resolveOnFinish!: () => void;
+    const onFinish = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveOnFinish = resolve;
+        }),
+    );
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () =>
+        createStream([
+          { type: 'start', messageId: 'a1' },
+          { type: 'text-start', id: 't1' },
+          { type: 'text-delta', id: 't1', delta: 'Reply' },
+          { type: 'text-end', id: 't1' },
+          { type: 'finish', messageId: 'a1' },
+        ]),
+      ),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      onFinish,
+      initialActiveConversationId: 'c1',
+    });
+    const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.setValue('First');
+    });
+
+    let firstSubmit!: Promise<void>;
+    act(() => {
+      firstSubmit = result.current.submit();
+    });
+
+    await waitFor(() => {
+      expect(onFinish).toHaveBeenCalledTimes(1);
+    });
+
+    act(() => {
+      result.current.setValue('Second');
+    });
+
+    await act(async () => {
+      await result.current.submit();
+    });
+
+    expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+    expect(result.current.value).toBe('Second');
+
+    await act(async () => {
+      resolveOnFinish();
+      await firstSubmit;
+    });
+  });
+
+  it('restores attachments and revokes submit-time URLs when a send is rejected during an async onFinish', async () => {
+    const objectUrls = mockObjectUrlApis();
+    let resolveOnFinish!: () => void;
+    const onFinish = vi
+      .fn(async () => {})
+      .mockImplementationOnce(
+        () =>
+          new Promise<void>((resolve) => {
+            resolveOnFinish = resolve;
+          }),
+      );
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () =>
+        createStream([
+          { type: 'start', messageId: 'a1' },
+          { type: 'text-start', id: 't1' },
+          { type: 'text-delta', id: 't1', delta: 'Reply' },
+          { type: 'text-end', id: 't1' },
+          { type: 'finish', messageId: 'a1' },
+        ]),
+      ),
+    });
+
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        onFinish,
+        initialActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setValue('First');
+      });
+
+      let firstSubmit!: Promise<void>;
+      act(() => {
+        firstSubmit = result.current.submit();
+      });
+
+      await waitFor(() => {
+        expect(onFinish).toHaveBeenCalledTimes(1);
+      });
+
+      act(() => {
+        result.current.addAttachment(new File(['img'], 'photo.png', { type: 'image/png' }));
+        result.current.addAttachment(new File(['txt'], 'notes.txt', { type: 'text/plain' }));
+      });
+
+      await act(async () => {
+        await result.current.submit();
+      });
+
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+      expect(result.current.attachments.map((attachment) => attachment.file.name)).toEqual([
+        'photo.png',
+        'notes.txt',
+      ]);
+      expect(result.current.attachments[0].previewUrl).toBe('blob:photo.png-1');
+      expect(objectUrls.revokeObjectURL).not.toHaveBeenCalledWith('blob:photo.png-1');
+      expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:notes.txt-2');
+
+      await act(async () => {
+        resolveOnFinish();
+        await firstSubmit;
+      });
+
+      await act(async () => {
+        await result.current.submit();
+      });
+
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(2);
+      expect(result.current.value).toBe('');
+      expect(result.current.attachments).toHaveLength(0);
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
   it('does not submit empty drafts', async () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async () => createStream()),

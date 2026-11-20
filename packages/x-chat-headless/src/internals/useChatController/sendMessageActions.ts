@@ -192,6 +192,8 @@ export function createSendMessageActions<Cursor = string>(params: {
       status: 'sending',
     };
 
+    // Keep the guard and addMessage synchronous (before any await, here and in `sendMessage`):
+    // useChatComposer detects a rejected send by checking the store right after calling sendMessage.
     isSending = true;
     store.addMessage(nextMessage);
     store.setStreaming(true, conversationId);
