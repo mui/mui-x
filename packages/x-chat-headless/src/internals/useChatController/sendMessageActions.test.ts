@@ -377,6 +377,142 @@ describe('createSendMessageActions', () => {
       expect(reconnectToStream).not.toHaveBeenCalled();
     });
 
+    it('calls onFinish once with isError when the first stream errors and reconnectToStream is set', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn();
+      const onError = vi.fn();
+      const reconnectToStream = vi.fn();
+      let pullCount = 0;
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(
+          new ReadableStream<ChatMessageChunk>({
+            pull(controller) {
+              pullCount += 1;
+              if (pullCount === 1) {
+                controller.enqueue({ type: 'start', messageId: 'a1' });
+              } else {
+                controller.error(new Error('Network failure'));
+              }
+            },
+          }),
+        ),
+        reconnectToStream,
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onFinish, onError } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(reconnectToStream).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(onFinish.mock.calls[0][0]).toMatchObject({
+        isAbort: false,
+        isDisconnect: false,
+        isError: true,
+        message: { id: 'a1', status: 'error' },
+      });
+    });
+
+    it('calls onFinish once when the reconnected stream errors', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn();
+      const onError = vi.fn();
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(
+          createStream([
+            { sequence: 0, eventId: 'e0', chunk: { type: 'start', messageId: 'a1' } },
+            { sequence: 1, eventId: 'e1', chunk: { type: 'text-start', id: 'text-1' } },
+          ]),
+        ),
+        reconnectToStream: vi.fn().mockResolvedValue(
+          new ReadableStream<ChatStreamEnvelope>({
+            start(controller) {
+              controller.enqueue({
+                sequence: 2,
+                eventId: 'e2',
+                chunk: { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+              });
+              controller.error(new Error('Network failure'));
+            },
+          }),
+        ),
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onFinish, onError } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(onFinish.mock.calls[0][0]).toMatchObject({
+        isAbort: false,
+        isDisconnect: true,
+        isError: true,
+        message: { id: 'a1', status: 'error' },
+      });
+    });
+
+    it('does not treat a throwing onFinish as a reconnect failure', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn().mockRejectedValue(new Error('boom'));
+      const adapter = createAdapter({
+        sendMessage: vi
+          .fn()
+          .mockResolvedValue(
+            createStream([
+              { sequence: 0, eventId: 'e0', chunk: { type: 'start', messageId: 'a1' } },
+            ]),
+          ),
+        reconnectToStream: vi.fn().mockResolvedValue(
+          createStream([
+            {
+              sequence: 1,
+              eventId: 'e1',
+              chunk: { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+            },
+          ]),
+        ),
+      });
+
+      const onError = vi.fn();
+      const setRuntimeError = vi.fn();
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onFinish, onError } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(store.state.error?.message ?? '').not.toContain('Unable to reconnect');
+      expect(onError).not.toHaveBeenCalled();
+      expect(setRuntimeError).toHaveBeenCalledTimes(1);
+      expect(setRuntimeError.mock.calls[0][0]).toMatchObject({
+        code: 'SEND_ERROR',
+        source: 'send',
+      });
+      expect(store.state.isStreaming).toBe(false);
+    });
+
     it('sets user message status to "error" when the adapter throws', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
@@ -965,6 +1101,66 @@ describe('createSendMessageActions', () => {
       expect(setRuntimeError.mock.calls[0][0].details.messageId).toBe('a1');
       expect(store.state.isStreaming).toBe(false);
     });
+
+    it.each([
+      ['after a reconnect', true],
+      ['without reconnect support', false],
+    ])(
+      'keeps the completed reply when onFinish throws %s (no rollback)',
+      async (_label, withReconnect) => {
+        const store = new ChatStore({ initialMessages: makeThread() });
+        store.setActiveConversation('c1');
+        const onFinish = vi.fn().mockRejectedValue(new Error('boom'));
+        const setRuntimeError = vi.fn();
+        const adapter = withReconnect
+          ? createAdapter({
+              regenerate: vi
+                .fn()
+                .mockResolvedValue(
+                  createStream([
+                    { sequence: 0, eventId: 'e0', chunk: { type: 'start', messageId: 'a2' } },
+                  ]),
+                ),
+              reconnectToStream: vi.fn().mockResolvedValue(
+                createStream([
+                  {
+                    sequence: 1,
+                    eventId: 'e1',
+                    chunk: { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+                  },
+                ]),
+              ),
+            })
+          : createAdapter({
+              regenerate: vi.fn().mockResolvedValue(
+                createStream([
+                  { type: 'start', messageId: 'a2' },
+                  { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+                ]),
+              ),
+            });
+
+        const { regenerate } = createSendMessageActions({
+          store,
+          storeUnknown: asUnknown(store),
+          runtimeRef: { current: { adapter, onFinish } },
+          setRuntimeError,
+          assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+        });
+
+        await regenerate('a1');
+
+        expect(onFinish).toHaveBeenCalledTimes(1);
+        expect(store.state.messagesById.a1).toBeUndefined();
+        expect(store.state.messagesById.a2.status).toBe('sent');
+        expect(setRuntimeError).toHaveBeenCalledTimes(1);
+        expect(setRuntimeError.mock.calls[0][0]).toMatchObject({
+          code: 'REGENERATE_ERROR',
+          message: 'boom',
+        });
+        expect(store.state.isStreaming).toBe(false);
+      },
+    );
 
     it('fires onError on a mid-stream error and keeps partial output (no rollback)', async () => {
       const store = new ChatStore({ initialMessages: makeThread() });
