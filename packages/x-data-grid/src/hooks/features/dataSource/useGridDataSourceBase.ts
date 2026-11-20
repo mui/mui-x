@@ -430,12 +430,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     debouncedFetchRows();
   }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]);
 
-  const handleFetchRowsOnSortModelChange = React.useCallback(() => {
+  const handleSortOrPageChange = React.useCallback(() => {
     if (
       apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) ===
       DataSourceRowsUpdateStrategy.GroupedData
     ) {
-      // Sorting resets the loaded tree, but does not change parent-child relationships.
+      // Sorting and pagination reset the loaded tree without changing its hierarchy.
       // Include loaded ancestors so retained descendants stay connected after the reset.
       apiRef.current.retainRowSelection(GRID_ROOT_GROUP_ID);
     }
@@ -564,12 +564,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     cache,
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
-      sortModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnSortModelChange),
+      sortModelChange: runIf(standardRowsUpdateStrategyActive, handleSortOrPageChange),
       filterModelChange: runIf(
         standardRowsUpdateStrategyActive,
         handleFetchRowsOnFilterModelChange,
       ),
-      paginationModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
+      paginationModelChange: runIf(standardRowsUpdateStrategyActive, handleSortOrPageChange),
     },
   };
 };

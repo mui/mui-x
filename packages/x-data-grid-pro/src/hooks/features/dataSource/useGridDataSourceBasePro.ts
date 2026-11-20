@@ -387,10 +387,21 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (keepChildrenExpanded === false) {
         apiRef.current.retainRowSelection(GRID_ROOT_GROUP_ID);
       }
-      apiRef.current.reconcileRowSelectionRetention(
-        GRID_ROOT_GROUP_ID,
-        new Set(response.rows.map((row) => gridRowIdSelector(apiRef, row))),
-      );
+      // A group missing from one page may still exist on another.
+      const rootCount = response.rowCount ?? props.rowCount;
+      const firstRangeMayHaveMoreRows =
+        response.pageInfo?.hasNextPage ??
+        (props.pagination || response.rows.length >= params.fetchParams.end + 1);
+      const hasAllRootRows =
+        rootCount !== undefined && rootCount >= 0
+          ? response.rows.length === rootCount
+          : params.fetchParams.start === 0 && !firstRangeMayHaveMoreRows;
+      if (hasAllRootRows) {
+        apiRef.current.reconcileRowSelectionRetention(
+          GRID_ROOT_GROUP_ID,
+          new Set(response.rows.map((row) => gridRowIdSelector(apiRef, row))),
+        );
+      }
 
       if (keepChildrenExpanded === false) {
         apiRef.current.setRows(response.rows);
@@ -408,6 +419,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         });
         const rowsToDelete: GridRowModelUpdate[] = [];
         if (parentRowsToDelete.size > 0) {
+          if (!hasAllRootRows) {
+            apiRef.current.retainRowSelection(GRID_ROOT_GROUP_ID);
+          }
           parentRowsToDelete.forEach((parentRowId) => {
             const descendants = getTreeNodeDescendants(tree, parentRowId, false, false);
             for (let i = descendants.length - 1; i >= 0; i -= 1) {
@@ -431,7 +445,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       );
       startPolling();
     },
-    [apiRef, startPolling],
+    [apiRef, props.pagination, props.rowCount, startPolling],
   );
 
   const handleNestedDataUpdate = React.useCallback<

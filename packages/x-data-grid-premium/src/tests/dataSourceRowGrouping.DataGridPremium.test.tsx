@@ -20,10 +20,13 @@ describe('<DataGridPremium /> - Data source row grouping selection', () => {
   const { render } = createRenderer();
   type TestProps = Partial<DataGridPremiumProps> & { activityMode?: 'visible' | 'hidden' };
 
-  async function renderGroupedGrid(props: TestProps = {}) {
+  async function renderGroupedGrid(
+    props: TestProps = {},
+    rootRows = [{ id: 'G', name: 'G', childrenCount: 1 }],
+  ) {
     let apiRef!: RefObject<GridApi | null>;
     const rowsByPath: Record<string, GridGetRowsResponse['rows']> = {
-      '': [{ id: 'G', name: 'G', childrenCount: 1 }],
+      '': rootRows,
       G: [{ id: 'P', name: 'P', childrenCount: 2 }],
       'G/P': [
         { id: 'L1', name: 'First', childrenCount: 0 },
@@ -32,7 +35,11 @@ describe('<DataGridPremium /> - Data source row grouping selection', () => {
     };
     const getRows = vi.fn(async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
       const rows = rowsByPath[params.groupKeys!.join('/')];
-      return { rows, rowCount: rows.length };
+      if (params.groupKeys!.length > 0) {
+        return { rows };
+      }
+      const ordered = params.sortModel[0]?.sort === 'desc' ? [...rows].reverse() : rows;
+      return { rows: ordered.slice(Number(params.start), params.end + 1), rowCount: rows.length };
     });
     const dataSource: GridDataSource = {
       getRows,
@@ -166,20 +173,140 @@ describe('<DataGridPremium /> - Data source row grouping selection', () => {
     },
   );
 
-  it('should discard retained relationships when sorting returns no root rows', async () => {
-    const { user, apiRef, checkbox, toggle, rowsByPath, getRows } = await renderGroupedGrid();
+  it.each([false, true])(
+    'should discard retained relationships when sorting returns a total of zero root rows (pagination: %s)',
+    async (pagination) => {
+      const { user, apiRef, checkbox, toggle, rowsByPath, getRows } = await renderGroupedGrid({
+        pagination,
+      });
+      await user.click(checkbox('L1'));
+      await toggle('G');
+      rowsByPath[''] = [];
+      const callsBeforeSort = getRows.mock.calls.length;
+
+      act(() => apiRef.current!.setSortModel([{ field: 'name', sort: 'desc' }]));
+
+      await waitFor(() => {
+        expect(getRows.mock.calls.length).to.be.greaterThan(callsBeforeSort);
+        expect(apiRef.current!.state.rows.loading).to.equal(false);
+      });
+      expect(apiRef.current!.state.rowSelectionRetention.size).to.equal(0);
+      expect(apiRef.current!.isRowSelected('L1')).to.equal(true);
+    },
+  );
+
+  it.each(['page change', 'sort', 'root refresh'] as const)(
+    'should preserve partial selection when a %s moves the group off the current page',
+    async (action) => {
+      const { user, apiRef, checkbox, toggle, rowsByPath } = await renderGroupedGrid(
+        {
+          pagination: true,
+          initialState: {
+            rowGrouping: { model: ['company', 'department'] },
+            pagination: { paginationModel: { page: 0, pageSize: 1 } },
+          },
+          pageSizeOptions: [1],
+        },
+        [
+          { id: 'G', name: 'G', childrenCount: 1 },
+          { id: 'H', name: 'H', childrenCount: 0 },
+        ],
+      );
+      await user.click(checkbox('L1'));
+      await toggle('P');
+
+      if (action === 'page change') {
+        act(() => apiRef.current!.setPage(1));
+      } else if (action === 'sort') {
+        act(() => apiRef.current!.setSortModel([{ field: 'name', sort: 'desc' }]));
+      } else {
+        rowsByPath[''].reverse();
+        await act(() => apiRef.current!.dataSource.fetchRows(GRID_ROOT_GROUP_ID));
+      }
+      await waitFor(() => expect(apiRef.current!.getRowElement('H')).not.to.equal(null));
+      expect(apiRef.current!.getRow('G')).to.equal(null);
+      expect(checkbox('H').checked).to.equal(false);
+      expect(checkbox('H')).to.have.attribute('data-indeterminate', 'false');
+
+      act(() => apiRef.current!.setPage(action === 'page change' ? 0 : 1));
+      await waitFor(() => expect(apiRef.current!.getRowElement('G')).not.to.equal(null));
+      expect(apiRef.current!.state.rowSelection.ids).to.deep.equal(new Set(['L1']));
+      expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+      await toggle('G');
+      await waitFor(() => expect(apiRef.current!.getRowElement('P')).not.to.equal(null));
+      expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+    },
+  );
+
+  it.each([{ rowCount: 2 }, { pageInfo: { hasNextPage: true } }, {}])(
+    'should preserve selection for a partial root response even without pagination (%j)',
+    async (pageInfo) => {
+      const { user, apiRef, checkbox, toggle, getRows } = await renderGroupedGrid({
+        initialState: {
+          rowGrouping: { model: ['company', 'department'] },
+          pagination: { paginationModel: { page: 0, pageSize: 1 } },
+        },
+        pageSizeOptions: [1],
+      });
+      await user.click(checkbox('L1'));
+      await toggle('P');
+      getRows.mockResolvedValueOnce({
+        rows: [{ id: 'H', name: 'H', childrenCount: 0 }],
+        ...pageInfo,
+      });
+      act(() => apiRef.current!.setSortModel([{ field: 'name', sort: 'desc' }]));
+      await waitFor(() => expect(apiRef.current!.getRowElement('H')).not.to.equal(null));
+
+      act(() => apiRef.current!.setSortModel([]));
+      await waitFor(() => expect(apiRef.current!.getRowElement('G')).not.to.equal(null));
+      expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    },
+  );
+
+  it('should discard a removed group when the controlled row count covers the whole response', async () => {
+    const { user, apiRef, checkbox, toggle, getRows } = await renderGroupedGrid({
+      pagination: true,
+      rowCount: 1,
+    });
     await user.click(checkbox('L1'));
     await toggle('G');
-    rowsByPath[''] = [];
-    const callsBeforeSort = getRows.mock.calls.length;
+    getRows.mockResolvedValueOnce({ rows: [{ id: 'H', name: 'H', childrenCount: 0 }] });
 
     act(() => apiRef.current!.setSortModel([{ field: 'name', sort: 'desc' }]));
-
-    await waitFor(() => {
-      expect(getRows.mock.calls.length).to.be.greaterThan(callsBeforeSort);
-      expect(apiRef.current!.state.rows.loading).to.equal(false);
-    });
+    await waitFor(() => expect(apiRef.current!.getRowElement('H')).not.to.equal(null));
     expect(apiRef.current!.state.rowSelectionRetention.size).to.equal(0);
+    expect(apiRef.current!.isRowSelected('L1')).to.equal(true);
+  });
+
+  it('should not retain the previous filter results when filtering resets the page before a throttled row update', async () => {
+    const group = { id: 'G', name: 'G', childrenCount: 1 };
+    const { user, apiRef, checkbox, getRows, setProps } = await renderGroupedGrid(
+      {
+        pagination: true,
+        initialState: {
+          rowGrouping: { model: ['company', 'department'] },
+          pagination: { rowCount: 2, paginationModel: { page: 1, pageSize: 1 } },
+        },
+        pageSizeOptions: [1],
+      },
+      [{ id: 'H', name: 'H', childrenCount: 0 }, group],
+    );
+    await user.click(checkbox('L1'));
+    const filtered = Promise.withResolvers<GridGetRowsResponse>();
+    getRows.mockImplementation(() => filtered.promise);
+    act(() => apiRef.current!.updateRows([{ id: 'L2', name: 'Second' }]));
+    setProps({
+      throttleRowsMs: 300,
+      filterModel: { items: [{ field: 'name', operator: 'equals', value: 'Second' }] },
+    });
+    await waitFor(() => {
+      expect(getRows.mock.calls.at(-1)![0].paginationModel!.page).to.equal(0);
+      expect(apiRef.current!.getRowElement('G')).to.equal(null);
+    });
+    await act(async () => filtered.resolve({ rows: [group], rowCount: 1 }));
+
+    await waitFor(() => expect(apiRef.current!.getRowElement('G')).not.to.equal(null));
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'false');
     expect(apiRef.current!.isRowSelected('L1')).to.equal(true);
   });
 

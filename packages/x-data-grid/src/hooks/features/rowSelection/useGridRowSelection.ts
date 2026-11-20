@@ -179,6 +179,11 @@ export const useGridRowSelection = (
       if (!props.dataSource || !props.rowSelection || !props.keepNonExistentRowsSelected) {
         return;
       }
+      // A throttled setRows([]) can leave the previous query's tree visible until the next update.
+      const pending = apiRef.current.caches.rows.updates;
+      if (pending.type === 'full' && pending.rows.length === 0) {
+        return;
+      }
       const tree = gridRowTreeSelector(apiRef);
       const parent = tree[parentId];
       if (parent?.type !== 'group' || parent.children.length === 0) {
