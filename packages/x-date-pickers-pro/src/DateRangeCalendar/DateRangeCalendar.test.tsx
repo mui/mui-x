@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { screen, fireEvent, createEvent, within, waitFor } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   adapterToUse,
   executeDateDrag,
@@ -41,6 +42,28 @@ describe('<DateRangeCalendar />', () => {
     refInstanceof: window.HTMLDivElement,
     skip: ['componentProp', 'themeVariants'],
   }));
+
+  it('should pass the owner state to every slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiDateRangeCalendar: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              opacity: ownerState.isDraggingDay ? 0.5 : 1,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <DateRangeCalendar calendars={2} />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getAllByRole('grid')).to.have.length(2);
+  });
 
   describe('Selection', () => {
     it('should select the range from the next month', async () => {

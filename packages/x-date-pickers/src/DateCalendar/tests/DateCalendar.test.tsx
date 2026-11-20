@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
@@ -10,6 +11,60 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<DateCalendar />', () => {
   const { render } = createPickerRenderer();
+
+  it('should pass the owner state to every day calendar slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiDayCalendar: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              opacity: ownerState.isPickerDisabled ? 0.5 : 1,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <DateCalendar displayWeekNumber />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('grid')).toBeVisible();
+  });
+
+  it('should pass the owner state to every calendar header slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiPickersCalendarHeader: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              opacity: ownerState.isPickerDisabled ? 0.5 : 1,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <DateCalendar />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('button', { name: /calendar view is open/ })).toBeVisible();
+  });
+
+  it('should not pass the owner state to a custom switch view icon', () => {
+    function SwitchViewIcon(props: React.SVGProps<SVGSVGElement>) {
+      return <svg data-testid="switch-view-icon" {...props} />;
+    }
+
+    render(<DateCalendar slots={{ switchViewIcon: SwitchViewIcon }} />);
+
+    expect(screen.getByTestId('switch-view-icon')).not.to.have.attribute('ownerState');
+  });
 
   it('switches between views uncontrolled', async () => {
     const handleViewChange = vi.fn();

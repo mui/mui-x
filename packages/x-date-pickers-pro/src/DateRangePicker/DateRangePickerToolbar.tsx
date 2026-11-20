@@ -55,7 +55,7 @@ const DateRangePickerToolbarRoot = styled(PickersToolbar, {
 const DateRangePickerToolbarContainer = styled('div', {
   name: 'MuiDateRangePickerToolbar',
   slot: 'Container',
-})({
+})<{ ownerState: PickerToolbarOwnerState }>({
   display: 'flex',
 });
 
@@ -107,7 +107,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
       ownerState={ownerState}
       ref={ref}
     >
-      <DateRangePickerToolbarContainer className={classes.container}>
+      <DateRangePickerToolbarContainer className={classes.container} ownerState={ownerState}>
         <PickersToolbarButton
           variant={value[0] == null ? 'h6' : 'h5'}
           value={formatDate(value[0], translations.start)}

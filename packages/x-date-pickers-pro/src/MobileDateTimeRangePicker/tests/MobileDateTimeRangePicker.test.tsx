@@ -1,4 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   createPickerRenderer,
   openPicker,
@@ -46,5 +47,52 @@ describe('<MobileDateTimeRangePicker />', () => {
       const sectionsContainer = getFieldSectionsContainer();
       expectFieldValue(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
     });
+  });
+
+  it('should pass the owner state to every tabs slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiDateTimeRangePickerTabs: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              opacity: ownerState.pickerVariant === 'mobile' ? 1 : 0.5,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MobileDateTimeRangePicker open slotProps={{ tabs: { hidden: false } }} />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Start date' })).toBeVisible();
+  });
+
+  it('should pass the toolbar owner state to every toolbar slot', () => {
+    const toolbarDirections: Array<string | undefined> = [];
+    const theme = createTheme({
+      components: {
+        MuiDateTimeRangePickerToolbar: {
+          styleOverrides: {
+            root: ({ ownerState }) => {
+              toolbarDirections.push(ownerState.toolbarDirection);
+              return {};
+            },
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MobileDateTimeRangePicker open />
+      </ThemeProvider>,
+    );
+
+    expect(toolbarDirections).not.to.have.length(0);
+    expect(toolbarDirections).not.to.include(undefined);
   });
 });

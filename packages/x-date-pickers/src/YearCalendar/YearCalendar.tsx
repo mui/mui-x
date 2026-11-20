@@ -83,7 +83,7 @@ const YearCalendarRoot = styled('div', {
 const YearCalendarButtonFiller = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'ButtonFiller',
-})({
+})<{ ownerState: PickerOwnerState }>({
   height: 36,
   width: 72,
 });
@@ -372,7 +372,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
         );
       })}
       {Array.from({ length: fillerAmount }, (_, index) => (
-        <YearCalendarButtonFiller key={index} />
+        <YearCalendarButtonFiller key={index} ownerState={ownerState} />
       ))}
     </YearCalendarRoot>
   );

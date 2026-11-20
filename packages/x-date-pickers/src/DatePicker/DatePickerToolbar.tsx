@@ -37,7 +37,7 @@ const useUtilityClasses = (classes: Partial<DatePickerToolbarClasses> | undefine
 const DatePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDatePickerToolbar',
   slot: 'Root',
-})({});
+})<{ ownerState: PickerToolbarOwnerState }>({});
 
 const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
@@ -101,6 +101,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
       toolbarTitle={translations.datePickerToolbarTitle}
       className={clsx(classes.root, className)}
       {...other}
+      ownerState={ownerState}
     >
       <DatePickerToolbarTitle
         variant="h4"

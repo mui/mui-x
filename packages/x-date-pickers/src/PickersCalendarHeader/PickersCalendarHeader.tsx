@@ -170,13 +170,19 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
   });
 
   const SwitchViewIcon = slots?.switchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
-  // The spread is here to avoid this bug mui/material-ui#34056
-  const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
+  const switchViewIconSlotProps = useSlotProps({
     elementType: SwitchViewIcon,
     externalSlotProps: slotProps?.switchViewIcon,
     ownerState,
     className: classes.switchViewIcon,
   });
+  // Only the built-in icon gets `ownerState`, because a custom icon can forward it to the DOM.
+  const { ownerState: switchViewIconOwnerState, ...customSwitchViewIconProps } =
+    switchViewIconSlotProps;
+  const switchViewIconProps =
+    SwitchViewIcon === PickersCalendarHeaderSwitchViewIcon
+      ? switchViewIconSlotProps
+      : customSwitchViewIconProps;
 
   const selectNextMonth = () => onMonthChange(adapter.addMonths(month, 1));
   const selectPreviousMonth = () => onMonthChange(adapter.addMonths(month, -1));

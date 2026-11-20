@@ -7,6 +7,11 @@ import type { DialogActionsProps } from '@mui/material/DialogActions';
 import DialogActions from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { usePickerContext } from '../hooks';
+import type { PickerLayoutOwnerState } from '../PickersLayout/PickersLayout.types';
+import {
+  PickerLayoutOwnerStateContext,
+  usePickerLayoutOwnerState,
+} from '../PickersLayout/usePickerLayoutOwnerState';
 
 export type PickersActionBarAction =
   'clear' | 'cancel' | 'accept' | 'today' | 'next' | 'nextOrAccept';
@@ -25,7 +30,7 @@ export interface PickersActionBarProps extends DialogActionsProps {
 const PickersActionBarRoot = styled(DialogActions, {
   name: 'MuiPickersLayout',
   slot: 'ActionBar',
-})({});
+})<{ ownerState: PickerLayoutOwnerState }>({});
 
 /**
  * Demos:
@@ -41,6 +46,9 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
   const { actions, ...other } = props;
 
   const translations = usePickerTranslations();
+  const layoutOwnerState = React.useContext(PickerLayoutOwnerStateContext);
+  const fallbackOwnerState = usePickerLayoutOwnerState();
+  const ownerState = layoutOwnerState ?? fallbackOwnerState;
   const {
     clearValue,
     setValueToToday,
@@ -110,7 +118,11 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
     }
   });
 
-  return <PickersActionBarRoot {...other}>{buttons}</PickersActionBarRoot>;
+  return (
+    <PickersActionBarRoot {...other} ownerState={ownerState}>
+      {buttons}
+    </PickersActionBarRoot>
+  );
 }
 
 PickersActionBarComponent.propTypes /* remove-proptypes */ = {

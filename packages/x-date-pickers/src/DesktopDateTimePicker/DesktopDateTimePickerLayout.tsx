@@ -10,6 +10,7 @@ import {
   pickersLayoutClasses,
   usePickerLayout,
 } from '../PickersLayout';
+import { PickerLayoutOwnerStateContext } from '../PickersLayout/usePickerLayoutOwnerState';
 import { usePickerContext } from '../hooks/usePickerContext';
 import type { PickerValidValue } from '../internals/models';
 
@@ -52,7 +53,9 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
         {tabs}
         {isActionBarVisible && <Divider sx={{ gridRow: 3, gridColumn: '1 / 4' }} />}
       </PickersLayoutContentWrapper>
-      {actionBar}
+      <PickerLayoutOwnerStateContext.Provider value={ownerState}>
+        {actionBar}
+      </PickerLayoutOwnerStateContext.Provider>
     </PickersLayoutRoot>
   );
 }) as DesktopDateTimePickerLayoutComponent;
