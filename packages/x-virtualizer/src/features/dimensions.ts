@@ -582,6 +582,12 @@ function useRowsMeta(
 
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
+    // Without per-row heights, every row has the base height and needs no height entry. Entries
+    // left from earlier per-row heights no longer apply.
+    const hasPerRowHeights = Boolean(getRowHeightProp || getRowSpacing || applyRowHeight);
+    if (!hasPerRowHeights) {
+      heightCache.clear();
+    }
 
     const pinnedTopRowsTotalHeight =
       pinnedRows?.top.reduce((acc, row) => {
@@ -596,14 +602,19 @@ function useRowsMeta(
       }, 0) ?? 0;
 
     const positions: number[] = [];
-    const currentPageTotalHeight = rows.reduce((acc, row) => {
-      positions.push(acc);
-
-      const entry = processHeightEntry(row);
-      const total = entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
-
-      return acc + total;
-    }, 0);
+    const baseRowHeight = selectors.dimensions(store.state).rowHeight;
+    let currentPageTotalHeight = 0;
+    for (let i = 0; i < rows.length; i += 1) {
+      positions.push(currentPageTotalHeight);
+      let rowHeight = 0;
+      if (hasPerRowHeights) {
+        const entry = processHeightEntry(rows[i]);
+        rowHeight = entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+      } else {
+        rowHeight = baseRowHeight;
+      }
+      currentPageTotalHeight += rowHeight;
+    }
 
     if (!hasRowWithAutoHeight.current) {
       // No row has height=auto, so all rows are already measured
@@ -628,7 +639,17 @@ function useRowsMeta(
     }
 
     isHeightMetaValid.current = true;
-  }, [store, pinnedRows, rows, processHeightEntry, updateDimensions]);
+  }, [
+    store,
+    heightCache,
+    getRowHeightProp,
+    getRowSpacing,
+    applyRowHeight,
+    pinnedRows,
+    rows,
+    processHeightEntry,
+    updateDimensions,
+  ]);
   const hydrateRowsMetaLatest = useEventCallback(hydrateRowsMeta);
 
   const getRowHeight = (rowId: RowId) => {

@@ -53,7 +53,6 @@ describe('<CalendarGrid.DayEvent />', () => {
     <CalendarGrid.DayEvent
       eventId="fake-id"
       occurrenceKey="fake-key"
-      internalInfos={undefined}
       start={eventStart}
       end={eventEnd}
       renderDragPreview={() => null}
@@ -76,7 +75,6 @@ describe('<CalendarGrid.DayEvent />', () => {
         <CalendarGrid.DayEvent
           eventId="fake-id"
           occurrenceKey="fake-key"
-          internalInfos={undefined}
           start={createProcessedDate(createDate(start).getTime(), 'default')}
           end={createProcessedDate(createDate(end).getTime(), 'default')}
           renderDragPreview={() => null}
@@ -104,7 +102,6 @@ describe('<CalendarGrid.DayEvent />', () => {
       <CalendarGrid.DayEvent
         eventId="fake-id"
         occurrenceKey="fake-key"
-        internalInfos={undefined}
         start={eventStart}
         end={eventEnd}
         renderDragPreview={() => null}

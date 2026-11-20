@@ -270,15 +270,12 @@ export function getEndOfDayMs(epochMs: number, timezone: string): number {
 }
 
 /**
- * The number of full days from `earlierMs` to `laterMs` on the wall clock of `timezone`: the days
- * between the two dates, minus one when the time of `laterMs` is before the time of `earlierMs`.
- * Negative when `laterMs` is before `earlierMs`.
+ * The first instant, in `timezone`, of the day `dayCount` days after the day of an instant. A day
+ * whose midnight a DST transition skips starts at the end of the gap.
  */
-export function differenceInDays(laterMs: number, earlierMs: number, timezone: string): number {
-  // A wall-clock day always lasts 24 hours, whatever the DST transitions.
-  return (
-    Math.trunc((toLocalMs(laterMs, timezone) - toLocalMs(earlierMs, timezone)) / MS_PER_DAY) || 0
-  );
+export function addDaysToDayStart(epochMs: number, dayCount: number, timezone: string): number {
+  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+  return localToEpochMs((dayNumber + dayCount) * MS_PER_DAY, timezone);
 }
 
 /**

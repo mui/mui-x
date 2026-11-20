@@ -733,6 +733,10 @@ export interface GridClasses {
    */
   'root--disableUserSelection': string;
   /**
+   * Styles applied to the root element while a click on a cell writes a reference into the formula being edited (Premium formulas).
+   */
+  'root--formulaReferencePicking': string;
+  /**
    * Used to fix header outline border radius.
    * @ignore - do not document.
    */
@@ -1178,6 +1182,7 @@ export const gridClassesOverrides = {
     'root--densityComfortable',
     'root--densityCompact',
     'root--disableUserSelection',
+    'root--formulaReferencePicking',
     'root--noToolbar',
     'withVerticalBorder',
   ],

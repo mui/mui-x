@@ -1,96 +1,33 @@
 # Changelog
 
-## 9.19.0
+## 9.18.1
 
 _Nov 16, 2026_
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 1 contributor who made this release possible. Here are some highlights ✨:
 
 - 🐛 Fix the broken CommonJS entries of the `@mui/x-charts-vendor` package published in v9.18.0
-- ⚠️ The Scheduler occurrences use flat `BaseTemporal` display dates, exported from the new `@mui/x-scheduler/base-temporal` entry point
-
-Special thanks go out to community member @officialasishkumar for their valuable contribution.
 
 The following team members contributed to this release:
-@flaviendelangle, @JCQuintas, @LukasTy, @noraleonte
-
-### Data Grid
-
-#### `@mui/x-data-grid@9.19.0`
-
-- [DataGrid] Support React node values in `GridLongTextCell` (#24152) @JCQuintas
-
-#### `@mui/x-data-grid-pro@9.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-data-grid@9.19.0`.
-
-#### `@mui/x-data-grid-premium@9.19.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
-
-Same changes as in `@mui/x-data-grid-pro@9.19.0`, plus:
-
-- [DataGridPremium] Preview the applied result in the computed column editor (#24141) @JCQuintas
+@LukasTy
 
 ### Charts
 
-#### `@mui/x-charts@9.19.0`
+#### `@mui/x-charts@9.18.1`
 
 - [charts] Fix `@mui/x-charts-vendor` CommonJS entries after the D3 bump (#24218) @LukasTy
 
-#### `@mui/x-charts-pro@9.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@9.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@9.19.0`.
+Same changes as in `@mui/x-charts@9.18.1`.
 
-#### `@mui/x-charts-premium@9.19.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@9.18.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@9.19.0`, plus:
+Same changes as in `@mui/x-charts-pro@9.18.1`.
 
-- [charts-premium] Support `barLabel` and `barLabelPlacement` on range bar series (#24147) @officialasishkumar
-
-#### `@mui/x-charts-vendor@9.19.0`
+#### `@mui/x-charts-vendor@9.18.1`
 
 - [charts] Fix `@mui/x-charts-vendor` CommonJS entries after the D3 bump (#24218) @LukasTy
-
-### Scheduler
-
-#### Breaking changes
-
-- The occurrences (`onEventEditingStart`, `getEventAriaLabel`, the `timelineEventContent` slot and `useEventDialogOccurrence()`) are flatter and built around their display dates:
-  - `occurrence.displayTimezone.start` / `.end` are now `occurrence.start` / `.end`.
-  - `occurrence.dataTimezone.timezone` / `.rrule` are now `occurrence.timezone` / `.rrule`.
-  - `occurrence.displayTimezone.timezone` / `.exDates` and `occurrence.dataTimezone.start` / `.end` / `.exDates` are removed. The original `exDates` strings are in `occurrence.modelInBuiltInFormat.exDates`.
-
-- The processed dates replace `value` (`Date`), `key` and `minutesInDay` with `plainDateTime`, a `BaseTemporal.PlainDateTime` in the display timezone. `timestamp` doesn't change. The `BaseTemporal` namespace is exported from the new `@mui/x-scheduler/base-temporal` entry point:
-
-  ```diff
-  -const hour = Math.floor(occurrence.displayTimezone.start.minutesInDay / 60);
-  +const hour = occurrence.start.plainDateTime.hour;
-  ```
-
-- The `end` of the all-day occurrences is exclusive: the start of the next day instead of 23:59:59.999. The event models keep their format.
-
-- The `rrule.until` of the occurrences follows RFC 5545: a `BaseTemporal.PlainDate` includes its whole day, and a `BaseTemporal.PlainDateTime` is the exact cutoff of a timed series.
-
-- The `rruleDraft.until` of `EventDialogFormValues` is `null` while its field is empty.
-
-- The `'system'` timezone, an alias of `'default'`, is removed. Use `'default'` in `displayTimezone` and in the `timezone` of the events:
-
-  ```diff
-  -<EventCalendar displayTimezone="system" />
-  +<EventCalendar displayTimezone="default" />
-  ```
-
-#### `@mui/x-scheduler@9.0.0-beta.17`
-
-- [scheduler] Expose BaseTemporal and flatten the occurrences around plain date-times (#24160) @flaviendelangle
-- [scheduler] Remove the last traces of the date adapter (#24161) @flaviendelangle
-
-#### `@mui/x-scheduler-premium@9.0.0-beta.17` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
-
-Same changes as in `@mui/x-scheduler@9.0.0-beta.17`.
-
-### Miscellaneous
-
-- [release] Fix missing changelog line (#24190) @noraleonte
 
 ## 9.18.0
 

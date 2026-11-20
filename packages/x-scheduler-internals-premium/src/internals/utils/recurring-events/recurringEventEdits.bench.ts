@@ -51,6 +51,7 @@ describe('recurring event edits', () => {
               createOccurrence(event, occurrenceStart),
               { id: event.id, title: 'Renamed' },
               'this-and-following',
+              'default',
             );
           }
         }
