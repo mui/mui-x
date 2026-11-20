@@ -4,7 +4,6 @@ import {
   gridVisibleRowsSelector,
   gridVisibleColumnFieldsSelector,
   gridEditCellStateSelector,
-  gridEditRowsStateSelector,
   GridCellEditStopReasons,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid-pro';
@@ -203,15 +202,8 @@ export const createRowEditHistoryHandler = (
 
       const { id } = params;
 
-      // Escape discards the values, and a validation error keeps the row in edit mode.
-      // A stop during the validation can still commit, so only a settled error counts.
-      const editRowState = gridEditRowsStateSelector(apiRef)[id] ?? {};
-      if (
-        params.reason === GridRowEditStopReasons.escapeKeyDown ||
-        Object.values(editRowState).some(
-          (fieldProps) => fieldProps.error && !fieldProps.isProcessingProps,
-        )
-      ) {
+      // Escape discards the values. The grid does not stop a row while a field has an error.
+      if (params.reason === GridRowEditStopReasons.escapeKeyDown) {
         return null;
       }
 
