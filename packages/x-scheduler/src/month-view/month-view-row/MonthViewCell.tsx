@@ -8,6 +8,7 @@ import {
   formatDayOfMonth,
   formatMonthAndDayOfMonth,
   formatMonthShortAndDayOfMonth,
+  formatWeekdayMonthAndDayOfMonth,
   getDayNumber,
   isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
@@ -212,7 +213,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
-  const dateLabel = formatMonthAndDayOfMonth(locale, day.plainDate);
   const dateLabelId = schedulerId ? `${schedulerId}-MonthViewDate-${day.key}` : undefined;
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
@@ -240,6 +240,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       key={day.key}
       value={day.plainDate}
       aria-colindex={colIndex}
+      includeColumnHeaderInLabel={!dateLabelId}
       aria-labelledby={[dateLabelId, ariaLabelledBy].filter(Boolean).join(' ') || undefined}
       data-current={isToday || undefined}
       aria-current={isToday ? 'date' : undefined}
@@ -249,13 +250,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >
       <span id={dateLabelId} hidden>
-        {dateLabel}
+        {formatWeekdayMonthAndDayOfMonth(locale, day.plainDate)}
       </span>
       {hasDayView ? (
         <MonthViewCellNumberButton
           type="button"
           className={classes.monthViewCellNumberButton}
-          aria-label={localeText.goToDay(dateLabel)}
+          aria-label={localeText.goToDay(formatMonthAndDayOfMonth(locale, day.plainDate))}
           onClick={(event) => store.switchToDay(new Date(day.timestamp), event)}
           tabIndex={-1}
         >

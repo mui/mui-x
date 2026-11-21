@@ -222,7 +222,7 @@ describe('EventCalendar', () => {
   describe('current day', () => {
     // Browsers cannot change their timezone through process.env.TZ.
     it.skipIf(!isJSDOM).each([
-      { view: 'month', viewLabel: 'Friday December 30', currentColumnCount: 0 },
+      { view: 'month', viewLabel: 'Friday, December 30', currentColumnCount: 0 },
       { view: 'week', viewLabel: 'Friday, December 30', currentColumnCount: 1 },
       { view: 'agenda', viewLabel: 'Friday, December 30', currentColumnCount: 0 },
     ] as const)(

@@ -82,12 +82,31 @@ describe('<MonthView />', () => {
       </EventCalendarProvider>,
     );
 
-    const may1Cell = screen.getByRole('gridcell', { name: 'Thursday May 1' });
-    const may15Cell = screen.getByRole('gridcell', { name: 'Thursday May 15' });
+    const may1Cell = screen.getByRole('gridcell', { name: 'Thursday, May 1' });
+    const may15Cell = screen.getByRole('gridcell', { name: 'Thursday, May 15' });
 
     expect(within(may1Cell).getByText('Meeting')).not.to.equal(null);
     expect(within(may15Cell).getByText('Doctor Appointment')).not.to.equal(null);
   });
+
+  it.each([
+    { dateLocale: 'en-US', buttonName: 'Go to May 15', cellName: 'Thursday, May 15' },
+    { dateLocale: 'ja-JP', buttonName: 'Go to 5月15日', cellName: '5月15日木曜日' },
+  ])(
+    'should use the $dateLocale weekday and date order for the month cell',
+    ({ dateLocale, buttonName, cellName }) => {
+      render(
+        <EventCalendarProvider {...standaloneDefaults} dateLocale={dateLocale}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const button = screen.getByRole('button', { name: buttonName });
+      expect(button.closest('[role="gridcell"]')).toHaveAccessibleName(cellName);
+    },
+  );
 
   it('should name month cells and day buttons with their date, including adjacent months', () => {
     render(
@@ -140,7 +159,7 @@ describe('<MonthView />', () => {
         </EventDialogProvider>
       </EventCalendarProvider>,
     );
-    const cell = screen.getByRole('gridcell', { name: 'Thursday May 15' });
+    const cell = screen.getByRole('gridcell', { name: 'Thursday, May 15' });
     expect(within(cell).getByText('15').closest('button')).to.equal(null);
   });
 
@@ -268,7 +287,7 @@ describe('<MonthView />', () => {
     }
 
     function getMay1Cell() {
-      return screen.getByRole('gridcell', { name: 'Thursday May 1' });
+      return screen.getByRole('gridcell', { name: 'Thursday, May 1' });
     }
 
     function getPopoverEventTitles(popover: HTMLElement) {
@@ -1111,7 +1130,7 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const firstCell = screen.getByRole('gridcell', { name: 'Sunday May 4' });
+      const firstCell = screen.getByRole('gridcell', { name: 'Sunday, May 4' });
 
       // Event should render in the first cell of the week since it started before
       expect(within(firstCell).getByText('Long Event')).not.to.equal(null);
@@ -1410,7 +1429,7 @@ describe('<MonthView />', () => {
       const weekNumberLabels = document.querySelectorAll<HTMLElement>(
         `.${eventCalendarClasses.monthViewWeekNumberCell}`,
       );
-      expect(within(grid).getByRole('gridcell', { name: 'Thursday May 1 Week 18' })).not.to.equal(
+      expect(within(grid).getByRole('gridcell', { name: 'Thursday, May 1 Week 18' })).not.to.equal(
         null,
       );
       expect(weekNumberLabels.length).to.be.greaterThan(0);
