@@ -22,10 +22,15 @@ import { useRegisterPointerInteractions } from '../internals/plugins/featurePlug
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsAccessibilityProxy } from '../internals/components/ChartsAccessibilityProxy';
 
+interface ChartsLayerContainerOwnerState extends ChartsLayerContainerProps {
+  width?: number;
+  height?: number;
+}
+
 const ChartsLayerContainerDiv = styled('div', {
   name: 'MuiChartsLayerContainer',
   slot: 'Root',
-})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
+})<{ ownerState: ChartsLayerContainerOwnerState }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',
@@ -104,7 +109,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
       // eslint-disable-next-line jsx-a11y/role-supports-aria-props
       <ChartsLayerContainerDiv
         ref={handleRef}
-        ownerState={{ width: propsWidth, height: propsHeight }}
+        ownerState={{ ...themeProps, width: propsWidth, height: propsHeight }}
         role="none"
         aria-label={title}
         aria-describedby={desc ? descId : undefined}

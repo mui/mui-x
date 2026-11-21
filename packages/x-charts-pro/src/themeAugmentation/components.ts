@@ -10,7 +10,7 @@ export interface ChartsProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiFunnelSection'];
   };
   MuiFunnelSectionLabel?: {
-    defaultProps?: ComponentsProps['MuiFunnelSection'];
+    defaultProps?: ComponentsProps['MuiFunnelSectionLabel'];
   };
 
   // BarChartPro components
@@ -20,6 +20,16 @@ export interface ChartsProComponents<Theme = unknown> {
   // LineChartPro components
   MuiLineChartPro?: {
     defaultProps?: ComponentsProps['MuiLineChartPro'];
+  };
+
+  // PieChartPro components
+  MuiPieChartPro?: {
+    defaultProps?: ComponentsProps['MuiPieChartPro'];
+  };
+
+  // RadarChartPro components
+  MuiRadarChartPro?: {
+    defaultProps?: ComponentsProps['MuiRadarChartPro'];
   };
 
   // Heatmap components

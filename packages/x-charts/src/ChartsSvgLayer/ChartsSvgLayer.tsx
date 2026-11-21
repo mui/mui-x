@@ -29,7 +29,7 @@ export interface ChartsSvgLayerProps extends Omit<
 const ChartsSvgLayerStyles = styled('svg', {
   name: 'MuiChartsSvgLayer',
   slot: 'Root',
-})({
+})<{ ownerState: ChartsSvgLayerProps }>({
   width: '100%',
   height: '100%',
   position: 'absolute',
@@ -67,6 +67,7 @@ const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
 
     return (
       <ChartsSvgLayerStyles
+        ownerState={themeProps}
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         className={clsx(classes.root, className)}
         {...other}
