@@ -5,6 +5,7 @@ export const GridRoot = styled('g', {
   name: 'MuiChartsRadialGrid',
   slot: 'Root',
   overridesResolver: (props, styles) => [
+    { [`& .${chartsRadialGridClasses.line}`]: styles.line },
     { [`& .${chartsRadialGridClasses.rotationLine}`]: styles.rotationLine },
     { [`& .${chartsRadialGridClasses.radiusLine}`]: styles.radiusLine },
     styles.root,

@@ -12,7 +12,7 @@ import {
 export const BarLabelComponent = styled('text', {
   name: 'MuiBarLabel',
   slot: 'Root',
-})(({ theme }) => ({
+})<{ ownerState: BarLabelProps }>(({ theme }) => ({
   ...theme?.typography?.body2,
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
@@ -88,6 +88,7 @@ function BarLabel(inProps: BarLabelProps): React.JSX.Element {
 
   return (
     <BarLabelComponent
+      ownerState={props}
       textAnchor={textAnchor}
       dominantBaseline={dominantBaseline}
       opacity={hidden ? 0 : fadedOpacity}

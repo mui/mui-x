@@ -128,8 +128,10 @@ const theme = createTheme({
   components: {
     MuiChartsAxis: {
       styleOverrides: {
-        tick: {
-          stroke: '#006BD6',
+        root: {
+          '& .MuiChartsAxis-tick': {
+            stroke: '#006BD6',
+          },
         },
       },
     },

@@ -219,5 +219,13 @@ createTheme({
         constent: { color: 'red' },
       },
     },
+    // RadarChart components
+    MuiRadarChart: {
+      defaultProps: {
+        shape: 'circular',
+        // @ts-expect-error invalid MuiRadarChart prop
+        someRandomProp: true,
+      },
+    },
   },
 });

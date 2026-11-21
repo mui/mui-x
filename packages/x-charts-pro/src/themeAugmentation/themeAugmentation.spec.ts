@@ -78,7 +78,7 @@ createTheme({
 
     MuiFunnelSectionLabel: {
       defaultProps: {
-        variant: 'outlined',
+        label: { x: 0, y: 0, value: 'label' },
         // @ts-expect-error invalid MuiFunnelSectionLabel prop
         someRandomProp: true,
       },

@@ -14,6 +14,7 @@ import type { ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider'
 import type { ChartsLayerContainerProps } from '../ChartsLayerContainer';
 import type { ChartsSvgLayerProps } from '../ChartsSvgLayer';
 import type { ChartsRadialGridProps } from '../ChartsRadialGrid';
+import type { RadarChartProps } from '../RadarChart/RadarChart';
 
 export interface ChartsComponentsPropsList {
   MuiChartsXAxis: ChartsXAxisProps;
@@ -39,6 +40,8 @@ export interface ChartsComponentsPropsList {
   MuiScatterChart: ScatterChartProps;
   // PieChart components
   MuiPieChart: PieChartProps;
+  // RadarChart components
+  MuiRadarChart: RadarChartProps;
 }
 
 declare module '@mui/material/styles' {
