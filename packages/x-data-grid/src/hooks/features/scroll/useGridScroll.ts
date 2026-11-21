@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useRtl } from '@mui/system/RtlProvider';
+import { RowsMeta } from '@mui/x-virtualizer';
 import type { GridCellIndexCoordinates } from '../../../models/gridCell';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -189,15 +190,11 @@ export const useGridScroll = (apiRef: RefObject<GridPrivateApiCommunity>): void 
         const rowsMeta = gridRowsMetaSelector(apiRef);
         const elementIndex = targetRowIndex - rowIndexOffset;
 
-        const targetOffsetHeight = rowsMeta.positions[elementIndex + 1]
-          ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
-          : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
-
         scrollCoordinates.top = scrollIntoView({
           containerSize: dimensions.viewportInnerSize.height,
           scrollPosition: virtualScrollerRef.current?.scrollTop ?? 0,
-          elementSize: targetOffsetHeight,
-          elementOffset: rowsMeta.positions[elementIndex],
+          elementSize: RowsMeta.getSlotHeight(rowsMeta, elementIndex),
+          elementOffset: RowsMeta.getPosition(rowsMeta, elementIndex) ?? 0,
         });
       }
 
