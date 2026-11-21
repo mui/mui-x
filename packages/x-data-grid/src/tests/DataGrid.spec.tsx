@@ -71,6 +71,21 @@ function RowPropTest() {
   );
 }
 
+function CellParamsRowTypeTest() {
+  <DataGrid<{ firstName: string }>
+    rows={[]}
+    columns={[]}
+    isCellEditable={(params) => {
+      // @ts-expect-error The row model declares firstName, but no lastName property.
+      return params.row.lastName === '';
+    }}
+    getCellClassName={(params) => {
+      // @ts-expect-error The row model declares firstName, but no lastName property.
+      return params.row.lastName;
+    }}
+  />;
+}
+
 function ColumnPropTest() {
   return (
     <div>
