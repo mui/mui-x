@@ -12,7 +12,12 @@ Indexes are zero-based.
 The `rowIndex` is an index into the full filtered and sorted row list, not relative to the current page, and it must fall within the range of rows displayed on the current page.
 With `paginationMode="server"` the Data Grid only holds the rows of the current page, so the absolute index is `page * pageSize` plus the index of the row within the loaded rows.
 The `colIndex` is an index into the visible columns.
-When an index is out of bounds, the Data Grid logs a warning in development and ignores that axis, so `scrollToIndexes` scrolls the other one and returns `false` if nothing moved.
+When an index is out of bounds, the Data Grid logs a warning in development and ignores that axis. It can still scroll along the other axis.
+`scrollToIndexes()` returns `true` when it requests a scroll along either axis and `false` when no scroll is requested, such as when the target cell is already in view.
+
+When you append a row through the `rows` prop, its index can be available before the grid has calculated its scroll position.
+Calling `scrollToIndexes()` during this interval can also return `false`.
+Wait for the grid to update its row positions in a subsequent render before scrolling to the appended row.
 
 The following demo explores the usage of this API:
 
