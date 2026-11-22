@@ -24,7 +24,7 @@ import {
   getLocalizedDigits,
   getSectionOrder,
 } from './useField.utils';
-import { buildSectionsFromFormat } from './buildSectionsFromFormat';
+import { buildSectionsFromFormat, getSectionPlaceholder } from './buildSectionsFromFormat';
 import type {
   FieldSelectedSections,
   PickersTimezone,
@@ -460,6 +460,24 @@ export const useFieldState = <
       tempValueStrAndroid: null,
       characterQuery: null,
     }));
+  } else if (translations !== state.lastSectionsDependencies.localeText) {
+    setState((prevState) => {
+      const sections = prevState.sections.map((section) => {
+        const placeholder = getSectionPlaceholder(adapter, translations, section, section.format);
+        return placeholder === section.placeholder ? section : { ...section, placeholder };
+      });
+
+      return {
+        ...prevState,
+        lastSectionsDependencies: {
+          ...prevState.lastSectionsDependencies,
+          localeText: translations,
+        },
+        sections: sections.some((section, index) => section !== prevState.sections[index])
+          ? sections
+          : prevState.sections,
+      };
+    });
   }
 
   if (state.characterQuery != null && !error && activeSectionIndex == null) {
