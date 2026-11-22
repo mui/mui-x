@@ -137,7 +137,12 @@ export const useFieldState = <
     const stateWithoutReferenceDate: Omit<UseFieldState<TValue>, 'referenceValue'> = {
       sections,
       lastExternalValue: value,
-      lastSectionsDependencies: { format, isRtl, locale: adapter.locale },
+      lastSectionsDependencies: {
+        format,
+        isRtl,
+        locale: adapter.locale,
+        localeText: translations,
+      },
       tempValueStrAndroid: null,
       characterQuery: null,
     };
@@ -445,7 +450,12 @@ export const useFieldState = <
     validateSections(sections, valueType);
     setState((prevState) => ({
       ...prevState,
-      lastSectionsDependencies: { format, isRtl, locale: adapter.locale },
+      lastSectionsDependencies: {
+        format,
+        isRtl,
+        locale: adapter.locale,
+        localeText: translations,
+      },
       sections,
       tempValueStrAndroid: null,
       characterQuery: null,
