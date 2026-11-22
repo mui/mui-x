@@ -16,6 +16,7 @@ import {
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { EventCalendarPreferences } from '@mui/x-scheduler/models';
+import type { CalendarView } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { SchedulerUserFacingErrorDescriptor } from '@mui/x-scheduler-internals/internals';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -25,7 +26,9 @@ import { SharedComponentsStyledContext } from '../internals/components/SharedCom
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../internals/constants/defaultLocaleText';
 
 describe('EventCalendar', () => {
-  const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });
+  const { render, renderSettled } = createSchedulerRenderer({
+    clockConfig: new Date('2025-05-26'),
+  });
 
   const event1 = EventBuilder.new()
     .title('Running')
@@ -218,6 +221,120 @@ describe('EventCalendar', () => {
       expect(view.queryByRole('button', { name: /Morning Run/i })).to.equal(null);
     },
   );
+
+  describe('opening a date in Day view', () => {
+    const getContent = () => screen.getByRole('region', { name: 'Calendar content' });
+
+    it.each(['month', 'week'] as const)(
+      'should focus the first event after Enter in %s view and let Tab reach the next event',
+      async (defaultView) => {
+        const lunch = EventBuilder.new()
+          .title('Lunch')
+          .span('2025-05-26T12:00:00Z', '2025-05-26T13:00:00Z')
+          .build();
+        const { user } = await renderSettled(
+          <EventCalendar events={[lunch, event1]} defaultView={defaultView} />,
+        );
+        const content = getContent();
+        const dateTrigger =
+          defaultView === 'week'
+            ? within(content).getByRole('columnheader', { name: 'Monday, May 26' })
+            : within(content).getByRole('button', { name: '26' });
+        act(() => dateTrigger.focus());
+        await user.keyboard('{Enter}');
+
+        expect(content).to.have.attribute('data-view', 'day');
+        expect(within(content).getByRole('button', { name: /^Running,/ })).toHaveFocus();
+        await user.tab();
+        expect(within(content).getByRole('button', { name: /^Lunch,/ })).toHaveFocus();
+      },
+    );
+
+    it.each(['month', 'week'] as const)(
+      'should focus a calendar cell after Enter opens an empty day from %s view',
+      async (defaultView) => {
+        const { user } = await renderSettled(
+          <EventCalendar events={[event1]} defaultView={defaultView} />,
+        );
+        const content = getContent();
+        const dateTrigger =
+          defaultView === 'week'
+            ? within(content).getByRole('columnheader', { name: 'Sunday, May 25' })
+            : within(content).getByRole('button', { name: '25' });
+        act(() => dateTrigger.focus());
+        await user.keyboard('{Enter}');
+
+        expect(content).to.have.attribute('data-view', 'day');
+        expect(within(content).getByRole('columnheader')).toHaveAccessibleName('Sunday, May 25');
+        expect(within(content).getAllByRole('gridcell')).to.include(document.activeElement);
+      },
+    );
+
+    it('should focus the all-day event first when a controlled calendar opens a clicked date', async () => {
+      const holiday = EventBuilder.new()
+        .title('Holiday')
+        .span('2025-05-26', '2025-05-27', { allDay: true })
+        .build();
+      function ControlledCalendar() {
+        const [view, setView] = React.useState<CalendarView>('week');
+        const [date, setDate] = React.useState(new Date('2025-05-28T12:00:00Z'));
+        return (
+          <EventCalendar
+            events={[event1, holiday]}
+            view={view}
+            onViewChange={(nextView) => setView(nextView)}
+            visibleDate={date}
+            onVisibleDateChange={(nextDate) => setDate(nextDate)}
+          />
+        );
+      }
+      const { user } = await renderSettled(<ControlledCalendar />);
+      const content = getContent();
+      await user.click(within(content).getByRole('button', { name: /26$/ }));
+
+      expect(content).to.have.attribute('data-view', 'day');
+      expect(within(content).getByRole('button', { name: /^Holiday,/ })).toHaveFocus();
+    });
+
+    it('should leave focus on the toolbar when switching views after a canceled date change', async () => {
+      const { user } = await renderSettled(
+        <EventCalendar
+          events={[event1]}
+          defaultView="week"
+          onVisibleDateChange={(_date, details) => details.cancel()}
+        />,
+      );
+      const content = getContent();
+      const dateButton = within(content).getByRole('button', { name: /26$/ });
+      act(() => dateButton.focus());
+      await user.keyboard('{Enter}');
+      expect(dateButton).toHaveFocus();
+      expect(content).to.have.attribute('data-view', 'week');
+
+      const viewSwitcher = screen.getByRole('button', { name: 'Week' });
+      await user.click(viewSwitcher);
+      await user.click(screen.getByRole('menuitemradio', { name: 'Day' }));
+      expect(content).to.have.attribute('data-view', 'day');
+      expect(viewSwitcher).toHaveFocus();
+    });
+
+    it('should discard a declined controlled view change before a later switch to Day', async () => {
+      const onViewChange = vi.fn();
+      const { user, setProps } = await renderSettled(
+        <EventCalendar events={[event1]} view="month" onViewChange={onViewChange} />,
+      );
+      const content = getContent();
+      const dateButton = within(content).getByRole('button', { name: /26$/ });
+      act(() => dateButton.focus());
+      await user.keyboard('{Enter}');
+      expect(onViewChange.mock.calls[0][0]).to.equal('day');
+      expect(dateButton).toHaveFocus();
+
+      setProps({ view: 'day' });
+      expect(content).to.have.attribute('data-view', 'day');
+      expect(content.contains(document.activeElement)).to.equal(false);
+    });
+  });
 
   describe('current day', () => {
     // Browsers cannot change their timezone through process.env.TZ.

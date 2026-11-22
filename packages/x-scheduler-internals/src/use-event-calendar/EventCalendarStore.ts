@@ -17,6 +17,7 @@ import {
   SchedulerStore,
 } from '../internals/utils/SchedulerStore';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
+import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
 const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
@@ -110,6 +111,8 @@ export class ExtendableEventCalendarStore<
     TResource
   >,
 > extends SchedulerStore<TEvent, TResource, EventCalendarState, Parameters> {
+  private dayToFocus: number | null = null;
+
   public constructor(
     parameters: Parameters,
     instanceName: SchedulerInstanceName,
@@ -144,7 +147,11 @@ export class ExtendableEventCalendarStore<
     }
   }
 
-  private setVisibleDateAndView = (visibleDate: Date, view: CalendarView, event: React.UIEvent) => {
+  /**
+   * Goes to a specific day and sets the view to 'day'.
+   */
+  public switchToDay = (visibleDate: Date, event: React.UIEvent) => {
+    const view = 'day';
     const {
       visibleDate: visibleDateProp,
       view: viewProp,
@@ -172,6 +179,9 @@ export class ExtendableEventCalendarStore<
       return;
     }
 
+    const dayNumber = toLocalDayNumber(visibleDate.getTime(), this.state.displayTimezone);
+    this.dayToFocus = hasViewChange ? dayNumber : null;
+
     const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
     const canSetView = viewProp === undefined && hasViewChange;
     if (canSetVisibleDate && canSetView) {
@@ -180,6 +190,20 @@ export class ExtendableEventCalendarStore<
       this.update({ visibleDate });
     } else if (canSetView) {
       this.update({ view });
+    }
+
+    if (hasViewChange && (viewProp !== undefined || visibleDateProp !== undefined)) {
+      // A controlled calendar may decline the request. Don't carry focus into a later navigation.
+      queueMicrotask(() => {
+        if (
+          this.dayToFocus === dayNumber &&
+          (this.state.view !== view ||
+            toLocalDayNumber(this.state.visibleDate.getTime(), this.state.displayTimezone) !==
+              dayNumber)
+        ) {
+          this.dayToFocus = null;
+        }
+      });
     }
   };
 
@@ -202,6 +226,7 @@ export class ExtendableEventCalendarStore<
    * Sets the view of the calendar.
    */
   public setView = (view: CalendarView, event: Event) => {
+    this.dayToFocus = null;
     const { view: viewProp, onViewChange } = this.parameters;
     if (process.env.NODE_ENV !== 'production' && viewProp !== undefined && !onViewChange) {
       warnOnce(
@@ -230,11 +255,14 @@ export class ExtendableEventCalendarStore<
    */
   public goToNextVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(1, event);
 
-  /**
-   * Goes to a specific day and set the view to 'day'.
-   */
-  public switchToDay = (visibleDate: Date, event: React.UIEvent) => {
-    this.setVisibleDateAndView(visibleDate, 'day', event);
+  /** Consumes focus requested by a date button once its day grid has mounted. */
+  public consumeDayFocus = (dayNumber: number) => {
+    if (this.state.view !== 'day' || this.dayToFocus !== dayNumber) {
+      return false;
+    }
+
+    this.dayToFocus = null;
+    return true;
   };
 
   /**

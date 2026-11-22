@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { activeElement, contains } from '@base-ui/utils/shadowDom';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
@@ -100,8 +101,9 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   // Apply DOM focus when this cell becomes the focused cell
   React.useEffect(() => {
-    if (hasFocus && cellRef.current && !cellRef.current.contains(document.activeElement)) {
-      cellRef.current.focus({ preventScroll: true });
+    const column = cellRef.current;
+    if (hasFocus && column && !contains(column, activeElement(column.ownerDocument))) {
+      column.focus({ preventScroll: true });
     }
   }, [hasFocus]);
 
