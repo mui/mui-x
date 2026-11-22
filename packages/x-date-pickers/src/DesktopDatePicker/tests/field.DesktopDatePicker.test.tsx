@@ -1,3 +1,4 @@
+import { screen } from '@mui/internal-test-utils';
 import type { DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
@@ -7,7 +8,7 @@ import {
   adapterToUse,
 } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
-import { describe, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('<DesktopDatePicker /> - Field', () => {
   describe('Basic behaviors', () => {
@@ -17,6 +18,84 @@ describe('<DesktopDatePicker /> - Field', () => {
     const { renderWithProps } = buildFieldInteractions({
       render,
       Component: DesktopDatePicker,
+    });
+
+    it('should open the calendar with Alt+ArrowDown without editing the selected section', async () => {
+      const onChange = vi.fn();
+      const view = renderWithProps(
+        { defaultValue: adapterToUse.date('2022-06-18T00:00:00'), onChange },
+        { componentFamily: 'picker' },
+      );
+
+      await view.selectSection('month');
+      await view.user.keyboard('{Alt>}{ArrowDown}{/Alt}');
+
+      expect(screen.getByRole('dialog')).toBeVisible();
+      expectFieldValue(view.getSectionsContainer(), '06/18/2022');
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it('should request opening a controlled picker and keep plain ArrowDown available for editing', async () => {
+      const onOpen = vi.fn();
+      const view = renderWithProps(
+        { defaultValue: adapterToUse.date('2022-06-18T00:00:00'), open: false, onOpen },
+        { componentFamily: 'picker' },
+      );
+
+      await view.selectSection('month');
+      await view.user.keyboard('{Alt>}{ArrowDown}{/Alt}');
+      expect(onOpen).toHaveBeenCalledTimes(1);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+      expectFieldValue(view.getSectionsContainer(), '06/18/2022');
+
+      await view.user.keyboard('{ArrowDown}');
+      expectFieldValue(view.getSectionsContainer(), '05/18/2022');
+      expect(onOpen).toHaveBeenCalledTimes(1);
+    });
+
+    it('should ignore the shortcut in an already open picker', async () => {
+      const onOpen = vi.fn();
+      const view = renderWithProps(
+        {
+          defaultValue: adapterToUse.date('2022-06-18T00:00:00'),
+          open: true,
+          keepOpenDuringFieldFocus: true,
+          onOpen,
+        },
+        { componentFamily: 'picker' },
+      );
+
+      await view.selectSection('month');
+      await view.user.keyboard('{Alt>}{ArrowDown}{/Alt}');
+      expect(onOpen).not.toHaveBeenCalled();
+      expectFieldValue(view.getSectionsContainer(), '06/18/2022');
+    });
+
+    it('should let a field keydown handler cancel the opening shortcut', async () => {
+      const view = renderWithProps(
+        {
+          defaultValue: adapterToUse.date('2022-06-18T00:00:00'),
+          slotProps: { textField: { onKeyDown: (event) => event.preventDefault() } },
+        },
+        { componentFamily: 'picker' },
+      );
+
+      await view.selectSection('month');
+      await view.user.keyboard('{Alt>}{ArrowDown}{/Alt}');
+      expect(screen.queryByRole('dialog')).to.equal(null);
+      expectFieldValue(view.getSectionsContainer(), '06/18/2022');
+    });
+
+    it('should keep a read-only picker closed on Alt+ArrowDown', async () => {
+      const view = renderWithProps(
+        { defaultValue: adapterToUse.date('2022-06-18T00:00:00'), readOnly: true },
+        { componentFamily: 'picker' },
+      );
+
+      await view.selectSection('month');
+      await view.user.keyboard('{Alt>}{ArrowDown}{/Alt}');
+      expect(screen.queryByRole('dialog')).to.equal(null);
+      expectFieldValue(view.getSectionsContainer(), '06/18/2022');
     });
 
     it('should be able to reset a single section', async () => {
