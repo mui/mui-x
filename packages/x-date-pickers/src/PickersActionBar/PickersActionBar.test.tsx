@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { vi, describe, it, expect } from 'vitest';
@@ -8,7 +8,7 @@ import { PickerContext } from '../hooks/usePickerContext';
 describe('<PickersActionBar />', () => {
   const { render } = createPickerRenderer();
 
-  const renderWithContext = (element: React.ReactElement, disabled = false) => {
+  const renderWithContext = (element: React.ReactElement, disabled = false, readOnly = false) => {
     const spys = {
       setValue: vi.fn(),
       setView: vi.fn(),
@@ -21,6 +21,7 @@ describe('<PickersActionBar />', () => {
       goToPreviousStep: vi.fn(),
       hasNextStep: false,
       disabled,
+      readOnly,
     } as any;
 
     const { user } = render(
@@ -68,15 +69,31 @@ describe('<PickersActionBar />', () => {
     expect(setValueToToday.mock.calls.length).to.equal(1);
   });
 
-  it('disables the action buttons when the picker is disabled', () => {
-    renderWithContext(
-      <PickersActionBar actions={['clear', 'cancel', 'accept', 'today', 'next', 'nextOrAccept']} />,
-      true,
-    );
+  it.each([
+    { disabled: true, readOnly: false },
+    { disabled: false, readOnly: true },
+    { disabled: true, readOnly: true },
+  ])('disables the action buttons for %o', ({ disabled, readOnly }) => {
+    const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges, goToNextStep } =
+      renderWithContext(
+        <PickersActionBar
+          actions={['clear', 'cancel', 'accept', 'today', 'next', 'nextOrAccept']}
+        />,
+        disabled,
+        readOnly,
+      );
 
     const buttons = screen.getAllByRole<HTMLButtonElement>('button');
     expect(buttons.length).to.equal(6);
     expect(buttons.every((button) => button.disabled)).to.equal(true);
+    for (const button of buttons) {
+      fireEvent.click(button);
+    }
+    expect(clearValue).not.toHaveBeenCalled();
+    expect(setValueToToday).not.toHaveBeenCalled();
+    expect(acceptValueChanges).not.toHaveBeenCalled();
+    expect(cancelValueChanges).not.toHaveBeenCalled();
+    expect(goToNextStep).not.toHaveBeenCalled();
   });
 
   it('should respect actions order', () => {

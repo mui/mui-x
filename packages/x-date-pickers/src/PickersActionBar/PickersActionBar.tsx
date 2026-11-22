@@ -48,8 +48,10 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
     cancelValueChanges,
     goToNextStep,
     hasNextStep,
-    disabled,
+    disabled: isPickerDisabled,
+    readOnly,
   } = usePickerContext();
+  const disabled = isPickerDisabled || readOnly;
 
   if (actions == null || actions.length === 0) {
     return null;
