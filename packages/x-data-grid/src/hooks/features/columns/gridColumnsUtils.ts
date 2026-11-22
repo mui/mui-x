@@ -364,6 +364,7 @@ export const createColumnsState = ({
 
   columnsToUpsert.forEach((newColumn) => {
     const { field } = newColumn;
+    const isDuplicate = keepOnlyColumnsToUpsert && columnsToKeep[field] === true;
     columnsToKeep[field] = true;
     let existingState = columnsState.lookup[field];
 
@@ -374,7 +375,7 @@ export const createColumnsState = ({
         hasBeenResized: false,
       };
       columnsState.orderedFields.push(field);
-    } else if (keepOnlyColumnsToUpsert) {
+    } else if (keepOnlyColumnsToUpsert && !isDuplicate) {
       columnsState.orderedFields.push(field);
     }
 
