@@ -1,5 +1,11 @@
 import type { MockInstance } from 'vitest';
-import { DataGrid, GridToolbarExport } from '@mui/x-data-grid';
+import MenuItem from '@mui/material/MenuItem';
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbarExportContainer,
+} from '@mui/x-data-grid';
 import type { DataGridProps } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, waitFor } from '@mui/internal-test-utils';
@@ -191,5 +197,38 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });
+  });
+});
+
+describe('<DataGrid /> - GridToolbarExportContainer', () => {
+  const { render } = createRenderer();
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarExportContainer>
+          <MenuItem>Export as JSON</MenuItem>
+        </GridToolbarExportContainer>
+      </GridToolbarContainer>
+    );
+  }
+
+  it('should not forward `hideMenu` to a `MenuItem` child', () => {
+    function TestCase() {
+      const basicData = useBasicDemoData(3, 2);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...basicData} showToolbar slots={{ toolbar: CustomToolbar }} />
+        </div>
+      );
+    }
+
+    expect(() => {
+      render(<TestCase />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+    }).not.toErrorDev();
+
+    expect(screen.getByRole('menuitem', { name: 'Export as JSON' })).not.to.equal(null);
   });
 });
