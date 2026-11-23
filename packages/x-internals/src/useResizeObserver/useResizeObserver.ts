@@ -2,8 +2,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
-const isDevEnvironment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
-
 const noop = () => {};
 
 export function useResizeObserver(
@@ -23,16 +21,11 @@ export function useResizeObserver(
 
     const target = ref.current;
     const observer = new ResizeObserver((entries) => {
-      // See https://github.com/mui/mui-x/issues/8733
-      // In dev, we avoid the React warning by moving the task to the next frame.
-      // In prod, we want the task to run in the same frame as to avoid tear.
-      if (isDevEnvironment) {
-        frameID = requestAnimationFrame(() => {
-          fnRef.current(entries);
-        });
-      } else {
+      // Next frame: a layout change inside the delivery reports a "ResizeObserver loop" error,
+      // e.g. React 17 renders a `setState` here synchronously. See https://github.com/mui/mui-x/issues/8733
+      frameID = requestAnimationFrame(() => {
         fnRef.current(entries);
-      }
+      });
     });
 
     if (target) {
