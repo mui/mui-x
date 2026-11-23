@@ -2,6 +2,7 @@
   "props": {
     "areAllSectionsEmpty": { "type": { "name": "bool" }, "required": true },
     "contentEditable": { "type": { "name": "bool" }, "required": true },
+    "disabled": { "type": { "name": "bool" }, "default": "false", "required": true },
     "elements": {
       "type": {
         "name": "arrayOf",
@@ -9,17 +10,16 @@
       },
       "required": true
     },
+    "error": { "type": { "name": "bool" }, "default": "false", "required": true },
     "value": { "type": { "name": "string" }, "required": true },
     "color": {
       "type": {
-        "name": "enum",
-        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
+        "name": "union",
+        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'<br>&#124;&nbsp;string"
       },
       "default": "'primary'"
     },
-    "disabled": { "type": { "name": "bool" }, "default": "false" },
     "endAdornment": { "type": { "name": "node" } },
-    "error": { "type": { "name": "bool" }, "default": "false" },
     "focused": { "type": { "name": "bool" } },
     "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "helperText": { "type": { "name": "node" } },
@@ -38,7 +38,10 @@
     "readOnly": { "type": { "name": "bool" } },
     "required": { "type": { "name": "bool" }, "default": "false" },
     "size": {
-      "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
+      "type": {
+        "name": "union",
+        "description": "'medium'<br>&#124;&nbsp;'small'<br>&#124;&nbsp;string"
+      },
       "default": "'medium'"
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

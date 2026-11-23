@@ -474,7 +474,7 @@
     "rowSelectionModel": {
       "type": {
         "name": "shape",
-        "description": "{ ids: Set, type: 'exclude'<br>&#124;&nbsp;'include' }"
+        "description": "{ ids: object, type: 'exclude'<br>&#124;&nbsp;'include' }"
       }
     },
     "rowSpacingType": {

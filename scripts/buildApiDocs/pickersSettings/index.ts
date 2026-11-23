@@ -8,6 +8,7 @@ import type {
 } from '@mui/internal-api-docs-builder';
 import { findApiPages } from '@mui/internal-api-docs-builder';
 import { isGlobalState } from '@mui/utils/generateUtilityClass';
+import { createXPropsSettings } from '../xPropsSettings';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 import generatePickersClassName from './generatePickersClassName';
 
@@ -80,6 +81,7 @@ export default datePickersApiPages;
   importTranslationPagesDirectory: 'docs/translations/api-docs/date-pickers',
   getComponentImports,
   propsSettings: {
+    ...createXPropsSettings({ dateObjects: true }),
     propsWithoutDefaultVerification: [
       'dateIcon',
       'hidden',

@@ -1,50 +1,28 @@
 {
   "props": {
-    "apiRef": { "type": { "name": "shape", "description": "{ current?: { setZoomData: func } }" } },
-    "children": { "type": { "name": "node" } },
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: any }" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "blueberryTwilightPalette"
+      "default": "rainbowSurgePalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "desc": { "type": { "name": "string" } },
-    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
     "height": { "type": { "name": "number" } },
-    "highlightedItem": {
-      "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
-      }
-    },
     "id": { "type": { "name": "string" } },
-    "initialZoom": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
-      }
-    },
+    "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
-        "name": "shape",
-        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
-      }
-    },
-    "onHighlightChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
-        "describedArgs": ["highlightedItem"]
-      }
-    },
-    "onZoomChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(zoomData: Array<ZoomData>) => void",
-        "describedArgs": ["zoomData"]
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "sx": {
       "type": {
         "name": "union",
@@ -54,15 +32,7 @@
     },
     "theme": { "type": { "name": "enum", "description": "'dark'<br>&#124;&nbsp;'light'" } },
     "title": { "type": { "name": "string" } },
-    "width": { "type": { "name": "number" } },
-    "xAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "yAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "zAxis": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
-      }
-    }
+    "width": { "type": { "name": "number" } }
   },
   "name": "ChartsContainerPro",
   "imports": [

@@ -1,5 +1,40 @@
 {
-  "props": {},
+  "props": {
+    "renderItem": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(params: object, params.id: string, params.index: number) => React.ReactNode",
+        "describedArgs": ["params", "params.id", "params.index"],
+        "returned": "React.ReactNode"
+      }
+    },
+    "autoScroll": {
+      "type": { "name": "union", "description": "{ buffer?: number }<br>&#124;&nbsp;bool" },
+      "default": "true"
+    },
+    "enableRovingFocus": { "type": { "name": "bool" }, "default": "true" },
+    "estimatedItemSize": { "type": { "name": "number" }, "default": "84" },
+    "getItemKey": {
+      "type": { "name": "func" },
+      "default": "(id) => id",
+      "signature": {
+        "type": "function(id: string, index: number) => React.Key",
+        "describedArgs": ["id", "index"],
+        "returned": "React.Key"
+      }
+    },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "onReachBottom": { "type": { "name": "func" } },
+    "onReachTop": { "type": { "name": "func" } },
+    "overlay": { "type": { "name": "node" }, "default": "null" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "MessageListRoot",
   "imports": ["import { MessageListRoot } from '@mui/x-chat/headless';"],
   "slots": [

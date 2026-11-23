@@ -1,5 +1,14 @@
 {
-  "props": {},
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "htmlFor": { "type": { "name": "string" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerLabel",
   "imports": ["import { ComposerLabel } from '@mui/x-chat/headless';"],
   "slots": [

@@ -94,7 +94,7 @@
       },
       "default": "\"standard\""
     },
-    "detailPanelExpandedRowIds": { "type": { "name": "instanceOf", "description": "Set" } },
+    "detailPanelExpandedRowIds": { "type": { "name": "object" } },
     "disableAggregation": { "type": { "name": "bool" }, "default": "false" },
     "disableAutosize": { "type": { "name": "bool" }, "default": "false" },
     "disableChildrenFiltering": { "type": { "name": "bool" }, "default": "false" },
@@ -815,7 +815,7 @@
     "rowSelectionModel": {
       "type": {
         "name": "shape",
-        "description": "{ ids: Set, type: 'exclude'<br>&#124;&nbsp;'include' }"
+        "description": "{ ids: object, type: 'exclude'<br>&#124;&nbsp;'include' }"
       }
     },
     "rowSelectionPropagation": {

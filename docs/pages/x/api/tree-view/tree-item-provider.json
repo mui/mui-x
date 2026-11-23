@@ -1,8 +1,8 @@
 {
   "props": {
-    "children": { "type": { "name": "node" }, "required": true },
-    "id": { "type": { "name": "string" }, "required": true },
-    "itemId": { "type": { "name": "string" }, "required": true }
+    "itemId": { "type": { "name": "string" }, "required": true },
+    "children": { "type": { "name": "node" } },
+    "id": { "type": { "name": "string" } }
   },
   "name": "TreeItemProvider",
   "imports": [

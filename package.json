@@ -75,7 +75,7 @@
     "@emotion/cache": "catalog:",
     "@eslint/compat": "2.1.1",
     "@inquirer/prompts": "8.7.5",
-    "@mui/internal-api-docs-builder": "2.0.1-canary.0",
+    "@mui/internal-api-docs-builder": "https://pkg.pr.new/mui/material-ui/@mui/internal-api-docs-builder@f74792d",
     "@mui/internal-babel-plugin-display-name": "2.0.1-canary.2",
     "@mui/internal-babel-plugin-minify-errors": "3.0.1-canary.2",
     "@mui/internal-bundle-size-checker": "1.1.1-canary.6",

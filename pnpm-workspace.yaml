@@ -84,7 +84,9 @@ catalog:
 engineStrict: true
 updateNotifier: false
 autoDedupe: true
-blockExoticSubdeps: true
+# Temporarily disabled to install the pkg.pr.new build of @mui/internal-api-docs-builder,
+# which depends on other pkg.pr.new packages. Revert before merging.
+blockExoticSubdeps: false
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'

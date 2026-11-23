@@ -1,5 +1,145 @@
 {
-  "props": {},
+  "props": {
+    "adapter": {
+      "type": {
+        "name": "shape",
+        "description": "{ addToolApprovalResponse?: func, listConversations?: func, listMessages?: func, loadMore?: func, markRead?: func, reconnectToStream?: func, regenerate?: func, sendMessage: func, setTyping?: func, stop?: func, subscribe?: func }"
+      },
+      "required": true
+    },
+    "activeConversationId": { "type": { "name": "string" } },
+    "children": { "type": { "name": "node" } },
+    "composerValue": { "type": { "name": "string" } },
+    "conversations": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, id: string, lastMessageAt?: string, metadata?: object, participants?: Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }&gt;, readState?: 'read'<br>&#124;&nbsp;'unread', subtitle?: string, title?: string, unreadCount?: number }&gt;"
+      }
+    },
+    "currentUser": {
+      "type": {
+        "name": "shape",
+        "description": "{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }"
+      }
+    },
+    "density": {
+      "type": {
+        "name": "enum",
+        "description": "'comfortable'<br>&#124;&nbsp;'compact'<br>&#124;&nbsp;'standard'"
+      }
+    },
+    "features": { "type": { "name": "shape", "description": "{ typingSignal?: bool }" } },
+    "getMessageAuthorAvatarUrl": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.avatarUrl"
+    },
+    "getMessageAuthorDisplayName": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.displayName"
+    },
+    "getMessageAuthorId": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.id"
+    },
+    "initialActiveConversationId": { "type": { "name": "string" } },
+    "initialComposerValue": { "type": { "name": "string" } },
+    "initialConversations": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, id: string, lastMessageAt?: string, metadata?: object, participants?: Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }&gt;, readState?: 'read'<br>&#124;&nbsp;'unread', subtitle?: string, title?: string, unreadCount?: number }&gt;"
+      }
+    },
+    "initialMessages": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: object, parts: Array&lt;{ state?: 'done'<br>&#124;&nbsp;'streaming', text: string, type: 'text' }<br>&#124;&nbsp;{ state?: 'done'<br>&#124;&nbsp;'streaming', text: string, type: 'reasoning' }<br>&#124;&nbsp;{ filename?: string, mediaType: string, type: 'file', url: string }<br>&#124;&nbsp;{ sourceId: string, title?: string, type: 'source-url', url: string }<br>&#124;&nbsp;{ sourceId: string, text?: string, title?: string, type: 'source-document' }<br>&#124;&nbsp;{ data: any, id?: string, transient?: bool, type: object }<br>&#124;&nbsp;{ type: 'step-start' }<br>&#124;&nbsp;{ toolInvocation: { approval?: object, approvalId?: string, callProviderMetadata?: object, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'tool' }<br>&#124;&nbsp;{ toolInvocation: { approval?: object, approvalId?: string, callProviderMetadata?: object, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'dynamic-tool' }&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
+      }
+    },
+    "localeText": { "type": { "name": "object" } },
+    "members": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }&gt;"
+      }
+    },
+    "messages": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: object, parts: Array&lt;{ state?: 'done'<br>&#124;&nbsp;'streaming', text: string, type: 'text' }<br>&#124;&nbsp;{ state?: 'done'<br>&#124;&nbsp;'streaming', text: string, type: 'reasoning' }<br>&#124;&nbsp;{ filename?: string, mediaType: string, type: 'file', url: string }<br>&#124;&nbsp;{ sourceId: string, title?: string, type: 'source-url', url: string }<br>&#124;&nbsp;{ sourceId: string, text?: string, title?: string, type: 'source-document' }<br>&#124;&nbsp;{ data: any, id?: string, transient?: bool, type: object }<br>&#124;&nbsp;{ type: 'step-start' }<br>&#124;&nbsp;{ toolInvocation: { approval?: object, approvalId?: string, callProviderMetadata?: object, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'tool' }<br>&#124;&nbsp;{ toolInvocation: { approval?: object, approvalId?: string, callProviderMetadata?: object, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'dynamic-tool' }&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
+      }
+    },
+    "onActiveConversationChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(conversationId: string | undefined) => void",
+        "describedArgs": ["conversationId"]
+      }
+    },
+    "onComposerValueChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: string) => void", "describedArgs": ["value"] }
+    },
+    "onConversationsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(conversations: Array<ChatConversation>) => void",
+        "describedArgs": ["conversations"]
+      }
+    },
+    "onData": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(part: ChatDataMessagePart) => void",
+        "describedArgs": ["part"]
+      }
+    },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(error: ChatError) => void", "describedArgs": ["error"] }
+    },
+    "onFinish": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnFinishPayload) => void",
+        "describedArgs": ["payload"]
+      }
+    },
+    "onMessagesChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(messages: Array<ChatMessage>) => void",
+        "describedArgs": ["messages"]
+      }
+    },
+    "onToolCall": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnToolCallPayload) => void",
+        "describedArgs": ["payload"]
+      }
+    },
+    "partRenderers": {
+      "type": {
+        "name": "shape",
+        "description": "{ dynamic-tool?: func, file?: func, reasoning?: func, source-document?: func, source-url?: func, step-start?: func, text?: func, tool?: func }"
+      }
+    },
+    "roleDisplayNames": {
+      "type": {
+        "name": "shape",
+        "description": "{ assistant?: string, system?: string, user?: string }"
+      }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "storeClass": { "type": { "name": "func" }, "default": "ChatStore" },
+    "streamFlushInterval": { "type": { "name": "number" }, "default": "16" },
+    "variant": { "type": { "name": "enum", "description": "'compact'<br>&#124;&nbsp;'default'" } }
+  },
   "name": "ChatRoot",
   "imports": ["import { ChatRoot } from '@mui/x-chat/headless';"],
   "slots": [

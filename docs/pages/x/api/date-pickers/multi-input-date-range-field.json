@@ -2,7 +2,6 @@
   "props": {
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "className": { "type": { "name": "string" } },
     "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "direction": {
@@ -16,7 +15,7 @@
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "divider": { "type": { "name": "node" } },
-    "endFieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "endFieldRef": { "type": { "name": "custom", "description": "ref" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
@@ -78,7 +77,7 @@
       },
       "default": "0"
     },
-    "startFieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "startFieldRef": { "type": { "name": "custom", "description": "ref" } },
     "sx": {
       "type": {
         "name": "union",

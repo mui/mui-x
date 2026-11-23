@@ -9,9 +9,7 @@
     "fullWidth": { "type": { "name": "bool" } },
     "helperText": { "type": { "name": "string" } },
     "id": { "type": { "name": "string" } },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
-    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "multiline": { "type": { "name": "bool" } },
     "placeholder": { "type": { "name": "string" } },

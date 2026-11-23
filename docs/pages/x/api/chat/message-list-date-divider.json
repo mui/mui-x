@@ -1,5 +1,39 @@
 {
-  "props": {},
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "formatDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(date: Date) => React.ReactNode",
+        "describedArgs": ["date"],
+        "returned": "React.ReactNode"
+      }
+    },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "shouldShowDivider": {
+      "type": { "name": "func" },
+      "default": "Renders when `message.createdAt` falls on a different UTC\ncalendar day than the previous message's.",
+      "signature": {
+        "type": "function(params: object, params.message: ChatMessage, params.previousMessage: ChatMessage | null, params.index: number, params.date: Date | null, params.previousDate: Date | null) => boolean",
+        "describedArgs": [
+          "params",
+          "params.message",
+          "params.previousMessage",
+          "params.index",
+          "params.date",
+          "params.previousDate"
+        ],
+        "returned": "boolean"
+      }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "MessageListDateDivider",
   "imports": ["import { MessageListDateDivider } from '@mui/x-chat/headless';"],
   "slots": [

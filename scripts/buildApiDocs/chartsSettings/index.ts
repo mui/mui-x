@@ -8,6 +8,7 @@ import type {
 } from '@mui/internal-api-docs-builder';
 import { findApiPages } from '@mui/internal-api-docs-builder';
 import { isGlobalState } from '@mui/utils/generateUtilityClass';
+import { createXPropsSettings } from '../xPropsSettings';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 import generateChartsClassName from './generateChartsClassName';
 
@@ -140,6 +141,7 @@ export default chartsApiPages;
   importTranslationPagesDirectory: 'docs/translations/api-docs/charts',
   getComponentImports,
   propsSettings: {
+    ...createXPropsSettings(),
     propsWithoutDefaultVerification: ['stripeColor'],
   },
   sortingStrategies: {
