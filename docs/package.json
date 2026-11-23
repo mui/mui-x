@@ -52,8 +52,8 @@
     "@mui/x-tree-view": "workspace:^",
     "@mui/x-tree-view-pro": "workspace:^",
     "@react-spring/web": "catalog:",
-    "@tanstack/query-core": "^5.107.1",
-    "@tanstack/react-query": "^5.107.1",
+    "@tanstack/query-core": "^5.108.1",
+    "@tanstack/react-query": "^5.108.1",
     "chance": "catalog:",
     "clsx": "catalog:",
     "cross-env": "catalog:",
@@ -70,11 +70,11 @@
     "moment-jalaali": "catalog:",
     "moment-timezone": "catalog:",
     "motion": "catalog:",
-    "next": "^16.4.5",
+    "next": "^16.4.6",
     "prop-types": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hook-form": "^7.91.0",
+    "react-hook-form": "^7.92.0",
     "react-runner": "^1.0.5",
     "react-simple-code-editor": "^0.14.1",
     "rifm": "1.1.0",
@@ -85,7 +85,7 @@
     "topojson-client": "^3.1.0",
     "us-atlas": "^3.0.1",
     "visionscarto-world-atlas": "^1.0.0",
-    "webpack-bundle-analyzer": "^5.4.2"
+    "webpack-bundle-analyzer": "^5.4.3"
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
