@@ -79,9 +79,12 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
     it('should shrink the title column after removing the widest resource', async () => {
       const short = ResourceBuilder.new().title('A').build();
       const long = ResourceBuilder.new().title('A longer resource title').build();
-      const { rerender, unmount } = await renderSettled(timeline([short, long]));
+      const { rerender, unmount } = await renderSettled(timeline([long]));
       const wide = getTitleColumnWidth();
 
+      // The short row mounts while the column is wide, so it must not measure the column.
+      rerender(timeline([long, short]));
+      await absorbObserverFrames();
       rerender(timeline([short]));
       await absorbObserverFrames();
       const afterRemoval = getTitleColumnWidth();

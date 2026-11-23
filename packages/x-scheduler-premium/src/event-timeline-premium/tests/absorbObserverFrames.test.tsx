@@ -98,6 +98,16 @@ describe('absorbObserverFrames', () => {
     }
   });
 
+  it.skipIf(isJSDOM)('should resolve while requestAnimationFrame is faked', async () => {
+    // The package config keeps rAF native, so fake it here: the absorb must ride the capture.
+    vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame'] });
+    try {
+      await absorbObserverFrames();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it.skipIf(!isJSDOM)('should no-op in jsdom even under fake timers', async () => {
     // jsdom's rAF is timer-backed, so anything but the early return would hang here.
     vi.useFakeTimers();
