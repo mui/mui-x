@@ -331,6 +331,9 @@ PickerDayRaw.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   component: PropTypes.elementType,
   /**
@@ -484,6 +487,7 @@ PickerDayRaw.propTypes /* remove-proptypes */ = {
     PropTypes.object,
   ]),
   /**
+   * The `tabIndex` of the root element.
    * @default 0
    */
   tabIndex: PropTypes.number,

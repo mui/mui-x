@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
+import type { GridColDef } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 140 },

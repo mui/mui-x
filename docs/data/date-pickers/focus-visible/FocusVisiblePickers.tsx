@@ -1,5 +1,6 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -10,10 +11,10 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
-import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
+import type { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
+import type { DateRange } from '@mui/x-date-pickers-pro/models';
 
 const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {
