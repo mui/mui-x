@@ -113,7 +113,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.65.0-noble
+      playwright-img-version: v1.65.1-noble
     resource_class: large.gen2
     steps:
       - checkout
@@ -181,7 +181,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.65.0-noble
+      playwright-img-version: v1.65.1-noble
     resource_class: medium
     steps:
       - checkout
@@ -197,7 +197,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.65.0-noble
+      playwright-img-version: v1.65.1-noble
     resource_class: medium
     steps:
       - checkout
@@ -225,7 +225,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.65.0-noble
+      playwright-img-version: v1.65.1-noble
     resource_class: large.gen2
     steps:
       - checkout
@@ -242,7 +242,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.65.0-noble
+      playwright-img-version: v1.65.1-noble
     # 2 vCPUs starve V8's background compilers, and the `benchmark` CLI warns below 3. More didn't
     # narrow the results: on CI, their spread comes from the noise of a shared host, not from cores.
     resource_class: medium+.gen2
