@@ -63,8 +63,6 @@ function GridDetailPanel(props: GridDetailPanelProps) {
       apiRef.current.storeDetailPanelHeight(rowId, observedHeight);
     },
     hasAutoHeight,
-    // Updating the row height can toggle the scrollbar and change this panel's width.
-    { defer: true },
   );
 
   if (rowNode?.type === 'skeletonRow') {

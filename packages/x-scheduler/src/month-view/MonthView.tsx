@@ -196,8 +196,6 @@ export const MonthView = React.memo(
         setMaxEvents(Math.max(1, maxEventsCount));
       },
       true,
-      // Changing the number of visible events can resize the cell again.
-      { defer: true },
     );
 
     return (
