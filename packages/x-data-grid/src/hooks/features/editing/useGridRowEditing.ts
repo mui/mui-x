@@ -569,6 +569,17 @@ export const useGridRowEditing = (
         return;
       }
 
+      const isSomeFieldProcessingProps = () =>
+        Object.values(gridEditRowsStateSelector(apiRef)[id] ?? {}).some(
+          (fieldProps) => fieldProps.isProcessingProps,
+        );
+
+      // The stop can render before the validation of the values that it flushed ends.
+      // A synchronous validation ends in the next microtask, so wait for it.
+      if (isSomeFieldProcessingProps()) {
+        await Promise.resolve();
+      }
+
       const editingState = gridEditRowsStateSelector(apiRef);
       if (!editingState[id]) {
         finishRowEditMode();
@@ -576,11 +587,7 @@ export const useGridRowEditing = (
       }
       const row = prevRowValuesLookup.current[id];
 
-      const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
-        (fieldProps) => fieldProps.isProcessingProps,
-      );
-
-      if (isSomeFieldProcessingProps) {
+      if (isSomeFieldProcessingProps()) {
         prevRowModesModel.current[id].mode = GridRowModes.Edit;
         return;
       }

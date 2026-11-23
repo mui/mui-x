@@ -1333,6 +1333,27 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(spiedStopRowEditMode.mock.calls.length).to.equal(1);
         expect(spiedStopRowEditMode.mock.lastCall?.[0].ignoreModifications).to.equal(false);
       });
+
+      it('should commit a debounced value after its validation ends', async () => {
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
+        render(<TestCase column1Props={{ preProcessEditCellProps }} />);
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        // The stop validates the debounced value, and renders before the validation ends.
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await act(() => Promise.resolve());
+        expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        expect(apiRef.current?.getRow(0).currencyPair).to.equal('USD GBP');
+      });
     });
 
     describe('by pressing Tab', () => {

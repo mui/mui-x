@@ -1172,6 +1172,8 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireUserEvent.mousePress(getCell(1, 1));
         expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
         expect(spiedStopCellEditMode.mock.lastCall?.[0].ignoreModifications).to.equal(false);
+        // The stop waits one microtask for the validation, then reverts to edit mode.
+        await act(() => Promise.resolve());
       });
     });
 
@@ -1251,6 +1253,29 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
         expect(spiedStopCellEditMode.mock.lastCall?.[0].ignoreModifications).to.equal(false);
+        // The stop waits one microtask for the validation, then reverts to edit mode.
+        await act(() => Promise.resolve());
+      });
+
+      it('should commit a debounced value after its validation ends', async () => {
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        // The stop validates the debounced value, and renders before the validation ends.
+        fireEvent.keyDown(cell, { key: 'Enter' });
+        await act(() => Promise.resolve());
+        expect(apiRef.current?.getCellMode(0, 'currencyPair')).to.equal(GridCellModes.View);
+        expect(apiRef.current?.getRow(0).currencyPair).to.equal('USD GBP');
       });
     });
 
@@ -1300,6 +1325,8 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.keyDown(cell, { key: 'Tab' });
         expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
         expect(spiedStopCellEditMode.mock.lastCall?.[0].ignoreModifications).to.equal(false);
+        // The stop waits one microtask for the validation, then reverts to edit mode.
+        await act(() => Promise.resolve());
       });
     });
   });
