@@ -169,7 +169,7 @@ export function useFieldRootProps(
       }
 
       // Let the browser move the focus out of the field from the focused section
-      case event.key === 'Tab': {
+      case event.key === 'Tab' && !event.defaultPrevented: {
         // Firefox starts the sequential focus navigation from the selection: with the content of
         // a section after the first one selected, the focus would move back to the top of the page.
         ownerDocument(event.currentTarget).getSelection()?.removeAllRanges();
