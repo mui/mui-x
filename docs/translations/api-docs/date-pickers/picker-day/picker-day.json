@@ -8,6 +8,7 @@
       "description": "If <code>true</code>, the ripples are centered. They won&#39;t start at the cursor interaction position."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "className": { "description": "A CSS class name applied to the root element." },
     "day": { "description": "The date to show." },
     "disabled": { "description": "If <code>true</code>, the day is disabled." },
     "disableHighlightToday": {
@@ -92,6 +93,7 @@
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
+    "tabIndex": { "description": "The <code>tabIndex</code> of the root element." },
     "today": { "description": "If <code>true</code>, today&#39;s day is highlighted." },
     "TouchRippleProps": { "description": "Props applied to the <code>TouchRipple</code> element." },
     "touchRippleRef": {
