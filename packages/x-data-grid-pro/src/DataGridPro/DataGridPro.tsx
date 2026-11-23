@@ -22,6 +22,10 @@ import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
+import {
+  useIsColumnKeyboardReorderTarget,
+  useIsRowKeyboardReorderTarget,
+} from '../hooks/features/keyboardReorder/useGridKeyboardReorderTarget';
 import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
@@ -37,6 +41,8 @@ const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedPr
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
     useColumnHeaderAdornment: () => null,
+    useIsRowKeyboardReorderTarget,
+    useIsColumnKeyboardReorderTarget,
   },
 };
 const packageInfo = {
