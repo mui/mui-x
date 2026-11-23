@@ -214,11 +214,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
   const dateLabelId = schedulerId ? `${schedulerId}-MonthViewDate-${day.key}` : undefined;
+  const dayNumberText = isFirstDayOfMonth
+    ? formatMonthShortAndDayOfMonth(locale, day.plainDate)
+    : formatDayOfMonth(locale, day.plainDate);
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
-      {isFirstDayOfMonth
-        ? formatMonthShortAndDayOfMonth(locale, day.plainDate)
-        : formatDayOfMonth(locale, day.plainDate)}
+      {dayNumberText}
     </MonthViewCellNumber>
   );
 
@@ -256,7 +257,9 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         <MonthViewCellNumberButton
           type="button"
           className={classes.monthViewCellNumberButton}
-          aria-label={localeText.goToDay(formatMonthAndDayOfMonth(locale, day.plainDate))}
+          aria-label={localeText.goToDay(
+            isFirstDayOfMonth ? dayNumberText : formatMonthAndDayOfMonth(locale, day.plainDate),
+          )}
           onClick={(event) => store.switchToDay(new Date(day.timestamp), event)}
           tabIndex={-1}
         >

@@ -57,7 +57,11 @@ describe('<MonthView />', () => {
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
-      <EventCalendarProvider {...standaloneDefaults}>
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        defaultVisibleDate={createDate('2025-09-01T12:00:00Z')}
+        dateLocale="en-US"
+      >
         <EventDialogProvider>
           <MonthView />
         </EventDialogProvider>
@@ -68,9 +72,10 @@ describe('<MonthView />', () => {
 
     expect(headerTexts).to.include.members(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
     expect(gridCells.length).to.be.at.least(31);
-    expect(
-      within(screen.getByRole('button', { name: 'Go to May 1' })).getByText('May 1'),
-    ).not.to.equal(null);
+    const september1 = screen.getByRole('gridcell', { name: 'Monday, September 1' });
+    const button = within(september1).getByRole('button');
+    expect(button.textContent).to.equal('Sep 1');
+    expect(button).toHaveAccessibleName('Go to Sep 1');
   });
 
   it('should render events in the correct cell', () => {
@@ -123,8 +128,12 @@ describe('<MonthView />', () => {
     );
 
     const june30 = screen.getByRole('gridcell', { name: 'lundi 30 juin' });
+    const july1 = screen.getByRole('gridcell', { name: 'mardi 1 juillet' });
     const july2 = screen.getByRole('gridcell', { name: 'mercredi 2 juillet' });
     expect(within(june30).getByRole('button', { name: 'Aller au 30 juin' })).not.to.equal(null);
+    const firstDayButton = within(july1).getByRole('button');
+    expect(firstDayButton.textContent).to.equal('1 juil.');
+    expect(firstDayButton).toHaveAccessibleName('Aller au 1 juil.');
     expect(within(july2).getByRole('button', { name: 'Aller au 2 juillet' })).not.to.equal(null);
   });
 
