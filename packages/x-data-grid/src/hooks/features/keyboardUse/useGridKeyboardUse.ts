@@ -4,6 +4,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
+import { getActiveElement } from '../../../utils/domUtils';
 
 export const keyboardUseStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -47,7 +48,8 @@ export const useGridKeyboardUse = (apiRef: RefObject<GridPrivateApiCommunity>): 
       return;
     }
     lastInputRef.current = 'keyboard';
-    if (isInMain(event.target)) {
+    // In a shadow root, `event.target` is the host when the listener is on the document
+    if (isInMain(event.composedPath()[0] ?? event.target)) {
       setActive(true);
     }
   };
@@ -67,7 +69,7 @@ export const useGridKeyboardUse = (apiRef: RefObject<GridPrivateApiCommunity>): 
     }
     // Moving the focused row or column blurs it until React restores the focus
     setTimeout(() => {
-      if (!isInMain(root.ownerDocument.activeElement)) {
+      if (!isInMain(getActiveElement(root.ownerDocument))) {
         setActive(false);
       }
     });

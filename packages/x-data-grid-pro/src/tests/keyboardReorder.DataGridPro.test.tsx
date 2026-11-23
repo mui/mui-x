@@ -796,6 +796,42 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
     });
 
+    // jsdom only: the styles of the grid are injected in the document head, so in a browser the
+    // grid has no layout inside the shadow root of this test.
+    it.skipIf(!isJSDOM)(
+      'should mark the row on a key press that keeps the focus in a shadow root',
+      async () => {
+        const host = document.createElement('div');
+        document.body.appendChild(host);
+        const container = document.createElement('div');
+        host.attachShadow({ mode: 'open' }).appendChild(container);
+        try {
+          await render(<Test />, { container });
+          const cell = container.querySelector<HTMLElement>('[data-id="0"] [data-field="name"]')!;
+          act(() => apiRef.current!.setCellFocus(0, 'name'));
+          expect(host.shadowRoot!.activeElement).to.equal(cell);
+          // The first row can't move up, so the focus stays on the cell.
+          // Not `fireEvent`, which expects the target to be `document.activeElement`, the host here.
+          act(() => {
+            cell.dispatchEvent(
+              new KeyboardEvent('keydown', {
+                key: 'ArrowUp',
+                altKey: true,
+                bubbles: true,
+                cancelable: true,
+                composed: true,
+              }),
+            );
+          });
+          expect(container.querySelector('[role="row"][data-id="0"]')).to.have.class(
+            gridClasses['row--reorderTarget'],
+          );
+        } finally {
+          host.remove();
+        }
+      },
+    );
+
     it('should remove the marker when the focus leaves the grid', async () => {
       const { user } = render(
         <React.Fragment>
