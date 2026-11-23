@@ -1,4 +1,5 @@
-import { BarChart, BarLabelProps } from '@mui/x-charts/BarChart';
+import type { BarLabelProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import * as React from 'react';
 import { animated, useSpring } from '@react-spring/web';
 import Stack from '@mui/material/Stack';
@@ -67,7 +68,6 @@ function AnimatedBarLabel(props: BarLabelProps) {
   return (
     <animated.text
       {...otherProps}
-      // @ts-ignore
       fill={color}
       x={xOrigin + x + width / 2}
       width={width}

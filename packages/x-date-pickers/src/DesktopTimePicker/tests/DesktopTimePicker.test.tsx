@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 
 describe('<DesktopTimePicker />', () => {
@@ -231,6 +233,42 @@ describe('<DesktopTimePicker />', () => {
       await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
       // the input should be focused—the new active element
       expect(document.activeElement!).to.equal(decoyInput);
+    });
+  });
+
+  // See https://github.com/mui/mui-x/issues/18818
+  // Needs layout
+  describe.skipIf(isJSDOM)('layout', () => {
+    function getFirstLayoutColumnWidth() {
+      const root = document.querySelector<HTMLElement>(`.${pickersLayoutClasses.root}`)!;
+      return parseFloat(getComputedStyle(root).gridTemplateColumns.split(' ')[0]);
+    }
+
+    it('should not render an empty first column in portrait orientation', () => {
+      render(<DesktopTimePicker open views={['hours']} ampm={false} orientation="portrait" />);
+
+      expect(getFirstLayoutColumnWidth()).to.equal(0);
+    });
+
+    it('should not render an empty first column in landscape orientation', () => {
+      render(<DesktopTimePicker open views={['hours']} ampm={false} orientation="landscape" />);
+
+      expect(getFirstLayoutColumnWidth()).to.equal(0);
+    });
+
+    it('should keep the action bar below the toolbar in landscape orientation', () => {
+      render(
+        <DesktopTimePicker
+          open
+          views={['hours']}
+          ampm={false}
+          orientation="landscape"
+          slotProps={{ toolbar: { hidden: false } }}
+        />,
+      );
+
+      const actionBar = document.querySelector<HTMLElement>(`.${pickersLayoutClasses.actionBar}`)!;
+      expect(getComputedStyle(actionBar).gridColumnStart).to.equal('1');
     });
   });
 });

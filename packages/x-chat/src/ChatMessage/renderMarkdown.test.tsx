@@ -127,7 +127,7 @@ describe('renderMarkdown', () => {
 
     it('renders a footnote reference with a superscript marker', () => {
       const { container } = render(
-        <React.Fragment>{renderMarkdown('See here[^1]')}</React.Fragment>,
+        <React.Fragment>{renderMarkdown('See here[^1]\n\n[^1]: The note.')}</React.Fragment>,
       );
       expect(container.textContent).toContain('See here');
       const sup = document.querySelector('sup');

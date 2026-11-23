@@ -9,14 +9,35 @@ import { useMessageListContext } from '../message-list/internals/MessageListCont
 import type { ScrollToBottomAffordanceOwnerState } from './indicators.types';
 
 export interface ScrollToBottomAffordanceSlots {
+  /**
+   * The component that renders the root.
+   * @default 'button'; a styled IconButton in `ChatScrollToBottomAffordance`
+   */
   root: React.ElementType;
+  /**
+   * The component that renders the badge.
+   * @default 'span'
+   */
   badge: React.ElementType;
+  /**
+   * The component that renders the icon.
+   * @default A text label; an arrow icon in `ChatScrollToBottomAffordance`.
+   */
   icon?: React.ElementType;
 }
 
 export interface ScrollToBottomAffordanceSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'button', {}, ScrollToBottomAffordanceOwnerState>;
+  /**
+   * The props used for the badge slot.
+   */
   badge?: SlotComponentProps<'span', {}, ScrollToBottomAffordanceOwnerState>;
+  /**
+   * The props used for the icon slot.
+   */
   icon?: SlotComponentProps<'svg', {}, ScrollToBottomAffordanceOwnerState>;
 }
 
@@ -24,8 +45,19 @@ export interface ScrollToBottomAffordanceProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   'children'
 > {
+  /**
+   * The scroll behavior used when the button scrolls to the bottom.
+   */
   scrollBehavior?: ScrollBehavior;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ScrollToBottomAffordanceSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ScrollToBottomAffordanceSlotProps;
 }
 

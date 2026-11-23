@@ -6,7 +6,7 @@ import {
   randomBoolean,
 } from '@mui/x-data-grid-generator';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { DataSourceCache } from '@mui/x-tree-view/utils';
+import type { DataSourceCache } from '@mui/x-tree-view/utils';
 
 const queryClient = new QueryClient({
   defaultOptions: {

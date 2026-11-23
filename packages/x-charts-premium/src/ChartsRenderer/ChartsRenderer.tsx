@@ -34,6 +34,61 @@ const getLegendPosition = (position: string) => {
   return { horizontal, vertical };
 };
 
+const formatDimensionValue = (item: string | number | Date | null) =>
+  item instanceof Date ? item.toLocaleDateString() : String(item);
+
+interface PieNode {
+  label: string;
+  value: number;
+  children: Map<string, PieNode>;
+}
+
+/**
+ * Groups the rows of one value series by dimension (first dimension at the root) and returns
+ * the items of one ring per dimension, each group summing its children and the children
+ * listed right after their parent so the rings line up.
+ */
+const getPieRings = (
+  dimensions: ChartsRendererProps['dimensions'],
+  valueItem: ChartsRendererProps['values'][number],
+) => {
+  const root: PieNode = { label: '', value: 0, children: new Map() };
+
+  valueItem.data.forEach((item, dataIndex) => {
+    let node = root;
+    dimensions.forEach((dimension) => {
+      const dimensionValue = formatDimensionValue(dimension.data[dataIndex]);
+      let child = node.children.get(dimensionValue);
+      if (!child) {
+        child = {
+          label: node === root ? dimensionValue : `${node.label} - ${dimensionValue}`,
+          value: 0,
+          children: new Map(),
+        };
+        node.children.set(dimensionValue, child);
+      }
+      child.value += item || 0;
+      node = child;
+    });
+  });
+
+  const rings: { id: string; value: number; label: string }[][] = dimensions.map(() => []);
+  const visit = (node: PieNode, levelIndex: number) => {
+    node.children.forEach((child) => {
+      const ring = rings[levelIndex];
+      ring.push({
+        id: `${valueItem.id}-${levelIndex}-${ring.length}`,
+        value: child.value,
+        label: `${child.label} - ${valueItem.label}`,
+      });
+      visit(child, levelIndex + 1);
+    });
+  };
+  visit(root, 0);
+
+  return rings;
+};
+
 export interface ChartsRendererProps {
   dimensions: { id: string; label: string; data: (string | number | Date | null)[] }[];
   values: { id: string; label: string; data: (number | null)[] }[];
@@ -50,7 +105,7 @@ export interface ChartsRendererProps {
  * A component that renders different types of charts based on the provided data and configuration.
  * It supports column, bar, line, area and pie charts with customizable styling and formatting options.
  * The component handles both single and multiple dimension datasets, with special data processing for each case.
- * For multiple dimension datasets, it creates grouped axes.
+ * For multiple dimension datasets, it creates grouped axes, or one ring per dimension for pie charts.
  *
  * @link https://www.mui.com/x/react-charts/data-grid-integration/
  * @param {Array<{id: string, label: string, data: Array<string|number|Date|null>}>} props.dimensions - Array of dimension objects containing data for chart axes
@@ -80,7 +135,7 @@ function ChartsRenderer({
         dimensions.map((dimension) => dimension.data[dataIndex]),
       )
     : dimensionRawData.map((item) => {
-        const itemValue = item instanceof Date ? item.toLocaleDateString() : String(item);
+        const itemValue = formatDimensionValue(item);
         const currentCount = itemCount.get(itemValue) || 1;
         itemCount.set(itemValue, currentCount + 1);
         return currentCount > 1 ? `${item} (${currentCount})` : item;
@@ -264,43 +319,62 @@ function ChartsRenderer({
   }
 
   if (chartType === 'pie') {
+    // each value series takes one ring per dimension, from the first dimension (innermost ring)
+    // to the last one (outermost ring)
+    const levelCount = Math.max(dimensions.length, 1);
+    const ringCount = values.length * levelCount;
+
     // - `chartConfiguration.outerRadius - chartConfiguration.innerRadius` is available radius for the whole chart
-    // - to get the radius for each series, we need to substract all the gaps
-    //   between the series from the total available radius (`chartConfiguration.seriesGap * values.length - 1` - there is always
-    //   one gap less than the number of series)
-    // - then we divide the result by the number of series to get the radius for each series
-    const radiusPerSeries =
+    // - to get the radius for each ring, we need to substract the gaps between the rings
+    //   (`chartConfiguration.seriesGap * ringCount`) and one pixel from the total available radius
+    // - then we divide the result by the number of rings to get the radius for each ring
+    const radiusPerRing = Math.max(
+      0,
       (chartConfiguration.outerRadius -
         chartConfiguration.innerRadius -
-        chartConfiguration.seriesGap * values.length -
+        chartConfiguration.seriesGap * ringCount -
         1) /
-      values.length;
+        ringCount,
+    );
 
-    const seriesProp = values.map((valueItem, valueIndex) => ({
-      data: valueItem.data.map((item, itemIndex) => ({
-        id: `${valueItem.id}-${itemIndex}`,
-        value: item || 0,
-        label: `${String(dimensionData[itemIndex])} - ${valueItem.label}`,
-      })),
-      arcLabel: chartConfiguration.itemLabel === 'value' ? ('value' as const) : undefined,
-      // each series starts from
-      // - inner radius of the chart
-      // - plus all the series before
-      // - plus the gap between the series
-      innerRadius:
-        chartConfiguration.innerRadius +
-        valueIndex * radiusPerSeries +
-        chartConfiguration.seriesGap * valueIndex,
-      // each series ends at the radius that is the same as start plus the radius of one series
-      outerRadius:
-        chartConfiguration.innerRadius +
-        (valueIndex + 1) * radiusPerSeries +
-        chartConfiguration.seriesGap * valueIndex,
-      cornerRadius: chartConfiguration.cornerRadius,
-      startAngle: chartConfiguration.startAngle,
-      endAngle: chartConfiguration.endAngle,
-      paddingAngle: chartConfiguration.paddingAngle,
-    }));
+    const seriesProp = values.flatMap((valueItem, valueIndex) => {
+      const rings = hasMultipleDimensions
+        ? getPieRings(dimensions, valueItem)
+        : [
+            valueItem.data.map((item, itemIndex) => ({
+              id: `${valueItem.id}-${itemIndex}`,
+              value: item || 0,
+              label: `${String(dimensionData[itemIndex])} - ${valueItem.label}`,
+            })),
+          ];
+
+      return rings.map((data, levelIndex) => {
+        const ringIndex = valueIndex * levelCount + levelIndex;
+
+        return {
+          data,
+          arcLabel: chartConfiguration.itemLabel === 'value' ? ('value' as const) : undefined,
+          // each ring starts from
+          // - inner radius of the chart
+          // - plus all the rings before
+          // - plus the gap between the rings
+          innerRadius:
+            chartConfiguration.innerRadius +
+            ringIndex * radiusPerRing +
+            chartConfiguration.seriesGap * ringIndex,
+          // each ring ends at the radius that is the same as start plus the radius of one ring
+          outerRadius:
+            chartConfiguration.innerRadius +
+            (ringIndex + 1) * radiusPerRing +
+            chartConfiguration.seriesGap * ringIndex,
+          cornerRadius: chartConfiguration.cornerRadius,
+          startAngle: chartConfiguration.startAngle,
+          endAngle: chartConfiguration.endAngle,
+          // the padding is added per arc, so rings with a different number of arcs would not line up
+          paddingAngle: hasMultipleDimensions ? 0 : chartConfiguration.paddingAngle,
+        };
+      });
+    });
 
     const legendPosition = getLegendPosition(
       chartConfiguration.pieLegendDirection === 'vertical'

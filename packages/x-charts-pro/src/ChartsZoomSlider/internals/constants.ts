@@ -14,3 +14,12 @@ export const ZOOM_SLIDER_SIZE = Math.max(
   ZOOM_SLIDER_THUMB_HEIGHT,
   ZOOM_SLIDER_THUMB_WIDTH,
 );
+
+/**
+ * Portion of the axis extent, in percent, a zoom slider handle or track moves by on an arrow key press.
+ */
+export const ZOOM_SLIDER_KEYBOARD_STEP = 1;
+/**
+ * Portion of the axis extent, in percent, a zoom slider handle or track moves by on a page key press.
+ */
+export const ZOOM_SLIDER_KEYBOARD_LARGE_STEP = 10;

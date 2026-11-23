@@ -2,7 +2,14 @@
   "props": {},
   "name": "ComposerToolbar",
   "imports": ["import { ComposerToolbar } from '@mui/x-chat/headless';"],
-  "slots": [{ "name": "toolbar", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "toolbar",
+      "description": "The component that renders the toolbar.",
+      "default": "'div'",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiComposerToolbar",
   "filename": "/packages/x-chat-headless/src/composer/ComposerToolbar.tsx",

@@ -9,7 +9,8 @@ import ArrowRight from '@mui/icons-material/ArrowRight';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { TimeClock, TimeClockProps } from '@mui/x-date-pickers/TimeClock';
+import type { TimeClockProps } from '@mui/x-date-pickers/TimeClock';
+import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 
 const slots: TimeClockProps<any>['slots'] = {

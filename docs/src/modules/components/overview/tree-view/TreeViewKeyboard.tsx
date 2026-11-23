@@ -10,8 +10,9 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
-import KeyboardSvg, { SelectedKey } from '../KeyboardSvg';
+import type { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
+import type { SelectedKey } from '../KeyboardSvg';
+import KeyboardSvg from '../KeyboardSvg';
 
 const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {

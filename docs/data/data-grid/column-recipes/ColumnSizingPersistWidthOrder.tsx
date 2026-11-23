@@ -1,11 +1,13 @@
 import * as React from 'react';
+import type {
+  GridColDef,
+  GridColumnResizeParams,
+  GridApiPro,
+} from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
   useGridApiRef,
-  GridColDef,
-  GridColumnResizeParams,
   gridColumnFieldsSelector,
-  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 

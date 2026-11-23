@@ -1,6 +1,6 @@
 // School Calendar Nested Resources Dataset
 
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
@@ -117,8 +117,8 @@ export const initialEvents: SchedulerEvent[] = [
   },
   {
     id: 'admin-2',
-    start: '2025-07-04T00:00:00',
-    end: '2025-07-05T00:00:00',
+    start: '2025-07-04',
+    end: '2025-07-06',
     title: 'Independence Day — Campus Closed',
     resource: 'administration',
     allDay: true,
@@ -314,8 +314,8 @@ export const initialEvents: SchedulerEvent[] = [
   },
   {
     id: 'cs-9',
-    start: '2025-07-26T00:00:00',
-    end: '2025-07-27T00:00:00',
+    start: '2025-07-26',
+    end: '2025-07-28',
     title: 'Hackathon',
     resource: 'computer-science',
     allDay: true,

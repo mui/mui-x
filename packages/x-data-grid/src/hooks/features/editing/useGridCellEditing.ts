@@ -1,9 +1,11 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import type { RefObject } from '@mui/x-internals/types';
 import { errorOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
@@ -25,7 +27,8 @@ import type {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import type { GridRowId } from '../../../models/gridRows';
-import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
+import { isPrintableKey, isPasteShortcut, isImeKeyDown } from '../../../utils/keyboardUtils';
+import { isEventFromPreMountedEditor } from '../../../utils/cellEditor';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
@@ -125,7 +128,14 @@ export const useGridCellEditing = (
         return;
       }
       const newParams = { ...params, reason: GridCellEditStopReasons.cellFocusOut };
-      apiRef.current.publishEvent('cellEditStop', newParams, event);
+      const publish = () => apiRef.current.publishEvent('cellEditStop', newParams, event);
+      // React 17 and React 18 legacy roots do not batch updates in native listeners. Without the
+      // batch, the row commits before the undo history and other `cellEditStop` listeners run.
+      if (isReactVersionAtLeast(19)) {
+        publish();
+      } else {
+        ReactDOM.unstable_batchedUpdates(publish);
+      }
     },
     [apiRef],
   );
@@ -133,9 +143,8 @@ export const useGridCellEditing = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
-        // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: to replace at one point. See https://github.com/mui/material-ui/pull/39713#discussion_r1381678957.
-        if (event.which === 229) {
+        // Wait until the IME composition ends.
+        if (isImeKeyDown(event)) {
           return;
         }
 
@@ -157,6 +166,11 @@ export const useGridCellEditing = (
           apiRef.current.publishEvent('cellEditStop', newParams, event);
         }
       } else if (params.isEditable) {
+        // The composition starts edit mode instead, see `handleCellCompositionStart`.
+        if (isEventFromPreMountedEditor(event) && isImeKeyDown(event)) {
+          return;
+        }
+
         let reason: GridCellEditStartReasons | undefined;
 
         const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
@@ -188,6 +202,23 @@ export const useGridCellEditing = (
     [apiRef],
   );
 
+  const handleCellCompositionStart = React.useCallback<GridEventListener<'cellCompositionStart'>>(
+    (params, event) => {
+      if (params.cellMode !== GridCellModes.View || !params.isEditable) {
+        return;
+      }
+      if (apiRef.current.getCellMode(params.id, params.field) !== GridCellModes.View) {
+        return;
+      }
+      const newParams: GridCellEditStartParams = {
+        ...params,
+        reason: GridCellEditStartReasons.compositionStart,
+      };
+      apiRef.current.publishEvent('cellEditStart', newParams, event);
+    },
+    [apiRef],
+  );
+
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params) => {
       const { id, field, reason } = params;
@@ -197,7 +228,8 @@ export const useGridCellEditing = (
       if (
         reason === GridCellEditStartReasons.printableKeyDown ||
         reason === GridCellEditStartReasons.deleteKeyDown ||
-        reason === GridCellEditStartReasons.pasteKeyDown
+        reason === GridCellEditStartReasons.pasteKeyDown ||
+        reason === GridCellEditStartReasons.compositionStart
       ) {
         startCellEditModeParams.deleteValue = true;
       }
@@ -252,6 +284,7 @@ export const useGridCellEditing = (
   useGridEvent(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
   useGridEvent(apiRef, 'cellFocusOut', runIfEditModeIsCell(handleCellFocusOut));
   useGridEvent(apiRef, 'cellKeyDown', runIfEditModeIsCell(handleCellKeyDown));
+  useGridEvent(apiRef, 'cellCompositionStart', runIfEditModeIsCell(handleCellCompositionStart));
 
   useGridEvent(apiRef, 'cellEditStart', runIfEditModeIsCell(handleCellEditStart));
   useGridEvent(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
@@ -595,7 +628,9 @@ export const useGridCellEditing = (
   useGridApiMethod(apiRef, editingApi, 'public');
   useGridApiMethod(apiRef, editingPrivateApi, 'private');
 
-  React.useEffect(() => {
+  // Apply the controlled model before the browser inserts the typed character.
+  // With a passive effect, the edit state is created too late, and the editor ignores the first key.
+  useEnhancedEffect(() => {
     if (cellModesModelProp) {
       updateCellModesModel(cellModesModelProp);
     }

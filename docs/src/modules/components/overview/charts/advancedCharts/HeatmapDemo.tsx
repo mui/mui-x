@@ -2,7 +2,7 @@ import { interpolateBlues } from 'd3-scale-chromatic';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
-import { HeatmapValueType } from '@mui/x-charts-pro/models';
+import type { HeatmapValueType } from '@mui/x-charts-pro/models';
 import bikeData from 'docs/data/charts/dataset/ParisBicycle.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 

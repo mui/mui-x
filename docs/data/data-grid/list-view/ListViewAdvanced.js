@@ -22,7 +22,6 @@ import { ListCell } from './components/ListCell';
 import { Toolbar } from './components/Toolbar';
 import { INITIAL_ROWS } from './data';
 import { FILE_TYPES } from './constants';
-
 import { formatDate, formatSize, stringAvatar } from './utils';
 import { ActionDrawer } from './components/ActionDrawer';
 import { RenameDialog } from './components/RenameDialog';

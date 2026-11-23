@@ -9,7 +9,6 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ChatBox } from '@mui/x-chat';
-
 import {
   ChoiceControl,
   NumberControl,

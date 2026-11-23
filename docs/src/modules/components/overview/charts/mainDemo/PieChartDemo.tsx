@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import Typography from '@mui/material/Typography';
 import muiMaterialData from '../data/material.json';
-import { DataFileContent } from './generateDataset';
+import type { DataFileContent } from './generateDataset';
 
 interface MuiMaterialVersionEntry {
   date: Date;

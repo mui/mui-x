@@ -9,10 +9,11 @@
  * This gesture is commonly used for rotation controls in drawing or image manipulation interfaces.
  */
 
-import { GesturePhase, GestureState } from '../Gesture';
-import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
-import { PointerData } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
+import type { GesturePhase, GestureState } from '../Gesture';
+import type { PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerData } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, calculateRotationAngle, createEventName } from '../utils';
 
 /**
@@ -78,15 +79,15 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
     lastDelta: 0,
   };
 
-  declare protected readonly isSinglePhase: false;
+  declare public readonly isSinglePhase: false;
 
-  declare protected readonly eventType: RotateEvent;
+  declare public readonly eventType: RotateEvent;
 
   declare protected readonly optionsType: RotateGestureOptions<GestureName>;
 
-  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  declare protected readonly mutableStateType: Omit<
+  declare public readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     'startAngle' | 'lastAngle' | 'lastTime' | 'velocity' | 'lastDelta'
   >;

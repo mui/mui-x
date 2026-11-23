@@ -7,10 +7,17 @@ import { getDataAttributes } from '../internals/getDataAttributes';
 import type { ConversationListItemOwnerState } from './conversationList.types';
 
 export interface ConversationListItemSlots {
+  /**
+   * The component that renders the root.
+   * @default 'div'
+   */
   root: React.ElementType;
 }
 
 export interface ConversationListItemSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, ConversationListItemOwnerState>;
 }
 
@@ -18,12 +25,35 @@ export interface ConversationListItemProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
+  /**
+   * The conversation the item renders.
+   */
   conversation: ChatConversation;
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected?: boolean;
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread?: boolean;
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused?: boolean;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ConversationListItemSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ConversationListItemSlotProps;
 }
 

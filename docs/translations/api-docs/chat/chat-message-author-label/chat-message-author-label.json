@@ -1,14 +1,14 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
   "classDescriptions": {
     "actions": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message actions element"
-    },
-    "authorLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message author label element"
     },
     "avatar": {
       "description": "Styles applied to {{nodeName}}.",
@@ -65,5 +65,6 @@
       "nodeName": "the message root element"
     },
     "streaming": { "description": "Applied while the message is streaming" }
-  }
+  },
+  "slotDescriptions": { "authorLabel": "The component that renders the author label." }
 }

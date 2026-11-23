@@ -12,7 +12,14 @@
     "import { RadialLineHighlightPlot } from '@mui/x-charts-premium/RadialLineChart';",
     "import { RadialLineHighlightPlot } from '@mui/x-charts-premium';"
   ],
-  "slots": [{ "name": "radialLineHighlight", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "radialLineHighlight",
+      "description": "The component that renders the radial line highlight.",
+      "default": "RadialLineHighlightElement",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiRadialLineHighlightPlot",
   "filename": "/packages/x-charts-premium/src/RadialLineChart/RadialLineHighlightPlot.tsx",

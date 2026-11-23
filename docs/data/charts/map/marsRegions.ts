@@ -1,4 +1,4 @@
-import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 
 /**
  * The 30 USGS Mars Chart (MC) quadrangles, tiling the whole planet.

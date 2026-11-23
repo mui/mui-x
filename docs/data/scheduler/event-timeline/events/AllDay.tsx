@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 
 const defaultVisibleDate = new Date('2025-07-01T00:00:00');
@@ -12,8 +12,8 @@ const resources: SchedulerResource[] = [
 const initialEvents: SchedulerEvent[] = [
   {
     id: '1',
-    start: '2025-07-01T00:00:00',
-    end: '2025-07-01T00:00:00',
+    start: '2025-07-01',
+    end: '2025-07-02',
     title: 'Release day',
     resource: 'company',
     allDay: true,

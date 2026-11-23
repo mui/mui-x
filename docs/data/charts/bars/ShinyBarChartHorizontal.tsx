@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { BarChart, type BarLabelProps, type BarProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
+import type { BarLabelProps, BarProps } from '@mui/x-charts/BarChart';
 import { useAnimate, useAnimateBar, useDrawingArea } from '@mui/x-charts/hooks';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';

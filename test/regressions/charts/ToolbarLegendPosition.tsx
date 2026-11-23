@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
-import { Position } from '@mui/x-charts/models';
-import { Direction } from '@mui/x-charts/ChartsLegend';
+import type { BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import type { Position } from '@mui/x-charts/models';
+import type { Direction } from '@mui/x-charts/ChartsLegend';
 
 const chartSettings = {
   margin: 2,

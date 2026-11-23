@@ -15,6 +15,13 @@ export const FORMULA_REFERENCE_TOKEN_CLASS = 'MuiDataGrid-formulaReferenceToken'
 export const FORMULA_SYNTAX_TOKEN_CLASS = 'MuiDataGrid-formulaSyntaxToken';
 
 /**
+ * The class on each run inside an error span (a parse error the host asked to
+ * underline, e.g. the computed column editor). Added on top of the reference or
+ * syntax class when the run is also one of those.
+ */
+export const FORMULA_ERROR_TOKEN_CLASS = 'MuiDataGrid-formulaErrorToken';
+
+/**
  * A character range within `root.textContent`. Collapsed (`start === end`) when it
  * is a plain caret.
  */
@@ -216,10 +223,16 @@ export function renderSegments(root: HTMLElement, segments: FormulaTextSegment[]
       span.className = FORMULA_REFERENCE_TOKEN_CLASS;
       span.style.color = getFormulaReferenceColorVar(segment.colorIndex);
       span.textContent = segment.text;
+      if (segment.error) {
+        span.classList.add(FORMULA_ERROR_TOKEN_CLASS);
+      }
       root.appendChild(span);
-    } else if (segment.syntax) {
+    } else if (segment.syntax || segment.error) {
       const span = doc.createElement('span');
-      span.className = FORMULA_SYNTAX_TOKEN_CLASS;
+      span.className = segment.syntax ? FORMULA_SYNTAX_TOKEN_CLASS : FORMULA_ERROR_TOKEN_CLASS;
+      if (segment.syntax && segment.error) {
+        span.classList.add(FORMULA_ERROR_TOKEN_CLASS);
+      }
       span.textContent = segment.text;
       root.appendChild(span);
     } else {

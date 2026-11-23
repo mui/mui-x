@@ -1,14 +1,17 @@
 import * as React from 'react';
-import {
-  DataGrid,
+import type {
   GridColDef,
   GridRowModel,
   GridRenderEditCellParams,
-  useGridApiContext,
   GridColTypeDef,
+} from '@mui/x-data-grid';
+import {
+  DataGrid,
+  useGridApiContext,
   GridCellEditStopReasons,
 } from '@mui/x-data-grid';
-import InputBase, { InputBaseProps } from '@mui/material/InputBase';
+import type { InputBaseProps } from '@mui/material/InputBase';
+import InputBase from '@mui/material/InputBase';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
 import {

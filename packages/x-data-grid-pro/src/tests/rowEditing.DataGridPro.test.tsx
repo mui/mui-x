@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { useGridApiRef, DataGridPro, GridRowModes } from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro, GridRowModes, gridClasses } from '@mui/x-data-grid-pro';
 import type {
   GridApi,
   DataGridProProps,
@@ -1107,6 +1107,38 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(input.value).to.equal('ありがとう');
         expect(listener.mock.lastCall?.[0].reason).to.equal('enterKeyDown');
       });
+
+      it(`should ignore the Enter keydown while the IME composition is active`, () => {
+        render(<TestCase />);
+        const listener = vi.fn();
+        apiRef.current?.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        const input = cell.querySelector('input')!;
+        fireEvent.change(input, { target: { value: 'あ' } });
+        // Some browsers send the real key code with `isComposing`.
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 13, isComposing: true });
+        expect(listener.mock.calls.length).to.equal(0);
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
+        expect(listener.mock.calls.length).to.equal(1);
+        expect(input.value).to.equal('あ');
+      });
+
+      it(`should ignore the Escape keydown while the IME composition is active`, () => {
+        render(<TestCase />);
+        const listener = vi.fn();
+        apiRef.current?.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        const input = cell.querySelector('input')!;
+        fireEvent.change(input, { target: { value: 'あ' } });
+        // Escape cancels the IME candidates. It must not cancel the edit.
+        fireEvent.keyDown(input, { key: 'Escape', keyCode: 27, isComposing: true });
+        expect(listener.mock.calls.length).to.equal(0);
+        fireEvent.keyDown(input, { key: 'Escape', keyCode: 27 });
+        expect(listener.mock.calls.length).to.equal(1);
+        expect(listener.mock.lastCall?.[0].reason).to.equal('escapeKeyDown');
+      });
     });
   });
 
@@ -1119,6 +1151,19 @@ describe('<DataGridPro /> - Row editing', () => {
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.mock.calls.length).to.equal(0);
         fireUserEvent.mousePress(getCell(1, 1));
+
+        await waitFor(() => {
+          expect(listener.mock.lastCall?.[0].reason).to.equal('rowFocusOut');
+        });
+      });
+
+      it(`should publish 'rowEditStop' with reason=rowFocusOut after a click on the empty space of the row`, async () => {
+        render(<TestCase />);
+        const listener = vi.fn();
+        apiRef.current?.subscribeEvent('rowEditStop', listener);
+        fireEvent.doubleClick(getCell(0, 1));
+        expect(listener.mock.calls.length).to.equal(0);
+        fireUserEvent.mousePress(getRow(0).querySelector(`.${gridClasses.cellEmpty}`)!);
 
         await waitFor(() => {
           expect(listener.mock.lastCall?.[0].reason).to.equal('rowFocusOut');

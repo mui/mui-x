@@ -9,10 +9,11 @@
  * This gesture is commonly used for contextual menus, revealing additional options, or alternate actions.
  */
 
-import { GesturePhase, GestureState } from '../Gesture';
-import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
-import { PointerData } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
+import type { GesturePhase, GestureState } from '../Gesture';
+import type { PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerData } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName } from '../utils';
 
 /**
@@ -88,15 +89,15 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
     pressThresholdReached: false,
   };
 
-  declare protected readonly isSinglePhase: false;
+  declare public readonly isSinglePhase: false;
 
-  declare protected readonly eventType: PressEvent;
+  declare public readonly eventType: PressEvent;
 
   declare protected readonly optionsType: PressGestureOptions<GestureName>;
 
-  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  declare protected readonly mutableStateType: Omit<
+  declare public readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     'startCentroid' | 'lastPosition' | 'timerId' | 'startTime' | 'pressThresholdReached'
   >;

@@ -1,12 +1,21 @@
 {
   "props": {
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
     "options": {
       "type": {
         "name": "shape",
         "description": "{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func, onStylesheetError?: func, pixelRatio?: number, quality?: number, type: string }"
       }
     },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      }
+    },
+    "tabIndex": { "type": { "name": "number" } }
   },
   "name": "ChartsToolbarImageExportTrigger",
   "imports": [

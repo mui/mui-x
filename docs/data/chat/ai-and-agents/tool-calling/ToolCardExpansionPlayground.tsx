@@ -6,13 +6,13 @@ import {
   ChatMessageContent,
   ChatMessageGroup,
 } from '@mui/x-chat';
-import {
-  useChatStore,
-  type ChatConversation,
-  type ChatMessage,
-  type ChatToolExpand,
-  type ChatToolInvocation,
-  type ChatToolInvocationState,
+import { useChatStore } from '@mui/x-chat/headless';
+import type {
+  ChatConversation,
+  ChatMessage,
+  ChatToolExpand,
+  ChatToolInvocation,
+  ChatToolInvocationState,
 } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';

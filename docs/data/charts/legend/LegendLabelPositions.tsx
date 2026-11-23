@@ -1,9 +1,9 @@
 import { interpolateRdYlBu } from 'd3-scale-chromatic';
+import type { PiecewiseLabelFormatterParams } from '@mui/x-charts/ChartsLegend';
 import {
   ContinuousColorLegend,
   piecewiseColorDefaultLabelFormatter,
   PiecewiseColorLegend,
-  PiecewiseLabelFormatterParams,
 } from '@mui/x-charts/ChartsLegend';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsAxesGradients } from '@mui/x-charts/internals';

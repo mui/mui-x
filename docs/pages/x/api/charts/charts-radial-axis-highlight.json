@@ -1,5 +1,18 @@
 {
-  "props": {},
+  "props": {
+    "radius": {
+      "type": {
+        "name": "enum",
+        "description": "'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none'"
+      }
+    },
+    "rotation": {
+      "type": {
+        "name": "enum",
+        "description": "'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none'"
+      }
+    }
+  },
   "name": "ChartsRadialAxisHighlight",
   "imports": [
     "import { ChartsRadialAxisHighlight } from '@mui/x-charts/ChartsRadialAxisHighlight';",

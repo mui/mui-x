@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   ChoiceControl,

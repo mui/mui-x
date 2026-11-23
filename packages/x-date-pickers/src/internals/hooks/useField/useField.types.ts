@@ -14,6 +14,7 @@ import type {
   PickerValueType,
 } from '../../../models';
 import type { InternalPropNames } from '../../../hooks/useSplitFieldProps';
+import type { PickersLocaleText } from '../../../locales';
 import type { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import type {
   FormProps,
@@ -117,13 +118,37 @@ export interface UseFieldForwardedProps {
   clearable?: boolean;
   error?: boolean;
   focused?: boolean;
+  /**
+   * The ref used to access the DOM elements of the sections.
+   */
   sectionListRef?: React.Ref<PickersSectionListRef>;
+  /**
+   * @ignore
+   */
   onClick?: React.MouseEventHandler;
+  /**
+   * @ignore
+   */
   onMouseDown?: React.MouseEventHandler;
+  /**
+   * @ignore
+   */
   onKeyDown?: React.KeyboardEventHandler;
+  /**
+   * @ignore
+   */
   onFocus?: React.FocusEventHandler;
+  /**
+   * @ignore
+   */
   onBlur?: React.FocusEventHandler;
+  /**
+   * @ignore
+   */
   onInput?: React.FormEventHandler<HTMLDivElement>;
+  /**
+   * @ignore
+   */
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
   onClear?: React.MouseEventHandler;
 }
@@ -281,7 +306,12 @@ export interface UseFieldState<TValue extends PickerValidValue> {
   /**
    * Last set of parameters used to generate the sections.
    */
-  lastSectionsDependencies: { format: string; isRtl: boolean; locale: any };
+  lastSectionsDependencies: {
+    format: string;
+    isRtl: boolean;
+    locale: any;
+    localeText: PickersLocaleText;
+  };
   /**
    * Non-nullable value used to keep trace of the timezone and the date parts not present in the format.
    * It is updated whenever we have a valid date (for the Range Pickers we update only the portion of the range that is valid).

@@ -3,9 +3,12 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
+import type { Page } from '@playwright/test';
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
+
+const pendingPrintFonts = new WeakMap<Page, { url: string; resolve: (fail: boolean) => void }>();
 
 export const alias = [
   // Generates resolver aliases for all packages and their plans.
@@ -81,27 +84,56 @@ export default defineConfig({
     },
     browser: {
       provider: playwright({
-        ...(process.env.PLAYWRIGHT_SERVER_WS
-          ? {
-              connectOptions: {
-                wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
-              },
-            }
-          : {
-              launchOptions: {
-                args: [
-                  // Enable GPU so WebGL2 is enabled in browser tests
-                  '--enable-gpu',
-                ],
-                // Required for tests which use scrollbars.
-                ignoreDefaultArgs: ['--hide-scrollbars'],
-              },
-            }),
+        launchOptions: {
+          args: [
+            // Enable GPU so WebGL2 is enabled in browser tests
+            '--enable-gpu',
+          ],
+          // Required for tests which use scrollbars.
+          ignoreDefaultArgs: ['--hide-scrollbars'],
+        },
       }),
       viewport: { width: 1280, height: 800 },
       headless: true,
       screenshotFailures: false,
       commands: {
+        async deferPrintFont({ page }) {
+          const url = new URL(`/print-font-${crypto.randomUUID()}.woff2`, page.url()).href;
+          let resolveFont!: (fail: boolean) => void;
+          const response = new Promise<boolean>((resolveResponse) => {
+            resolveFont = resolveResponse;
+          });
+          pendingPrintFonts.set(page, { url, resolve: resolveFont });
+          await page.route(
+            url,
+            async (route) => {
+              const fail = await response;
+              await route.fulfill(
+                fail
+                  ? { status: 404, body: '' }
+                  : {
+                      contentType: 'font/woff2',
+                      path: resolve(
+                        WORKSPACE_ROOT,
+                        'docs/public/static/fonts/IBMPlexSans-Regular-subset.woff2',
+                      ),
+                    },
+              );
+            },
+            { times: 1 },
+          );
+          return url;
+        },
+        async resolvePrintFont({ page }, result: 'loaded' | 'error' | 'cleanup') {
+          const pending = pendingPrintFonts.get(page);
+          if (pending) {
+            pending.resolve(result !== 'loaded');
+            if (result === 'cleanup') {
+              await page.unroute(pending.url);
+              pendingPrintFonts.delete(page);
+            }
+          }
+        },
         async resetMousePosition(ctx) {
           // Move the pointer out of the page. A pointer left over the content
           // makes components react to hover during unrelated tests.
@@ -133,7 +165,8 @@ export default defineConfig({
       testTimeout: 60000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
-      maxWorkers: 2,
+      // Total across all projects. 4 saturates the CPU of the `large.gen2` browser job; 8 runs out of memory.
+      maxWorkers: 4,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },

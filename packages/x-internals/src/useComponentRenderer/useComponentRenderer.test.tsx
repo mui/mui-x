@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
-import { RenderProp, useComponentRenderer } from './useComponentRenderer';
+import type { RenderProp } from './useComponentRenderer';
+import { useComponentRenderer } from './useComponentRenderer';
 
 describe('useComponentRenderer', () => {
   const { render } = createRenderer();
@@ -89,9 +90,12 @@ describe('useComponentRenderer', () => {
         render={<div style={{ backgroundColor: 'blue', outline: 'blue solid 1px' }} />}
       />,
     );
-    expect(screen.getByTestId('rendered-element')).to.have.attribute(
-      'style',
-      'color: blue; outline: blue solid 1px; background-color: blue;',
-    );
+    expect(screen.getByTestId('rendered-element')).toHaveInlineStyle({
+      color: 'blue',
+      backgroundColor: 'blue',
+      outlineColor: 'blue',
+      outlineStyle: 'solid',
+      outlineWidth: '1px',
+    });
   });
 });

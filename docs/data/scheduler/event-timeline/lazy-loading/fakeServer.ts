@@ -1,14 +1,17 @@
-import { SchedulerEvent, SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { initialEvents, resources, defaultVisibleDate } from '../../datasets/broadway';
 
 export { resources, defaultVisibleDate };
 
 const ALL_EVENTS: SchedulerEvent[] = [...initialEvents];
 
+/** Parses an event date as local time, including the date-only strings of all-day events. */
+const toDate = (value: string): Date => new Date(value.length === 10 ? `${value}T00:00:00` : value);
+
 function getEventsInRange(rangeStart: Date, rangeEnd: Date): SchedulerEvent[] {
   return ALL_EVENTS.filter((event) => {
-    const eventStart = new Date(event.start as string);
-    const eventEnd = new Date(event.end as string);
+    const eventStart = toDate(event.start);
+    const eventEnd = toDate(event.end);
     return eventEnd > rangeStart && eventStart < rangeEnd;
   });
 }

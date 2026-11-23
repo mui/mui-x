@@ -33,14 +33,16 @@ function initialize<State, Value>(params: {
     // but React triggers `useOnMount` multiple times in dev, so we need to manage
     // the subscription anyway.
     subscribe: () => {
-      instance.dispose ??= store.subscribe((state) => {
+      const handleChange = (state: State) => {
         const nextState = selector(state);
         if (!Object.is(previousState, nextState)) {
           const prev = previousState;
           previousState = nextState;
           instance.effect(prev, nextState);
         }
-      });
+      };
+      instance.dispose ??= store.subscribe(handleChange);
+      handleChange(store.state);
     },
     onMount: () => {
       instance.subscribe();

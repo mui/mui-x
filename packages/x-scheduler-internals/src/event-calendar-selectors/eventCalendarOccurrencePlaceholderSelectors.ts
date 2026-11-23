@@ -1,82 +1,74 @@
 import type { EventCalendarState as State } from '../use-event-calendar';
-import type { TemporalSupportedObject } from '../models';
+import type { SchedulerProcessedDay } from '../models';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
+import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
+import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+
+// These selectors run for every cell while dragging, so they compare timestamps and day numbers.
+
+/** Whether the timestamp falls on the plain date in the display timezone. */
+function isOnPlainDate(state: State, timestamp: number, plainDate: BaseTemporal.PlainDate) {
+  return getDayNumber(plainDate) === toLocalDayNumber(timestamp, state.displayTimezone);
+}
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
-  placeholderInDayCell: (
-    state: State,
-    day: TemporalSupportedObject,
-    rowStart: TemporalSupportedObject,
-  ) => {
-    if (
-      state.occurrencePlaceholder === null ||
-      state.occurrencePlaceholder.surfaceType !== 'day-grid' ||
-      state.occurrencePlaceholder.isHidden
-    ) {
+  placeholderInDayCell: (state: State, day: SchedulerProcessedDay, rowStart: number) => {
+    const placeholder = state.occurrencePlaceholder;
+    if (placeholder === null || placeholder.surfaceType !== 'day-grid' || placeholder.isHidden) {
       return null;
     }
 
-    if (state.adapter.isSameDay(day, state.occurrencePlaceholder.start)) {
-      return state.occurrencePlaceholder;
+    if (isOnPlainDate(state, placeholder.start, day.plainDate)) {
+      return placeholder;
     }
 
+    // A placeholder starting in a previous row also renders from the first day of this one, when the
+    // row starts within it, in either order (the end is exclusive). The range is checked first, as
+    // it rules out most cells.
     if (
-      state.adapter.isSameDay(day, rowStart) &&
-      state.adapter.isWithinRange(rowStart, [
-        state.occurrencePlaceholder.start,
-        state.occurrencePlaceholder.end,
-      ])
+      Math.min(placeholder.start, placeholder.end) <= rowStart &&
+      rowStart < Math.max(placeholder.start, placeholder.end) &&
+      isOnPlainDate(state, rowStart, day.plainDate)
     ) {
-      return state.occurrencePlaceholder;
+      return placeholder;
     }
 
     return null;
   },
-  placeholderInTimeRange: (
-    state: State,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
-  ) => {
-    if (
-      state.occurrencePlaceholder === null ||
-      state.occurrencePlaceholder.surfaceType !== 'time-grid' ||
-      state.occurrencePlaceholder.isHidden
-    ) {
+  placeholderInTimeRange: (state: State, start: number, end: number) => {
+    const placeholder = state.occurrencePlaceholder;
+    if (placeholder === null || placeholder.surfaceType !== 'time-grid' || placeholder.isHidden) {
       return null;
     }
 
-    if (
-      state.adapter.isBefore(state.occurrencePlaceholder.end, start) ||
-      state.adapter.isAfter(state.occurrencePlaceholder.start, end)
-    ) {
+    if (placeholder.end <= start || placeholder.start >= end) {
       return null;
     }
 
-    return state.occurrencePlaceholder;
+    return placeholder;
   },
-  isCreatingInDayCell: (state: State, day: TemporalSupportedObject) => {
+  isCreatingInDayCell: (state: State, day: SchedulerProcessedDay) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.type !== 'creation') {
       return false;
     }
-    return state.adapter.isSameDay(day, placeholder.start);
+    return isOnPlainDate(state, placeholder.start, day.plainDate);
   },
   isCreatingInTimeRange: (
     state: State,
-    dayStart: TemporalSupportedObject,
-    dayEnd: TemporalSupportedObject,
+    plainDate: BaseTemporal.PlainDate,
+    dayStart: number,
+    dayEnd: number,
   ) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'time-grid' || placeholder.type !== 'creation') {
       return false;
     }
 
-    if (!state.adapter.isSameDay(placeholder.start, dayStart)) {
-      return false;
-    }
-
-    const startsBeforeEnd = state.adapter.isBefore(placeholder.start, dayEnd);
-    const endsAfterStart = state.adapter.isAfter(placeholder.end, dayStart);
-
-    return startsBeforeEnd && endsAfterStart;
+    return (
+      placeholder.start < dayEnd &&
+      placeholder.end > dayStart &&
+      isOnPlainDate(state, placeholder.start, plainDate)
+    );
   },
 };

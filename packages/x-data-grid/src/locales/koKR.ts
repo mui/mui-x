@@ -50,15 +50,84 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarPivot: '피벗',
 
   // Toolbar charts button
-  // toolbarCharts: 'Charts',
+  toolbarCharts: '차트',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI 어시스턴트',
 
   // Formula bar (Premium formulas)
-  // formulaBarLabel: 'Formula bar',
-  // formulaBarInputLabel: 'Formula',
-  // formulaBarAddressLabel: 'Active cell',
+  formulaBarLabel: '수식 입력줄',
+  formulaBarInputLabel: '수식',
+  formulaBarAddressLabel: '활성 셀',
+
+  // Computed columns (Premium)
+  columnMenuAddComputedColumn: '계산 열 추가',
+  columnMenuEditComputedColumn: '계산 열 편집',
+  columnMenuViewComputedColumn: '계산 열 보기',
+  columnMenuRemoveComputedColumn: '계산 열 제거',
+  toolbarComputedColumns: '계산 열',
+  computedColumnsPanelTitle: '계산 열',
+  computedColumnsPanelCloseButton: '계산 열 패널 닫기',
+  computedColumnsPanelBackButton: '목록으로 돌아가기',
+  computedColumnsPanelEmpty: '아직 계산 열이 없습니다.',
+  computedColumnsPanelAddButton: '계산 열 추가',
+  computedColumnsPanelItemMenuLabel: '계산 열 작업',
+  computedColumnsPanelItemReadOnlyLabel: '읽기 전용',
+  computedColumnEditorNewTitle: '새 계산 열',
+  computedColumnEditorEditTitle: '계산 열 편집',
+  computedColumnEditorViewTitle: '계산 열 보기',
+  computedColumnReadOnlyHint: '이 계산 열은 편집할 수 없습니다.',
+  computedColumnNameLabel: '이름',
+  computedColumnFieldLabel: '필드',
+  computedColumnFormulaLabel: '수식',
+  computedColumnTypeLabel: '결과 유형',
+  computedColumnTypeNumber: '숫자',
+  computedColumnTypeString: '텍스트',
+  computedColumnTypeBoolean: '참/거짓',
+  computedColumnTypeDate: '날짜',
+  computedColumnTypeDateTime: '날짜 및 시간',
+  computedColumnFormatLabel: '형식',
+  computedColumnFormatStyleDecimal: '숫자',
+  computedColumnFormatStylePercent: '백분율',
+  computedColumnFormatStyleCurrency: '통화',
+  computedColumnFormatCurrencyLabel: '통화 코드',
+  computedColumnFormatDecimalsLabel: '소수 자릿수',
+  computedColumnFormatGroupingLabel: '천 단위 구분 기호',
+  computedColumnPreviewLabel: '미리보기',
+  computedColumnPreviewRow: (rowIndex) => `${rowIndex}행`,
+  computedColumnPreviewNoRows: '미리 볼 행이 없습니다.',
+  computedColumnReferenceTitle: '삽입',
+  computedColumnReferenceColumns: '열',
+  computedColumnReferenceFunctions: '함수',
+  computedColumnReferenceSearchPlaceholder: '검색',
+  computedColumnReferenceNoResults: '일치하는 항목이 없습니다.',
+  computedColumnApplyButton: '적용',
+  computedColumnAddButton: '열 추가',
+  computedColumnCancelButton: '취소',
+  computedColumnCloseButton: '닫기',
+  computedColumnDeleteButton: '열 삭제',
+  computedColumnHeaderLabel: '계산 열',
+  computedColumnHeaderInvalidLabel: '수식이 잘못된 계산 열',
+  computedColumnErrorNameRequired: '이름을 입력하세요.',
+  computedColumnErrorFieldRequired: '필드 이름을 입력하세요.',
+  computedColumnErrorFieldInvalid: '문자, 숫자, 밑줄만 사용하고 문자나 밑줄로 시작하세요.',
+  computedColumnErrorFieldExists: (field) => `필드가 "${field}"인 열이 이미 있습니다.`,
+  computedColumnErrorFieldA1Like: '이 필드 이름은 셀 주소로 읽힙니다. 더 긴 이름을 선택하세요.',
+  computedColumnErrorFormulaRequired: '수식을 입력하세요.',
+  computedColumnErrorParse: (message) => `수식 오류: ${message}`,
+  computedColumnErrorUnknownFunction: (name) => `알 수 없는 함수 ${name}입니다.`,
+  computedColumnErrorUnsupportedReference:
+    '계산 열은 같은 행의 열만 참조할 수 있습니다. 필드 이름만 사용하세요.',
+  computedColumnErrorUnknownField: (field) => `"${field}" 열이 없습니다.`,
+  computedColumnErrorSelfReference: '계산 열은 자기 자신을 참조할 수 없습니다.',
+  computedColumnErrorCycle: (path) => `순환 참조: ${path}.`,
+  computedCellErrorDivByZero:
+    '이 행에서 0으로 나누었습니다. 대체 값을 지정하려면 나눗셈을 IFERROR(…, 0)으로 감싸세요.',
+  computedCellErrorValue: '이 행의 값 중 이 연산에 맞지 않는 유형이 있습니다.',
+  computedCellErrorRef: '참조한 열이 없습니다.',
+  computedCellErrorName: '수식에 알 수 없는 함수가 있습니다.',
+  computedCellErrorCycle: '수식이 자기 자신에 의존합니다.',
+  computedCellErrorGeneric: '이 행에서는 수식을 계산할 수 없습니다.',
 
   // Columns management text
   columnsManagementSearchTitle: '검색',
@@ -141,13 +210,22 @@ const koKRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: '정렬 해제',
   columnMenuSortAsc: '오름차순 정렬',
   columnMenuSortDesc: '내림차순 정렬',
-  // columnMenuManagePivot: 'Manage pivot',
-  // columnMenuManageCharts: 'Manage charts',
+  columnMenuManagePivot: '피벗 관리',
+  columnMenuManageCharts: '차트 관리',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
   columnHeaderFiltersLabel: '필터 표시',
   columnHeaderSortIconLabel: '정렬',
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `${columnName} 오름차순 정렬`;
+    }
+    if (direction === 'desc') {
+      return `${columnName} 내림차순 정렬`;
+    }
+    return `${columnName} 정렬 해제`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) => `${count}행 선택중`,
@@ -169,6 +247,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '참',
   booleanCellFalseLabel: '거짓',
+
+  // Cell editor text
+  emptyCellLabel: '비어 있음',
 
   // Long text cell
   longTextCellExpandLabel: '열기',
@@ -201,11 +282,11 @@ const koKRGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: '페이지 당 행:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : `${formatNumber(to)} 이상`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} / ${count !== -1 ? formatNumber(count) : `${formatNumber(to)} 이상`}`;
     }
     const estimatedLabel =
       estimated && estimated > to ? `약 ${formatNumber(estimated)}` : `${formatNumber(to)} 이상`;
-    return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
+    return `${formatNumber(from)}–${formatNumber(to)} / ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
@@ -226,7 +307,7 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: '집계',
-  // aggregationFunctionLabelNone: 'none',
+  aggregationFunctionLabelNone: '없음',
   aggregationFunctionLabelSum: '합',
   aggregationFunctionLabelAvg: '평균',
   aggregationFunctionLabelMin: '최소값',
@@ -246,8 +327,8 @@ const koKRGrid: Partial<GridLocaleText> = {
   pivotNoFields: '필드가 없습니다.',
   pivotMenuMoveUp: '위로 이동',
   pivotMenuMoveDown: '아래로 이동',
-  pivotMenuMoveToTop: '위로 이동',
-  pivotMenuMoveToBottom: '아래로 이동',
+  pivotMenuMoveToTop: '맨 위로 이동',
+  pivotMenuMoveToBottom: '맨 아래로 이동',
   pivotMenuRows: '행',
   pivotMenuColumns: '열',
   pivotMenuValues: '값',
@@ -263,30 +344,30 @@ const koKRGrid: Partial<GridLocaleText> = {
   pivotQuarterColumnHeaderName: '(분기)',
 
   // Charts configuration panel
-  // chartsNoCharts: 'There are no charts available',
-  // chartsChartNotSelected: 'Select a chart type to configure its options',
-  // chartsTabChart: 'Chart',
-  // chartsTabFields: 'Fields',
-  // chartsTabCustomize: 'Customize',
-  // chartsCloseButton: 'Close charts configuration',
-  // chartsSyncButtonLabel: 'Sync chart',
-  // chartsSearchPlaceholder: 'Search fields',
-  // chartsSearchLabel: 'Search fields',
-  // chartsSearchClear: 'Clear search',
-  // chartsNoFields: 'No fields',
-  // chartsFieldBlocked: 'This field cannot be added to any section',
-  // chartsCategories: 'Categories',
-  // chartsSeries: 'Series',
-  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
-  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
-  // chartsMenuMoveUp: 'Move up',
-  // chartsMenuMoveDown: 'Move down',
-  // chartsMenuMoveToTop: 'Move to top',
-  // chartsMenuMoveToBottom: 'Move to bottom',
-  // chartsMenuOptions: 'Field options',
-  // chartsMenuRemove: 'Remove',
-  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
-  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
+  chartsNoCharts: '사용할 수 있는 차트가 없습니다.',
+  chartsChartNotSelected: '옵션을 설정하려면 차트 유형을 선택하세요.',
+  chartsTabChart: '차트',
+  chartsTabFields: '필드',
+  chartsTabCustomize: '맞춤 설정',
+  chartsCloseButton: '차트 설정 닫기',
+  chartsSyncButtonLabel: '차트 동기화',
+  chartsSearchPlaceholder: '필드 검색',
+  chartsSearchLabel: '필드 검색',
+  chartsSearchClear: '검색 초기화',
+  chartsNoFields: '필드가 없습니다.',
+  chartsFieldBlocked: '이 필드는 어떤 섹션에도 추가할 수 없습니다.',
+  chartsCategories: '카테고리',
+  chartsSeries: '계열',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `${dimensionLabel}에 추가`,
+  chartsMenuAddToValues: (valuesLabel: string) => `${valuesLabel}에 추가`,
+  chartsMenuMoveUp: '위로 이동',
+  chartsMenuMoveDown: '아래로 이동',
+  chartsMenuMoveToTop: '맨 위로 이동',
+  chartsMenuMoveToBottom: '맨 아래로 이동',
+  chartsMenuOptions: '필드 옵션',
+  chartsMenuRemove: '제거',
+  chartsDragToDimensions: (dimensionLabel: string) => `여기로 열을 끌어와 ${dimensionLabel}에 추가`,
+  chartsDragToValues: (valuesLabel: string) => `여기로 열을 끌어와 ${valuesLabel}에 추가`,
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'AI 어시스턴트',
@@ -317,18 +398,28 @@ const koKRGrid: Partial<GridLocaleText> = {
     `${column} (${aggregation})`,
   promptChangeAggregationDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation}) 집계`,
-  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `${column} is any of: ${value}`;
-  //   }
-  //   return `${column} ${operator} ${value}`;
-  // },
-  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `Filter where ${column} is any of: ${value}`;
-  //   }
-  //   return `Filter where ${column} ${operator} ${value}`;
-  // },
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
+      return `${column} ${operator}: ${value}`;
+    }
+    return `${column} ${operator} ${value}`;
+  },
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
+      return `필터: ${column} ${operator}: ${value}`;
+    }
+    return `필터: ${column} ${operator} ${value}`;
+  },
   promptChangeSortDescription: (column: string, direction: string) =>
     `${column} (${direction}) 기준으로 정렬`,
   promptChangePivotEnableLabel: '피벗',
@@ -340,7 +431,8 @@ const koKRGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `(${count}) 개의 값`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
-  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `차원 (${dimensionsCount}), 값 (${valuesCount})`,
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid);

@@ -6,6 +6,9 @@ export interface TypingIndicatorOwnerState {
   activeConversationId?: string;
   users: ChatUser[];
   count: number;
+  /**
+   * The label announcing who is typing.
+   */
   label: string;
 }
 
@@ -16,17 +19,29 @@ export interface StreamingIndicatorOwnerState {
    * `null` – hidden.
    */
   phase: 'waiting' | 'streaming' | null;
+  /**
+   * The id of the message.
+   */
   messageId?: string;
 }
 
 export interface UnreadMarkerOwnerState {
+  /**
+   * The id of the message.
+   */
   messageId: string;
   hasBoundary: boolean;
+  /**
+   * The label of the marker.
+   */
   label: React.ReactNode;
 }
 
 export interface ScrollToBottomAffordanceOwnerState {
   isAtBottom: boolean;
   unseenMessageCount: number;
+  /**
+   * The label of the button.
+   */
   label: string;
 }

@@ -11,6 +11,7 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
 interface UseEventContextMenuItemsParameters {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -23,19 +24,6 @@ interface UseEventContextMenuItemsParameters {
 }
 
 /**
- * The nearest surviving focusable ancestor of an event about to be removed from the DOM — the
- * grid column/cell it lives in, which (unlike the event itself) doesn't unmount on delete.
- *
- * An immediate delete removes `anchorEl` from the DOM in the same commit that closes the menu.
- * MUI's `Menu` tries to restore focus to the element that had it when the menu opened (`anchorEl`
- * itself here), but since that node is now detached, the restore silently fails and focus is lost
- * to `<body>`. Falling back to this ancestor keeps a keyboard user's place in the grid.
- */
-function getFocusFallback(anchorEl: HTMLElement): HTMLElement | null {
-  return anchorEl.parentElement?.closest<HTMLElement>('[tabindex]') ?? null;
-}
-
-/**
  * Builds the menu items for `EventContextMenu`. Every action goes through the exact same store
  * calls as `EventEditingTrigger`'s click and `EventToolbar`/`FormContent`'s delete, so behavior
  * (dialog positioning, the recurring scope dialog) matches those flows exactly.
@@ -44,6 +32,9 @@ function getFocusFallback(anchorEl: HTMLElement): HTMLElement | null {
  * `ReadonlyContent`, and `getInitialEditingMode` never arms the toolbar for one): the menu still
  * opens, but "Edit event" becomes "Show details" — `startEditing` already resolves to the
  * read-only view, the label just has to say so — and Delete is dropped entirely.
+ *
+ * Delete is also dropped when deletion is disabled (`eventDeletion={false}`), like the toolbar and
+ * the form, while "Edit event" stays.
  */
 export function useEventContextMenuItems(
   params: UseEventContextMenuItemsParameters,
@@ -55,6 +46,7 @@ export function useEventContextMenuItems(
   const { startEditing } = useEventEditingContext();
 
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
+  const deletionConfig = useStore(store, schedulerEventSelectors.deletionConfig);
 
   const handleEdit = (event: React.MouseEvent) => {
     onRequestClose();
@@ -69,17 +61,9 @@ export function useEventContextMenuItems(
     }
   };
 
-  // Recurring events open the scope dialog; single events delete immediately.
-  // No confirmation step here either — see #18025.
   const handleDelete = () => {
     onRequestClose();
-    // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`. Only the
-    // immediate delete needs it; the scope dialog manages its own focus.
-    const focusFallback = getFocusFallback(anchorEl);
-    const deletedImmediately = store.deleteOccurrence(occurrence);
-    if (deletedImmediately) {
-      focusFallback?.focus();
-    }
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchorEl);
   };
 
   const EditIcon = isReadOnly ? SearchRounded : EditRounded;
@@ -98,7 +82,7 @@ export function useEventContextMenuItems(
     </MenuItem>,
   ];
 
-  if (!isReadOnly) {
+  if (!isReadOnly && deletionConfig !== false) {
     items.push(
       <MenuItem className={classes.eventContextMenuDeleteItem} key="delete" onClick={handleDelete}>
         <ListItemIcon>

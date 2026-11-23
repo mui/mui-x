@@ -27,6 +27,8 @@ import {
   getCell,
   getColumnHeaderCell,
   getColumnHeadersTextContent,
+  getRow,
+  getActiveCell,
   grid,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
@@ -204,6 +206,14 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M']);
   });
 
+  it('should focus the last unpinned cell after a click on the empty space of a row', async () => {
+    const { user } = render(
+      <TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['id'] } }} />,
+    );
+    await user.click(getRow(0).querySelector(`.${gridClasses.cellEmpty}`)!);
+    expect(getActiveCell()).to.equal('0-1');
+  });
+
   it('should not override the first left pinned column when checkboxSelection=true', () => {
     render(
       <TestCase nbCols={2} initialState={{ pinnedColumns: { left: ['id'] } }} checkboxSelection />,
@@ -277,6 +287,28 @@ describe('<DataGridPro /> - Column pinning', () => {
       });
     });
 
+    // https://github.com/mui/mui-x/issues/19160
+    it('should call after the column order is updated', async () => {
+      const orderedFieldsInCallback: string[][] = [];
+      render(
+        <TestCase
+          onPinnedColumnsChange={() => {
+            orderedFieldsInCallback.push(apiRef.current!.state.columns.orderedFields);
+          }}
+        />,
+      );
+      const initialOrderedFields = apiRef.current!.state.columns.orderedFields;
+
+      await act(() => apiRef.current?.pinColumn('price17M', GridPinnedColumnPosition.LEFT));
+      expect(orderedFieldsInCallback).to.have.length(1);
+      expect(orderedFieldsInCallback[0][0]).to.equal('price17M');
+      expect(orderedFieldsInCallback[0]).to.deep.equal(apiRef.current!.state.columns.orderedFields);
+
+      await act(() => apiRef.current?.unpinColumn('price17M'));
+      expect(orderedFieldsInCallback).to.have.length(2);
+      expect(orderedFieldsInCallback[1]).to.deep.equal(initialOrderedFields);
+    });
+
     it('should not change the pinned columns when it is called', async () => {
       const handlePinnedColumnsChange = vi.fn();
       render(
@@ -289,6 +321,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       await act(() => apiRef.current?.pinColumn('price17M', GridPinnedColumnPosition.LEFT));
       await microtasks();
       expect($$(`[role="gridcell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
+      expect(handlePinnedColumnsChange.mock.calls).to.have.length(1);
       expect(handlePinnedColumnsChange.mock.lastCall?.[0]).to.deep.equal({
         left: ['currencyPair', 'price17M'],
         right: [],

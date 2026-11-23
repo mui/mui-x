@@ -6,11 +6,13 @@ import {
   useGridRootProps,
   useGridApiContext,
   gridRowsLookupSelector,
-  type GridRowId,
-  type GridBasicGroupNode,
-  type GridValidRowModel,
-  type GridRenderCellParams,
-  type GridDataSourceGroupNode,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridRowId,
+  GridBasicGroupNode,
+  GridValidRowModel,
+  GridRenderCellParams,
+  GridDataSourceGroupNode,
 } from '@mui/x-data-grid-pro';
 import { createSelector } from '@mui/x-data-grid-pro/internals';
 import useEventCallback from '@mui/utils/useEventCallback';

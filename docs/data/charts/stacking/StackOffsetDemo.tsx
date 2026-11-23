@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { StackOffsetType } from '@mui/x-charts/models';
+import type { StackOffsetType } from '@mui/x-charts/models';
 
 type GetSeriesParams = {
   hasNegativeValue: boolean;

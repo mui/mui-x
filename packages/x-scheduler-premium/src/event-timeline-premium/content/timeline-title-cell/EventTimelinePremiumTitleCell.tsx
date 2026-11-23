@@ -1,6 +1,9 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import { useRtl } from '@mui/system/RtlProvider';
+import ChevronLeftRounded from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 import { useStore } from '@base-ui/utils/store';
@@ -10,7 +13,6 @@ import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
-import { isEventFromNestedInteractiveElement } from '@mui/x-internals/domUtils';
 import { getPaletteVariants, useSchedulerSlots } from '@mui/x-scheduler/internals';
 import { Virtualization } from '@mui/x-virtualizer';
 import type {
@@ -34,13 +36,13 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
 })(({ theme }) => ({
   flex: '0 0 auto',
   width: 'var(--title-column-width)',
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
   padding: theme.spacing(2),
   // Indent each level so a child's toggle center lines up under its parent's
   // legend dot center: half the toggle + the gap + half the dot.
-  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ((${TOGGLE_SIZE}px + ${DOT_SIZE}px) / 2 + ${theme.spacing(1)}))`,
+  paddingInlineStart: `calc(${theme.spacing(2)} + var(--resource-depth) * ((${TOGGLE_SIZE}px + ${DOT_SIZE}px) / 2 + ${theme.spacing(1)}))`,
   alignContent: 'start',
   fontSize: theme.typography.body2.fontSize,
   display: 'flex',
@@ -54,9 +56,6 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   // while the browser still handles vertical row scrolling.
   touchAction: 'pan-y',
   variants: getPaletteVariants(theme),
-  '&[data-collapsible]': {
-    cursor: 'pointer',
-  },
   '&:focus-visible': {
     outline: 'none',
     boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
@@ -79,12 +78,12 @@ const EventTimelinePremiumTitleCellContent = styled('span', {
   flexShrink: 0,
   whiteSpace: 'nowrap',
   // Shared horizontal scroll for all title cells (the header title cell is not
-  // wrapped in this element and therefore does not move). Uses `left` rather than
+  // wrapped in this element and therefore does not move). Uses an inset rather than
   // `transform` so the text isn't promoted to its own compositing layer — that
   // caused a sub-pixel vertical shift of the label on Windows when rows relaid
   // out on collapse/expand.
   position: 'relative',
-  left: 'calc(-1 * var(--title-scroll-left, 0) * 1px)',
+  insetInlineStart: 'calc(-1 * var(--title-scroll-left, 0) * 1px)',
 }));
 
 const ResourceLegendColor = styled('span', {
@@ -98,8 +97,9 @@ const ResourceLegendColor = styled('span', {
   backgroundColor: 'var(--event-surface-accent)',
 });
 
-// Decorative chevron; the whole cell is the interactive control.
-const ResourceCollapseChevron = styled('span', {
+// Mouse toggle for a collapsible resource. Kept out of the tab order: keyboard
+// users toggle with Enter/Space on the focused cell.
+const ResourceCollapseChevron = styled(IconButton, {
   name: 'MuiEventTimeline',
   slot: 'TitleCellCollapseChevron',
 })(({ theme }) => ({
@@ -109,6 +109,7 @@ const ResourceCollapseChevron = styled('span', {
   width: TOGGLE_SIZE,
   height: TOGGLE_SIZE,
   flexShrink: 0,
+  padding: 0,
   color: (theme.vars || theme).palette.action.active,
   '& > svg': {
     fontSize: 18,
@@ -136,12 +137,15 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
-  const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
+  const { schedulerId, classes, localeText } = useEventTimelinePremiumStyledContext();
   const reportTitleWidth = useReportTitleWidth();
   const { slots, slotProps } = useSchedulerSlots<
     EventTimelinePremiumSlots,
     EventTimelinePremiumSlotProps
   >();
+
+  const isRtl = useRtl();
+  const CollapsedIcon = isRtl ? ChevronLeftRounded : ChevronRightRounded;
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
@@ -178,12 +182,11 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
 
   const ResourceTitle = slots.timelineResourceTitle;
 
-  // Interactive content rendered by the title slot keeps its own clicks.
-  const handleToggleCollapse = useStableCallback((event: React.SyntheticEvent) => {
-    if (isEventFromNestedInteractiveElement(event)) {
-      return;
-    }
+  const handleChevronClick = useStableCallback((event: React.MouseEvent) => {
     store.toggleResourceCollapse(resourceId, event.nativeEvent);
+    // Move the focus back to the cell: the row keyboard handler ignores keys from
+    // nested elements, so arrow navigation would stop working from the button.
+    rootRef.current?.focus({ preventScroll: true });
   });
 
   const handleKeyDown = useStableCallback((event: React.KeyboardEvent) => {
@@ -213,16 +216,21 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
         } as React.CSSProperties
       }
       data-palette={eventColor}
-      // The whole cell toggles a collapsible resource, via click or Enter/Space.
+      // Enter/Space on the focused cell toggle a collapsible resource. With the
+      // mouse, only the chevron does. `aria-expanded` lives on the row.
       data-collapsible={hasVisibleChildren || undefined}
-      aria-expanded={hasVisibleChildren ? !isCollapsed : undefined}
-      onClick={hasVisibleChildren ? handleToggleCollapse : undefined}
       onKeyDown={handleKeyDown}
     >
       <EventTimelinePremiumTitleCellContent ref={contentRef} className={classes.titleCellContent}>
         {hasVisibleChildren ? (
-          <ResourceCollapseChevron aria-hidden>
-            {isCollapsed ? <ChevronRightRounded /> : <ExpandMoreRounded />}
+          <ResourceCollapseChevron
+            tabIndex={-1}
+            aria-label={
+              isCollapsed ? localeText.timelineResourceExpand : localeText.timelineResourceCollapse
+            }
+            onClick={handleChevronClick}
+          >
+            {isCollapsed ? <CollapsedIcon /> : <ExpandMoreRounded />}
           </ResourceCollapseChevron>
         ) : (
           <ResourceCollapseSpacer aria-hidden />

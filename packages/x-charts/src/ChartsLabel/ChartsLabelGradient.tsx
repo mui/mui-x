@@ -39,6 +39,9 @@ export interface ChartsLabelGradientProps {
    */
   classes?: Partial<ChartsLabelGradientClasses>;
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
 }
 

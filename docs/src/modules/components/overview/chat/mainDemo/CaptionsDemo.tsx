@@ -24,14 +24,8 @@ import {
   ChatMessageGroup,
   ChatMessageList,
 } from '@mui/x-chat';
-import {
-  ChatProvider,
-  useMessageIds,
-  type ChatAdapter,
-  type ChatMessage as ChatMessageModel,
-  type ChatUser,
-} from '@mui/x-chat/headless';
-import { ChatVariantProvider } from '@mui/x-chat/headless';
+import { ChatProvider, useMessageIds, ChatVariantProvider } from '@mui/x-chat/headless';
+import type { ChatAdapter, ChatMessage as ChatMessageModel, ChatUser } from '@mui/x-chat/headless';
 import { randomId } from '../../../../../../data/chat/core/examples/shared/demoUtils';
 
 // --- Avatar helper -----------------------------------------------------------

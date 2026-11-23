@@ -2,7 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
+import type { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const isDisabled = (el: HTMLElement) => el.getAttribute('disabled') !== null;
 

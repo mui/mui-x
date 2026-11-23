@@ -1,4 +1,6 @@
-import { DataGridPro, GridColDef, DataGridProProps } from '@mui/x-data-grid-pro';
+import { gridRowIdSelector, gridRowNodeSelector } from '@mui/x-data-grid';
+import type { GridColDef, DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const rows = [
   {
@@ -88,8 +90,8 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     headerName: 'Gap',
     type: 'boolean',
     valueGetter: (value, row, column, apiRef) => {
-      const rowId = apiRef.current.getRowId(row);
-      const rowNode = apiRef.current.getRowNode(rowId);
+      const rowId = gridRowIdSelector(apiRef, row);
+      const rowNode = gridRowNodeSelector(apiRef, rowId);
       if (rowNode?.type !== 'group') {
         return undefined;
       }

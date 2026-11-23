@@ -23,10 +23,17 @@ import { LINE_ACTIVATION_PRIORITY, useRegisterLineItemActivation } from './useLi
 import { useMarkPlotData } from './useMarkPlotData';
 
 export interface MarkPlotSlots {
+  /**
+   * The component that renders the marks.
+   * @default MarkElement
+   */
   mark?: React.JSXElementConstructor<MarkElementProps & MarkPropsOverrides>;
 }
 
 export interface MarkPlotSlotProps {
+  /**
+   * The props used for the `mark` slot.
+   */
   mark?: WithDataAttributes<Partial<MarkElementProps> & MarkPropsOverrides>;
 }
 

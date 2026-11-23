@@ -1,12 +1,10 @@
 import * as React from 'react';
 import FlagRounded from '@mui/icons-material/FlagRounded';
 import BuildRounded from '@mui/icons-material/BuildRounded';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
-import {
-  EventTimelinePremium,
-  EventTimelineGetEventAriaLabelParameters,
-} from '@mui/x-scheduler-premium/event-timeline-premium';
-import { TimelineEventContentProps } from '@mui/x-scheduler-premium/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { EventTimelineGetEventAriaLabelParameters } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import type { TimelineEventContentProps } from '@mui/x-scheduler-premium/models';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 interface DemoEvent extends SchedulerEvent {
@@ -22,8 +20,8 @@ const resources: SchedulerResource[] = [
 const initialEvents: DemoEvent[] = [
   {
     id: 'web-1',
-    start: '2025-07-01T00:00:00',
-    end: '2025-07-11T00:00:00',
+    start: '2025-07-01',
+    end: '2025-07-12',
     title: 'Dashboard redesign',
     resource: 'web-app',
     allDay: true,
@@ -32,8 +30,8 @@ const initialEvents: DemoEvent[] = [
   },
   {
     id: 'web-2',
-    start: '2025-07-11T00:00:00',
-    end: '2025-07-12T00:00:00',
+    start: '2025-07-11',
+    end: '2025-07-13',
     title: 'Beta release',
     resource: 'web-app',
     allDay: true,
@@ -42,8 +40,8 @@ const initialEvents: DemoEvent[] = [
   },
   {
     id: 'api-1',
-    start: '2025-07-03T00:00:00',
-    end: '2025-07-15T00:00:00',
+    start: '2025-07-03',
+    end: '2025-07-16',
     title: 'Rate limiting',
     resource: 'api-team',
     allDay: true,

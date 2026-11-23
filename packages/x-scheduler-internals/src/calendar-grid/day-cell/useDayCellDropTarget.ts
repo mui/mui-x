@@ -2,9 +2,17 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
-import { useAdapterContext } from '../../use-adapter-context';
-import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
-import { mergeDateAndTime } from '../../internals/utils/date-utils';
+import type { SchedulerEvent } from '../../models';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
+import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
+import { getLastInstant } from '../../internals/utils/event-utils';
+import {
+  addDaysOnWallClock,
+  getEndOfDayMs,
+  moveTimestampToPlainDate,
+  toEpochMs,
+  toLocalDayNumber,
+} from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 
 const isValidDropTarget = buildIsValidDropTarget([
@@ -17,77 +25,79 @@ const isValidDropTarget = buildIsValidDropTarget([
 export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
   const { value, addPropertiesToDroppedEvent } = parameters;
 
-  // Context hooks
-  const adapter = useAdapterContext();
-
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Feature hooks
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside }) => {
+    ({ data, getDataFromInside, getDataFromOutside, timezone }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
+      // The first instant of the day of the cell in the display timezone.
+      const dayStart = toEpochMs(value, timezone);
+
+      // Move an Standalone Event into the Time Grid
+      if (data.source === 'StandaloneEvent') {
+        return getDataFromOutside(data, dayStart);
+      }
+
+      // Days are compared as plain dates, and each date moves on the wall clock of the display
+      // timezone.
       // Move a Day Grid Event within the Day Grid
       if (data.source === 'CalendarGridDayEvent') {
-        const offset = adapter.differenceInDays(value, data.draggedDay);
+        // The day under the grab point.
+        const dayCount = getDayNumber(value) - getDayNumber(data.draggedDay);
         return getDataFromInside(
           data,
-          offset === 0 ? data.start : adapter.addDays(data.start, offset),
-          offset === 0 ? data.end : adapter.addDays(data.end, offset),
+          addDaysOnWallClock(data.start, dayCount, timezone),
+          addDaysOnWallClock(data.end, dayCount, timezone),
         );
+      }
+
+      // Move a Time Grid Event into the Day Grid: it covers the day of the cell.
+      if (data.source === 'CalendarGridTimeEvent') {
+        return getDataFromInside(data, dayStart, toEpochMs(value.add({ days: 1 }), timezone));
       }
 
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
+        const { allDay } = data.originalOccurrence;
         if (data.side === 'start') {
-          if (adapter.isAfter(value, adapter.endOfDay(data.end))) {
+          const order =
+            getDayNumber(value) - toLocalDayNumber(getLastInstant(data.end, allDay), timezone);
+          if (order > 0) {
             return undefined;
           }
 
-          let newStart: TemporalSupportedObject;
-          if (adapter.isSameDay(value, data.end)) {
-            newStart = adapter.startOfDay(data.end);
-          } else {
-            newStart = mergeDateAndTime(adapter, value, data.start);
+          // An all-day occurrence starts on the day; a timed one keeps its time of day, unless
+          // it moves to the day of the end.
+          let newStart = dayStart;
+          if (!allDay && order !== 0) {
+            newStart = moveTimestampToPlainDate(data.start, value, timezone);
           }
           return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
-          if (adapter.isBefore(value, adapter.startOfDay(data.start))) {
+          const order = getDayNumber(value) - toLocalDayNumber(data.start, timezone);
+          if (order < 0) {
             return undefined;
           }
 
-          let draggedDay: TemporalSupportedObject;
-          if (adapter.isSameDay(value, data.start)) {
-            draggedDay = adapter.endOfDay(data.start);
+          // An all-day occurrence ends at the start of the day after; a timed one keeps its time
+          // of day, unless it moves to the day of the start.
+          let newEnd: number;
+          if (allDay) {
+            newEnd = toEpochMs(value.add({ days: 1 }), timezone);
+          } else if (order === 0) {
+            newEnd = getEndOfDayMs(dayStart, timezone);
           } else {
-            draggedDay = mergeDateAndTime(adapter, value, data.end);
+            newEnd = moveTimestampToPlainDate(data.end, value, timezone);
           }
-
-          return getDataFromInside(data, data.start, draggedDay);
+          return getDataFromInside(data, data.start, newEnd);
         }
-      }
-
-      // Move a Time Grid Event into the Day Grid
-      if (data.source === 'CalendarGridTimeEvent') {
-        const cursorDate = adapter.startOfDay(
-          adapter.addMilliseconds(data.start, data.initialCursorPositionInEventMs),
-        );
-        const offset = adapter.differenceInDays(value, cursorDate);
-        return getDataFromInside(
-          data,
-          offset === 0 ? data.start : adapter.addDays(data.start, offset),
-          offset === 0 ? data.end : adapter.addDays(data.end, offset),
-        );
-      }
-
-      // Move an Standalone Event into the Time Grid
-      if (data.source === 'StandaloneEvent') {
-        return getDataFromOutside(data, value);
       }
 
       return undefined;
@@ -108,9 +118,9 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 export namespace useDayCellDropTarget {
   export interface Parameters {
     /**
-     * The value of the cell.
+     * The day of the cell, read in the display timezone.
      */
-    value: TemporalSupportedObject;
+    value: BaseTemporal.PlainDate;
     /**
      * Add properties to the event dropped in the cell before storing it in the store.
      */

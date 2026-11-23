@@ -1,8 +1,9 @@
 /* eslint-disable no-promise-executor-return */
 import * as React from 'react';
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { createRenderer, act, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
+import { BarChartPro } from '../BarChartPro/BarChartPro';
 import { LineChartPro } from '../LineChartPro/LineChartPro';
 import type { LineChartProProps } from '../LineChartPro/LineChartPro';
 import { chartsAxisZoomSliderThumbClasses } from './internals/chartsAxisZoomSliderThumbClasses';
@@ -20,6 +21,8 @@ const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
 
   return axisData as string[];
 };
+
+const getZoomSliderTooltips = () => document.querySelectorAll('[data-popper-placement]');
 
 describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
   const { render } = createRenderer();
@@ -197,8 +200,6 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
   });
 
   describe('tooltip', () => {
-    const getZoomSliderTooltips = () => document.querySelectorAll('[data-popper-placement]');
-
     it('should show tooltip when showTooltip is "always"', async () => {
       render(
         <LineChartPro
@@ -300,6 +301,462 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(getZoomSliderTooltips().length).to.equal(0);
+    });
+  });
+
+  describe('ordinal y-axis', () => {
+    const data = Array.from({ length: 20 }, (_, index) => `G${index}`);
+    const height = 200;
+    const horizontalBarProps = {
+      layout: 'horizontal',
+      series: [{ data: data.map((_, index) => index + 1) }],
+      xAxis: [{ position: 'none' }],
+      yAxis: [
+        {
+          id: 'y',
+          scaleType: 'band',
+          data,
+          width: 30,
+          zoom: { minSpan: 5, slider: { enabled: true, preview: true } },
+        },
+      ],
+      width: 200,
+      height,
+      margin: 0,
+      slotProps: { tooltip: { trigger: 'none' } },
+    } as const;
+    const barOptions = {
+      wrapper: ({ children }: { children?: React.ReactNode }) => (
+        <div style={{ width: 200, height }}>{children}</div>
+      ),
+    };
+
+    const getActiveTrackY = () => {
+      const track = document.querySelector(`.${chartsAxisZoomSliderTrackClasses.active}`)!;
+
+      return {
+        start: Number(track.getAttribute('y')),
+        end: Number(track.getAttribute('y')) + Number(track.getAttribute('height')),
+      };
+    };
+
+    const getMaskHoleY = () => {
+      const hole = document.querySelector('mask rect[fill="black"]')!;
+
+      return {
+        start: Number(hole.getAttribute('y')),
+        end: Number(hole.getAttribute('y')) + Number(hole.getAttribute('height')),
+      };
+    };
+
+    it('should draw the zoom range from the top of the slider', () => {
+      render(
+        <BarChartPro {...horizontalBarProps} initialZoom={[{ axisId: 'y', start: 0, end: 25 }]} />,
+        barOptions,
+      );
+
+      expect(getAxisTickValues('y')).to.deep.equal(['G0', 'G1', 'G2', 'G3', 'G4']);
+      expect(getActiveTrackY()).to.deep.equal({ start: 0, end: height / 4 });
+      expect(getMaskHoleY()).to.deep.equal({ start: 0, end: height / 4 });
+    });
+
+    it('should draw the zoom range from the bottom of the slider when the axis is reversed', () => {
+      render(
+        <BarChartPro
+          {...horizontalBarProps}
+          yAxis={[{ ...horizontalBarProps.yAxis[0], reverse: true }]}
+          initialZoom={[{ axisId: 'y', start: 0, end: 25 }]}
+        />,
+        barOptions,
+      );
+
+      expect(getActiveTrackY()).to.deep.equal({ start: (height * 3) / 4, end: height });
+      expect(getMaskHoleY()).to.deep.equal({ start: (height * 3) / 4, end: height });
+    });
+
+    it('should show the first visible category in the tooltip of the top thumb', () => {
+      render(
+        <BarChartPro
+          {...horizontalBarProps}
+          yAxis={[
+            {
+              ...horizontalBarProps.yAxis[0],
+              zoom: { minSpan: 5, slider: { enabled: true, showTooltip: 'always' } },
+            },
+          ]}
+          initialZoom={[{ axisId: 'y', start: 10, end: 35 }]}
+        />,
+        barOptions,
+      );
+
+      expect(screen.getAllByRole('tooltip')[0].textContent).to.equal('G2');
+    });
+
+    it('should scroll down the categories when dragging the slider down', async () => {
+      const { user } = render(
+        <BarChartPro {...horizontalBarProps} initialZoom={[{ axisId: 'y', start: 0, end: 25 }]} />,
+        barOptions,
+      );
+      const activeTrack = document.querySelector(`.${chartsAxisZoomSliderTrackClasses.active}`)!;
+
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: activeTrack, coords: { x: 0, y: 10 } },
+        { target: activeTrack, coords: { x: 0, y: 60 } },
+        { keys: '[/MouseLeft]', target: activeTrack, coords: { x: 0, y: 60 } },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(getAxisTickValues('y')).to.deep.equal(['G5', 'G6', 'G7', 'G8', 'G9']);
+      expect(getActiveTrackY()).to.deep.equal({ start: 50, end: 100 });
+    });
+
+    it('should move the start of the zoom range with the top thumb', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro {...horizontalBarProps} onZoomChange={onZoomChange} />,
+        barOptions,
+      );
+      const startThumb = document.querySelector(`.${chartsAxisZoomSliderThumbClasses.start}`)!;
+
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: startThumb, coords: { x: 0, y: 0 } },
+        { target: startThumb, coords: { x: 0, y: 50 } },
+        { keys: '[/MouseLeft]', target: startThumb, coords: { x: 0, y: 50 } },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.mock.lastCall![0]).to.deep.equal([{ axisId: 'y', start: 25, end: 100 }]);
+    });
+  });
+
+  describe('keyboard', () => {
+    const getSlider = (name: string) => screen.getByRole('slider', { name });
+
+    const focus = (element: HTMLElement) => {
+      act(() => element.focus());
+    };
+
+    const getRect = (element: Element) => {
+      const { x, y, width, height } = element.getBoundingClientRect();
+
+      return { x, y, width, height };
+    };
+
+    // The axis of `lineChartProps` has 4 points, so a key press moves a handle by a third of it.
+    const POINT_STEP = 100 / 3;
+
+    const round = (value: number) => Math.round(value * 1e6) / 1e6;
+
+    const zoomRange = (start: number, end: number) => ({ start: round(start), end: round(end) });
+
+    const getLastZoom = (onZoomChange: ReturnType<typeof vi.fn>) => {
+      const [{ start, end }] = onZoomChange.mock.lastCall![0];
+
+      return zoomRange(start, end);
+    };
+
+    it('should lay the sliders over the handles', () => {
+      render(
+        <LineChartPro {...lineChartProps} initialZoom={[{ axisId: 'x', start: 20, end: 70 }]} />,
+        options,
+      );
+
+      expect(getRect(getSlider('Horizontal axis zoom start'))).to.deep.equal(
+        getRect(document.querySelector(`.${chartsAxisZoomSliderThumbClasses.start}`)!),
+      );
+      expect(getRect(getSlider('Horizontal axis zoom end'))).to.deep.equal(
+        getRect(document.querySelector(`.${chartsAxisZoomSliderThumbClasses.end}`)!),
+      );
+    });
+
+    it('should expose the handles as sliders', () => {
+      render(
+        <LineChartPro {...lineChartProps} initialZoom={[{ axisId: 'x', start: 0, end: 100 }]} />,
+        options,
+      );
+
+      expect(screen.getAllByRole('slider')).to.have.length(2);
+
+      const startThumb = getSlider('Horizontal axis zoom start');
+      const endThumb = getSlider('Horizontal axis zoom end');
+
+      [startThumb, endThumb].forEach((slider) => {
+        expect(slider).to.have.attribute('tabindex', '0');
+        expect(slider).to.have.attribute('aria-orientation', 'horizontal');
+      });
+
+      // The default `minSpan` is 10: a handle cannot get closer than that to the other one.
+      expect(startThumb).to.have.attribute('aria-valuenow', '0');
+      expect(startThumb).to.have.attribute('aria-valuemin', '0');
+      expect(startThumb).to.have.attribute('aria-valuemax', '90');
+      expect(startThumb).to.have.attribute('aria-valuetext', 'A');
+      expect(endThumb).to.have.attribute('aria-valuenow', '100');
+      expect(endThumb).to.have.attribute('aria-valuemin', '10');
+      expect(endThumb).to.have.attribute('aria-valuemax', '100');
+      expect(endThumb).to.have.attribute('aria-valuetext', 'D');
+    });
+
+    it('should keep the slider bounds within maxSpan of the other handle', () => {
+      render(
+        <LineChartPro
+          {...lineChartProps}
+          xAxis={[
+            { ...lineChartProps.xAxis![0], zoom: { maxSpan: 50, slider: { enabled: true } } },
+          ]}
+          initialZoom={[{ axisId: 'x', start: 20, end: 60 }]}
+        />,
+        options,
+      );
+
+      expect(getSlider('Horizontal axis zoom start')).to.have.attribute('aria-valuemin', '10');
+      expect(getSlider('Horizontal axis zoom end')).to.have.attribute('aria-valuemax', '70');
+    });
+
+    it('should name the sliders after the label of their axis', () => {
+      render(
+        <LineChartPro
+          {...lineChartProps}
+          xAxis={[{ ...lineChartProps.xAxis![0], label: 'Month' }]}
+        />,
+        options,
+      );
+
+      expect(getSlider('Month zoom start')).not.to.equal(null);
+      expect(getSlider('Month zoom end')).not.to.equal(null);
+    });
+
+    it('should move the start of the zoom range with the start handle', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <LineChartPro
+          {...lineChartProps}
+          onZoomChange={onZoomChange}
+          initialZoom={[{ axisId: 'x', start: 10, end: 90 }]}
+        />,
+        options,
+      );
+      const startThumb = getSlider('Horizontal axis zoom start');
+
+      focus(startThumb);
+
+      await user.keyboard('{ArrowRight}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(10 + POINT_STEP, 90));
+
+      await user.keyboard('{ArrowDown}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(10, 90));
+
+      await user.keyboard('{PageUp}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(10 + POINT_STEP, 90));
+
+      await user.keyboard('{End}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(80, 90));
+      expect(startThumb).to.have.attribute('aria-valuenow', '80');
+      expect(startThumb).to.have.attribute('aria-valuemax', '80');
+
+      await user.keyboard('{Home}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(0, 90));
+    });
+
+    it('should move the end of the zoom range with the end handle', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <LineChartPro
+          {...lineChartProps}
+          onZoomChange={onZoomChange}
+          initialZoom={[{ axisId: 'x', start: 10, end: 90 }]}
+        />,
+        options,
+      );
+
+      focus(getSlider('Horizontal axis zoom end'));
+
+      await user.keyboard('{ArrowLeft}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(10, 90 - POINT_STEP));
+
+      await user.keyboard('{ArrowUp}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(10, 90));
+
+      await user.keyboard('{PageDown}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(10, 90 - POINT_STEP));
+
+      await user.keyboard('{Home}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(10, 20));
+
+      await user.keyboard('{End}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(10, 100));
+    });
+
+    it('should move the handles by one category on a band axis', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro
+          series={[{ data: [10, 20, 30, 40, 50] }]}
+          xAxis={[
+            {
+              id: 'x',
+              scaleType: 'band',
+              data: ['A', 'B', 'C', 'D', 'E'],
+              zoom: { slider: { enabled: true } },
+            },
+          ]}
+          yAxis={[{ position: 'none' }]}
+          width={100}
+          height={130}
+          margin={5}
+          skipAnimation
+          onZoomChange={onZoomChange}
+          initialZoom={[{ axisId: 'x', start: 20, end: 80 }]}
+        />,
+        options,
+      );
+
+      focus(getSlider('Horizontal axis zoom start'));
+
+      await user.keyboard('{ArrowRight}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(40, 80));
+
+      focus(getSlider('Horizontal axis zoom end'));
+
+      await user.keyboard('{ArrowLeft}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(40, 60));
+    });
+
+    it('should move the handles in the direction of the arrow keys on a reversed axis', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <LineChartPro
+          {...lineChartProps}
+          xAxis={[{ ...lineChartProps.xAxis![0], reverse: true }]}
+          onZoomChange={onZoomChange}
+          initialZoom={[{ axisId: 'x', start: 40, end: 90 }]}
+        />,
+        options,
+      );
+
+      focus(getSlider('Horizontal axis zoom start'));
+
+      // The start handle is on the right of a reversed axis, so moving it right shrinks the start.
+      await user.keyboard('{ArrowRight}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(40 - POINT_STEP, 90));
+
+      await user.keyboard('{Home}');
+      expect(getLastZoom(onZoomChange)).to.deep.equal(zoomRange(0, 90));
+    });
+
+    it('should leave the modified arrow keys to the keyboard pan of the chart', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <LineChartPro
+          {...lineChartProps}
+          onZoomChange={onZoomChange}
+          initialZoom={[{ axisId: 'x', start: 20, end: 50 }]}
+        />,
+        options,
+      );
+
+      focus(getSlider('Horizontal axis zoom start'));
+
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+
+      // The keyboard pan moves the whole range, while the handle alone would only move the start.
+      const [{ start, end }] = onZoomChange.mock.lastCall![0];
+      expect(start).to.be.above(20);
+      expect(end - start).to.be.closeTo(30, 1e-9);
+    });
+
+    it('should show the tooltips while the slider is focused when showTooltip is "hover"', async () => {
+      render(
+        <LineChartPro
+          {...lineChartProps}
+          xAxis={[
+            {
+              ...lineChartProps.xAxis![0],
+              zoom: { slider: { enabled: true, showTooltip: 'hover' } },
+            },
+          ]}
+        />,
+        options,
+      );
+
+      expect(getZoomSliderTooltips().length).to.equal(0);
+
+      focus(getSlider('Horizontal axis zoom start'));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+      expect(getZoomSliderTooltips().length).to.equal(2);
+
+      // Moving between the handles keeps the tooltips open.
+      focus(getSlider('Horizontal axis zoom end'));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+      expect(getZoomSliderTooltips().length).to.equal(2);
+
+      act(() => (document.activeElement as HTMLElement).blur());
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+      expect(getZoomSliderTooltips().length).to.equal(0);
+    });
+
+    it('should focus the top handle of a vertical slider first', async () => {
+      const { user } = render(
+        <LineChartPro
+          {...lineChartProps}
+          xAxis={[{ ...lineChartProps.xAxis![0], zoom: undefined }]}
+          yAxis={[{ id: 'y', zoom: { slider: { enabled: true } }, width: 30 }]}
+        />,
+        options,
+      );
+
+      // The chart items come first.
+      for (let i = 0; i < 10 && document.activeElement?.getAttribute('role') !== 'slider'; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await user.keyboard('{Tab}');
+      }
+
+      // The end of a regular vertical axis is on the top.
+      expect(document.activeElement).to.equal(getSlider('Vertical axis zoom end'));
+
+      await user.keyboard('{Tab}');
+      expect(document.activeElement).to.equal(getSlider('Vertical axis zoom start'));
+    });
+
+    it('should move the focus from the chart to the slider with the Tab key', async () => {
+      const { user, container } = render(
+        <BarChartPro
+          series={[{ data: [10, 20, 30, 40] }]}
+          xAxis={[
+            {
+              id: 'x',
+              scaleType: 'band',
+              data: ['A', 'B', 'C', 'D'],
+              zoom: { slider: { enabled: true } },
+            },
+          ]}
+          yAxis={[{ position: 'none' }]}
+          width={100}
+          height={130}
+          margin={5}
+          skipAnimation
+        />,
+        options,
+      );
+      const getFocusedBar = () => container.querySelector('rect[fill="none"]');
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('{ArrowRight}');
+      expect(getFocusedBar()).not.to.equal(null);
+
+      await user.keyboard('{Tab}');
+      expect(document.activeElement).to.equal(getSlider('Horizontal axis zoom start'));
+      // The item focus belongs to the chart, not to the slider.
+      expect(getFocusedBar()).to.equal(null);
+
+      await user.keyboard('{ArrowRight}');
+      expect(getFocusedBar()).to.equal(null);
+
+      await user.keyboard('{Tab}');
+      expect(document.activeElement).to.equal(getSlider('Horizontal axis zoom end'));
+
+      await user.keyboard('{Shift>}{Tab}{Tab}{/Shift}');
+      // Coming back to the chart restores its item focus.
+      expect(getFocusedBar()).not.to.equal(null);
     });
   });
 });

@@ -1,5 +1,5 @@
 import { it, expect } from 'vitest';
-import { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
+import type { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
 
 export const testFormat: DescribeHijriAdapterTestSuite = ({ adapter }) => {
   it('should format the seconds without leading zeroes for format "s"', () => {

@@ -8,6 +8,7 @@ import type {
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { CompactWeekViewProps } from '@mui/x-scheduler/compact-week-view';
+import type { EventCalendarPremiumFeatures } from '../event-calendar-premium/features/EventCalendarPremiumFeatures.types';
 
 export interface StandaloneCompactWeekViewPremiumProps<
   TEvent extends object,
@@ -26,8 +27,9 @@ export interface StandaloneCompactWeekViewPremiumProps<
   /**
    * Configuration applied to the view, keyed by the view name.
    * For the `week` view, `startTime` and `endTime` (whole hours between 0 and 24)
-   * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
-   * scrolls to on mount.
+   * limit the hours displayed in the time grid, `initialScrollTime` is the hour the grid
+   * scrolls to on mount, and `timeGridEvents` sets which timed events are rendered in the
+   * time grid.
    * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
    */
   viewConfig?: Pick<EventCalendarViewConfig, 'week'>;
@@ -37,6 +39,12 @@ export interface StandaloneCompactWeekViewPremiumProps<
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;
+  /**
+   * The optional features of the view: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features?: EventCalendarPremiumFeatures;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

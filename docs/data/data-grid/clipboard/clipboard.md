@@ -128,6 +128,74 @@ The demo below shows how to persist the pasted data in the browser's `sessionSto
 
 {{"demo": "ClipboardPastePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Add rows on paste
+
+By default, the pasted rows that go past the last row are ignored.
+To add rows for them, pass a `createRows()` function to the `clipboardPasteOptions` prop.
+It receives the number of rows to create and their pasted data, and returns the new rows, or a promise that resolves with them.
+Each row needs a unique `id`, and can set default values for other fields.
+
+```tsx
+<DataGridPremium
+  clipboardPasteOptions={{
+    createRows: ({ count }) =>
+      Array.from({ length: count }, () => ({ id: randomId() })),
+  }}
+  disableRowSelectionOnClick
+/>
+```
+
+Rows are added only when the paste starts from a single cell.
+By default, a click on a cell also selects its row, so set `disableRowSelectionOnClick` to keep the paste from going to the selected row.
+
+The new rows get the pasted values with the same rules as the existing rows, then go through `processRowUpdate()`, with the row from `createRows()` as `oldRow`.
+`processRowUpdate()` can return the row with another `id`, for example one from your server. If it throws, the row is not added.
+
+:::warning
+Create the server records in `processRowUpdate()`, not in `createRows()`.
+A row from `createRows()` is dropped when it gets no pasted value, or when `processRowUpdate()` rejects it.
+:::
+
+The paste, new rows included, is a single [undo](/x/react-data-grid/undo-redo/) step.
+The `clipboardPasteEnd` event lists the new rows in its `createdRows` parameter.
+
+To try it, copy a range of cells, select a cell in the last row, and paste.
+
+{{"demo": "ClipboardPasteCreateRows.js", "bg": "inline"}}
+
+#### Controlled rows
+
+When you control the `rows` prop, add the new rows to your state in `onClipboardPasteEnd()`.
+Otherwise, the next update of `rows` removes them, along with the undo step of the paste.
+
+```tsx
+const [rows, setRows] = React.useState(initialRows);
+
+<DataGridPremium
+  rows={rows}
+  clipboardPasteOptions={clipboardPasteOptions}
+  processRowUpdate={(newRow) => {
+    setRows((prevRows) =>
+      prevRows.map((row) => (row.id === newRow.id ? newRow : row)),
+    );
+    return newRow;
+  }}
+  onClipboardPasteEnd={({ createdRows }) => {
+    setRows((prevRows) => [...prevRows, ...createdRows.values()]);
+  }}
+/>;
+```
+
+Don't add the new rows in `processRowUpdate()`: the Data Grid adds them after it runs, and skips a row whose `id` is already in the Data Grid.
+Undo and redo only change the rows of the Data Grid, so update your state in `onUndo()` and `onRedo()` too.
+
+#### Limitations
+
+- With pagination, rows are added only from the last page. On other pages, the paste stops at the last row of the page.
+- New rows are added after the last row, then sorting and filtering apply, so they can move or be hidden.
+- A paste that starts while another paste is still adding rows doesn't add rows.
+- Adding rows isn't supported with a [data source](/x/react-data-grid/server-side-data/), server-side pagination, tree data, row grouping, or pivoting.
+
 ### Events
 
 The following events are fired during the clipboard paste operation:

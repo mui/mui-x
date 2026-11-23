@@ -1,21 +1,16 @@
 import * as React from 'react';
 import { animated, useSpring } from '@react-spring/web';
-import {
-  ThemeOptions,
-  ThemeProvider,
-  createTheme,
-  useTheme,
-  alpha,
-  styled,
-} from '@mui/material/styles';
-import { TransitionProps } from '@mui/material/transitions';
+import type { ThemeOptions } from '@mui/material/styles';
+import { ThemeProvider, createTheme, useTheme, alpha, styled } from '@mui/material/styles';
+import type { TransitionProps } from '@mui/material/transitions';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import type { UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemCheckbox,
   TreeItemContent,
@@ -29,7 +24,8 @@ import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { useTreeItemModel } from '@mui/x-tree-view/hooks';
 import ImageIcon from '../../icons/ImageIcon';
 import LeftIcon from '../../icons/LeftIcon';
-import { ExtendedTreeItemProps, IdType, ITEMS, ItemType } from './items';
+import type { ExtendedTreeItemProps, IdType, ItemType } from './items';
+import { ITEMS } from './items';
 import RightIcon from '../../icons/RightIcon';
 import BottomIcon from '../../icons/BottomIcon';
 import TopIcon from '../../icons/TopIcon';

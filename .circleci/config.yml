@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/dbc0bfa7624e9caa02a935f7adce87804405ea6a/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/c025608c1f0746d496278aff1317a6ce8e61abde/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -60,7 +60,7 @@ default-job: &default-job
   working_directory: /tmp/mui
   executor:
     name: code-infra/mui-node
-    node-version: '22.23.3'
+    node-version: '22.23.5'
   resource_class: medium.gen2
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
@@ -113,35 +113,17 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
-    resource_class: xlarge.gen2
+      playwright-img-version: v1.65.0-noble
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
-      - when:
-          condition:
-            not:
-              equal: ['stable', << parameters.react-version >>]
-          steps:
-            - run:
-                environment:
-                  TZ: UTC
-                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                name: Test Browser
-                command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
-      - when:
-          condition:
-            equal: ['stable', << parameters.react-version >>]
-          steps:
-            - run:
-                name: Test Browser
-                environment:
-                  TZ: UTC
-                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
+      - run:
+          name: Test Browser
+          environment:
+            TZ: UTC
+          command: pnpm test:unit:browser
       - store_test_results:
           path: test-results
   test_lint:
@@ -199,7 +181,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
+      playwright-img-version: v1.65.0-noble
     resource_class: medium
     steps:
       - checkout
@@ -215,7 +197,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
+      playwright-img-version: v1.65.0-noble
     resource_class: medium
     steps:
       - checkout
@@ -235,12 +217,15 @@ jobs:
       - run:
           name: Build packages
           command: pnpm release:build --concurrency 2
+      - run:
+          name: Check charts consumer declarations
+          command: pnpm test:types:charts
       - code-infra/upload-size-snapshot
   test_regressions:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
+      playwright-img-version: v1.65.0-noble
     resource_class: large.gen2
     steps:
       - checkout
@@ -253,43 +238,81 @@ jobs:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
       - code-infra/argos-push
-  test_charts_benchmark:
+  test_benchmark:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
-    resource_class: medium
+      playwright-img-version: v1.65.0-noble
+    # 2 vCPUs starve V8's background compilers, and the `benchmark` CLI warns below 3. More didn't
+    # narrow the results: on CI, their spread comes from the noise of a shared host, not from cores.
+    resource_class: medium+.gen2
     steps:
       - checkout
       - run:
-          name: Skip when no charts changes
+          name: Skip pull requests without MUI X changes
+          # The base branch runs on every commit: changes outside these paths, such as a dependency
+          # bump, can change the performance too.
           command: |
-            if [ "$CIRCLE_BRANCH" = "master" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
-              echo "On $CIRCLE_BRANCH; running benchmarks."
-              exit 0
-            fi
+            set -e
             BASE="${BASE_BRANCH:-master}"
-            git fetch --no-tags --depth=50 origin "$BASE"
-            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
-              'packages/x-charts*' \
-              'test/performance-charts' \
-              '.circleci/config.yml')
-            if [ -n "$CHANGED" ]; then
-              echo "Relevant changes detected; running benchmarks:"
-              echo "$CHANGED"
+            if [ "$CIRCLE_BRANCH" = "$BASE" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
+              # So that the baseline below is the previous commit, not where this branch forked.
+              echo "$CIRCLE_BRANCH" > .benchmark-base-branch
               exit 0
             fi
-            echo "No changes to packages/x-charts*, test/performance-charts, or CircleCI config; halting job."
-            circleci-agent step halt
+            # Full history: the baseline below is where the branch forked.
+            git fetch --no-tags origin "$BASE"
+            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
+              'packages/x-*' \
+              ':!packages/x-codemod' \
+              'test/benchmark' \
+              '.circleci/config.yml')
+            if [ -z "$CHANGED" ]; then
+              echo "No changes to packages/x-* (outside x-codemod), test/benchmark, or CircleCI config; halting job."
+              circleci-agent step halt
+              exit 0
+            fi
+            echo "Relevant changes; running benchmarks:"
+            echo "$CHANGED"
+            echo "$BASE" > .benchmark-base-branch
       - install-deps
       - run:
-          name: Build charts packages
-          command: pnpm --filter "@mui/x-charts-premium..." build
+          name: Resolve the baseline commit
+          # On the base branch, the previous commit; on a pull request, where it forked from it.
+          command: |
+            set -e
+            BASE_SHA=$(pnpm code-infra baseline --base-branch "$(cat .benchmark-base-branch)")
+            echo "Baseline commit: $BASE_SHA"
+            echo "$BASE_SHA" > .benchmark-baseline-sha
+      - restore_cache:
+          name: Restore the packed-baseline cache
+          keys:
+            - benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
       - run:
-          name: Run charts benchmarks
-          environment:
-            BENCHMARK_UPLOAD: 'true'
-          command: pnpm test:charts-benchmark
+          name: Run the benchmarks
+          no_output_timeout: 30m
+          # The smoke benchmarks of all of MUI X. The run builds and packs both sides itself.
+          command: pnpm test:benchmark smoke/ --baseline "$(cat .benchmark-baseline-sha)"
+      - run:
+          name: Upload the benchmark report
+          # Also after a failed run, so the comment says what happened. A run that fails before
+          # sampling, while building or packing, writes no report.
+          when: always
+          command: |
+            if [ ! -f test/benchmark/.benchmark/results/report.json ]; then
+              echo "No benchmark report; the run failed before sampling. See the step above."
+              exit 0
+            fi
+            pnpm test:benchmark upload
+      - run:
+          name: Keep only the baseline in the cache
+          # The working tree's tarballs are packed apart from the baseline's, and no later run uses them.
+          command: rm -rf test/benchmark/.benchmark/packed/current
+      - save_cache:
+          name: Save the packed-baseline cache
+          key: benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
+          paths:
+            - test/benchmark/.benchmark/packed
 
 workflows:
   pipeline:
@@ -312,7 +335,7 @@ workflows:
           <<: *default-context
       - test_package:
           <<: *default-context
-      - test_charts_benchmark:
+      - test_benchmark:
           <<: *default-context
   e2e-website:
     when:

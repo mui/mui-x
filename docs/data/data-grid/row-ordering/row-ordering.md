@@ -32,6 +32,8 @@ Row reordering emits the following events:
 - `rowDragOver`: emitted when the user drags a row over another row.
 - `rowDragEnd`: emitted when the user stops dragging a row.
 
+These events are only emitted for mouse drags. Touch and pen drags only call `onRowOrderChange`.
+
 ## Customizing the row reordering value
 
 By default, when the user starts dragging a row, its ID is displayed in the draggable box.

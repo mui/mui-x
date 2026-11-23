@@ -62,18 +62,33 @@ ToolbarButton.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
+  /**
+   * The color of the button.
+   */
   color: PropTypes.oneOf(['default', 'inherit', 'primary']),
   /**
    * The component used for the root node. Either a string to use an HTML element or a component.
    */
   component: PropTypes.elementType,
+  /**
+   * If `true`, the button is disabled.
+   */
   disabled: PropTypes.bool,
+  /**
+   * If given, uses a negative margin to align the button with the edge of its container.
+   */
   edge: PropTypes.oneOf(['end', 'start', false]),
   /**
    * The URL to link to. If set, and `component` is not set, the component renders as an anchor tag.
    */
   href: PropTypes.string,
+  /**
+   * The id of the button element.
+   */
   id: PropTypes.string,
+  /**
+   * The label of the button.
+   */
   label: PropTypes.string,
   /**
    * The relationship of the linked URL.
@@ -84,15 +99,30 @@ ToolbarButton.propTypes /* remove-proptypes */ = {
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  /**
+   * The ARIA role of the button element.
+   */
   role: PropTypes.string,
+  /**
+   * The size of the button.
+   */
   size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
+  /**
+   * The `tabIndex` of the button element.
+   */
   tabIndex: PropTypes.number,
   /**
    * Where to display the linked URL, as the name for a browsing context.
    */
   target: PropTypes.string,
+  /**
+   * The title of the button element.
+   */
   title: PropTypes.string,
+  /**
+   * @ignore
+   */
   touchRippleRef: PropTypes.any,
 } as any;
 

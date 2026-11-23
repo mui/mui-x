@@ -11,7 +11,7 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { IdType } from './items';
+import type { IdType } from './items';
 
 const CustomCard = styled(Card)({
   overflow: 'visible',

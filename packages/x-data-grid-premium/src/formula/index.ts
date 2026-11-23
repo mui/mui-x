@@ -21,6 +21,7 @@ export type {
 
 export { FormulaBar } from '../components/formulaBar';
 export type { FormulaBarProps } from '../components/formulaBar';
+export { GridComputedColumnsPanel } from '../components/computedColumnsPanel';
 
 export { GRID_FORMULA_FUNCTIONS } from '../hooks/features/formula/gridFormulaUtils';
 

@@ -17,21 +17,55 @@ function resolveMessageIndex(messageId: string, index: number | undefined, items
 }
 
 export interface UnreadMarkerSlots {
+  /**
+   * The component that renders the root.
+   * @default 'div'
+   */
   root: React.ElementType;
+  /**
+   * The component that renders the label.
+   * @default 'div'; a styled 'span' in `ChatUnreadMarker`
+   */
   label: React.ElementType;
 }
 
 export interface UnreadMarkerSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, UnreadMarkerOwnerState>;
+  /**
+   * The props used for the label slot.
+   */
   label?: SlotComponentProps<'div', {}, UnreadMarkerOwnerState>;
 }
 
 export interface UnreadMarkerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+  /**
+   * The id of the message this row belongs to.
+   */
   messageId: string;
+  /**
+   * The index of the row in `items`.
+   */
   index?: number;
+  /**
+   * The ids of the messages in the list, in order.
+   */
   items?: string[];
+  /**
+   * The label of the marker.
+   */
   label?: React.ReactNode;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<UnreadMarkerSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: UnreadMarkerSlotProps;
 }
 

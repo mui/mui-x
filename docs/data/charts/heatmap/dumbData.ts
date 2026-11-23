@@ -1,4 +1,4 @@
-import { HeatmapValueType } from '@mui/x-charts-pro/models';
+import type { HeatmapValueType } from '@mui/x-charts-pro/models';
 
 export const data: HeatmapValueType[] = [
   [0, 0, 10],

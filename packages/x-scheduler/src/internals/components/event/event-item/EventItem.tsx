@@ -9,22 +9,22 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import {
+  getDayNumber,
+  getOccurrenceLastDayNumber,
+  plainDateFromDayNumber,
+  formatMonthShortAndDayOfMonth,
+} from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
-import {
-  ARROW_DEPTH,
-  LEFT_ARROW_CLIP,
-  RIGHT_ARROW_CLIP,
-  BOTH_ARROWS_CLIP,
-  getArrowFocusVisibleStyles,
-} from '../arrowClips';
+import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
+import { isOccurrenceMultiDay } from '../../../utils/event-utils';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -57,21 +57,7 @@ const EventItemCard = styled('div', {
         backgroundColor: 'var(--event-surface-selected-hover)',
       },
     },
-    '&[data-starting-before-edge]': {
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      clipPath: LEFT_ARROW_CLIP,
-      paddingLeft: ARROW_DEPTH,
-    },
-    '&[data-ending-after-edge]': {
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
-      clipPath: RIGHT_ARROW_CLIP,
-      paddingRight: ARROW_DEPTH,
-    },
-    '&[data-starting-before-edge][data-ending-after-edge]': {
-      clipPath: BOTH_ARROWS_CLIP,
-    },
+    ...getArrowEdgeStyles(theme),
     ...getArrowFocusVisibleStyles(theme.shape.borderRadius),
   },
   '&[data-editing]': {
@@ -190,6 +176,7 @@ export const EventItem = React.forwardRef(function EventItem(
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   // Selector hooks
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
@@ -202,13 +189,12 @@ export const EventItem = React.forwardRef(function EventItem(
     localeText,
   });
 
-  const adapter = useAdapterContext();
+  // The processed dates are read in the display timezone, like the day.
+  const { start } = occurrence;
   const startsBeforeDay =
-    !adapter.isSameDay(occurrence.displayTimezone.start.value, date.value) &&
-    adapter.isBefore(occurrence.displayTimezone.start.value, date.value);
+    !start.plainDateTime.toPlainDate().equals(date.plainDate) && start.timestamp < date.timestamp;
   const endsAfterDay =
-    !adapter.isSameDay(occurrence.displayTimezone.end.value, date.value) &&
-    adapter.isAfter(occurrence.displayTimezone.end.value, date.value);
+    getOccurrenceLastDayNumber(occurrence, displayTimezone) > getDayNumber(date.plainDate);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -222,7 +208,7 @@ export const EventItem = React.forwardRef(function EventItem(
             >
               <EventItemCardContent className={classes.eventItemCardContent}>
                 <EventItemTime className={classes.eventItemTime} data-compact>
-                  <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+                  <span>{formatTime(occurrence.start)}</span>
                 </EventItemTime>
                 <EventItemTitle className={classes.eventItemTitle}>
                   {occurrence.title}
@@ -277,6 +263,10 @@ export const EventItem = React.forwardRef(function EventItem(
           data-variant={variant}
           data-palette={color}
           data-editing={isEditing || undefined}
+          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
+          data-event-id={occurrence.id}
+          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
+          data-occurrence-timestamp={occurrence.start.timestamp}
           aria-label={accessibleName}
           {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
           {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
@@ -305,17 +295,19 @@ function MultiDayDateLabel(props: {
 }) {
   const { occurrence, formatTime } = props;
 
-  const adapter = useAdapterContext();
+  const store = useEventCalendarStoreContext();
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { classes, localeText } = useEventCalendarStyledContext();
 
-  if (
-    !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
-  ) {
-    const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
+  if (isOccurrenceMultiDay(occurrence, displayTimezone)) {
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
         {localeText.eventItemMultiDayLabel(
-          adapter.formatByString(occurrence.displayTimezone.end.value, format),
+          formatMonthShortAndDayOfMonth(
+            locale,
+            plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, displayTimezone)),
+          ),
         )}
       </EventItemTime>
     );
@@ -329,8 +321,8 @@ function MultiDayDateLabel(props: {
   }
   return (
     <EventItemTime className={classes.eventItemTime}>
-      <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
-      <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
+      <span>{formatTime(occurrence.start)}</span>
+      <span> - {formatTime(occurrence.end)}</span>
     </EventItemTime>
   );
 }

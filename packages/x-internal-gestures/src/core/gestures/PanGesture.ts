@@ -9,11 +9,12 @@
  * The gesture can be configured to recognize movement only in specific directions.
  */
 
-import { GesturePhase, GestureState } from '../Gesture';
-import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
-import { PointerData } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
-import { Direction } from '../types/Direction';
+import type { GesturePhase, GestureState } from '../Gesture';
+import type { PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerData } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
+import type { Direction } from '../types/Direction';
 import { calculateCentroid, createEventName, getDirection, isDirectionAllowed } from '../utils';
 
 /**
@@ -126,15 +127,15 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     lastDeltas: null,
   };
 
-  declare protected readonly isSinglePhase: false;
+  declare public readonly isSinglePhase: false;
 
-  declare protected readonly eventType: PanEvent;
+  declare public readonly eventType: PanEvent;
 
   declare protected readonly optionsType: PanGestureOptions<GestureName>;
 
-  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  declare protected readonly mutableStateType: Omit<
+  declare public readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     | 'startPointers'
     | 'startCentroid'

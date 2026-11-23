@@ -1,5 +1,9 @@
 {
-  "props": {},
+  "props": {
+    "children": { "type": { "name": "node" }, "required": true },
+    "id": { "type": { "name": "string" }, "required": true },
+    "itemId": { "type": { "name": "string" }, "required": true }
+  },
   "name": "TreeItemProvider",
   "imports": [
     "import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';",

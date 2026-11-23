@@ -1,3 +1,5 @@
+import '../../typeOverloads';
+
 import { getValueToPositionMapper } from '@mui/x-charts/hooks';
 import {
   selectorAllSeriesOfType,

@@ -57,7 +57,11 @@ export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
   return isLoaded ? (
     children
   ) : (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+    <Box
+      // The visual regression tests wait until no `data-screenshot-pending` element is left.
+      data-screenshot-pending
+      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}
+    >
       <CircularProgress />
     </Box>
   );

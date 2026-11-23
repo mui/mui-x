@@ -26,6 +26,13 @@ dayjs.extend(weekOfYearPlugin);
 dayjs.extend(isBetweenPlugin);
 dayjs.extend(advancedFormatPlugin);
 
+// The precisions `isSame` compares at, each including the ones before it.
+const PRECISION_YEAR = 0;
+const PRECISION_MONTH = 1;
+const PRECISION_DAY = 2;
+
+type Precision = typeof PRECISION_YEAR | typeof PRECISION_MONTH | typeof PRECISION_DAY;
+
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   YY: 'year',
@@ -178,10 +185,25 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   private hasTimezonePlugin = () => typeof dayjs.tz !== 'undefined';
 
-  private isSame = (value: Dayjs, comparing: Dayjs, comparisonTemplate: string) => {
+  private isSame = (value: Dayjs, comparing: Dayjs, precision: Precision) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
 
-    return value.format(comparisonTemplate) === comparingInValueTimezone.format(comparisonTemplate);
+    // Strict parsing can return an invalid date that keeps numeric fields, such as `02/31/2026`
+    // with those of March 3, so validity is checked first: with `valueOf()`, as `isValid()` calls
+    // `Date#toString()`, which is slow. An invalid date only matches another invalid one.
+    const valueTime = value.valueOf();
+    const comparingTime = comparingInValueTimezone.valueOf();
+    if (Number.isNaN(valueTime) || Number.isNaN(comparingTime)) {
+      return Object.is(valueTime, comparingTime);
+    }
+
+    // Compares the fields that `format('YYYY-MM-DD')` prints, without the cost of formatting, which
+    // calendars pay for every day they render.
+    return (
+      value.year() === comparingInValueTimezone.year() &&
+      (precision < PRECISION_MONTH || value.month() === comparingInValueTimezone.month()) &&
+      (precision < PRECISION_DAY || value.date() === comparingInValueTimezone.date())
+    );
   };
 
   /**
@@ -266,19 +288,85 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
     const timezone = this.getTimezone(value);
     // Plain system values already follow the native Date offset.
-    // @ts-ignore
+    // @ts-expect-error Dayjs does not expose its internal UTC offset in its public types.
     if (timezone === 'UTC' || (timezone === 'system' && value.$offset === undefined)) {
       return value;
     }
 
+    // `tz(timezone, true)` breaks when the offset changes to or from 0, so rebuild the value from its wall time.
+    if (timezone !== 'system' && value.isValid()) {
+      return this.getWallTimeValue(this.getWallTime(value), timezone, value.utcOffset()).locale(
+        value.locale(),
+      );
+    }
+
     const fixedValue = value.tz(this.cleanTimezone(timezone), true);
     // An offset of `0` equals no offset, and before dayjs 1.11.12 assigning `0` breaks UTC values.
-    // @ts-ignore
+    // @ts-expect-error Dayjs does not expose its internal UTC offset in its public types.
     if ((fixedValue.$offset ?? 0) !== (value.$offset ?? 0)) {
-      // @ts-ignore
+      // @ts-expect-error Dayjs does not expose its internal UTC offset in its public types.
       value.$offset = fixedValue.$offset;
     }
     return value;
+  };
+
+  /**
+   * The wall time of the value, in milliseconds as if it was UTC.
+   */
+  private getWallTime = (value: Dayjs) => {
+    const wallDate = new Date(0);
+    wallDate.setUTCFullYear(value.year(), value.month(), value.date());
+    wallDate.setUTCHours(value.hour(), value.minute(), value.second(), value.millisecond());
+    return wallDate.getTime();
+  };
+
+  /**
+   * The value of a timezone at a timestamp. Before 1970, `tz()` adds a second to an instant with milliseconds,
+   * so convert the whole second, then add the milliseconds (a setter can move a repeated local time).
+   */
+  private toTimezone = (timestamp: number, timezone: string) => {
+    const milliseconds = ((timestamp % 1000) + 1000) % 1000;
+    const value = this.setTimezone(dayjs(timestamp - milliseconds), timezone);
+    return value.add(milliseconds, 'millisecond');
+  };
+
+  /**
+   * The value of a timezone at a wall time. A repeated wall time keeps the given offset when it is valid,
+   * else it takes the first occurrence. A wall time in a DST gap or a skipped day (`Pacific/Apia` on
+   * 2011-12-30) moves forward. It reads the offsets 24 hours before and after, so it does not see a second
+   * offset change within 48 hours.
+   */
+  private getWallTimeValue = (wallTime: number, timezone: string, offset?: number) => {
+    const getValue = (candidate: number) =>
+      this.toTimezone(wallTime - candidate * 60_000, timezone);
+    if (offset !== undefined) {
+      const value = getValue(offset);
+      if (this.getWallTime(value) === wallTime) {
+        return value;
+      }
+    }
+
+    // The offsets of the day before and the day after cover a DST change on that day.
+    const valueBefore = getValue(this.toTimezone(wallTime - 86_400_000, timezone).utcOffset());
+    if (this.getWallTime(valueBefore) === wallTime) {
+      return valueBefore;
+    }
+
+    const valueAfter = getValue(this.toTimezone(wallTime + 86_400_000, timezone).utcOffset());
+    return this.getWallTime(valueAfter) === wallTime ? valueAfter : valueBefore;
+  };
+
+  /**
+   * Hours, minutes, and seconds measure elapsed time: add them to the instant, then convert back to the timezone.
+   */
+  private addTime = (value: Dayjs, amount: number, unit: 'hour' | 'minute' | 'second') => {
+    // Without the `timezone` plugin, a value with a UTC offset keeps that offset.
+    if (!this.hasTimezonePlugin()) {
+      return this.adjustOffset(value.add(amount, unit));
+    }
+
+    const timestamp = dayjs(value.valueOf()).add(amount, unit).valueOf();
+    return this.toTimezone(timestamp, this.getTimezone(value)).locale(value.locale());
   };
 
   /**
@@ -346,7 +434,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   public getTimezone = (value: Dayjs): string => {
     if (this.hasTimezonePlugin()) {
-      // @ts-ignore
+      // @ts-expect-error Dayjs does not expose its internal timezone metadata in its public types.
       const zone = value.$x?.$timezone;
 
       if (zone) {
@@ -471,15 +559,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public isSameYear = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'YYYY');
+    return this.isSame(value, comparing, PRECISION_YEAR);
   };
 
   public isSameMonth = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'YYYY-MM');
+    return this.isSame(value, comparing, PRECISION_MONTH);
   };
 
   public isSameDay = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'YYYY-MM-DD');
+    return this.isSame(value, comparing, PRECISION_DAY);
   };
 
   public isSameHour = (value: Dayjs, comparing: Dayjs) => {
@@ -543,7 +631,20 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public startOfDay = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('day'));
+    const timezone = this.getTimezone(value);
+    if (timezone === 'UTC' || !this.hasTimezonePlugin() || !value.isValid()) {
+      return this.adjustOffset(value.startOf('day'));
+    }
+
+    // The native `Date` gives the first instant of the day.
+    if (timezone === 'system') {
+      return dayjs(value.valueOf()).startOf('day').locale(value.locale());
+    }
+
+    // `startOf('day')` can give a midnight in a DST gap or the previous day.
+    const midnight = new Date(this.getWallTime(value));
+    midnight.setUTCHours(0, 0, 0, 0);
+    return this.getWallTimeValue(midnight.getTime(), timezone).locale(value.locale());
   };
 
   public endOfYear = (value: Dayjs) => {
@@ -579,15 +680,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public addHours = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'hour'));
+    return this.addTime(value, amount, 'hour');
   };
 
   public addMinutes = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'minute'));
+    return this.addTime(value, amount, 'minute');
   };
 
   public addSeconds = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'second'));
+    return this.addTime(value, amount, 'second');
   };
 
   public getYear = (value: Dayjs) => {

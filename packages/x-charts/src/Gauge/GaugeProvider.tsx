@@ -128,6 +128,9 @@ export const GaugeContext = React.createContext<
 });
 
 export interface GaugeProviderProps extends GaugeConfig, CircularConfig {
+  /**
+   * The content of the component.
+   */
   children: React.ReactNode;
 }
 

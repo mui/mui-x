@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
-import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import {
   randomInt,
   randomUserName,

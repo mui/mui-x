@@ -1,1 +1,10 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "height": { "description": "The height of the element." },
+    "width": { "description": "The width of the element." },
+    "x": { "description": "The position of the element in the x-axis." },
+    "y": { "description": "The position of the element in the y-axis." }
+  },
+  "classDescriptions": {}
+}
