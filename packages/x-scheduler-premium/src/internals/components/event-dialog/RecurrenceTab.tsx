@@ -62,6 +62,7 @@ const RecurrenceSelectorContainer = styled('div', {
   name: 'MuiEventDialog',
   slot: 'RecurrenceSelectorContainer',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   display: 'inline-flex',
   // Wrap day-of-week toggles instead of overflowing in a narrow surface (e.g. mobile drawer).
   flexWrap: 'wrap',

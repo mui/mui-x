@@ -32,6 +32,7 @@ const ErrorAlert = styled(Alert, {
   name: 'MuiEventErrorContainer',
   slot: 'Alert',
 })({
+  boxSizing: 'border-box',
   maxWidth: 400,
 });
 

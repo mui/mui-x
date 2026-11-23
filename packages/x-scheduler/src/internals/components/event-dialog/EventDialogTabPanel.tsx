@@ -18,6 +18,7 @@ const EventDialogTabContent = styled('div', {
   name: 'MuiEventDialog',
   slot: 'TabContent',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   padding: theme.spacing(3),
   display: 'flex',
   flexDirection: 'column',
