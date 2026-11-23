@@ -76,6 +76,9 @@ SingleInputDateTimeRangeField.propTypes /* remove-proptypes */ = {
    * @default false
    */
   autoFocus: PropTypes.bool,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * If `true`, a clear button will be shown in the field allowing value clearing.
