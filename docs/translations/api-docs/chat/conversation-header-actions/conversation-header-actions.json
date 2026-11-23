@@ -1,10 +1,6 @@
 {
   "componentDescription": "",
-  "propDescriptions": {
-    "children": { "description": "The content of the component." },
-    "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." }
-  },
+  "propDescriptions": {},
   "classDescriptions": {},
   "slotDescriptions": { "actions": "The component that renders the actions." }
 }

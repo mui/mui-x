@@ -3,7 +3,6 @@
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
     "areAllSectionsEmpty": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
-    "className": { "type": { "name": "string" } },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
     "clearButtonPosition": {
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
