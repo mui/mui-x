@@ -261,7 +261,10 @@ export default withDeploymentConfig({
               options.defaultLoaders.babel,
               {
                 loader: '@mui/internal-docs-infra/pipeline/loadPrecomputedCodeHighlighter',
-                options: demoHighlighterOptions,
+                options: {
+                  ...demoHighlighterOptions,
+                  deferPrecompute: options.isServer ? true : 'asset',
+                },
               },
             ],
           },

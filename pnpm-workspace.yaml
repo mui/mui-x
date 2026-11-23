@@ -22,7 +22,7 @@ catalog:
   '@mui/icons-material': 9.6.0
   '@mui/internal-test-utils': 2.1.1-canary.11
   '@mui/internal-core-docs': 10.0.0-canary.1
-  '@mui/internal-docs-infra': 0.13.1-canary.37
+  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@33fa26f9
   '@mui/material': 9.6.0
   '@mui/stylis-plugin-rtl': 9.6.0
   '@mui/system': 9.6.0
@@ -125,8 +125,10 @@ overrides:
   '@mui/internal-core-docs>@mui/internal-markdown': 4.0.1-canary.1
   '@mui/internal-core-docs>@mui/*:peer': ^9.5.0
 
-  # Keep one runtime until core-docs/scripts adopt https://github.com/mui/mui-public/pull/2093.
-  '@mui/internal-docs-infra': 0.13.1-canary.37
+  # Keep scripts on the released runtime from https://github.com/mui/mui-public/pull/2093.
+  '@mui/internal-scripts>@mui/internal-docs-infra': 0.13.1-canary.37
+  # Remove after https://github.com/mui/mui-public/pull/2105 is released.
+  '@mui/internal-docs-infra>@mui/internal-typescript-api-extractor': 0.1.1-canary.3
 
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
