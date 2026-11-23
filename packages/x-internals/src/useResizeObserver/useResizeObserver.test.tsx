@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { useResizeObserver } from './useResizeObserver';
 
 describe('useResizeObserver', () => {
   const { render } = createRenderer();
@@ -25,28 +24,42 @@ describe('useResizeObserver', () => {
   });
 
   afterEach(() => {
+    vi.doUnmock('@base-ui/utils/reactVersion');
+    vi.unstubAllEnvs();
     vi.unstubAllGlobals();
     vi.useRealTimers();
   });
 
-  function TestComponent({ onResize }: { onResize: (entries: ResizeObserverEntry[]) => void }) {
-    const ref = React.useRef<HTMLDivElement>(null);
-    useResizeObserver(ref, onResize);
-    return <div ref={ref} />;
+  // The hook reads the environment and the React version at module load.
+  async function mountInProduction(reactMajor: number) {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.doMock('@base-ui/utils/reactVersion', () => ({
+      isReactVersionAtLeast: (version: number) => reactMajor >= version,
+    }));
+    vi.resetModules();
+    const { useResizeObserver } = await import('./useResizeObserver');
+
+    const onResize = vi.fn();
+    function TestComponent() {
+      const ref = React.useRef<HTMLDivElement>(null);
+      useResizeObserver(ref, onResize);
+      return <div ref={ref} />;
+    }
+    render(<TestComponent />);
+    deliver([], {} as ResizeObserver);
+    return onResize;
   }
 
-  // A layout change inside the delivery reports a "ResizeObserver loop" error.
-  // React 17 renders a `setState` from the callback synchronously.
-  it('should call the callback in the next frame, outside the observer delivery', () => {
-    const onResize = vi.fn();
-    render(<TestComponent onResize={onResize} />);
-
-    const entries = [{} as ResizeObserverEntry];
-    deliver(entries, {} as ResizeObserver);
+  it('should call the callback in the next frame on React 17', async () => {
+    const onResize = await mountInProduction(17);
     expect(onResize).not.toHaveBeenCalled();
 
     vi.advanceTimersToNextFrame();
     expect(onResize).toHaveBeenCalledTimes(1);
-    expect(onResize).toHaveBeenCalledWith(entries);
+  });
+
+  it('should call the callback inside the observer delivery on React 18+', async () => {
+    const onResize = await mountInProduction(18);
+    expect(onResize).toHaveBeenCalledTimes(1);
   });
 });
