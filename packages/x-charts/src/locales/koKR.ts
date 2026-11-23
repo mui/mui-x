@@ -83,6 +83,7 @@ export const koKRLocaleText: Partial<ChartsLocaleText> = {
   chartConfigurationPieTooltipTrigger: '표시 조건',
   chartConfigurationPieLegendPosition: '위치',
   chartConfigurationPieLegendDirection: '방향',
+
   // Common option labels
   chartConfigurationOptionNone: '없음',
   chartConfigurationOptionValue: '값',
