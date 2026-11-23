@@ -26,11 +26,11 @@ export function useTitleCellMeasurement(key: Key) {
     }
 
     const measure = () => {
-      // The cell already spans the whole column. Measure its max-content span and
-      // include the cell padding, which also accounts for the resource's indentation.
+      // The cell's scrollWidth is at least the current column width. Measure the inner span
+      // so the column can shrink, and include slot content that overflows it (e.g. a badge).
       const style = getComputedStyle(cell);
       const padding = parseFloat(style.paddingInlineStart) + parseFloat(style.paddingInlineEnd);
-      report(key, content.offsetWidth + padding);
+      report(key, Math.max(content.offsetWidth, content.scrollWidth) + padding);
     };
     measure();
     return observeResizeNextFrame(content, measure);

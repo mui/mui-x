@@ -1,9 +1,14 @@
 import * as React from 'react';
+import Badge from '@mui/material/Badge';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
+import type {
+  EventTimelinePremiumSlots,
+  TimelineResourceTitleProps,
+} from '@mui/x-scheduler-premium/models';
 import {
   absorbObserverFrames,
   createSchedulerRenderer,
@@ -37,6 +42,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
     options: {
       events?: SchedulerEvent[];
       presetConfig?: EventTimelinePremiumPresetConfig;
+      slots?: EventTimelinePremiumSlots;
     } = {},
   ) {
     return (
@@ -48,6 +54,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
           preset="dayAndHour"
           presets={['dayAndHour']}
           presetConfig={options.presetConfig}
+          slots={options.slots}
         />
       </div>
     );
@@ -74,6 +81,25 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
       await waitFor(() => {
         expect(getTitleColumnWidth()).to.be.greaterThan(shortWidth);
       });
+    });
+
+    it('should fit a badge that extends past a custom resource title', async () => {
+      function ResourceTitle({ resource }: TimelineResourceTitleProps) {
+        return (
+          <Badge badgeContent="On call now" color="primary">
+            <span>{resource.title}</span>
+          </Badge>
+        );
+      }
+
+      const resource = ResourceBuilder.new().title('Engineering').build();
+      await renderSettled(
+        timeline([resource], 1200, { slots: { timelineResourceTitle: ResourceTitle } }),
+      );
+
+      const badge = screen.getByText('On call now');
+      const cell = badge.closest(`.${classes.titleCell}`)!;
+      expect(badge.getBoundingClientRect().right).to.be.at.most(cell.getBoundingClientRect().right);
     });
 
     it('should shrink the title column after removing the widest resource', async () => {
