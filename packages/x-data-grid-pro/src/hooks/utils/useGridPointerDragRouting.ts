@@ -2,8 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { gridClasses } from '@mui/x-data-grid';
-import { useGridNativeEventListener } from '@mui/x-data-grid/internals';
+import { gridClasses, useGridEventPriority } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../models/gridApiPro';
 
 /**
@@ -14,6 +13,69 @@ import type { GridPrivateApiPro } from '../../models/gridApiPro';
  */
 export function isElementInGrid(root: Element | null | undefined, element: Element): boolean {
   return !!root && element.closest(`.${gridClasses.root}`) === root;
+}
+
+// A slow tap on a control of a handle, like a menu button or a chip, must stay a tap
+const INTERACTIVE_CONTROL_SELECTOR = 'button, a, input, select, textarea, [role="button"]';
+
+/**
+ * Returns whether a press on a drag handle is on one of its controls, and must not start a drag.
+ * @param {PointerEvent} event The `pointerdown` event.
+ * @param {Element} handle The pressed handle.
+ * @returns {boolean} `true` when the press is on a control inside of `handle`.
+ */
+export function isPointerDownOnHandleControl(event: PointerEvent, handle: Element): boolean {
+  const control = (event.target as Element | null)?.closest?.(INTERACTIVE_CONTROL_SELECTOR);
+  return !!control && handle.contains(control);
+}
+
+type GridRootNativeEventHandler<K extends keyof HTMLElementEventMap> = (
+  event: HTMLElementEventMap[K],
+) => void;
+
+/**
+ * Binds a native listener to the grid root.
+ * A side panel mounts after the root and binds in its effect.
+ * Feature hooks can run before the root mounts, when hydrating, and bind on `rootMount`.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {K} eventName The event to listen to.
+ * @param {Function} handler The listener. It must keep its identity, with `useEventCallback`.
+ * @param {boolean} capture Whether to listen in the capture phase.
+ */
+function useGridRootNativeEventListener<K extends keyof HTMLElementEventMap>(
+  apiRef: RefObject<GridPrivateApiPro>,
+  eventName: K,
+  handler: GridRootNativeEventHandler<K>,
+  capture = false,
+) {
+  const boundRootRef = React.useRef<HTMLElement | null>(null);
+  const isMountedRef = React.useRef(false);
+
+  const bind = useEventCallback((root: HTMLElement | null | undefined) => {
+    if (!root || boundRootRef.current === root) {
+      return;
+    }
+    boundRootRef.current?.removeEventListener(eventName, handler, capture);
+    root.addEventListener(eventName, handler, capture);
+    boundRootRef.current = root;
+  });
+
+  // The `rootMount` subscription is made during render, so a render that is thrown away, by React 18 StrictMode for example, keeps it until it is garbage collected. Only a mounted hook binds from it, or the listener would be bound twice.
+  useGridEventPriority(apiRef, 'rootMount', (root) => {
+    if (isMountedRef.current) {
+      bind(root);
+    }
+  });
+
+  React.useEffect(() => {
+    isMountedRef.current = true;
+    bind(apiRef.current.rootElementRef?.current);
+    return () => {
+      isMountedRef.current = false;
+      boundRootRef.current?.removeEventListener(eventName, handler, capture);
+      boundRootRef.current = null;
+    };
+  }, [apiRef, bind, eventName, handler, capture]);
 }
 
 // Allowlist, not `!== 'mouse'`: an empty or missing `pointerType` must keep HTML drag and drop
@@ -78,18 +140,6 @@ export function useGridPointerDragRouting(
     }
   });
 
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current.rootElementRef?.current,
-    'pointerdown',
-    handlePointerDown,
-  );
-
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current.rootElementRef?.current,
-    'dragstart',
-    handleNativeDragStart,
-    { capture: true },
-  );
+  useGridRootNativeEventListener(apiRef, 'pointerdown', handlePointerDown);
+  useGridRootNativeEventListener(apiRef, 'dragstart', handleNativeDragStart, true);
 }

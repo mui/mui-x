@@ -81,7 +81,7 @@ Clicking an event or creating a new one opens the event dialog.
 The dialog has two tabs:
 
 - **General**: title, start/end date and time, all-day toggle, resource and color selectors, and description.
-- **Recurrence**: frequency, interval, days of the week, and end condition.
+- **Recurrence**: frequency, interval, days of the week, and end condition. Shown when the [`recurringEvents` feature](/x/react-scheduler/recurring-events/) is enabled.
 
 Click any event in the demo below to open the dialog.
 From there you can edit the event details or delete it.
@@ -114,13 +114,20 @@ Call `eventDetails.cancel()` to keep the built-in dialog closed and open your ow
     eventDetails.cancel();
     if (eventDetails.reason === 'creation') {
       // Creation drafts have a synthetic `id` — use the proposed dates instead.
-      openYourCreationUI(eventDetails.occurrence.displayTimezone);
+      openYourCreationUI({
+        start: eventDetails.occurrence.start,
+        end: eventDetails.occurrence.end,
+      });
     } else {
       openYourEditingUI(eventDetails.occurrence.id);
     }
   }}
 />
 ```
+
+The proposed dates use the [occurrence date format](/x/react-scheduler/timezone/#reading-occurrence-dates).
+To store an all-day occurrence in an event model, write its dates back as `YYYY-MM-DD` strings: `occurrence.start.plainDateTime.toPlainDate().toString()`, and the same for `end`, which is already the day after the last day.
+An all-day event dropped on the timeline stays all-day, on whole days.
 
 In the demo below, both clicking an event and clicking an empty cell open a custom dialog instead of the built-in one:
 

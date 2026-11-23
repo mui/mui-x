@@ -1,15 +1,18 @@
-import {
-  DataGridPro,
+import type {
   GridRenderCellParams,
-  useGridApiContext,
   GridColDef,
   GridRowsProp,
   DataGridProProps,
+} from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  useGridApiContext,
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
 } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
-import Button, { ButtonProps } from '@mui/material/Button';
+import type { ButtonProps } from '@mui/material/Button';
+import Button from '@mui/material/Button';
 
 export const isNavigationKey = (key: string) =>
   key === 'Home' ||

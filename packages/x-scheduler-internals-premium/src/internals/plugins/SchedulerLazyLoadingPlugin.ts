@@ -1,5 +1,4 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
-import type { TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerState,
   SchedulerParameters,
@@ -9,7 +8,6 @@ import type {
 } from '@mui/x-scheduler-internals/internals';
 import {
   buildEventsState,
-  createAdapterDate,
   getEndOfDayMs,
   getStartOfDayMs,
 } from '@mui/x-scheduler-internals/internals';
@@ -156,7 +154,7 @@ export class SchedulerLazyLoadingPlugin<
       if (this.disposables.disposed) {
         return;
       }
-      this.store.pushError(error);
+      this.store.pushUserFacingError({ code: 'somethingWentWrongError' }, { error });
       this.store.set('isLoading', false);
     }
   };
@@ -166,7 +164,7 @@ export class SchedulerLazyLoadingPlugin<
    */
   private loadEventsFromDataSource = async (range: DateRange) => {
     const { dataSource } = this.store.parameters;
-    const { adapter, displayTimezone } = this.store.state;
+    const { displayTimezone } = this.store.state;
     // Capture locally; `dispose` may null these during the await.
     const dataManager = this.dataManager;
     const cache = this.cache;
@@ -185,7 +183,6 @@ export class SchedulerLazyLoadingPlugin<
         const eventsState = buildEventsState({
           events: allCachedEvents,
           eventModelStructure: this.store.parameters.eventModelStructure,
-          adapter,
           displayTimezone,
           previousState: this.store.state,
         });
@@ -206,10 +203,7 @@ export class SchedulerLazyLoadingPlugin<
     let isStale = false;
     let requestToRefetch: typeof this.latestRequest = null;
     try {
-      const events = await dataSource.getEvents(
-        createAdapterDate(adapter, range.start, displayTimezone),
-        createAdapterDate(adapter, range.end, displayTimezone),
-      );
+      const events = await dataSource.getEvents(new Date(range.start), new Date(range.end));
       const latestRequest = this.latestRequest;
 
       // Drop the result if a more recent range has been requested since this
@@ -232,7 +226,6 @@ export class SchedulerLazyLoadingPlugin<
       const eventsState = buildEventsState({
         events: allCachedEvents,
         eventModelStructure: this.store.parameters.eventModelStructure,
-        adapter,
         displayTimezone,
         previousState: this.store.state,
       });
@@ -250,7 +243,7 @@ export class SchedulerLazyLoadingPlugin<
         isStale = true;
         return;
       }
-      this.store.pushError(error);
+      this.store.pushUserFacingError({ code: 'somethingWentWrongError' }, { error });
     } finally {
       if (!this.disposables.disposed && !isStale && !requestToRefetch) {
         this.store.set('isLoading', false);
@@ -268,7 +261,7 @@ export class SchedulerLazyLoadingPlugin<
   ) => {
     const { deleted, updated, created, newEvents } = params;
     const { dataSource } = this.store.parameters;
-    const { adapter, displayTimezone } = this.store.state;
+    const { displayTimezone } = this.store.state;
 
     if (!dataSource || !this.cache) {
       return;
@@ -291,7 +284,7 @@ export class SchedulerLazyLoadingPlugin<
         }
         return;
       }
-      this.store.pushError(error);
+      this.store.pushUserFacingError({ code: 'somethingWentWrongError' }, { error });
       return;
     }
 
@@ -306,12 +299,13 @@ export class SchedulerLazyLoadingPlugin<
     }
 
     if (!persistResult.success) {
-      this.store.pushError(
-        new Error(
-          'MUI X Scheduler: `dataSource.persistEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
-            'To surface a specific message to the user, throw a descriptive Error from `persistEvents` instead. ' +
+      this.store.pushUserFacingError(
+        { code: 'somethingWentWrongError' },
+        {
+          error:
+            '`dataSource.persistEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
             'See the `persistEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
-        ),
+        },
       );
       return;
     }
@@ -330,7 +324,6 @@ export class SchedulerLazyLoadingPlugin<
     const eventsState = buildEventsState({
       events: newEvents,
       eventModelStructure: this.store.parameters.eventModelStructure,
-      adapter,
       displayTimezone,
       previousState: this.store.state,
     });
@@ -347,7 +340,7 @@ export class SchedulerLazyLoadingPlugin<
  * Extends a range to the whole days it touches in `timezone`, which is the coverage the cache
  * records.
  */
-export function toWholeDays(range: DateRange, timezone: TemporalTimezone): DateRange {
+export function toWholeDays(range: DateRange, timezone: string): DateRange {
   return {
     start: getStartOfDayMs(range.start, timezone),
     end: getEndOfDayMs(range.end, timezone),

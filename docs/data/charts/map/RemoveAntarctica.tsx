@@ -11,8 +11,8 @@ import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
-import { type MapShapeValueType } from '@mui/x-charts-premium/models';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { MapShapeValueType } from '@mui/x-charts-premium/models';
 import { internetUsageByCountry } from '../dataset/internetUsageByCountry';
 import { countryData, withCountryCodeAsName } from '../dataset/countryData';
 

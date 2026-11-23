@@ -1,5 +1,8 @@
 import type { SchedulerEventUpdatedProperties } from '../../models';
-import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';
+import type {
+  SchedulerUserFacingErrorDescriptor,
+  UpdateEventsParameters,
+} from '../utils/SchedulerStore/SchedulerStore.types';
 
 /**
  * Interface of the scheduling plugin (dependencies and auto-scheduling).
@@ -12,7 +15,7 @@ export interface SchedulerSchedulingPluginInterface {
    * whichever of `start` / `end` it actually moves — omit a bound that doesn't change, the same
    * way a direct caller would) fold into the same update and the same `onEventsChange` emission,
    * overriding only the bound(s) present on an entry already in the batch. `rejected` vetoes
-   * the whole batch: nothing is applied or emitted, and the caller surfaces `error`.
+   * the whole batch: nothing is applied or emitted, and the caller surfaces `rejection`.
    *
    * `updateEvents` can still refuse the merged batch afterward (e.g. a date
    * `eventModelStructure` can't write back) for a reason this hook has no way to predict, so any
@@ -24,6 +27,6 @@ export interface SchedulerSchedulingPluginInterface {
     parameters: UpdateEventsParameters,
   ) =>
     | { updated?: SchedulerEventUpdatedProperties[]; commit?: () => void }
-    | { rejected: true; error: Error }
+    | { rejected: true; rejection: SchedulerUserFacingErrorDescriptor }
     | void;
 }

@@ -1,6 +1,8 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
-import { toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
+
+const visibleTimestamp = (state: State) => state.visibleDate.getTime();
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
@@ -29,21 +31,22 @@ export const schedulerOtherSelectors = {
     }
     return editing.modelBounds ?? null;
   },
-  visibleDate: createSelectorMemoized(
-    (state: State) => state.adapter,
-    (state: State) => state.visibleDate,
-    (state: State) => state.displayTimezone,
-    (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
-  ),
+  /**
+   * The timestamp of `visibleDate`. The other selectors of the visible date read it, so a re-passed
+   * date of the same instant changes nothing.
+   */
+  visibleTimestamp,
+  /**
+   * The locale the dates are formatted in.
+   */
+  dateLocale: (state: State) => state.dateLocale,
   /**
    * The date of `visibleDate` in the display timezone, for the code that works on plain dates.
    */
   visiblePlainDate: createSelectorMemoized(
-    (state: State) => state.adapter,
-    (state: State) => state.visibleDate,
+    visibleTimestamp,
     (state: State) => state.displayTimezone,
-    (adapter, visibleDate, timezone) =>
-      toPlainDateTime(adapter.getTime(visibleDate), timezone).date,
+    toPlainDate,
   ),
   /**
    * Which face the edited occurrence is in (`'armed'` toolbar or `'edit'` surface), or `null` when idle.

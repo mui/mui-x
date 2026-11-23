@@ -1,6 +1,6 @@
 import { screen, within, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { createDate, createSchedulerRenderer } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { HeaderToolbar } from './HeaderToolbar';
@@ -60,6 +60,27 @@ describe('<ViewSwitcher />', () => {
     fireEvent.click(viewSwitcherButton);
 
     expect(viewSwitcherButton).to.have.attribute('aria-expanded', 'true');
+  });
+
+  it('should give the menu a fixed accessible name instead of the current view', async () => {
+    render(
+      <EventCalendarProvider {...standaloneDefaults}>
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Week' }));
+
+    // The checked item already announces the current view, so the menu must not repeat it.
+    expect(screen.getByRole('menu')).toHaveAccessibleName('Views');
+  });
+
+  it('should take the menu accessible name from the localeText', async () => {
+    render(<EventCalendar events={[]} localeText={{ viewSwitcherAriaLabel: 'Calendar views' }} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Week' }));
+
+    expect(screen.getByRole('menu')).toHaveAccessibleName('Calendar views');
   });
 
   it('should render all views in the menu for a custom set of views (with more than 3 views)', async () => {
@@ -223,7 +244,7 @@ describe('week number badge', () => {
   });
 
   it('shows "Week 1" for Jan 5 2025 when weekStartsOn=1', () => {
-    const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+    const visibleDate = createDate('2025-01-05T00:00:00Z');
 
     render(
       <EventCalendar
@@ -239,21 +260,94 @@ describe('week number badge', () => {
     expect(badge).to.have.text('Week 1');
   });
 
-  it('shows "Week 2" for Jan 5 2025 when weekStartsOn=0 (regression)', () => {
-    const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+  it('shows "Week 2" for Jan 5 2025 when weekStartsOn=7 (regression)', () => {
+    const visibleDate = createDate('2025-01-05T00:00:00Z');
 
     render(
       <EventCalendar
         events={[]}
         visibleDate={visibleDate}
         view="week"
-        preferences={{ showWeekNumber: true, weekStartsOn: 0 }}
+        preferences={{ showWeekNumber: true, weekStartsOn: 7 }}
       />,
     );
 
     const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
     expect(badge).not.to.equal(null);
     expect(badge).to.have.text('Week 2');
+  });
+
+  it.each([
+    // January 1st is in the first week in English (United States), and the first week holds
+    // January 4th in French.
+    { dateLocale: 'en-US', expected: 'Week 1' },
+    { dateLocale: 'fr-FR', expected: 'Week 53' },
+  ])(
+    'numbers the week of Friday, January 1st, 2027 with the rules of $dateLocale',
+    ({ dateLocale, expected }) => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={createDate('2027-01-01T12:00:00Z')}
+          view="week"
+          dateLocale={dateLocale}
+          preferences={{ showWeekNumber: true }}
+        />,
+      );
+
+      expect(
+        document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`),
+      ).to.have.text(expected);
+    },
+  );
+
+  it('keeps the first week of the locale when the weeks start on another day', () => {
+    // January 1st stays in the first week of English (United States) with weeks starting on Monday.
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={createDate('2027-01-01T12:00:00Z')}
+        view="week"
+        dateLocale="en-US"
+        preferences={{ showWeekNumber: true, weekStartsOn: 1 }}
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`)).to.have.text(
+      'Week 1',
+    );
+  });
+
+  it('writes the week number in the digits of the locale', () => {
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={createDate('2025-07-16T12:00:00Z')}
+        view="week"
+        dateLocale="ar-EG"
+        preferences={{ showWeekNumber: true }}
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`)).to.have.text(
+      'Week ٢٩',
+    );
+  });
+
+  it('formats the month of the visible date in the display timezone', () => {
+    // July 31st at 23:00 in UTC is August 1st in Tokyo.
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={createDate('2025-07-31T23:00:00Z')}
+        displayTimezone="Asia/Tokyo"
+        view="week"
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.headerToolbarLabel}`)).to.have.text(
+      'August 2025',
+    );
   });
 });
 

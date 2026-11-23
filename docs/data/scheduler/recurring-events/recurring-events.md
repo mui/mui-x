@@ -39,9 +39,34 @@ It does not support every rule or combination yet.
 For more information about specific rules, see [RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10).
 :::
 
-The `EventCalendarPremium` and `EventTimelinePremium` expand recurring events only for the visible range, keep the original duration, and handle all-day and multi-day spans.
+Recurring events are opt-in: pass the `recurringEvents` feature to the `features` prop of `EventCalendarPremium`, of its standalone views, or of `EventTimelinePremium`.
+Without it, each event with an `rrule` renders once, as a single event, and the recurrence code stays out of your bundle.
 
-The rule is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
+```tsx
+import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+
+<EventCalendarPremium features={{ recurringEvents: recurringEventsFeature }} />;
+```
+
+:::info
+The `features` prop is read once, when the component mounts.
+To change it, remount the component, for example with a `key`.
+:::
+
+:::warning
+Without the feature, the `rrule` stays in your data but is ignored:
+
+- The event renders once, on its start date, even when that occurrence was deleted or edited on its own (the `exDates` are not applied).
+- The event dialog has no Recurrence tab, and no dialog asks which occurrences a change applies to.
+- Editing, moving, or deleting the event applies to the event stored in your data, which is the whole series.
+
+:::
+
+With the feature, the Scheduler expands recurring events only for the visible range, keeps the original duration, and handles all-day and multi-day spans.
+
+The rule of a timed event is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
+The rule of an all-day event is evaluated on its dates, the same in every timezone.
 See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
 
 {{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -139,14 +164,20 @@ Use either the `COUNT` or the `UNTIL` property if you want to put an end boundar
   ```
 
 - Use the `UNTIL` property if you want your event to stop at a given date.
-  The date must be in UTC and formatted as `YYYYMMDDTHHmmssZ` (no dashes or colons):
+  Use `YYYYMMDD`, a date, on an all-day event, and `YYYYMMDDTHHmmssZ`, a UTC date-time, on a timed event (no dashes or colons):
 
   ```ts
-  // Until December 31, 2025 at 23:59:59 UTC (inclusive)
-  rrule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20251231T235959Z';
+  // An all-day event until December 31, 2025, included
+  rrule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20251231';
+
+  // A timed event until December 31, 2025 at 09:00 UTC, included
+  rrule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20251231T090000Z';
   ```
 
   :::success
-  The `UNTIL` property is inclusive.
-  This means that if it matches the date of an event occurrence, this occurrence will be included.
+  The `UNTIL` property is inclusive and has the type of the event's start, as in RFC 5545.
+  On an all-day event, it is a date, which includes its whole day.
+  On a timed event, it is a UTC date-time, read in the timezone of the event: an occurrence starting at that instant is included, and one starting later is excluded.
+  A value of the other type logs a warning in development.
+  The event dialog offers a date picker: the chosen day is the last day of the series.
   :::

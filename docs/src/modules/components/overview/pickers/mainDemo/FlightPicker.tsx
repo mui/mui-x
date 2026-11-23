@@ -5,7 +5,7 @@ import FlightLandIcon from '@mui/icons-material/FlightLand';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
 
 export default function FlightPicker() {
   return (

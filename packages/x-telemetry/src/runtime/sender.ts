@@ -1,6 +1,6 @@
 import type { TelemetryContextType } from '../context';
 import { getTelemetryEnvConfigValue } from './config';
-import { TelemetryEvent } from '../types';
+import type { TelemetryEvent } from '../types';
 import { fetchWithRetry } from './fetcher';
 
 const sendMuiXTelemetryRetries = 3;

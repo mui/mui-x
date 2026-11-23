@@ -258,14 +258,14 @@ export function finishColumnReorder(
 ) {
   const { dragField, originIndex, restoreOrigin } = params;
   if (restoreOrigin) {
-    apiRef.current.setColumnIndex(dragField, originIndex);
+    apiRef.current.setColumnIndex(dragField, originIndex, false);
   } else if (apiRef.current.getColumnIndex(dragField, false) !== originIndex) {
     const draggedColumn = apiRef.current.getColumn(dragField);
     if (draggedColumn) {
       // Emit the columnOrderChange event only once when the reordering stops.
       const columnOrderChangeParams: GridColumnOrderChangeParams = {
         column: draggedColumn,
-        targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(dragField),
+        targetIndex: apiRef.current.getColumnIndex(dragField, false),
         oldIndex: originIndex,
       };
 

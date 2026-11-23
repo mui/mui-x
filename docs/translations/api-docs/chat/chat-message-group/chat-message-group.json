@@ -1,9 +1,30 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "children": { "description": "The content of the component." },
     "groupKey": {
       "description": "A function that maps a message to a group key. Messages that resolve to the same key are visually grouped (shared avatar, author name, etc.). Use <code>createTimeWindowGroupKey(windowMs)</code> to replicate time-window-based grouping."
+    },
+    "index": { "description": "The index of the row in <code>items</code>." },
+    "items": { "description": "The ids of the messages in the list, in order." },
+    "messageId": { "description": "The id of the message this row belongs to." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "messageActions": "Actions row component (receives <code>{ messageId }</code>). Pass <code>null</code> to hide actions entirely; omit to render only the declarative <code>extraActions</code> from <code>slotProps.messageActions</code> if provided.",
+    "messageAuthorName": "Author name label rendered by the group wrapper (default variant: above the bubble; compact variant: inside the message grid). Pass <code>null</code> to hide.",
+    "messageAvatar": "Avatar component. Pass <code>null</code> to hide the avatar entirely and drop the reserved avatar grid track.",
+    "messageContent": "The message bubble component.",
+    "messageError": "Error card shown under the bubble when the message status is <code>error</code>. Pass <code>null</code> to hide the error surface entirely (no component is mounted).",
+    "messageGroup": "The per-author group wrapper around consecutive messages.",
+    "messageInlineMeta": "Inline meta rendered inside the bubble (default variant). Pass <code>null</code> to hide.",
+    "messageMeta": "External meta (compact variant). Pass <code>null</code> to hide.",
+    "messageRoot": "Styled root of <code>&lt;ChatMessage&gt;</code> (wrapper-only); the default avatar/content/meta tree still renders inside it.",
+    "streamingIndicator": "The animated dots shown while an assistant response is in flight: as a trailing row while waiting for the response to start, then inside the assistant bubble while it streams. Controlled by <code>features.streamingIndicator</code> (<code>&#39;auto&#39;</code> by default). Pass <code>null</code> to hide it."
+  }
 }

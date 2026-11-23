@@ -4,10 +4,10 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
-import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
+import type { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
+import type { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import { describe } from 'vitest';
-import {
+import type {
   DescribeTreeViewTestRunner,
   DescribeTreeViewRenderer,
   DescribeTreeViewJSXRenderer,

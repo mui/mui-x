@@ -18,12 +18,21 @@ export interface MarkPlotDataPoint {
   x: number;
   y: number;
   index: number;
+  /**
+   * The color of the element.
+   */
   color: string;
 }
 
 export interface MarkPlotSeriesData {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
   clipId: string;
+  /**
+   * The shape of the marker.
+   */
   shape: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
   xAxisId: AxisId;
   marks: MarkPlotDataPoint[];

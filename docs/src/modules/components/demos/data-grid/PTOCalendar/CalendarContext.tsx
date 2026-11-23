@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCalendarState } from './hooks/useCalendarState';
+import type { useCalendarState } from './hooks/useCalendarState';
 
 export const CalendarContext = React.createContext<ReturnType<typeof useCalendarState> | undefined>(
   undefined,

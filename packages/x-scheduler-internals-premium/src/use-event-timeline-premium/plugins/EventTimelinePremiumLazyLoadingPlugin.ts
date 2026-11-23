@@ -50,5 +50,5 @@ export class EventTimelinePremiumLazyLoadingPlugin<
  */
 function getRangeToFetch(state: EventTimelinePremiumState): DateRange {
   const config = eventTimelinePremiumPresetSelectors.config(state);
-  return { start: state.adapter.getTime(config.start), end: state.adapter.getTime(config.end) };
+  return { start: config.start, end: config.end };
 }

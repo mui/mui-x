@@ -11,7 +11,6 @@ import { addDays } from 'date-fns/addDays';
 import { addWeeks } from 'date-fns/addWeeks';
 import { addMonths } from 'date-fns/addMonths';
 import { addYears } from 'date-fns/addYears';
-
 import {
   resources as agendaResources,
   defaultVisibleDate,
@@ -39,6 +38,13 @@ function randomBool(likelihood) {
 
 /** Wall-time ISO string (no trailing Z). */
 const str = (date) => format(date, "yyyy-MM-dd'T'HH:mm:ss");
+
+/** Date-only string, the format of all-day events. */
+const dateStr = (date) => format(date, 'yyyy-MM-dd');
+
+/** Parses an event date as local time, including the date-only strings of all-day events. */
+const toDate = (value) =>
+  new Date(value.length === 10 ? `${value}T00:00:00` : value);
 
 // ---------------------------------------------------------------------------
 // Resources
@@ -93,8 +99,8 @@ const RECURRING_EVENTS = [
   {
     id: 'rec-birthday',
     title: `${birthdayName}'s Birthday`,
-    start: '2025-03-14T00:00:00',
-    end: '2025-03-14T01:00:00',
+    start: '2025-03-14',
+    end: '2025-03-15',
     resource: 'birthdays',
     allDay: true,
     readOnly: true,
@@ -149,8 +155,8 @@ function generateOneTimeEvents() {
       allDayStart.setHours(0, 0, 0, 0);
       const spanDays = randomBool(30) ? randomInt(2, 4) : 1;
       const allDayEnd = addDays(allDayStart, spanDays);
-      startStr = str(allDayStart);
-      endStr = str(allDayEnd);
+      startStr = dateStr(allDayStart);
+      endStr = dateStr(allDayEnd);
     } else {
       const hour = randomInt(8, 19);
       const minute = pick([0, 15, 30, 45]);
@@ -200,12 +206,12 @@ function estimateRecurrenceEnd(event) {
   }
 
   const { rrule } = event;
-  const eventStart = new Date(event.start);
-  const eventEnd = new Date(event.end);
+  const eventStart = toDate(event.start);
+  const eventEnd = toDate(event.end);
   const eventDuration = eventEnd.getTime() - eventStart.getTime();
 
   if (rrule.until) {
-    return new Date(new Date(rrule.until).getTime() + eventDuration);
+    return new Date(toDate(rrule.until).getTime() + eventDuration);
   }
 
   if (rrule.count) {
@@ -244,8 +250,8 @@ function estimateRecurrenceEnd(event) {
  */
 function getEventsInRange(rangeStart, rangeEnd) {
   return ALL_EVENTS.filter((event) => {
-    const eventStart = new Date(event.start);
-    const eventEnd = new Date(event.end);
+    const eventStart = toDate(event.start);
+    const eventEnd = toDate(event.end);
 
     if (!event.rrule) {
       return eventEnd > rangeStart && eventStart < rangeEnd;

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPremium, GridRowGroupingModel } from '@mui/x-data-grid-premium';
+import type { GridRowGroupingModel } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 export default function RowGroupingControlled() {

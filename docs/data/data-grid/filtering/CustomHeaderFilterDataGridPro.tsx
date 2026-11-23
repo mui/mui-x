@@ -1,13 +1,15 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import type {
+  GridHeaderFilterCellProps,
+  GridHeaderFilterEventLookup,
+} from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
   useGridSelector,
   gridFilterModelSelector,
   useGridApiContext,
-  GridHeaderFilterCellProps,
-  GridHeaderFilterEventLookup,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 

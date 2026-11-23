@@ -1,5 +1,4 @@
 import { renderHook } from '@mui/internal-test-utils';
-import { ResourceBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { useExtractEventTimelinePremiumParameters } from '../useExtractEventTimelinePremiumParameters';
 import type { EventTimelinePremiumParameters } from '../EventTimelinePremiumStore.types';
@@ -19,6 +18,7 @@ const allParameters: Record<keyof EventTimelinePremiumParameters<any, any>, unkn
   defaultPreset: 'defaultPreset',
   defaultVisibleDate: 'defaultVisibleDate',
   defaultVisibleResources: 'defaultVisibleResources',
+  dependencies: 'dependencies',
   displayTimezone: 'displayTimezone',
   eventColor: 'eventColor',
   eventCreation: 'eventCreation',
@@ -26,6 +26,7 @@ const allParameters: Record<keyof EventTimelinePremiumParameters<any, any>, unkn
   eventModelStructure: 'eventModelStructure',
   events: 'events',
   onCollapsedResourcesChange: 'onCollapsedResourcesChange',
+  onDependenciesChange: 'onDependenciesChange',
   onEventEditingStart: 'onEventEditingStart',
   onEventsChange: 'onEventsChange',
   onPresetChange: 'onPresetChange',
@@ -45,47 +46,7 @@ const allParameters: Record<keyof EventTimelinePremiumParameters<any, any>, unkn
 };
 
 describe('useExtractEventTimelinePremiumParameters', () => {
-  it('should forward `shouldEventRequireResource` to the parameters object', () => {
-    const { result } = renderHook(() =>
-      useExtractEventTimelinePremiumParameters({
-        events: [],
-        resources: [ResourceBuilder.new().build()],
-        shouldEventRequireResource: true,
-      }),
-    );
-
-    expect(result.current.parameters.shouldEventRequireResource).to.equal(true);
-  });
-
-  it('should forward `presetConfig` to the parameters object instead of the forwarded props', () => {
-    const presetConfig = { dayAndHour: { startTime: 8, endTime: 20 } };
-    const { result } = renderHook(() =>
-      useExtractEventTimelinePremiumParameters({
-        events: [],
-        resources: [ResourceBuilder.new().build()],
-        presetConfig,
-      }),
-    );
-
-    expect(result.current.parameters.presetConfig).to.equal(presetConfig);
-    expect(result.current.forwardedProps).to.not.have.property('presetConfig');
-  });
-
-  it('should forward `onEventEditingStart` to the parameters object instead of the forwarded props', () => {
-    const onEventEditingStart = () => {};
-    const { result } = renderHook(() =>
-      useExtractEventTimelinePremiumParameters({
-        events: [],
-        resources: [ResourceBuilder.new().build()],
-        onEventEditingStart,
-      }),
-    );
-
-    expect(result.current.parameters.onEventEditingStart).to.equal(onEventEditingStart);
-    expect(result.current.forwardedProps).to.not.have.property('onEventEditingStart');
-  });
-
-  it('should not forward any parameter to the forwarded props', () => {
+  it('should route every parameter to the parameters object and none to the forwarded props', () => {
     const { result } = renderHook(() =>
       useExtractEventTimelinePremiumParameters({
         ...(allParameters as EventTimelinePremiumParameters<any, any>),
@@ -93,6 +54,7 @@ describe('useExtractEventTimelinePremiumParameters', () => {
       }),
     );
 
+    expect(result.current.parameters).to.deep.equal(allParameters);
     expect(result.current.forwardedProps).to.deep.equal({ 'data-testid': 'forwarded' });
   });
 });

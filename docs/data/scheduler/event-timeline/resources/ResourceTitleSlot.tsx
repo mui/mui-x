@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import Link from '@mui/material/Link';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { TimelineResourceTitleProps } from '@mui/x-scheduler-premium/models';
+import type { TimelineResourceTitleProps } from '@mui/x-scheduler-premium/models';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const resourceDetails: Record<string, { code: string; owner: string }> = {
@@ -19,16 +19,16 @@ const resources: SchedulerResource[] = [
 const initialEvents: SchedulerEvent[] = [
   {
     id: 'web-1',
-    start: '2025-07-01T00:00:00',
-    end: '2025-07-11T00:00:00',
+    start: '2025-07-01',
+    end: '2025-07-12',
     title: 'Dashboard redesign',
     resource: 'web-app',
     allDay: true,
   },
   {
     id: 'api-1',
-    start: '2025-07-03T00:00:00',
-    end: '2025-07-15T00:00:00',
+    start: '2025-07-03',
+    end: '2025-07-16',
     title: 'Rate limiting',
     resource: 'api-team',
     allDay: true,

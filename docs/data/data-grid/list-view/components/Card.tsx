@@ -1,5 +1,7 @@
-import Stack, { StackProps } from '@mui/material/Stack';
-import Typography, { TypographyProps } from '@mui/material/Typography';
+import type { StackProps } from '@mui/material/Stack';
+import Stack from '@mui/material/Stack';
+import type { TypographyProps } from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
 
 export function Card(props: StackProps) {
   const { children, ...other } = props;

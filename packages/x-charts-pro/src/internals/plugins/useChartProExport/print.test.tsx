@@ -4,6 +4,7 @@ import { vi, describe, it, expect, onTestFinished } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import type { ChartProApi } from '@mui/x-charts-pro/context';
 import { isJSDOM } from 'test/utils/skipIf';
+import { setupPrintFont } from 'test/utils/printFont';
 
 describe.skipIf(isJSDOM)('printChart', () => {
   const { render } = createRenderer();
@@ -38,6 +39,103 @@ describe.skipIf(isJSDOM)('printChart', () => {
     });
 
     expect(printed).to.equal(true);
+  });
+
+  it.each(['loaded', 'error'] as const)(
+    'waits for a delayed font to settle as %s before printing',
+    async (fontStatus) => {
+      const font = await setupPrintFont();
+      const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+      let printWindow: HTMLIFrameElement | undefined;
+      const print = vi.fn(() =>
+        Array.from(printWindow!.contentDocument!.fonts, (face) => face.status),
+      );
+
+      render(<Chart apiRef={apiRef} />);
+
+      let exportPromise!: Promise<void>;
+      act(() => {
+        exportPromise = apiRef.current!.exportAsPrint({
+          copyStyles: false,
+          onBeforeExport: (iframe) => {
+            printWindow = iframe;
+            const style = iframe.contentDocument!.createElement('style');
+            style.textContent = font.css;
+            iframe.contentDocument!.head.appendChild(style);
+            iframe.contentWindow!.print = print;
+          },
+        });
+      });
+
+      try {
+        await act(async () => {
+          await expect.poll(() => printWindow?.contentDocument?.fonts.status).to.equal('loading');
+          expect(print).not.toHaveBeenCalled();
+
+          await font.resolve(fontStatus);
+          await exportPromise;
+        });
+
+        expect(print).toHaveBeenCalledTimes(1);
+        expect(print.mock.results[0].value).to.deep.equal([fontStatus]);
+      } finally {
+        await act(async () => {
+          await font.resolve('error');
+          await exportPromise;
+        });
+        printWindow?.remove();
+      }
+    },
+  );
+
+  it('prints with the fallback font when the font stalls for 3 seconds', async () => {
+    const font = await setupPrintFont();
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+    let printWindow: HTMLIFrameElement | undefined;
+    const print = vi.fn(() =>
+      Array.from(printWindow!.contentDocument!.fonts, (face) => face.status),
+    );
+
+    render(<Chart apiRef={apiRef} />);
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    onTestFinished(() => {
+      vi.useRealTimers();
+    });
+
+    let exportPromise!: Promise<void>;
+    act(() => {
+      exportPromise = apiRef.current!.exportAsPrint({
+        copyStyles: false,
+        onBeforeExport: (iframe) => {
+          printWindow = iframe;
+          const style = iframe.contentDocument!.createElement('style');
+          style.textContent = font.css;
+          iframe.contentDocument!.head.appendChild(style);
+          iframe.contentWindow!.print = print;
+        },
+      });
+    });
+
+    try {
+      await act(async () => {
+        await expect.poll(() => printWindow?.contentDocument?.fonts.status).to.equal('loading');
+        // `expect.poll` also moves fake timers, so check well before the 3 s mark.
+        await vi.advanceTimersByTimeAsync(2000);
+        expect(print).not.toHaveBeenCalled();
+
+        await vi.advanceTimersByTimeAsync(1000);
+        await exportPromise;
+      });
+
+      expect(print).toHaveBeenCalledTimes(1);
+      expect(print.mock.results[0].value).to.deep.equal(['loading']);
+    } finally {
+      await act(async () => {
+        await font.resolve('error');
+        await exportPromise;
+      });
+      printWindow?.remove();
+    }
   });
 
   it('rejects when the print export fails', async () => {

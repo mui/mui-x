@@ -1,6 +1,11 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { useGridApiRef, DataGridPremium } from '@mui/x-data-grid-premium';
+import {
+  useGridApiRef,
+  DataGridPremium,
+  GridCellEditStopReasons,
+  GridRowEditStopReasons,
+} from '@mui/x-data-grid-premium';
 import type {
   GridApi,
   DataGridPremiumProps,
@@ -8,10 +13,11 @@ import type {
   GridEvents,
   GridDataSource,
   GridUpdateRowParams,
+  GridValidRowModel,
 } from '@mui/x-data-grid-premium';
 import { createRenderer, waitFor, act, fireEvent, screen } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
-import { getCell, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnValues, raf, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
@@ -96,6 +102,99 @@ describe('<DataGridPremium /> - History', () => {
 
       expect(apiRef.current!.history.canUndo()).to.equal(false);
     });
+
+    it('should undo a cell edit on a page other than the first', async () => {
+      const { user } = render(
+        <Test
+          pagination
+          initialState={{ pagination: { paginationModel: { page: 1, pageSize: 3 } } }}
+          pageSizeOptions={[3]}
+        />,
+      );
+      const originalValue = apiRef.current!.getRow(3).price1M;
+      const cell = getCell(3, 2);
+      await user.dblClick(cell);
+      await user.keyboard('10000');
+      await user.click(getCell(4, 2));
+      expect(apiRef.current!.getRow(3).price1M).not.to.equal(originalValue);
+
+      let result: boolean | undefined;
+      await act(async () => {
+        result = await apiRef.current!.history.undo();
+      });
+
+      expect(result).to.equal(true);
+      expect(apiRef.current!.getRow(3).price1M).to.equal(originalValue);
+    });
+
+    it('should undo a row edit that stops on a click in another row', async () => {
+      const { user } = render(<Test editMode="row" />);
+      const originalValue = apiRef.current!.getRow(0).price1M;
+
+      await user.dblClick(getCell(0, 2));
+      await user.keyboard('10000');
+      await user.click(getCell(1, 2));
+      // The row edit stops in a timeout after the focus leaves the row
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).price1M).not.to.equal(originalValue);
+      });
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+    });
+
+    it.each(['cell', 'row'] as const)(
+      'should preserve undo and redo history when a %s edit is discarded on focus-out',
+      async (editMode) => {
+        const { user } = render(
+          <Test
+            editMode={editMode}
+            onCellEditStop={({ id, field, reason }, event) => {
+              if (reason === 'cellFocusOut') {
+                event.defaultMuiPrevented = true;
+                apiRef.current!.stopCellEditMode({ id, field, ignoreModifications: true });
+              }
+            }}
+            onRowEditStop={({ id, reason }, event) => {
+              if (reason === 'rowFocusOut') {
+                event.defaultMuiPrevented = true;
+                apiRef.current!.stopRowEditMode({ id, ignoreModifications: true });
+              }
+            }}
+          />,
+        );
+
+        const originalValue = apiRef.current!.getRow(0).price1M;
+        await user.dblClick(getCell(0, 2));
+        await user.keyboard('123{Enter}');
+        await user.dblClick(getCell(1, 2));
+        await user.keyboard('456{Enter}');
+        // Leave one committed edit on each side of the history cursor.
+        await act(async () => {
+          expect(await apiRef.current!.history.undo()).to.equal(true);
+          await raf();
+        });
+
+        const beforeDiscard = apiRef.current!.getRow(2).price1M;
+        await user.dblClick(getCell(2, 2));
+        await act(async () => {
+          await apiRef.current!.setEditCellValue({ id: 2, field: 'price1M', value: 789 });
+        });
+        await user.click(getCell(3, 2));
+        await waitFor(() => expect(apiRef.current!.getCellMode(2, 'price1M')).to.equal('view'));
+        expect(apiRef.current!.getRow(2).price1M).to.equal(beforeDiscard);
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+        await act(async () => {
+          expect(await apiRef.current!.history.undo()).to.equal(true);
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+      },
+    );
   });
 
   describe('Row updates through API', () => {
@@ -577,6 +676,134 @@ describe('<DataGridPremium /> - History', () => {
     });
   });
 
+  describe('Edit validation and cancellation', () => {
+    const validatedColumns = data.columns.map((column) =>
+      column.field === 'price1M'
+        ? {
+            ...column,
+            preProcessEditCellProps: ({ props }) => ({
+              ...props,
+              error: Number(props.value) > 1000,
+            }),
+          }
+        : column,
+    ) as DataGridPremiumProps['columns'];
+
+    it.each(['cell', 'row'] as const)(
+      'should keep the redo steps when an edit is canceled with Escape in %s mode',
+      async (editMode) => {
+        const { user } = render(<Test editMode={editMode} />);
+        const originalValue = apiRef.current!.getRow(0).price1M;
+
+        await user.dblClick(getCell(0, 2));
+        await user.keyboard('123{Enter}');
+        await user.dblClick(getCell(1, 2));
+        await user.keyboard('456{Enter}');
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        // The undo focuses the cell in the next frame
+        await act(() => raf());
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+        await user.dblClick(getCell(2, 2));
+        await user.keyboard('789{Escape}');
+
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+        let result: boolean | undefined;
+        await act(async () => {
+          result = await apiRef.current!.history.undo();
+        });
+        expect(result).to.equal(true);
+        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+      },
+    );
+
+    it.each(['cell', 'row'] as const)(
+      'should undo a %s edit that commits after its validation ends',
+      async (editMode) => {
+        const { user } = render(<Test columns={validatedColumns} editMode={editMode} />);
+        const originalValue = apiRef.current!.getRow(0).price1M;
+        await user.dblClick(getCell(0, 2));
+
+        // The stop applies the debounced value, so the validation runs while the edit stops.
+        // The grid checks the stop in a later render, after the synchronous validation ends.
+        await act(async () => {
+          apiRef.current!.setEditCellValue({ id: 0, field: 'price1M', value: 5, debounceMs: 200 });
+          if (editMode === 'cell') {
+            apiRef.current!.publishEvent('cellEditStop', {
+              ...apiRef.current!.getCellParams(0, 'price1M'),
+              reason: GridCellEditStopReasons.cellFocusOut,
+            });
+          } else {
+            apiRef.current!.publishEvent('rowEditStop', {
+              ...apiRef.current!.getRowParams(0),
+              field: 'price1M',
+              reason: GridRowEditStopReasons.rowFocusOut,
+            });
+          }
+        });
+
+        expect(apiRef.current!.getRow(0).price1M).to.equal(5);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+      },
+    );
+
+    it.each(['cell', 'row'] as const)(
+      'should leave an imperative %s edit out of history',
+      async (editMode) => {
+        const { user } = render(<Test editMode={editMode} />);
+        await user.dblClick(getCell(0, 2));
+        await act(async () => {
+          await apiRef.current!.setEditCellValue({ id: 0, field: 'price1M', value: 42 });
+          if (editMode === 'cell') {
+            apiRef.current!.stopCellEditMode({ id: 0, field: 'price1M' });
+          } else {
+            apiRef.current!.stopRowEditMode({ id: 0 });
+          }
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(42);
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      },
+    );
+
+    it('should pass a canceled edit to a custom stop handler', async () => {
+      const store = vi.fn<GridHistoryEventHandler['store']>(() => null);
+      const handler: GridHistoryEventHandler = { store, undo: () => {}, redo: () => {} };
+      const historyEventHandlers = { cellEditStop: handler } as Record<
+        GridEvents,
+        GridHistoryEventHandler
+      >;
+      const { user } = render(<Test historyEventHandlers={historyEventHandlers} />);
+      await user.dblClick(getCell(0, 2));
+      await user.keyboard('{Escape}');
+      expect(store.mock.calls).to.have.length(1);
+      expect(store.mock.calls[0][0].reason).to.equal('escapeKeyDown');
+    });
+
+    it('should not store an edit with an invalid value in cell mode', async () => {
+      const { user } = render(<Test columns={validatedColumns} />);
+
+      await user.dblClick(getCell(0, 2));
+      await user.keyboard('99999');
+      await waitFor(() => {
+        expect(apiRef.current!.state.editRows[0].price1M.error).to.equal(true);
+      });
+      await user.click(getCell(1, 2));
+      await act(() => raf());
+
+      expect(apiRef.current!.getCellMode(0, 'price1M')).to.equal('edit');
+      expect(apiRef.current!.history.canUndo()).to.equal(false);
+    });
+  });
+
   describe('Events', () => {
     it('should fire `onUndo` callback', async () => {
       const onUndo = vi.fn();
@@ -667,6 +894,72 @@ describe('<DataGridPremium /> - History', () => {
 
       expect(apiRef.current!.history.canUndo()).to.equal(false);
     });
+  });
+
+  describe('Pagination', () => {
+    it('should undo a cell edit on a page after the first page', async () => {
+      const { user } = render(
+        <Test
+          pagination
+          pageSizeOptions={[5]}
+          initialState={{ pagination: { paginationModel: { page: 1, pageSize: 5 } } }}
+        />,
+      );
+
+      const cell = document.querySelector<HTMLElement>(
+        '[role="row"][data-id="5"] [data-field="price1M"]',
+      )!;
+      await user.dblClick(cell);
+      await user.keyboard('1{Enter}');
+      // Let the debounced history validation run
+      await act(() => sleep(50));
+
+      expect(apiRef.current!.getRow(5).price1M).not.to.equal(51);
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(apiRef.current!.getRow(5).price1M).to.equal(51);
+    });
+
+    // JSDOM has no layout, so the grid cannot scroll
+    it.skipIf(isJSDOM)(
+      'should scroll to the undone cell on a page after the first page',
+      async () => {
+        const { user } = render(
+          <Test
+            rows={getBasicGridData(20, 5).rows}
+            pagination
+            pageSizeOptions={[10]}
+            initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
+          />,
+        );
+
+        const cell = document.querySelector<HTMLElement>(
+          '[role="row"][data-id="19"] [data-field="price1M"]',
+        )!;
+        await user.dblClick(cell);
+        await user.keyboard('1{Enter}');
+        await act(() => sleep(50));
+
+        const virtualScroller = document.querySelector<HTMLElement>(
+          '.MuiDataGrid-virtualScroller',
+        )!;
+        await act(() => apiRef.current!.scroll({ top: 0 }));
+        expect(virtualScroller.scrollTop).to.equal(0);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        // The focus and the scroll happen in the next animation frame
+        await act(() => sleep(50));
+
+        expect(apiRef.current!.getRow(19).price1M).to.equal(191);
+        expect(virtualScroller.scrollTop).to.be.greaterThan(0);
+      },
+    );
   });
 
   describe('Data source integration', () => {
@@ -880,6 +1173,332 @@ describe('<DataGridPremium /> - History', () => {
       });
 
       expect(apiRef.current!.history.canUndo()).to.equal(false);
+    });
+
+    it('should keep the history when the rows change during a paste with `throttleRowsMs`', async () => {
+      const { user } = render(
+        <Test
+          throttleRowsMs={100}
+          onBeforeClipboardPasteStart={async () => {
+            apiRef.current!.updateRows([{ id: 100, currencyPair: 'NEW' }]);
+          }}
+        />,
+      );
+      const originalValues = getColumnValues(1);
+
+      const pasteInto = async (cell: HTMLElement, text: string) => {
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, text);
+        await waitFor(() => {
+          expect(cell).to.have.text(text);
+        });
+        await act(() => sleep(250));
+      };
+
+      await pasteInto(getCell(0, 1), 'FIRST');
+      await pasteInto(getCell(1, 1), 'SECOND');
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+      await act(() => sleep(250));
+      expect(getCell(1, 1)).to.have.text(originalValues[1]);
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+    });
+
+    it('should keep the history when the rows change while the paste is in progress', async () => {
+      const { user } = render(
+        <Test
+          onBeforeClipboardPasteStart={async () => {
+            // Fires `rowsSet`, which validates the history while the paste is in progress
+            apiRef.current!.updateRows([{ id: 100, currencyPair: 'NEW' }]);
+          }}
+        />,
+      );
+      const originalValues = getColumnValues(1);
+
+      const pasteInto = async (cell: HTMLElement, text: string) => {
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, text);
+        await waitFor(() => {
+          expect(cell).to.have.text(text);
+        });
+        // Let the debounced history validation run
+        await act(() => sleep(100));
+      };
+
+      await pasteInto(getCell(0, 1), 'FIRST');
+      await pasteInto(getCell(1, 1), 'SECOND');
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+      expect(getCell(1, 1)).to.have.text(originalValues[1]);
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+      expect(getCell(0, 1)).to.have.text(originalValues[0]);
+    });
+
+    describe('created rows', () => {
+      const createRows = ({ count }: { count: number }) =>
+        Array.from({ length: count }, (_, index) => ({ id: `new-${index}` }));
+
+      async function pasteIntoLastRow(user: MuiRenderResult['user']) {
+        const cell = getCell(9, 1);
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, ['A', 'B', 'C'].join('\n'));
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(12);
+        });
+        // Let the debounced history validation run
+        await act(() => sleep(50));
+      }
+
+      it('should remove the created rows on undo and add them again on redo', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+        const originalValue = getCell(9, 1).textContent;
+
+        await pasteIntoLastRow(user);
+        expect(getColumnValues(1).slice(9)).to.deep.equal(['A', 'B', 'C']);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+        expect(getCell(9, 1)).to.have.text(originalValue!);
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.redo();
+        });
+        expect(getColumnValues(1).slice(9)).to.deep.equal(['A', 'B', 'C']);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+      });
+
+      it('should keep the undo step when the sorting moves the created rows', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await pasteIntoLastRow(user);
+
+        await act(() => apiRef.current!.sortColumn('currencyPair', 'asc'));
+        await act(() => sleep(50));
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+      });
+
+      it('should not undo when a created row was changed', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await pasteIntoLastRow(user);
+
+        await act(() => apiRef.current!.updateRows([{ id: 'new-0', currencyPair: 'CHANGED' }]));
+        await act(() => sleep(50));
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      });
+
+      it('should keep the created rows and the undo step with controlled rows', async () => {
+        const initialRows = getBasicGridData(10, 5).rows;
+        function ControlledTest() {
+          const [rows, setRows] = React.useState<GridValidRowModel[]>(initialRows);
+          return (
+            <Test
+              rows={rows}
+              clipboardPasteOptions={{ createRows }}
+              processRowUpdate={async (newRow) => {
+                await sleep(10);
+                setRows((prevRows) =>
+                  prevRows.map((prevRow) => (prevRow.id === newRow.id ? newRow : prevRow)),
+                );
+                return newRow;
+              }}
+              onClipboardPasteEnd={({ createdRows }) => {
+                setRows((prevRows) => [...prevRows, ...createdRows.values()]);
+              }}
+            />
+          );
+        }
+        const { user } = render(<ControlledTest />);
+
+        await pasteIntoLastRow(user);
+        await act(() => sleep(50));
+
+        expect(getColumnValues(1).slice(9)).to.deep.equal(['A', 'B', 'C']);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+      });
+
+      it('should keep the history when a paste changes nothing', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await pasteIntoLastRow(user);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        // Paste into a read-only cell
+        await act(() =>
+          apiRef.current!.updateColumns([{ field: 'currencyPair', editable: false }]),
+        );
+        const cell = getCell(0, 1);
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, 'NOTHING');
+        await act(() => sleep(50));
+        await act(() => apiRef.current!.sortColumn('price1M', 'asc'));
+        await act(() => sleep(50));
+
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+      });
+
+      it('should not restore the rows that `processRowUpdate()` rejected on undo', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows }}
+            processRowUpdate={(newRow) => {
+              if (!String(newRow.id).startsWith('new-')) {
+                throw new Error('Rejected');
+              }
+              return newRow;
+            }}
+            onProcessRowUpdateError={() => {}}
+          />,
+        );
+
+        await pasteIntoLastRow(user);
+
+        // Another change of the rejected row, for example from the server
+        await act(() => apiRef.current!.updateRows([{ id: 9, currencyPair: 'SERVER' }]));
+        await act(() => sleep(50));
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+        expect(apiRef.current!.getRow(9).currencyPair).to.equal('SERVER');
+      });
+
+      it('should not focus a row on another page on undo', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows }}
+            pagination
+            pageSizeOptions={[5]}
+            initialState={{ pagination: { paginationModel: { page: 1, pageSize: 5 } } }}
+          />,
+        );
+
+        const cell = document.querySelector<HTMLElement>(
+          '[role="row"][data-id="9"] [data-field="currencyPair"]',
+        )!;
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, ['A', 'B', 'C'].join('\n'));
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(12);
+        });
+        await act(() => sleep(50));
+
+        await act(() => apiRef.current!.setPage(0));
+        await act(() => sleep(50));
+        const firstPageCell = getCell(0, 1);
+        await act(() => firstPageCell.focus());
+        await user.click(firstPageCell);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        await act(() => sleep(50));
+
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+        expect(apiRef.current!.state.focus.cell?.id).to.equal(0);
+      });
+
+      it('should not undo when a field was added to a created row', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await pasteIntoLastRow(user);
+
+        // Undo would remove the row, and the new field with it
+        await act(() => apiRef.current!.updateRows([{ id: 'new-0', comment: 'Added later' }]));
+        await act(() => sleep(50));
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      });
+
+      it('should undo when `processRowUpdate()` rejects all updated rows', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows }}
+            processRowUpdate={(newRow) => {
+              if (!String(newRow.id).startsWith('new-')) {
+                throw new Error('Rejected');
+              }
+              return newRow;
+            }}
+            onProcessRowUpdateError={() => {}}
+          />,
+        );
+        const originalValue = getCell(9, 1).textContent;
+
+        await pasteIntoLastRow(user);
+        expect(getCell(9, 1)).to.have.text(originalValue!);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+      });
+
+      it('should keep the undo step when the created rows move the updated rows to another page', async () => {
+        const { user } = render(
+          <Test
+            rows={[
+              { id: 1, currencyPair: 'A' },
+              { id: 2, currencyPair: 'B' },
+              { id: 3, currencyPair: 'C' },
+              { id: 4, currencyPair: 'D' },
+            ]}
+            clipboardPasteOptions={{ createRows }}
+            pagination
+            pageSizeOptions={[2]}
+            initialState={{
+              pagination: { paginationModel: { page: 1, pageSize: 2 } },
+              sorting: { sortModel: [{ field: 'currencyPair', sort: 'asc' }] },
+            }}
+          />,
+        );
+
+        const cell = document.querySelector<HTMLElement>(
+          '[role="row"][data-id="4"] [data-field="currencyPair"]',
+        )!;
+        await act(() => cell.focus());
+        await user.click(cell);
+        // `AA` and `AB` sort before `D`, so `D` moves to the next page
+        paste(cell, ['DD', 'AA', 'AB'].join('\n'));
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(6);
+        });
+        await act(() => sleep(50));
+
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(4);
+        expect(apiRef.current!.getRow(4).currencyPair).to.equal('D');
+      });
     });
   });
 

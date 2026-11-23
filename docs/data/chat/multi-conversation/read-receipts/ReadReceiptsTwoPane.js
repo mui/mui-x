@@ -16,7 +16,6 @@ import {
   ChatMessageList,
 } from '@mui/x-chat';
 import { ChatLayout, ChatProvider } from '@mui/x-chat/headless';
-
 import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   inboxConversations,

@@ -5,13 +5,14 @@ import CheckIcon from '@mui/icons-material/Check';
 import IconButton from '@mui/material/IconButton';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { TreeItem, TreeItemLabel, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import {
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, TreeItemLabel } from '@mui/x-tree-view/TreeItem';
+import type {
   UseTreeItemLabelInputSlotOwnProps,
   UseTreeItemLabelSlotOwnProps,
 } from '@mui/x-tree-view/useTreeItem';
 import { useTreeItemUtils, useTreeItemModel } from '@mui/x-tree-view/hooks';
-import { TreeViewItemId } from '@mui/x-tree-view/models';
+import type { TreeViewItemId } from '@mui/x-tree-view/models';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
   ...theme.typography.body1,

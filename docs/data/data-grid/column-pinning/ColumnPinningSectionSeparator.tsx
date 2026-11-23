@@ -8,10 +8,12 @@ import Radio from '@mui/material/Radio';
 import {
   DataGridPro,
   GridActionsCellItem,
-  type GridColDef,
-  type GridRowsProp,
-  type DataGridProProps,
   GridActionsCell,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridColDef,
+  GridRowsProp,
+  DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,

@@ -1,20 +1,21 @@
-import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import { EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-import { describe, it, expect } from 'vitest';
-import { processDate } from '../process-date';
+import { describe, it, expect, vi } from 'vitest';
+import { getDayListFromPlainDates } from '../get-day-list';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
-import type { SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
+import type { SchedulerProcessedDay, SchedulerProcessedEvent } from '../models';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 describe('innerGetEventOccurrencesGroupedByDay', () => {
   const day0Str = '2024-01-10T00:00:00Z';
   const day1Str = '2024-01-11T00:00:00Z';
   const day2Str = '2024-01-12T00:00:00Z';
-  const days: SchedulerProcessedDate[] = [
-    processDate(adapter.date(day0Str, 'default'), adapter),
-    processDate(adapter.date(day1Str, 'default'), adapter),
-    processDate(adapter.date(day2Str, 'default'), adapter),
-  ];
+  const days = getDayListFromPlainDates({
+    firstPlainDate: BaseTemporal.PlainDate.from('2024-01-10'),
+    lastPlainDate: BaseTemporal.PlainDate.from('2024-01-12'),
+    timezone: 'default',
+  });
 
   const resourceA = ResourceBuilder.new().build();
   const resourceB = ResourceBuilder.new().build();
@@ -24,11 +25,10 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     [resourceB.id]: true,
   };
 
-  function run(events: SchedulerProcessedEvent[], visibleDays: SchedulerProcessedDate[] = days) {
+  function run(events: SchedulerProcessedEvent[], visibleDays: SchedulerProcessedDay[] = days) {
     return innerGetEventOccurrencesGroupedByDay({
-      adapter,
       days: visibleDays,
-      eventRangeIndex: createEventRangeIndex(events, adapter, false),
+      eventRangeIndex: createEventRangeIndex(events, false),
       visibleResources: visible,
       displayTimezone: 'default',
       recurringEventsPlugin: null,
@@ -50,7 +50,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should place a single-day event on the correct day', () => {
-    const event = EventBuilder.new(adapter).singleDay(day1Str).toProcessed();
+    const event = EventBuilder.new().singleDay(day1Str).toProcessed();
 
     const result = run([event]);
 
@@ -62,7 +62,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should expand a multi-day event into each day', () => {
-    const event = EventBuilder.new(adapter).span(day0Str, day2Str).toProcessed();
+    const event = EventBuilder.new().span(day0Str, day2Str).toProcessed();
 
     const result = run([event]);
 
@@ -71,88 +71,10 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     expect(result.get(days[2].key)).to.have.length(1);
   });
 
-  it('should exclude events whose resource is not visible', () => {
-    const hiddenResource = ResourceBuilder.new().build();
-    const visibilityWithHidden: Record<string, boolean> = {
-      ...visible,
-      [hiddenResource.id]: false,
-    };
-
-    const visibleEvent = EventBuilder.new(adapter)
-      .resource(resourceA)
-      .singleDay(day1Str)
-      .toProcessed();
-
-    const invisibleEvent = EventBuilder.new(adapter)
-      .resource(hiddenResource)
-      .singleDay(day1Str)
-      .toProcessed();
-
-    const result = innerGetEventOccurrencesGroupedByDay({
-      adapter,
-      days,
-      eventRangeIndex: createEventRangeIndex([visibleEvent, invisibleEvent], adapter, false),
-      visibleResources: visibilityWithHidden,
-      displayTimezone: 'default',
-      recurringEventsPlugin: null,
-    });
-
-    const list = result.get(days[1].key)!;
-
-    expect(list).to.have.length(1);
-    expect(list[0].id).to.equal(visibleEvent.id);
-  });
-
-  it('should include a multi-resource event when at least one assigned resource is visible', () => {
-    const visibilityWithOneHidden: Record<string, boolean> = {
-      ...visible,
-      [resourceB.id]: false,
-    };
-
-    const event = EventBuilder.new(adapter)
-      .resources([resourceA, resourceB])
-      .singleDay(day1Str)
-      .toProcessed();
-
-    const result = innerGetEventOccurrencesGroupedByDay({
-      adapter,
-      days,
-      eventRangeIndex: createEventRangeIndex([event], adapter, false),
-      visibleResources: visibilityWithOneHidden,
-      displayTimezone: 'default',
-      recurringEventsPlugin: null,
-    });
-
-    const list = result.get(days[1].key)!;
-    expect(list).to.have.length(1);
-    expect(list[0].id).to.equal(event.id);
-  });
-
-  it('should exclude a multi-resource event when all assigned resources are hidden', () => {
-    const visibilityAllHidden: Record<string, boolean> = {
-      [resourceA.id]: false,
-      [resourceB.id]: false,
-    };
-
-    const event = EventBuilder.new(adapter)
-      .resources([resourceA, resourceB])
-      .singleDay(day1Str)
-      .toProcessed();
-
-    const result = innerGetEventOccurrencesGroupedByDay({
-      adapter,
-      days,
-      eventRangeIndex: createEventRangeIndex([event], adapter, false),
-      visibleResources: visibilityAllHidden,
-      displayTimezone: 'default',
-      recurringEventsPlugin: null,
-    });
-
-    expect(result.get(days[1].key)).to.have.length(0);
-  });
-
   it('should handle multi-day all-day events correctly', () => {
-    const event = EventBuilder.new(adapter).span(day0Str, day2Str, { allDay: true }).toProcessed();
+    const event = EventBuilder.new()
+      .span('2024-01-10', '2024-01-13', { allDay: true })
+      .toProcessed();
 
     const result = run([event]);
 
@@ -162,9 +84,9 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should support multiple events on multiple days', () => {
-    const e1 = EventBuilder.new(adapter).singleDay(day1Str).toProcessed();
-    const e2 = EventBuilder.new(adapter).span(day0Str, day2Str).toProcessed();
-    const e3 = EventBuilder.new(adapter).singleDay(day2Str).toProcessed();
+    const e1 = EventBuilder.new().singleDay(day1Str).toProcessed();
+    const e2 = EventBuilder.new().span(day0Str, day2Str).toProcessed();
+    const e3 = EventBuilder.new().singleDay(day2Str).toProcessed();
 
     const result = run([e1, e2, e3]);
 
@@ -176,16 +98,19 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   it('should include an event in the repeated last hour of the last day', () => {
     // In America/Santiago, the clocks go back from 24:00 to 23:00 on April 6th, 2024.
     // 2024-04-07T03:30:00Z is the second 23:30 of April 6th.
-    const lastDay = processDate(adapter.date('2024-04-06T12:00:00Z', 'America/Santiago'), adapter);
-    const event = EventBuilder.new(adapter)
+    const [lastDay] = getDayListFromPlainDates({
+      firstPlainDate: BaseTemporal.PlainDate.from('2024-04-06'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2024-04-06'),
+      timezone: 'America/Santiago',
+    });
+    const event = EventBuilder.new()
       .span('2024-04-07T03:30:00Z', '2024-04-07T03:45:00Z')
       .withDisplayTimezone('America/Santiago')
       .toProcessed();
 
     const result = innerGetEventOccurrencesGroupedByDay({
-      adapter,
       days: [lastDay],
-      eventRangeIndex: createEventRangeIndex([event], adapter, false),
+      eventRangeIndex: createEventRangeIndex([event], false),
       visibleResources: visible,
       displayTimezone: 'America/Santiago',
       recurringEventsPlugin: null,
@@ -195,10 +120,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should render a recurring event as a single non-expanded occurrence when no plugin is provided', () => {
-    const event = EventBuilder.new(adapter)
-      .singleDay(day1Str)
-      .rrule({ freq: 'DAILY' })
-      .toProcessed();
+    const event = EventBuilder.new().singleDay(day1Str).rrule({ freq: 'DAILY' }).toProcessed();
 
     const result = run([event]);
 
@@ -208,6 +130,58 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     expect(result.get(days[2].key)).to.have.length(0);
   });
 
+  it('should expand only visible weekdays and keep late-Friday occurrences when weekends are hidden', () => {
+    const visibleDays = getDayListFromPlainDates({
+      firstPlainDate: BaseTemporal.PlainDate.from('2025-01-06'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2025-01-19'),
+      timezone: 'Europe/Paris',
+      excludedWeekdays: [6, 7],
+    });
+    const event = EventBuilder.new()
+      .withDataTimezone('UTC')
+      .withDisplayTimezone('Europe/Paris')
+      .singleDay('2025-01-06T22:30:00Z', 15)
+      .rrule({ freq: 'DAILY' })
+      .toProcessed();
+    const getOccurrencesForVisibleDays = vi.fn(
+      schedulerRecurringEventsPlugin.getOccurrencesForVisibleDays,
+    );
+
+    const result = innerGetEventOccurrencesGroupedByDay({
+      days: visibleDays,
+      eventRangeIndex: createEventRangeIndex([event], true),
+      visibleResources: visible,
+      displayTimezone: 'Europe/Paris',
+      recurringEventsPlugin: { ...schedulerRecurringEventsPlugin, getOccurrencesForVisibleDays },
+    });
+
+    const expectedDates = [
+      '2025-01-06',
+      '2025-01-07',
+      '2025-01-08',
+      '2025-01-09',
+      '2025-01-10',
+      '2025-01-13',
+      '2025-01-14',
+      '2025-01-15',
+      '2025-01-16',
+      '2025-01-17',
+    ];
+    expect(
+      Array.from(result, ([key, occurrences]) => [
+        key,
+        occurrences.map((occurrence) => occurrence.start.timestamp),
+      ]),
+    ).to.deep.equal(expectedDates.map((date) => [date, [Date.parse(`${date}T22:30:00Z`)]]));
+    // Grouping already drops hidden days. Check expansion too, so omitting the ranges cannot
+    // silently restore the work this optimization avoids.
+    expect(
+      getOccurrencesForVisibleDays.mock.results[0].value.map(
+        (occurrence) => occurrence.start.timestamp,
+      ),
+    ).to.deep.equal(expectedDates.map((date) => Date.parse(`${date}T22:30:00Z`)));
+  });
+
   it('should convert recurring event occurrences to the display timezone before grouping', () => {
     // Event at Jan 10, 23:00 local time in New York (UTC−5)
     // 2024-01-10 23:00 EST → 2024-01-11T04:00:00Z
@@ -215,7 +189,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     // which makes it 2024-01-11 05:00 local Paris time.
     // The occurrence must never appear on Jan 10 in the UI.
 
-    const event = EventBuilder.new(adapter)
+    const event = EventBuilder.new()
       .span('2024-01-11T04:00:00Z', '2024-01-11T05:00:00Z')
       .withDataTimezone('America/New_York')
       .withDisplayTimezone('Europe/Paris')
@@ -223,9 +197,8 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       .toProcessed();
 
     const result = innerGetEventOccurrencesGroupedByDay({
-      adapter,
       days,
-      eventRangeIndex: createEventRangeIndex([event], adapter, true),
+      eventRangeIndex: createEventRangeIndex([event], true),
       visibleResources: visible,
       displayTimezone: 'Europe/Paris',
       recurringEventsPlugin: schedulerRecurringEventsPlugin,

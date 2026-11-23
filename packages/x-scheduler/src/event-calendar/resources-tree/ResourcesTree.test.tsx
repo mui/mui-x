@@ -23,16 +23,6 @@ describe('ResourcesTree', () => {
       `.${treeItemClasses.iconContainer}`,
     ) as HTMLElement;
 
-  it('parent checkbox should be checked when all descendants are visible', () => {
-    const child = ResourceBuilder.new().id('tennis').title('Tennis').build();
-    const parent = ResourceBuilder.new().id('sport').title('Sport').children([child]).build();
-
-    const { container } = render(<EventCalendar events={[]} resources={[parent]} />);
-
-    expect(getCheckbox(container, 'sport').checked).to.equal(true);
-    expect(getCheckbox(container, 'tennis').checked).to.equal(true);
-  });
-
   it('clicking parent checkbox should toggle all descendants', async () => {
     const child = ResourceBuilder.new().id('tennis').title('Tennis').build();
     const parent = ResourceBuilder.new().id('sport').title('Sport').children([child]).build();

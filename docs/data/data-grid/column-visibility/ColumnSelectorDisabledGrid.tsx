@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import { DataGrid } from '@mui/x-data-grid';

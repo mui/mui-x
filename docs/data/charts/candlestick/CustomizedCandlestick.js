@@ -1,5 +1,4 @@
 import { CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
-
 import sp500 from '../dataset/sp500-intraday.json';
 
 const xData = sp500.map((entry) => new Date(Date.parse(entry.date)));

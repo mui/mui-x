@@ -6,17 +6,39 @@ import { useMessageContext } from './internals/MessageContext';
 import type { MessageAvatarOwnerState } from './message.types';
 
 export interface MessageAvatarSlots {
+  /**
+   * The component that renders the avatar.
+   * @default 'div'
+   */
   avatar: React.ElementType;
+  /**
+   * The component that renders the image.
+   * @default 'img'
+   */
   image: React.ElementType;
 }
 
 export interface MessageAvatarSlotProps {
+  /**
+   * The props used for the avatar slot.
+   */
   avatar?: SlotComponentProps<'div', {}, MessageAvatarOwnerState>;
+  /**
+   * The props used for the image slot.
+   */
   image?: SlotComponentProps<'img', {}, MessageAvatarOwnerState>;
 }
 
 export interface MessageAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageAvatarSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageAvatarSlotProps;
 }
 

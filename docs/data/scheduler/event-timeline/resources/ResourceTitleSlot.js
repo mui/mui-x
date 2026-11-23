@@ -1,9 +1,7 @@
 import * as React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import Link from '@mui/material/Link';
-
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const resourceDetails = {
@@ -19,16 +17,16 @@ const resources = [
 const initialEvents = [
   {
     id: 'web-1',
-    start: '2025-07-01T00:00:00',
-    end: '2025-07-11T00:00:00',
+    start: '2025-07-01',
+    end: '2025-07-12',
     title: 'Dashboard redesign',
     resource: 'web-app',
     allDay: true,
   },
   {
     id: 'api-1',
-    start: '2025-07-03T00:00:00',
-    end: '2025-07-15T00:00:00',
+    start: '2025-07-03',
+    end: '2025-07-16',
     title: 'Rate limiting',
     resource: 'api-team',
     allDay: true,

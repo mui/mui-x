@@ -4,7 +4,6 @@ import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   floorToWallClockMinutes,
   useEventCreation,
@@ -52,7 +51,6 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   } = componentProps;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
   const { rowRef, hasFocus, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
@@ -81,13 +79,12 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     () => ({
       ...occurrenceLayoutWithoutTimelinePositions,
       occurrences: addTimelinePositionsToOccurrences({
-        adapter,
         config,
         occurrences: occurrenceLayoutWithoutTimelinePositions.occurrences,
         positionByOccurrenceKey,
       }),
     }),
-    [adapter, config, occurrenceLayoutWithoutTimelinePositions, positionByOccurrenceKey],
+    [config, occurrenceLayoutWithoutTimelinePositions, positionByOccurrenceKey],
   );
 
   // Feature hooks
@@ -106,7 +103,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     // the collection, where it would not be rendered at all.
     const lastStartOffsetMs = config.durationMs - EVENT_CREATION_PRECISION_MINUTE * 60_000;
     const startTimestamp = floorToWallClockMinutes(
-      timelineAxisOffsetToTimestamp(adapter, config, Math.min(offsetMs, lastStartOffsetMs)),
+      timelineAxisOffsetToTimestamp(config, Math.min(offsetMs, lastStartOffsetMs)),
       EVENT_CREATION_PRECISION_MINUTE,
       timezone,
     );
@@ -123,7 +120,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     // Start at the first visible hour: with a trimmed window an event created at
     // midnight would be hidden. Offset 0 resolves it as a wall-clock hour, which
     // `addMinutes` from midnight would miss on a DST day.
-    const creationStart = timelineAxisOffsetToTimestamp(adapter, config, 0);
+    const creationStart = timelineAxisOffsetToTimestamp(config, 0);
     return {
       surfaceType: 'timeline' as const,
       start: creationStart,

@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { screen, within } from '@mui/internal-test-utils';
-import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import {
+  createDate,
+  createSchedulerRenderer,
+  EventBuilder,
+  setSystemTimezone,
+} from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { describe, it, expect } from 'vitest';
 
@@ -8,7 +14,7 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03') });
 
   // 2025-07-03 is a Thursday, the week view renders Sunday June 29 to Saturday July 5.
-  const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
+  const visibleDate = createDate('2025-07-03T00:00:00Z');
   const JUNE_29_COLUMN_INDEX = 0;
   const JULY_3_COLUMN_INDEX = 4;
   const JULY_4_COLUMN_INDEX = 5;
@@ -224,6 +230,44 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
     );
   });
 
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM).each([
+    {
+      // Pacific/Apia skipped December 30th, 2011: on a system there, adding a day to the dates of the
+      // other timezones around it must move them by one day, not two.
+      systemTimezone: 'Pacific/Apia',
+      displayTimezone: 'America/New_York',
+      start: '2011-12-29T13:00:00Z',
+      end: '2011-12-30T13:00:00Z',
+    },
+    {
+      // America/Santiago repeats the last hour of April 4th, 2026: whatever the system, adding a day
+      // must keep 23:00 on its first occurrence, inside the day.
+      systemTimezone: 'America/New_York',
+      displayTimezone: 'America/Santiago',
+      start: '2026-04-04T02:00:00Z',
+      end: '2026-04-05T02:00:00Z',
+    },
+  ])(
+    'should render an event of one day on the wall clock of $displayTimezone in the day grid on a $systemTimezone system',
+    ({ systemTimezone, displayTimezone, start, end }) => {
+      setSystemTimezone(systemTimezone);
+      const event = EventBuilder.new().title('Day shift').span(start, end).build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          visibleDate={new Date(start)}
+          displayTimezone={displayTimezone}
+          view="week"
+        />,
+      );
+
+      expect(getDayGridEvents(/Day shift/)).to.have.length(1);
+      expect(document.querySelector(`.${eventCalendarClasses.timeGridEvent}`)).to.equal(null);
+    },
+  );
+
   describe('day view', () => {
     it('should render a timed event crossing midnight in the time grid', () => {
       render(<EventCalendar events={[nightShift]} visibleDate={visibleDate} view="day" />);
@@ -239,7 +283,7 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
       render(
         <EventCalendar
           events={[nightShift]}
-          visibleDate={adapter.date('2025-07-04T00:00:00Z', 'default')}
+          visibleDate={createDate('2025-07-04T00:00:00Z')}
           view="day"
         />,
       );

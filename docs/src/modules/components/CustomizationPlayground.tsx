@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { BrandingProvider } from '@mui/internal-core-docs/branding';
-import { styled, Theme, alpha, useTheme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import { styled, alpha, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -9,7 +10,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import CheckIcon from '@mui/icons-material/Check';
 import Chip from '@mui/material/Chip';
-import ToggleButton, { ToggleButtonProps } from '@mui/material/ToggleButton';
+import type { ToggleButtonProps } from '@mui/material/ToggleButton';
+import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -20,14 +22,16 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Alert from '@mui/material/Alert';
 import { pick } from 'es-toolkit/object';
-import {
-  useCustomizationPlayground,
+import type {
   UseCustomizationPlaygroundProps,
-  DEFAULT_COLORS,
-  withStyles,
   ColorKey,
   StyleTokensType,
   CustomizationLabelType,
+} from '../utils/useCustomizationPlayground';
+import {
+  useCustomizationPlayground,
+  DEFAULT_COLORS,
+  withStyles,
 } from '../utils/useCustomizationPlayground';
 
 const PlaygroundWrapper = styled('div')(({ theme }) => ({

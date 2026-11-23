@@ -1,25 +1,22 @@
 import * as React from 'react';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
   createSchedulerRenderer,
   describeConformance,
   mockElementBounds,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { createAdapterDate } from '../../internals/utils/plain-date-utils/adapter';
+import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals';
 
 describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.now('default');
-  const start = adapter.startOfDay(day);
-  const end = adapter.endOfDay(day);
+  const plainDate = toPlainDate(Date.now(), 'default');
 
   function TimeColumnWrapper({
     children,
@@ -32,7 +29,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
     );
   }
 
-  describeConformance(<CalendarGrid.TimeColumn start={start} end={end} />, () => ({
+  describeConformance(<CalendarGrid.TimeColumn value={plainDate} />, () => ({
     refInstanceof: window.HTMLDivElement,
     render: (node) => render(<TimeColumnWrapper>{node}</TimeColumnWrapper>),
   }));
@@ -42,12 +39,11 @@ describe('<CalendarGrid.TimeColumn />', () => {
       let store: AnyEventCalendarStore | null = null;
       // Asia/Kathmandu is 5:45 ahead of UTC, so its half hours aren't the half hours of UTC.
       const timezone = 'Asia/Kathmandu';
-      const columnStart = createAdapterDate(adapter, Date.UTC(2025, 6, 2, 18, 15), timezone);
-      const columnEnd = createAdapterDate(adapter, Date.UTC(2025, 6, 3, 18, 15) - 1, timezone);
 
       render(
         <TimeColumnWrapper displayTimezone={timezone}>
-          <CalendarGrid.TimeColumn start={columnStart} end={columnEnd} />
+          {/* July 3rd starts at 18:15 UTC on July 2nd in Kathmandu. */}
+          <CalendarGrid.TimeColumn value={BaseTemporal.PlainDate.from('2025-07-03')} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -75,7 +71,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       const { user } = render(
         <TimeColumnWrapper>
-          <CalendarGrid.TimeColumn start={start} end={end} />
+          <CalendarGrid.TimeColumn value={plainDate} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -86,7 +82,11 @@ describe('<CalendarGrid.TimeColumn />', () => {
       );
 
       const cell = screen.getByRole('gridcell');
-      await user.click(cell);
+      // Focus without clicking, so the Enter keypress is the only creation trigger.
+      act(() => {
+        cell.focus();
+      });
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
@@ -99,7 +99,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       const { user } = render(
         <TimeColumnWrapper eventCreation={false}>
-          <CalendarGrid.TimeColumn start={start} end={end} />
+          <CalendarGrid.TimeColumn value={plainDate} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {

@@ -182,5 +182,16 @@ describe('dependency-utils', () => {
     it('should add weeks', () => {
       expectShifted({ amount: 1, unit: 'week' }, '2025-07-10T09:00:00');
     });
+
+    it('should return NaN for a lag in days or weeks past the range of Date', () => {
+      for (const timezone of ['UTC', 'America/New_York']) {
+        expect(
+          addDependencyLag(timestamp, { amount: 100_000_000, unit: 'day' }, timezone),
+        ).toBeNaN();
+        expect(
+          addDependencyLag(timestamp, { amount: 20_000_000, unit: 'week' }, timezone),
+        ).toBeNaN();
+      }
+    });
   });
 });

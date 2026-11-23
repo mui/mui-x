@@ -46,20 +46,7 @@ const allParameters: Record<keyof EventCalendarPremiumParameters<any, any>, unkn
 };
 
 describe('useExtractEventCalendarPremiumParameters', () => {
-  it('should forward `dataSource` to the parameters object instead of the forwarded props', () => {
-    const dataSource = {
-      getEvents: async () => [],
-      persistEvents: async () => ({ success: true }),
-    };
-    const { result } = renderHook(() =>
-      useExtractEventCalendarPremiumParameters({ events: [], dataSource }),
-    );
-
-    expect(result.current.parameters.dataSource).to.equal(dataSource);
-    expect(result.current.forwardedProps).to.not.have.property('dataSource');
-  });
-
-  it('should not forward any parameter to the forwarded props', () => {
+  it('should route every parameter to the parameters object and none to the forwarded props', () => {
     const { result } = renderHook(() =>
       useExtractEventCalendarPremiumParameters({
         ...(allParameters as EventCalendarPremiumParameters<any, any>),
@@ -67,6 +54,7 @@ describe('useExtractEventCalendarPremiumParameters', () => {
       }),
     );
 
+    expect(result.current.parameters).to.deep.equal(allParameters);
     expect(result.current.forwardedProps).to.deep.equal({ 'data-testid': 'forwarded' });
   });
 });

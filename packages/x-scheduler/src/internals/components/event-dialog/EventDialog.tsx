@@ -5,15 +5,13 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { PaperProps } from '@mui/material/Paper';
 import Paper from '@mui/material/Paper';
 import type { DialogProps } from '@mui/material/Dialog';
-import Dialog, { dialogClasses } from '@mui/material/Dialog';
-import { backdropClasses } from '@mui/material/Backdrop';
+import Dialog from '@mui/material/Dialog';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
 import type { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
 import type { EventEditingOptionalRenderers } from '../event-editing';
 import {
@@ -24,7 +22,8 @@ import {
   FormContent,
 } from '../event-editing';
 import { EventContextMenuProvider } from '../event-context-menu';
-import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
+import { useDraggableAnchoredPaper } from '../../hooks/useDraggableAnchoredPaper';
+import { dialogRootBaseStyles, getDialogPaperBaseStyles } from '../../constants/dialogStyles';
 import { AnchoredEventToolbar } from '../event-toolbar';
 import {
   DeleteConfirmationDialog,
@@ -32,45 +31,17 @@ import {
 } from '../delete-confirmation-dialog';
 import ReadonlyContent from './ReadonlyContent';
 
-export const EventDialogRoot = styled(Dialog, {
+const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
   slot: 'Root',
-})({
-  [`& .${backdropClasses.root}`]: {
-    backgroundColor: 'transparent',
-  },
-  [`& .${dialogClasses.container}`]: {
-    width: '100%',
-    justifyContent: 'unset',
-    alignItems: 'unset',
-  },
-  [`& .${dialogClasses.paper}`]: {
-    // `useAnchoredPosition` sets `top` and `left` in viewport coordinates. With the default
-    // `position: relative`, they would offset the paper from the flex start, which is the right
-    // edge in RTL.
-    position: 'absolute',
-    // Otherwise the width would shrink with the space left after `left`.
-    width: 'max-content',
-    margin: 0,
-    // Never let the anchored dialog grow past the viewport on narrow (mobile) screens.
-    maxWidth: '100%',
-  },
-});
+})(dialogRootBaseStyles);
 
 const EventDialogPaper = styled(Paper, {
   name: 'MuiEventDialog',
   slot: 'Paper',
-})(({ theme }) => ({
-  borderWidth: 0,
-  borderTopWidth: 1,
-  height: 'fit-content',
-  overflow: 'hidden',
-  '&[data-dragging]': {
-    outline: `1px solid ${(theme.vars || theme).palette.primary.light}`,
-  },
-}));
+})(({ theme }) => getDialogPaperBaseStyles(theme));
 
-export interface EventDialogDraggablePaperProps extends PaperProps {
+interface EventDialogDraggablePaperProps extends PaperProps {
   anchor: HTMLElement | null;
   dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
@@ -79,26 +50,13 @@ export interface EventDialogDraggablePaperProps extends PaperProps {
  * The draggable paper of the event dialog, positioned next to `anchor`.
  * Pass `anchor` and `dragHandlerRef` through `slotProps.paper`.
  */
-export const EventDialogDraggablePaper = function EventDialogDraggablePaper(
+const EventDialogDraggablePaper = function EventDialogDraggablePaper(
   props: EventDialogDraggablePaperProps,
 ) {
-  const nodeRef = React.useRef<HTMLDivElement>(null);
-
-  const mutateStyle = React.useCallback(
-    (style: string) => {
-      if (nodeRef.current) {
-        nodeRef.current.style.transform = style;
-      }
-    },
-    [nodeRef],
-  );
-
   const { anchor, dragHandlerRef, className, ...other } = props;
-  const resetDrag = useDraggableDialog(nodeRef, dragHandlerRef, mutateStyle);
+  const paperRef = useDraggableAnchoredPaper(anchor, dragHandlerRef);
 
-  useAnchoredPosition({ anchor, popupRef: nodeRef, onReposition: resetDrag });
-
-  return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
+  return <EventDialogPaper {...other} ref={paperRef} className={className} />;
 } as any as DialogProps['PaperComponent'];
 
 export const EventDialogContent = React.forwardRef(function EventDialogContent(

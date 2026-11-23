@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { GridSortDirection } from '@mui/x-data-grid-premium';
 import {
   useGridApiContext,
   GridArrowUpwardIcon,
@@ -6,7 +7,6 @@ import {
   useGridSelector,
   gridSortModelSelector,
   gridColumnDefinitionsSelector,
-  GridSortDirection,
   ToolbarButton,
 } from '@mui/x-data-grid-premium';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
@@ -17,7 +17,8 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
-import { Drawer, DrawerHeader, DrawerProps } from './Drawer';
+import type { DrawerProps } from './Drawer';
+import { Drawer, DrawerHeader } from './Drawer';
 
 interface ToolbarSortItemProps {
   listView: boolean;

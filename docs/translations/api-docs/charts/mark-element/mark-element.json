@@ -1,10 +1,12 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
     "dataIndex": { "description": "The index to the element in the series&#39; data array." },
     "hidden": { "description": "If <code>true</code>, the marker is hidden." },
     "isFaded": { "description": "If <code>true</code>, the marker is faded." },
     "isHighlighted": { "description": "If <code>true</code>, the marker is highlighted." },
+    "seriesId": { "description": "The id of the series the element belongs to." },
     "shape": { "description": "The shape of the marker." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },

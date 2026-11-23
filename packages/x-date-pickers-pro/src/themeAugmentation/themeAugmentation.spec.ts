@@ -9,6 +9,7 @@ import {
   dateTimeRangePickerTabsClasses,
   dateTimeRangePickerToolbarClasses,
 } from '../DateTimeRangePicker';
+import { timeRangePickerTabsClasses, timeRangePickerToolbarClasses } from '../TimeRangePicker';
 
 createTheme({
   components: {
@@ -106,6 +107,46 @@ createTheme({
           },
         },
         // @ts-expect-error invalid MuiDateTimeRangePickerToolbar class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+
+    MuiTimeRangePickerTabs: {
+      defaultProps: {
+        className: 'empty',
+        // @ts-expect-error invalid MuiTimeRangePickerTabs prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${timeRangePickerTabsClasses.tab}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiTimeRangePickerTabs class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+
+    MuiTimeRangePickerToolbar: {
+      defaultProps: {
+        toolbarPlaceholder: 'empty',
+        // @ts-expect-error invalid MuiTimeRangePickerToolbar prop
+        view: 'hours',
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${timeRangePickerToolbarClasses.separator}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiTimeRangePickerToolbar class key
         content: {
           backgroundColor: 'blue',
         },
@@ -252,6 +293,31 @@ createTheme({
       defaultProps: {
         open: true,
         // @ts-expect-error invalid MuiMobileDateTimeRangePicker prop
+        someRandomProp: true,
+      },
+    },
+
+    // Time Range Pickers
+    MuiTimeRangePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiTimeRangePicker prop
+        someRandomProp: true,
+      },
+    },
+
+    MuiDesktopTimeRangePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopTimeRangePicker prop
+        someRandomProp: true,
+      },
+    },
+
+    MuiMobileTimeRangePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileTimeRangePicker prop
         someRandomProp: true,
       },
     },

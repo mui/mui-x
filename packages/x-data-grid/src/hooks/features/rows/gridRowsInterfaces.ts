@@ -107,9 +107,15 @@ export interface GridRowsFullUpdate {
 
 export interface GridRowsPartialUpdates {
   type: 'partial';
+  /** Tracks the latest models in this batch until it is applied or replaced by a full update. */
+  modelLookupRef?: { current: GridRowIdToModelLookup };
   actions: { [action in GridRowsPartialUpdateAction]: GridRowId[] };
   idToActionLookup: { [id: GridRowId]: GridRowsPartialUpdateAction | undefined };
   groupKeys?: string[];
+  /**
+   * Every child of `parentId`, in the order the update provided them.
+   */
+  childrenOrder?: { parentId: GridRowId; ids: GridRowId[] };
 }
 
 export interface GridPinnedRowsState {

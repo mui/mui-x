@@ -1,5 +1,6 @@
 import Typography from '@mui/material/Typography';
-import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import { addLabels, balanceSheet, valueFormatter } from './netflixsBalanceSheet';
 
 export default function StackBars() {

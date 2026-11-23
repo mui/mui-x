@@ -296,6 +296,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       {showSortIcon && (
         <rootProps.slots.columnHeaderSortIcon
           field={colDef.field}
+          columnName={colDef.headerName ?? colDef.field}
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}

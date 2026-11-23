@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
+import type { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';

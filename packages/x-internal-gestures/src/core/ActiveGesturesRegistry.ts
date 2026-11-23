@@ -6,7 +6,7 @@
  */
 
 import type { Gesture } from './Gesture';
-import { TargetElement } from './types/TargetElement';
+import type { TargetElement } from './types/TargetElement';
 
 /**
  * Type for entries in the active gestures registry

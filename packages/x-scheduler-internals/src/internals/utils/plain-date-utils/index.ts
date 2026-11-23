@@ -1,28 +1,47 @@
 export {
   addDaysOnWallClock,
+  addDaysToDayStart,
   floorToWallClockMinutes,
   getEndOfDayMs,
   getSkippedDays,
   getStartOfDayMs,
+  getTimezoneId,
   localToEpochMs,
   moveTimestampToPlainDate,
   toEpochMs,
   toLocalDayNumber,
   toLocalMs,
+  toMsInDay,
+  toPlainDate,
   toPlainDateTime,
 } from './timeZone';
-export type { PlainDateTime } from './timeZone';
 export {
-  addToAdapterDate,
-  buildTemporalPlainDate,
-  createAdapterDate,
-  createAdapterDateOnPlainDate,
-  createEndOfPlainDate,
+  addToDate,
   createProcessedDate,
   createStartOfPlainDate,
-  getDateKey,
+  isDateOnlyString,
+  parseDateOnlyString,
+  snapAllDayBounds,
+  snapToOwnDays,
+} from './date';
+export {
+  getDayNumber,
+  getMinutesInDay,
+  getMsInDay,
   getPlainDateKey,
-  moveToPlainDate,
-  normalizeAllDayBounds,
-} from './adapter';
-export { isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';
+  isWeekendPlainDate,
+  plainDateFromDayNumber,
+  plainTimeFromMsInDay,
+  type PlainDateDuration,
+} from './plainDate';
+export {
+  addMonthsToDayNumber,
+  dayNumberToIsoDate,
+  getDaysInIsoMonth,
+  getIsoDayOfWeek,
+  getStartOfMonthDayNumber,
+  getStartOfWeekDayNumber,
+  getStartOfYearDayNumber,
+  LAST_SUPPORTED_DAY,
+  MS_PER_DAY,
+} from './dayNumber';

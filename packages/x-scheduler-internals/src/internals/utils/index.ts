@@ -2,6 +2,7 @@ export * from './SchedulerStore';
 export * from './event-utils';
 export * from './event-range-index';
 export * from './drag-utils';
+export * from './placeholder-occurrence';
 export * from './pointer-utils';
 export * from './dom-utils';
 export * from './useDropTarget';
@@ -15,20 +16,11 @@ export * from './useOriginalOccurrence';
 export * from './useElementDragMarker';
 export * from './useTimelineDragAutoScroll';
 export * from './TimeoutManager';
+export * from './date-locale';
 export * from './date-utils';
+export * from './event-date-changes';
 export * from './plain-date-utils';
-export {
-  addMonths as addMonthsToDayNumber,
-  createPlainDate,
-  getStartOfMonth as getStartOfMonthDayNumber,
-  getStartOfWeek as getStartOfWeekDayNumber,
-  LAST_SUPPORTED_DAY,
-  PlainDate,
-  type PlainDateDuration,
-} from './base-temporal/PlainDate';
-export { ISO_CALENDAR_ID } from './base-temporal/calendar';
-export { MS_PER_DAY } from './base-temporal/iso';
-export { ZonedDateTime } from './base-temporal/ZonedDateTime';
+export * from './base-temporal';
 export * from './extractStandaloneEvent';
 export * from './useInitializeApiRef';
 export * from './useEventCreation';

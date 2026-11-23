@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { config } from 'react-transition-group';
 import { screen, waitFor } from '@mui/internal-test-utils';
-import { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internals';
+import type { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internals';
+import type { PickerRangeComponentType } from 'test/utils/pickers';
 import {
   getExpectedOnChangeCount,
   getFieldInputRoot,
   isPickerRangeType,
   isPickerSingleInput,
   openPicker,
-  PickerRangeComponentType,
 } from 'test/utils/pickers';
 import { vi, describe, it, expect } from 'vitest';
-import { DescribeValueTestSuite } from './describeValue.types';
+import type { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidValue, 'picker'> = (
   ElementToTest,

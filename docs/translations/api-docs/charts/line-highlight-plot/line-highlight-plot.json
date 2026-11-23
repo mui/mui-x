@@ -5,5 +5,5 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "lineHighlight": "" }
+  "slotDescriptions": { "lineHighlight": "The component that renders the line highlight." }
 }

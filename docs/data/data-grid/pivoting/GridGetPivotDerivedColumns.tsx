@@ -1,10 +1,9 @@
-import {
-  DataGridPremium,
+import type {
   DataGridPremiumProps,
   GridColDef,
   GridPivotModel,
-  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridSidebarValue } from '@mui/x-data-grid-premium';
 
 const getPivotDerivedColumns: DataGridPremiumProps['getPivotDerivedColumns'] = (
   column,

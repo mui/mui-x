@@ -378,6 +378,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
     className: classes.loadingIcon,
   });
 
+  // The Rich Tree View passes its leaves an empty array of children: skipping the group of an item
+  // that can't open spares every leaf a hidden `Collapse`.
+  const hasGroup = !!children && (status.expandable || status.expanded || status.loading);
+
   return (
     <TreeItemProvider {...getContextProviderProps()}>
       <Root {...rootProps}>
@@ -394,7 +398,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
           {status.editing ? <LabelInput {...labelInputProps} /> : <Label {...labelProps} />}
           <DragAndDropOverlay {...dragAndDropOverlayProps} />
         </Content>
-        {children && <TreeItemGroupTransition as={GroupTransition} {...groupTransitionProps} />}
+        {hasGroup && <TreeItemGroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>
     </TreeItemProvider>
   );

@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
-import { GridColDef, DataGrid, GridCellParams, gridClasses } from '@mui/x-data-grid';
+import type { GridColDef, GridCellParams } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   { field: 'city', rowHeader: true },

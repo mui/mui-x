@@ -1,169 +1,250 @@
-import { adapter, adapterFr } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { PlainDate } from './base-temporal/PlainDate';
-import { getPlainDateWeekStart, getStartOfWeek, getWeekNumber } from './date-utils';
-import { normalizeAllDayBounds } from './plain-date-utils/adapter';
+import { EventBuilder } from 'test/utils/scheduler';
+import { BaseTemporal } from './base-temporal';
+import {
+  allDayBoundToEventString,
+  getAllDayDayCount,
+  getOccurrenceEnd,
+  getPlainDateWeekStart,
+  getUntilReferenceString,
+  getWeekNumber,
+  untilToEventString,
+} from './date-utils';
+import { toEpochMs } from './plain-date-utils/timeZone';
 
-const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
+const wednesdayPlainDate = BaseTemporal.PlainDate.from('2025-01-08');
 
 describe('date-utils', () => {
-  describe('normalizeAllDayBounds', () => {
-    const start = adapter.date('2025-01-08T09:00:00.000Z', 'default');
-    const end = adapter.date('2025-01-08T18:00:00.000Z', 'default');
-
-    it('returns the bounds unchanged when allDay is false', () => {
-      const result = normalizeAllDayBounds(adapter, start, end, false);
-      expect(adapter.getHours(result.start)).to.equal(9);
-      expect(adapter.getHours(result.end)).to.equal(18);
+  describe('allDayBoundToEventString', () => {
+    it('should write the first instant of a day as its date in the timezone', () => {
+      expect(
+        allDayBoundToEventString(
+          toEpochMs(BaseTemporal.PlainDate.from('2025-07-04'), 'Asia/Tokyo'),
+          'Asia/Tokyo',
+        ),
+      ).to.equal('2025-07-04');
+      expect(
+        allDayBoundToEventString(
+          toEpochMs(BaseTemporal.PlainDate.from('2025-07-04'), 'America/New_York'),
+          'America/New_York',
+        ),
+      ).to.equal('2025-07-04');
     });
 
-    it('returns the bounds unchanged when allDay is undefined', () => {
-      const result = normalizeAllDayBounds(adapter, start, end, undefined);
-      expect(adapter.getHours(result.start)).to.equal(9);
-      expect(adapter.getHours(result.end)).to.equal(18);
-    });
-
-    it('snaps an all-day event to the whole day', () => {
-      const result = normalizeAllDayBounds(adapter, start, end, true);
-      expect(adapter.getHours(result.start)).to.equal(0);
-      expect(adapter.getMinutes(result.start)).to.equal(0);
-      expect(adapter.getHours(result.end)).to.equal(23);
-      expect(adapter.getMinutes(result.end)).to.equal(59);
-      expect(adapter.getSeconds(result.end)).to.equal(59);
-    });
-
-    it('preserves the span when flattening a multi-day all-day event', () => {
-      const multiDayEnd = adapter.date('2025-01-10T18:00:00.000Z', 'default');
-      const result = normalizeAllDayBounds(adapter, start, multiDayEnd, true);
-      expect(adapter.getDate(result.start)).to.equal(8);
-      expect(adapter.getHours(result.start)).to.equal(0);
-      expect(adapter.getDate(result.end)).to.equal(10);
-      expect(adapter.getHours(result.end)).to.equal(23);
+    it('should refuse an instant inside a day', () => {
+      // Midnight in UTC is 20:00 of the previous day in New York.
+      expect(() => allDayBoundToEventString(Date.UTC(2025, 6, 4), 'America/New_York')).to.throw(
+        /first instant of a day/,
+      );
     });
   });
 
-  describe('normalizeAllDayBounds across DST transitions', () => {
-    it('should end the day on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
-      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
-      const day = adapter.date('2024-04-06T12:00:00', 'America/Santiago');
-      const result = normalizeAllDayBounds(adapter, day, day, true);
-      expect(new Date(adapter.getTime(result.start)).toISOString()).to.equal(
-        '2024-04-06T03:00:00.000Z',
-      );
-      expect(new Date(adapter.getTime(result.end)).toISOString()).to.equal(
-        '2024-04-07T03:59:59.999Z',
-      );
-      expect(adapter.getTimezone(result.end)).to.equal('America/Santiago');
+  describe('getAllDayDayCount', () => {
+    it('should count the days of an all-day model', () => {
+      const model = EventBuilder.new().span('2025-07-04', '2025-07-07', { allDay: true }).build();
+      expect(getAllDayDayCount({ modelInBuiltInFormat: model })).to.equal(3);
     });
   });
 
-  describe('getStartOfWeek', () => {
-    it('uses the first day of the week of the locale when weekStartsOn is undefined', () => {
-      // Weeks start on Sunday in English and on Monday in French.
-      for (const currentAdapter of [adapter, adapterFr]) {
-        const result = getStartOfWeek(currentAdapter, wednesday, undefined);
-        expect(currentAdapter.isEqual(result, currentAdapter.startOfWeek(wednesday))).to.equal(
+  describe('getOccurrenceEnd', () => {
+    it('should end an all-day occurrence after its day count on the wall clock', () => {
+      // Europe/Paris springs forward on March 29th, 2026: two days from March 28th last 47 hours.
+      const event = EventBuilder.new()
+        .span('2026-03-28', '2026-03-30', { allDay: true })
+        .withDisplayTimezone('Europe/Paris')
+        .toProcessed();
+      const occurrenceStart = toEpochMs(BaseTemporal.PlainDate.from('2026-03-28'), 'Europe/Paris');
+      const end = getOccurrenceEnd({ event, occurrenceStart, displayTimezone: 'Europe/Paris' });
+      expect(new Date(end).toISOString()).to.equal('2026-03-29T22:00:00.000Z'); // March 30th 00:00
+    });
+
+    it('should end an all-day occurrence starting on a day without midnight at the start of the next day', () => {
+      // America/Havana springs forward at midnight on March 9th, 2025: that day starts at 01:00.
+      const event = EventBuilder.new()
+        .span('2025-03-09', '2025-03-10', { allDay: true })
+        .withDisplayTimezone('America/Havana')
+        .toProcessed();
+      const occurrenceStart = toEpochMs(
+        BaseTemporal.PlainDate.from('2025-03-09'),
+        'America/Havana',
+      );
+      const end = getOccurrenceEnd({ event, occurrenceStart, displayTimezone: 'America/Havana' });
+      expect(end).to.equal(toEpochMs(BaseTemporal.PlainDate.from('2025-03-10'), 'America/Havana'));
+    });
+
+    it('should keep the duration of a timed occurrence', () => {
+      const event = EventBuilder.new().singleDay('2025-07-04T09:00:00Z', 90).toProcessed();
+      const occurrenceStart = Date.UTC(2025, 6, 11, 9);
+      expect(getOccurrenceEnd({ event, occurrenceStart, displayTimezone: 'UTC' })).to.equal(
+        Date.UTC(2025, 6, 11, 10, 30),
+      );
+    });
+  });
+
+  describe('untilToEventString', () => {
+    it.each([
+      ['2025-01-01', '2025-01-12T23:59:59'],
+      ['2025-01-01T09:00:00', '2025-01-12T23:59:59'],
+      ['2025-01-01T08:00:00Z', '2025-01-12T22:59:59.999Z'],
+    ])('should write a plain date covering its whole day after %s', (original, expected) => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDate.from('2025-01-12'),
+          original,
+          'Europe/Paris',
+          false,
+        ),
+      ).to.equal(expected);
+    });
+
+    it('should write a plain date-time as its date on an all-day event', () => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30'),
+          '2025-01-01T09:00:00',
+          'Europe/Paris',
           true,
-        );
-      }
+        ),
+      ).to.equal('2025-01-12');
     });
 
-    it('reads the week in the timezone of the date', () => {
-      // Sunday 03:00 in UTC is Saturday 22:00 in New York.
-      const date = adapter.setTimezone(
-        adapter.date('2025-01-12T03:00:00Z', 'default'),
-        'America/New_York',
-      );
-      const result = getStartOfWeek(adapter, date, 0);
-      expect(adapter.getTimezone(result)).to.equal('America/New_York');
-      expect(adapter.toJsDate(result).toISOString()).to.equal('2025-01-05T05:00:00.000Z');
+    it('should write a plain date as a date on an all-day event', () => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDate.from('2025-01-12'),
+          '2025-01-01T09:00:00',
+          'Europe/Paris',
+          true,
+        ),
+      ).to.equal('2025-01-12');
     });
 
-    it('returns Sunday (2025-01-05) when weekStartsOn is 0', () => {
-      const result = getStartOfWeek(adapter, wednesday, 0);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-05T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
+    it.each([
+      ['2025-01-01', '2025-01-12T09:15:30'],
+      ['2025-01-01T09:00:00', '2025-01-12T09:15:30'],
+      ['2025-01-01T08:00:00Z', '2025-01-12T08:15:30.000Z'],
+    ])('should write a plain date-time with its time after %s', (original, expected) => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30'),
+          original,
+          'Europe/Paris',
+          false,
+        ),
+      ).to.equal(expected);
     });
 
-    it('returns Monday (2025-01-06) when weekStartsOn is 1', () => {
-      const result = getStartOfWeek(adapter, wednesday, 1);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-06T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
+    it('should end a plain date on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
+      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDate.from('2024-04-06'),
+          '2024-04-01T09:00:00Z',
+          'America/Santiago',
+          false,
+        ),
+      ).to.equal('2024-04-07T03:59:59.999Z');
     });
+  });
 
-    it('returns Saturday (2025-01-04) when weekStartsOn is 6', () => {
-      const result = getStartOfWeek(adapter, wednesday, 6);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-04T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
+  describe('getUntilReferenceString', () => {
+    const event = {
+      id: 'event',
+      title: 'Event',
+      start: '2025-01-01T09:00:00',
+      end: '2025-01-01T10:00:00',
+    };
+
+    it.each([
+      [{ freq: 'DAILY' as const, until: '2025-01-10T08:00:00Z' }, '2025-01-10T08:00:00Z'],
+      [{ freq: 'DAILY' as const }, '2025-01-01T09:00:00'],
+      ['FREQ=DAILY;UNTIL=20250110', '2025-01-10'],
+      ['FREQ=DAILY;UNTIL=20250110T080000Z;INTERVAL=2', '2025-01-10T08:00:00Z'],
+      ['FREQ=DAILY;COUNT=3', '2025-01-01T09:00:00'],
+    ])('should read the format of the UNTIL of %j', (rrule, expected) => {
+      expect(getUntilReferenceString({ ...event, rrule })).to.equal(expected);
     });
   });
 
   describe('getPlainDateWeekStart', () => {
-    it('reads the weekday of the plain date for the first day of the week of the locale', () => {
-      // Pacific/Apia skipped Friday, December 30th, 2011, so the day has no first instant to read
-      // its weekday from. Weeks start on Sunday in English and on Monday in French.
-      const plainDate = PlainDate.from('2011-12-30');
-      expect(getPlainDateWeekStart(adapter, plainDate, undefined).toString()).to.equal(
-        '2011-12-25',
-      );
-      expect(getPlainDateWeekStart(adapterFr, plainDate, undefined).toString()).to.equal(
-        '2011-12-26',
-      );
-    });
+    it.each([
+      { weekStartsOn: 7, expected: '2025-01-05' }, // Sunday
+      { weekStartsOn: 1, expected: '2025-01-06' }, // Monday
+      { weekStartsOn: 6, expected: '2025-01-04' }, // Saturday
+    ] as const)(
+      'returns $expected for Wednesday, January 8, 2025 when weekStartsOn is $weekStartsOn',
+      ({ weekStartsOn, expected }) => {
+        expect(getPlainDateWeekStart(wednesdayPlainDate, weekStartsOn)).toEqualPlainDate(expected);
+      },
+    );
   });
 
   describe('getWeekNumber', () => {
-    it('delegates to adapter.getWeekNumber when weekStartsOn is undefined', () => {
-      const result = getWeekNumber(adapter, wednesday, undefined);
-      expect(result).to.equal(adapter.getWeekNumber(wednesday));
+    it('returns the ISO week number with weeks starting on Monday and 4 minimal days', () => {
+      // ISO week 2 of 2025: Monday, January 6th to Sunday, January 12th.
+      expect(getWeekNumber(wednesdayPlainDate, { firstDay: 1, minimalDays: 4 })).to.equal(2);
+      // Wednesday, January 1st, 2025 is in the week of Monday, December 30th, 2024, whose
+      // Thursday is in 2025.
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2025-01-01'), { firstDay: 1, minimalDays: 4 }),
+      ).to.equal(1);
+      // Monday, December 29th, 2025 starts a week whose Thursday is in 2026.
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2025-12-29'), { firstDay: 1, minimalDays: 4 }),
+      ).to.equal(1);
+      // Friday, January 1st, 2027 is in the week of Monday, December 28th, 2026, whose Thursday is
+      // in 2026.
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2027-01-01'), { firstDay: 1, minimalDays: 4 }),
+      ).to.equal(53);
     });
 
-    it('returns week 2 for 2025-01-08 (Wednesday) with weekStartsOn=1 (ISO Mon)', () => {
-      // ISO week 2 of 2025: Mon 2025-01-06 – Sun 2025-01-12
-      const result = getWeekNumber(adapter, wednesday, 1);
-      expect(result).to.equal(2);
+    it('starts the first week of a year on the week of January 1 with 1 minimal day', () => {
+      // The weeks of the United States start on Sunday, and January 1st is in their first week.
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2027-01-01'), { firstDay: 7, minimalDays: 1 }),
+      ).to.equal(1);
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2026-12-26'), { firstDay: 7, minimalDays: 1 }),
+      ).to.equal(52);
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2026-12-27'), { firstDay: 7, minimalDays: 1 }),
+      ).to.equal(1);
+      // Sunday, January 5th, 2025 starts the second week of 2025.
+      expect(getWeekNumber(wednesdayPlainDate, { firstDay: 7, minimalDays: 1 })).to.equal(2);
     });
 
-    it('returns week 1 for 2025-01-01 (Wednesday) with weekStartsOn=1 (ISO Mon)', () => {
-      // ISO week 1 of 2025: Mon 2024-12-30 – Sun 2025-01-05, but Jan 1 is in that week.
-      // Actually Jan 1 2025 is a Wednesday; its Mon is Dec 30 2024 and midpoint (Thu) is Jan 2, which is in 2025.
-      // So it belongs to week 1 of 2025.
-      const jan1 = adapter.date('2025-01-01T12:00:00.000Z', 'UTC');
-      const result = getWeekNumber(adapter, jan1, 1);
-      expect(result).to.equal(1);
+    it('keeps the first week of the year when the weeks start on another day', () => {
+      // The first week of the United States holds January 1st, whatever day the weeks start on.
+      const mondayWeekInfo = { firstDay: 1, minimalDays: 1 } as const;
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2026-12-27'), mondayWeekInfo)).to.equal(52);
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2026-12-28'), mondayWeekInfo)).to.equal(1);
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2027-01-01'), mondayWeekInfo)).to.equal(1);
+      const saturdayWeekInfo = { firstDay: 6, minimalDays: 1 } as const;
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2026-12-25'), saturdayWeekInfo)).to.equal(
+        52,
+      );
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2026-12-26'), saturdayWeekInfo)).to.equal(
+        1,
+      );
     });
 
-    it('returns week 1 of 2026 for Dec 29 2025 with weekStartsOn=1', () => {
-      // Dec 29 2025 is a Monday, so its midpoint (Thu) is Jan 1 2026, which is in 2026.
-      // That means this week belongs to week 1 of 2026.
-      const dec29 = adapter.date('2025-12-29T12:00:00.000Z', 'UTC');
-      const result = getWeekNumber(adapter, dec29, 1);
-      expect(result).to.equal(1);
-    });
-
-    it('returns week 2 for 2025-01-08 with weekStartsOn=0 (Sun)', () => {
-      // Sun-week 2: week starts Sun Jan 5 2025; midpoint Wed Jan 8 is in 2025 => week 2.
-      const result = getWeekNumber(adapter, wednesday, 0);
-      expect(result).to.equal(2);
-    });
-
-    it('should count the weeks from a first week starting on a day the timezone skips', () => {
-      // Pacific/Apia skipped Friday December 30th, 2011, the first day of the first week of 2012.
-      const date = adapter.date('2012-11-23T12:00:00', 'Pacific/Apia');
-      expect(getWeekNumber(adapter, date, 5)).to.equal(48);
+    it('returns week 48 for 2012-11-23 with weekStartsOn=5 (Fri)', () => {
+      // Fri-week 1 of 2012 starts on Friday, December 30th, 2011, and holds January 4th.
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2012-11-23'), { firstDay: 5, minimalDays: 4 }),
+      ).to.equal(48);
     });
   });
 
   describe('runtime guards', () => {
-    it('getStartOfWeek throws in dev when weekStartsOn is out of range', () => {
-      expect(() => getStartOfWeek(adapter, wednesday, 7 as any)).to.throw(/weekStartsOn/);
-    });
-
-    it('getStartOfWeek throws in dev when weekStartsOn is a float', () => {
-      expect(() => getStartOfWeek(adapter, wednesday, 1.5 as any)).to.throw(/weekStartsOn/);
-    });
+    it.each([0, 8, 1.5])(
+      'getPlainDateWeekStart throws in dev when weekStartsOn is %s',
+      (weekStartsOn) => {
+        expect(() => getPlainDateWeekStart(wednesdayPlainDate, weekStartsOn as any)).to.throw(
+          /weekStartsOn must be an integer between 1 \(Monday\) and 7 \(Sunday\)/,
+        );
+      },
+    );
   });
 });

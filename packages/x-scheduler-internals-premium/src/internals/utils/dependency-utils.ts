@@ -1,12 +1,11 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import { localToEpochMs, MS_PER_DAY, toLocalMs } from '@mui/x-scheduler-internals/internals';
+import { addDaysOnWallClock, MS_PER_DAY } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerDependency,
   SchedulerDependenciesState,
@@ -49,28 +48,29 @@ export function isDependencyType(type: unknown): type is SchedulerDependencyType
   return typeof type === 'string' && Object.hasOwn(DEPENDENCY_EDGES, type);
 }
 
-// The range of `Date`, minus a margin for the offsets read around a wall-clock time.
-const MAX_LOCAL_MS = 8.64e15 - 2 * MS_PER_DAY;
+// The range of `Date`, minus a margin for the offsets of the timezone read around the result.
+const MAX_EPOCH_MS = 8.64e15 - 2 * MS_PER_DAY;
 
 /**
- * Adds days to an instant on the wall clock of `timezone`, keeping its time of day. The times a
- * DST transition skips or repeats resolve like `localToEpochMs()`. Returns `NaN` past the range
- * of `Date`. On wall-clock milliseconds rather than plain dates, as the cascade adds many lags.
+ * Adds days to an instant on the wall clock of `timezone` with `addDaysOnWallClock()`, or returns
+ * `NaN` past the range of `Date`, where `Intl` throws instead of giving the offsets of an IANA
+ * timezone.
  */
-function addDaysOnWallClock(epochMs: number, dayCount: number, timezone: TemporalTimezone) {
-  const localMs = toLocalMs(epochMs, timezone) + dayCount * MS_PER_DAY;
-  return Math.abs(localMs) > MAX_LOCAL_MS ? NaN : localToEpochMs(localMs, timezone);
+function addDaysInDateRange(epochMs: number, dayCount: number, timezone: string) {
+  return Math.abs(epochMs + dayCount * MS_PER_DAY) > MAX_EPOCH_MS
+    ? NaN
+    : addDaysOnWallClock(epochMs, dayCount, timezone);
 }
 
 // Minutes and hours are elapsed time. Days and weeks keep the time of day on the wall clock.
 const DEPENDENCY_LAG_ADDERS: Record<
   SchedulerDependencyLagUnit,
-  (epochMs: number, amount: number, timezone: TemporalTimezone) => number
+  (epochMs: number, amount: number, timezone: string) => number
 > = {
   minute: (epochMs, amount) => epochMs + amount * 60_000,
   hour: (epochMs, amount) => epochMs + amount * 3_600_000,
-  day: addDaysOnWallClock,
-  week: (epochMs, amount, timezone) => addDaysOnWallClock(epochMs, amount * 7, timezone),
+  day: addDaysInDateRange,
+  week: (epochMs, amount, timezone) => addDaysInDateRange(epochMs, amount * 7, timezone),
 };
 
 function isDependencyLagUnit(unit: unknown): unit is SchedulerDependencyLagUnit {
@@ -153,7 +153,7 @@ export function getEffectiveDependencyLag(
 export function addDependencyLag(
   epochMs: number,
   lag: SchedulerResolvedDependencyLag | null,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): number {
   if (lag === null) {
     return epochMs;
@@ -284,7 +284,7 @@ export function classifyDependencyEvent(
   if (processedEvent == null) {
     return 'unknownEvent';
   }
-  if (processedEvent.dataTimezone.rrule != null) {
+  if (processedEvent.rrule != null) {
     return 'recurringEvent';
   }
   return 'ok';

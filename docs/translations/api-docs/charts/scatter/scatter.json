@@ -2,6 +2,8 @@
   "componentDescription": "",
   "deprecationInfo": "The <code>Scatter</code> component is an internal implementation detail of <code>ScatterPlot</code> and will be removed from the public API in v10. Use <code>ScatterPlot</code> instead.<br>Demos:<br>- <a href=\"https://mui.com/x/react-charts/scatter/\">Scatter</a> - <a href=\"https://mui.com/x/react-charts/scatter-demo/\">Scatter demonstration</a><br>API:<br>- <a href=\"https://mui.com/x/api/charts/scatter/\">Scatter API</a>",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "color": { "description": "The color of the element." },
     "colorGetter": {
       "description": "Function to get the color of a scatter item given its data index. The data index argument is optional. If not provided, the color for the entire series is returned. If provided, the color for the specific scatter item is returned."
     },
@@ -18,9 +20,14 @@
         }
       }
     },
+    "series": { "description": "The scatter series to render." },
     "sizeGetter": {
       "description": "Function to get the marker size of a scatter item given its data index."
-    }
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "xScale": { "description": "The scale of the x-axis." },
+    "yScale": { "description": "The scale of the y-axis." }
   },
   "classDescriptions": {
     "focusedMark": {

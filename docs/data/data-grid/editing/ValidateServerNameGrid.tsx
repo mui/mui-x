@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
-import {
+import type { TooltipProps } from '@mui/material/Tooltip';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import type {
   GridColDef,
   GridRowsProp,
-  DataGrid,
   GridPreProcessEditCellProps,
-  GridEditInputCell,
   GridRenderEditCellParams,
 } from '@mui/x-data-grid';
+import { DataGrid, GridEditInputCell } from '@mui/x-data-grid';
 
 const StyledBox = styled('div')(({ theme }) => ({
   height: 400,
