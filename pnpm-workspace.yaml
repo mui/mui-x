@@ -120,6 +120,11 @@ allowBuilds:
   msw: false
 
 overrides:
+  # Remove after https://github.com/mui/material-ui/pull/49874 is released.
+  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@91f17caf
+  '@mui/internal-core-docs>@mui/internal-markdown': 4.0.1-canary.1
+  '@mui/internal-core-docs>@mui/*:peer': ^9.5.0
+
   # Keep one runtime until core-docs/scripts adopt https://github.com/mui/mui-public/pull/2093.
   '@mui/internal-docs-infra': 0.13.1-canary.37
 
