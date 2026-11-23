@@ -43,6 +43,7 @@ const DependencyDialogEventChip = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogEventChip',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   position: 'relative',
   display: 'inline-block',
   maxWidth: '100%',

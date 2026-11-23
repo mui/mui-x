@@ -48,6 +48,7 @@ const MoreEventsPopoverBody = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'MoreEventsPopoverBody',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   padding: theme.spacing(1),
   display: 'flex',
   flexDirection: 'column',
