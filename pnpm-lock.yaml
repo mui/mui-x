@@ -220,8 +220,8 @@ catalogs:
       specifier: 9.5.0
       version: 9.5.0
     '@mui/internal-core-docs':
-      specifier: 10.0.0-canary.1
-      version: 10.0.0-canary.1
+      specifier: 10.0.0-canary.0
+      version: 10.0.0-canary.0
     '@mui/internal-test-utils':
       specifier: 2.1.1-canary.11
       version: 2.1.1-canary.11
@@ -446,7 +446,7 @@ importers:
         version: 0.1.1-canary.37(@next/eslint-plugin-next@16.4.6(eslint@10.15.0(jiti@2.7.0)(supports-color@11.0.0)))(@octokit/core@7.0.8)(@types/node@22.20.5)(@typescript-eslint/eslint-plugin@8.73.0(@typescript-eslint/parser@8.73.0(@typescript/typescript6@6.0.2)(eslint@10.15.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0)(typescript@7.0.2))(@typescript/typescript6@6.0.2)(eslint@10.15.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0)(typescript@7.0.2))(@typescript-eslint/parser@8.73.0(@typescript/typescript6@6.0.2)(eslint@10.15.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0)(typescript@7.0.2))(@typescript/typescript6@6.0.2)(eslint-import-resolver-node@0.3.10(supports-color@11.0.0))(eslint@10.15.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.33)(prettier@3.10.1)(stylelint@18.1.0)(supports-color@11.0.0)(tsx@4.23.15)(typescript@7.0.2)(vitest@5.1.1)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 10.0.0-canary.1(b23d7215bf486c6b3792124f80ccccda)
+        version: 10.0.0-canary.0(b23d7215bf486c6b3792124f80ccccda)
       '@mui/internal-markdown':
         specifier: 4.0.1-canary.1
         version: 4.0.1-canary.1
@@ -674,7 +674,7 @@ importers:
         version: 9.5.0(@mui/material@9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@types/react@19.3.0)(react@19.3.1)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 10.0.0-canary.1(b23d7215bf486c6b3792124f80ccccda)
+        version: 10.0.0-canary.0(b23d7215bf486c6b3792124f80ccccda)
       '@mui/internal-docs-infra':
         specifier: 0.13.1-canary.37
         version: 0.13.1-canary.37(@types/react@19.3.0)(eslint@10.15.0(jiti@2.7.0)(supports-color@11.0.0))(next@16.4.6(@babel/core@8.1.2)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.10.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)(webpack@5.111.1(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.33)(sharp@0.35.5(@types/node@22.20.5))(uglify-js@3.19.3))
@@ -4616,9 +4616,9 @@ packages:
       typescript:
         optional: true
 
-  '@mui/internal-core-docs@10.0.0-canary.1':
-    resolution: {integrity: sha512-nvTaFzAkLZiUMGx/xuvyvB3Mfcd2BdCXjdwCz6SowsZlXsUXYWe4SYEbSyn9fdxeeeQV8E98MNV1WK+OuCh9KQ==}
-    engines: {node: '>=22.23.5'}
+  '@mui/internal-core-docs@10.0.0-canary.0':
+    resolution: {integrity: sha512-q4X7ZjZsVTrgEfRs8Wv2Lz7B/8dJJOZgcl0niPX8uyuuXwy6VnqbcQLjSGMViVgDjePRswKSzRYwR7asEVGVlw==}
+    engines: {node: '>=22.23.4'}
     peerDependencies:
       '@base-ui/react': ^1
       '@docsearch/react': ^5.2.0
@@ -4639,6 +4639,24 @@ packages:
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-runner: ^1.0.5
       react-simple-code-editor: ^0.14.1
+
+  '@mui/internal-docs-infra@0.13.1-canary.29':
+    resolution: {integrity: sha512-w3BDyjFcW7j7DXJFhsZ7QEdfjS6X891zLqvze6CpHsWprhPt97JXNSIV33+GhPVjHlsljldULpHhUNjpQ+ua3g==}
+    engines: {node: '>=22.18.0'}
+    hasBin: true
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      next: ^15.0.0 || ^16.0.0
+      prettier: ^3.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      next:
+        optional: true
+      prettier:
+        optional: true
 
   '@mui/internal-docs-infra@0.13.1-canary.33':
     resolution: {integrity: sha512-GD9JPJ1uQ0sehcoUkunrfgYGfTv7AeZuSjWwkt/Fxg7O0ZbW/QBMsNk4SdRRD3URKDO7IJwzkOBcTvmQbxGwJg==}
@@ -4715,6 +4733,12 @@ packages:
         optional: true
       '@types/react':
         optional: true
+
+  '@mui/internal-typescript-api-extractor@0.1.1-canary.1':
+    resolution: {integrity: sha512-qO14IwkNvZw9fi6YT4DbDJlX+Yq0ZHHmIP42P8tyO5W2EQoyAyfq/jRgf7orfqVzbk9XOzBRR/FSAV0lmVhZsw==}
+    engines: {node: '>=22.12.0'}
+    peerDependencies:
+      typescript: ^5.8 || ^6.0
 
   '@mui/internal-typescript-api-extractor@0.1.1-canary.2':
     resolution: {integrity: sha512-ZhPAK7nyh4qEzsLwTd/ixAik9Fc2vYINhLZ7xwhjAteokRiTgPu0knxcEobnoimrr3wKSEeTZ0UY6/lZgKCoDQ==}
@@ -14050,7 +14074,7 @@ snapshots:
       - vitest
       - vue-tsc
 
-  '@mui/internal-core-docs@10.0.0-canary.1(b23d7215bf486c6b3792124f80ccccda)':
+  '@mui/internal-core-docs@10.0.0-canary.0(b23d7215bf486c6b3792124f80ccccda)':
     dependencies:
       '@babel/runtime': 8.1.2
       '@base-ui/react': 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -14059,7 +14083,7 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
       '@mui/icons-material': 9.5.0(@mui/material@9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@types/react@19.3.0)(react@19.3.1)
-      '@mui/internal-docs-infra': 0.13.1-canary.33(@types/react@19.3.0)(next@16.4.6(@babel/core@8.1.2)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.10.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)
+      '@mui/internal-docs-infra': 0.13.1-canary.29(@types/react@19.3.0)(next@16.4.6(@babel/core@8.1.2)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.10.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)
       '@mui/internal-markdown': 4.0.1-canary.1
       '@mui/material': 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@mui/material-nextjs': 9.5.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/server@11.11.0)(@types/react@19.3.0)(next@16.4.6(@babel/core@8.1.2)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
@@ -14083,6 +14107,59 @@ snapshots:
       stylis: 4.4.0
     transitivePeerDependencies:
       - prettier
+      - supports-color
+
+  '@mui/internal-docs-infra@0.13.1-canary.29(@types/react@19.3.0)(next@16.4.6(@babel/core@8.1.2)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.10.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)':
+    dependencies:
+      '@babel/runtime': 8.1.2
+      '@csstools/postcss-light-dark-function': 3.0.9(postcss@8.5.33)
+      '@csstools/postcss-relative-color-syntax': 4.0.17(postcss@8.5.33)
+      '@csstools/postcss-stepped-value-functions': 5.0.9(postcss@8.5.33)
+      '@mui/internal-typescript-api-extractor': 0.1.1-canary.1(@typescript/typescript6@6.0.2)
+      '@orama/orama': 3.1.18
+      '@orama/plugin-qps': 3.1.18
+      '@orama/stemmers': 3.1.18
+      '@wooorm/starry-night': 3.11.0
+      autoprefixer: 10.7.0(postcss@8.5.33)
+      chalk: 6.0.1
+      es-toolkit: 1.53.2
+      fflate: 0.8.3
+      hast-util-to-jsx-runtime: 2.3.7(supports-color@11.0.0)
+      hast-util-to-text: 4.0.4
+      icss-utils: 5.1.0(postcss@8.5.33)
+      import-meta-resolve: 4.2.0
+      jiti: 2.7.0
+      jsondiffpatch: 0.7.7
+      kebab-case: 2.0.2
+      lz-string: 1.5.0
+      path-module: 0.1.2
+      postcss: 8.5.33
+      postcss-modules-extract-imports: 3.1.0(postcss@8.5.33)
+      postcss-modules-local-by-default: 4.2.0(postcss@8.5.33)
+      postcss-modules-scope: 3.2.1(postcss@8.5.33)
+      postcss-modules-values: 4.0.0(postcss@8.5.33)
+      proper-lockfile: 4.1.2
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      react-simple-code-editor: 0.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      remark-gfm: 4.0.1(supports-color@11.0.0)
+      remark-mdx: 3.1.1(supports-color@11.0.0)
+      remark-parse: 11.0.0(supports-color@11.0.0)
+      remark-stringify: 11.0.0
+      remark-typography: 0.8.11
+      sucrase: 3.35.1
+      typescript: '@typescript/typescript6@6.0.2'
+      uint8-to-base64: 0.2.1
+      unified: 11.0.5
+      unist-util-visit: 5.2.0
+      vscode-oniguruma: 2.0.1
+      yargs: 18.2.0
+      zx: 8.8.5
+    optionalDependencies:
+      '@types/react': 19.3.0
+      next: 16.4.6(@babel/core@8.1.2)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      prettier: 3.10.1
+    transitivePeerDependencies:
       - supports-color
 
   '@mui/internal-docs-infra@0.13.1-canary.33(@types/react@19.3.0)(next@16.4.6(@babel/core@8.1.2)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.10.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)':
@@ -14262,6 +14339,11 @@ snapshots:
       - '@types/react-dom'
       - '@vitest/utils'
       - vite
+
+  '@mui/internal-typescript-api-extractor@0.1.1-canary.1(@typescript/typescript6@6.0.2)':
+    dependencies:
+      '@babel/runtime': 8.1.2
+      typescript: '@typescript/typescript6@6.0.2'
 
   '@mui/internal-typescript-api-extractor@0.1.1-canary.2(@typescript/typescript6@6.0.2)':
     dependencies:
