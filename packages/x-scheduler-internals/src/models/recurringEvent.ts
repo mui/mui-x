@@ -74,9 +74,10 @@ export interface SchedulerProcessedEventRecurrenceRule {
    */
   byMonth?: number[];
   /**
-   * The inclusive end of the recurrence, in the timezone of the event.
-   * A plain date includes its whole day. A plain date-time, used for timed events only, is the
-   * latest start of an occurrence.
+   * The inclusive end of the recurrence.
+   * A plain date includes its whole day: all-day events have one, and so do timed events whose
+   * `until` is written as a date. A plain date-time is the latest start of an occurrence, in the
+   * timezone of the event.
    * Must not be specified when the count property is set.
    * Corresponds to the UNTIL property of the string-based RRULE.
    */
@@ -95,11 +96,10 @@ export interface SchedulerProcessedEventRecurrenceRule {
  */
 export type SchedulerEventRecurrenceRule = Omit<SchedulerProcessedEventRecurrenceRule, 'until'> & {
   /**
-   * The inclusive end of the recurrence.
+   * The inclusive end of the recurrence, with the type of the event start (RFC 5545).
    * Same string semantics as `SchedulerEvent.start` / `end`.
-   * A date without a time, like "2025-07-10", includes its whole day.
-   * For timed events, a date-time is the latest start of an occurrence.
-   * For all-day events, only its date in the timezone of the event is used.
+   * For all-day events, it must be a date, like "2025-07-10", which includes its whole day.
+   * For timed events, it must be a date-time, the latest start of an occurrence.
    */
   until?: string;
 };

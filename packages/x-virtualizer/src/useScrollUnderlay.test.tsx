@@ -80,13 +80,14 @@ function createUnderlayContent(): UnderlayContent {
 }
 
 // Like copies of rendered items: laid out from the left edge of the scrolled content, over the
-// area and 50px past it on either side.
-function createSpanningContent(isRtl: boolean): UnderlayContent {
+// area and 50px past it on either side, the area as it is at `scrollLeft`.
+function createSpanningContent(
+  isRtl: boolean,
+  scrollLeft = screen.getByTestId('scroller').scrollLeft,
+): UnderlayContent {
   const scroller = screen.getByTestId('scroller');
   // In right-to-left content, `scrollLeft` goes from 0 down to minus the scroll range.
-  const areaLeft = isRtl
-    ? scroller.scrollWidth - scroller.clientWidth + scroller.scrollLeft
-    : scroller.scrollLeft;
+  const areaLeft = isRtl ? scroller.scrollWidth - scroller.clientWidth + scrollLeft : scrollLeft;
   const content = document.createElement('div');
   content.style.position = 'absolute';
   content.style.left = `${areaLeft - 50}px`;
@@ -291,6 +292,62 @@ describe.skipIf(isJSDOM)('useScrollUnderlay', () => {
           }),
       );
       expect(getUnderlayContent.mock.calls.length).to.equal(builds + 1);
+    },
+  );
+
+  it.each([false, true])(
+    'stops the content at its edge rather than leave the area blank, isRtl=%s',
+    async (isRtl) => {
+      // Content for where the scroll starts, whenever it is built: as the copies of items a scroll
+      // outran are, until the items catch up.
+      const getUnderlayContent = vi.fn(() => createSpanningContent(isRtl, 0));
+      await renderAndWaitForBuild(getUnderlayContent, render, { isRtl });
+      const scroller = screen.getByTestId('scroller');
+      const direction = isRtl ? -1 : 1;
+      const area = screen.getByTestId('underlay').getBoundingClientRect();
+      // How far the content reaches past the area on the side the scroll comes from, and on the
+      // side it goes to.
+      const overhang = () => {
+        const box = layer().firstElementChild!.firstElementChild!.getBoundingClientRect();
+        return isRtl
+          ? { behind: box.right - area.right, ahead: area.left - box.left }
+          : { behind: area.left - box.left, ahead: box.right - area.right };
+      };
+
+      // It moves with the scroll while it spans the area.
+      scroller.scrollLeft = 30 * direction;
+      await waitForFrames();
+      expect(overhang().behind).to.be.closeTo(80, 0.5);
+      expect(overhang().ahead).to.be.closeTo(20, 0.5);
+
+      // Past that, it stops with its edge at the area's.
+      scroller.scrollLeft = 120 * direction;
+      await waitForFrames();
+      expect(overhang().behind).to.be.closeTo(100, 0.5);
+      expect(overhang().ahead).to.be.closeTo(0, 0.5);
+    },
+  );
+
+  it.each([false, true])(
+    'keeps the sideways animation running at either end, so the compositor has it ready for the scroll back, isRtl=%s',
+    async (isRtl) => {
+      const getUnderlayContent = vi.fn(createUnderlayContent);
+      await renderAndWaitForBuild(getUnderlayContent, render, { isRtl });
+      const scroller = screen.getByTestId('scroller');
+      const scrollLeftMax = scroller.scrollWidth - scroller.clientWidth;
+      const [sideways] = layer().firstElementChild!.getAnimations();
+
+      for (const scrollLeft of [scrollLeftMax, 0, scrollLeftMax]) {
+        scroller.scrollLeft = scrollLeft * (isRtl ? -1 : 1);
+        // eslint-disable-next-line no-await-in-loop
+        await waitForFrames();
+        expect(sideways.playState).to.equal('running');
+      }
+      // Still where the scroll puts it.
+      expect(translation(layer().firstElementChild!).x).to.be.closeTo(
+        isRtl ? 0 : -scrollLeftMax,
+        0.5,
+      );
     },
   );
 

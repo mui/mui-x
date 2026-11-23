@@ -13,7 +13,7 @@ import type {
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import type { SxProps } from '@mui/system/styleFunctionSx';
-import type { HasProperty, MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { MakeOptional, MakeRequired } from '@mui/x-internals/types';
 import type { WithDataAttributes } from '@mui/utils/types';
 import type { DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -803,10 +803,9 @@ export interface ChartsAxisData {
    */
   seriesValues: Record<
     string,
-    HasProperty<ChartsTypeFeatureFlags, 'seriesValuesOverride'> extends true
-      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium supplies seriesValuesOverride only when its augmentation is loaded.
-        // @ts-ignore Premium supplies seriesValuesOverride only when its augmentation is loaded.
-        ChartsTypeFeatureFlags['seriesValuesOverride']
+    // Premium supplies `seriesValuesOverride` only when its augmentation is loaded.
+    ChartsTypeFeatureFlags extends { seriesValuesOverride: infer SeriesValues }
+      ? SeriesValues
       : number | null | undefined
   >;
 }

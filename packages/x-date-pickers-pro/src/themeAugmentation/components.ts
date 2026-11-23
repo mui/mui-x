@@ -37,6 +37,17 @@ export interface PickersProComponents<Theme = unknown> {
       PickerToolbarOwnerState
     >['MuiDateTimeRangePickerToolbar'];
   };
+  MuiTimeRangePickerTabs?: {
+    defaultProps?: ComponentsProps['MuiTimeRangePickerTabs'];
+    styleOverrides?: ComponentsOverrides<Theme, PickerOwnerState>['MuiTimeRangePickerTabs'];
+  };
+  MuiTimeRangePickerToolbar?: {
+    defaultProps?: ComponentsProps['MuiTimeRangePickerToolbar'];
+    styleOverrides?: ComponentsOverrides<
+      Theme,
+      PickerToolbarOwnerState
+    >['MuiTimeRangePickerToolbar'];
+  };
   MuiPickersRangeCalendarHeader?: {
     defaultProps?: ComponentsProps['MuiPickersRangeCalendarHeader'];
   };
@@ -89,6 +100,17 @@ export interface PickersProComponents<Theme = unknown> {
   };
   MuiMobileDateTimeRangePicker?: {
     defaultProps?: ComponentsProps['MuiMobileDateTimeRangePicker'];
+  };
+
+  // Time Range Pickers
+  MuiTimeRangePicker?: {
+    defaultProps?: ComponentsProps['MuiTimeRangePicker'];
+  };
+  MuiDesktopTimeRangePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopTimeRangePicker'];
+  };
+  MuiMobileTimeRangePicker?: {
+    defaultProps?: ComponentsProps['MuiMobileTimeRangePicker'];
   };
 }
 

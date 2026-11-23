@@ -81,8 +81,8 @@ const initialEvents = [
   },
   {
     id: 'eilat',
-    start: '2025-07-04T00:00:00',
-    end: '2025-07-06T00:00:00',
+    start: '2025-07-04',
+    end: '2025-07-07',
     title: 'חופשה באילת',
     resource: 'family',
     allDay: true,

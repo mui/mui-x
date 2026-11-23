@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import { observeResizeNextFrame } from './observeResizeNextFrame';
 
 export const TITLE_HEADER_KEY = Symbol('title-header');
 
@@ -12,8 +13,30 @@ const Context = React.createContext<Report | null>(null);
 
 export const TitleColumnWidthProvider = Context.Provider;
 
-export function useReportTitleWidth(): Report {
-  return React.useContext(Context)!;
+export function useTitleCellMeasurement(key: Key) {
+  const report = React.useContext(Context)!;
+  const cellRef = React.useRef<HTMLDivElement>(null);
+  const contentRef = React.useRef<HTMLSpanElement>(null);
+
+  useIsoLayoutEffect(() => {
+    const cell = cellRef.current;
+    const content = contentRef.current;
+    if (!cell || !content || typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    const measure = () => {
+      // The cell's scrollWidth is at least the current column width. Measure the inner span
+      // so the column can shrink, and include slot content that overflows it (e.g. a badge).
+      const style = getComputedStyle(cell);
+      const padding = parseFloat(style.paddingInlineStart) + parseFloat(style.paddingInlineEnd);
+      report(key, Math.max(content.offsetWidth, content.scrollWidth) + padding);
+    };
+    measure();
+    return observeResizeNextFrame(content, measure);
+  }, [key, report]);
+
+  return { cellRef, contentRef };
 }
 
 /**
