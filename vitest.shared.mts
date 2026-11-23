@@ -3,12 +3,14 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
-import type { Page } from '@playwright/test';
+import type { CDPSession, Page } from '@playwright/test';
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
 const pendingPrintFonts = new WeakMap<Page, { url: string; resolve: (fail: boolean) => void }>();
+// Chromium clears an emulation when its CDP session detaches, so keep one session per page.
+const cdpSessions = new WeakMap<Page, Promise<CDPSession>>();
 
 export const alias = [
   // Generates resolver aliases for all packages and their plans.
@@ -138,6 +140,17 @@ export default defineConfig({
           // Move the pointer out of the page. A pointer left over the content
           // makes components react to hover during unrelated tests.
           await ctx.page.mouse.move(10_000, 10_000);
+        },
+        // Makes `(pointer: coarse)` and `(hover: none)` match in CSS, not only in a mocked `matchMedia`.
+        async setTouchEmulation({ page }, enabled: boolean) {
+          if (!cdpSessions.has(page)) {
+            cdpSessions.set(page, page.context().newCDPSession(page));
+          }
+          const session = await cdpSessions.get(page)!;
+          await session.send('Emulation.setTouchEmulationEnabled', {
+            enabled,
+            maxTouchPoints: enabled ? 5 : undefined,
+          });
         },
         async setupCrashHandler(ctx) {
           ctx.page.on('crash', (page) => {

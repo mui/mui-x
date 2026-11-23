@@ -6,6 +6,7 @@ declare module 'vitest/browser' {
     deferPrintFont: () => Promise<string>;
     resolvePrintFont: (result: 'loaded' | 'error' | 'cleanup') => Promise<void>;
     resetMousePosition: () => Promise<void>;
+    setTouchEmulation: (enabled: boolean) => Promise<void>;
     setupCrashHandler: () => Promise<void>;
   }
 }
