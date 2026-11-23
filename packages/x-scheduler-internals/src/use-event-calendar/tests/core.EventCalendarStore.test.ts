@@ -1,3 +1,4 @@
+import { getMinutesInDay, toMsInDay } from '@mui/x-scheduler-internals/internals';
 import {
   addDays,
   createDate,
@@ -17,6 +18,12 @@ const DEFAULT_PARAMS = { events: [] };
 describe('Core - EventCalendarStore', () => {
   describe('create', () => {
     createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
+
+    it('should throw when the display timezone is the removed "system" alias', () => {
+      expect(
+        () => new EventCalendarStore({ ...DEFAULT_PARAMS, displayTimezone: 'system' }),
+      ).to.throw('MUI X Scheduler: The `displayTimezone` "system" is not a supported timezone.');
+    });
 
     it('should initialize default state', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS);
@@ -97,7 +104,7 @@ describe('Core - EventCalendarStore', () => {
   });
 
   describe('editing state machine', () => {
-    // The editing methods only read `occurrence.key` / `displayTimezone`, so a minimal occurrence suffices.
+    // The editing methods only read `occurrence.key`, so a minimal occurrence suffices.
     const occurrence = (id: string) => ({ id, key: id }) as any;
 
     describe('startEditing', () => {
@@ -236,8 +243,8 @@ describe('Core - EventCalendarStore', () => {
         store.setEditingOccurrenceTimes({ start, end });
 
         const editing = store.state.editingOccurrence!;
-        expect(editing.occurrence.displayTimezone.start.value).toEqualDateTime(start);
-        expect(editing.occurrence.displayTimezone.end.value).toEqualDateTime(end);
+        expect(editing.occurrence.start.plainDateTime.toString()).to.equal('2024-01-15T10:00:00');
+        expect(editing.occurrence.end.plainDateTime.toString()).to.equal('2024-01-15T11:30:00');
         expect(editing.mode).to.equal('armed');
       });
 
@@ -252,8 +259,11 @@ describe('Core - EventCalendarStore', () => {
         expect(store.state.editingOccurrence).to.equal(null);
       });
 
-      it('should keep the data bounds on the committed instants', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS);
+      it('should keep the bounds on the committed instants', () => {
+        const store = new EventCalendarStore({
+          ...DEFAULT_PARAMS,
+          displayTimezone: 'America/New_York',
+        });
         const edited = EventBuilder.new()
           .withDataTimezone('UTC')
           .withDisplayTimezone('America/New_York')
@@ -266,35 +276,34 @@ describe('Core - EventCalendarStore', () => {
         store.setEditingOccurrenceTimes({ start, end });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
-        expect(editing.displayTimezone.start.timestamp).to.equal(start.getTime());
-        expect(editing.displayTimezone.end.timestamp).to.equal(end.getTime());
-        // A rule added from the dialog is built on the data-timezone start.
-        expect(editing.dataTimezone.start.timestamp).to.equal(start.getTime());
-        expect(editing.dataTimezone.end.timestamp).to.equal(end.getTime());
+        expect(editing.start.timestamp).to.equal(start.getTime());
+        expect(editing.end.timestamp).to.equal(end.getTime());
         // Read in the data timezone: 14:00 UTC.
-        expect(editing.dataTimezone.start.minutesInDay).to.equal(14 * 60);
+        expect(toMsInDay(editing.start.timestamp, editing.timezone)).to.equal(14 * 3_600_000);
         // Read in the display timezone: 09:00 in New York.
-        expect(editing.displayTimezone.start.minutesInDay).to.equal(9 * 60);
-        expect(editing.displayTimezone.end.minutesInDay).to.equal(11 * 60);
+        expect(getMinutesInDay(editing.start.plainDateTime)).to.equal(9 * 60);
+        expect(getMinutesInDay(editing.end.plainDateTime)).to.equal(11 * 60);
       });
 
-      it('should keep a bound left out on its stored value in both timezones', () => {
-        // July 4 00:00 UTC is displayed on July 3 in New York: an end-only resize must not
-        // re-read the untouched start from its displayed day.
-        const store = new EventCalendarStore(DEFAULT_PARAMS);
+      it('should keep a bound left out on its stored value', () => {
+        // An all-day event on July 4th displayed in New York: an end-only resize keeps the
+        // untouched start.
+        const store = new EventCalendarStore({
+          ...DEFAULT_PARAMS,
+          displayTimezone: 'America/New_York',
+        });
         const edited = utcJuly4AllDayBuilder()
           .withDisplayTimezone('America/New_York')
           .toOccurrence();
         store.startEditing(edited, 'armed');
-        const end = addDays(edited.displayTimezone.end.value, 1);
+        // One more day: the exclusive end moves from July 5th to July 6th.
+        const end = addDays(new Date(edited.end.timestamp), 1);
 
         store.setEditingOccurrenceTimes({ end });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
-        expect(editing.displayTimezone.start).to.equal(edited.displayTimezone.start);
-        expect(editing.dataTimezone.start).to.equal(edited.dataTimezone.start);
-        expect(editing.displayTimezone.end.timestamp).to.equal(end.getTime());
-        expect(editing.dataTimezone.end.timestamp).to.equal(end.getTime());
+        expect(editing.start).to.equal(edited.start);
+        expect(editing.end.timestamp).to.equal(end.getTime());
       });
     });
 

@@ -336,12 +336,8 @@ describe('<EventTimelinePremium /> - RTL', () => {
       });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
-      expect(new Date(onEventsChange.mock.calls[0][0][0].start).toISOString()).to.equal(
-        '2025-07-04T10:00:00.000Z',
-      );
-      expect(new Date(onEventsChange.mock.calls[0][0][0].end).toISOString()).to.equal(
-        '2025-07-04T11:00:00.000Z',
-      );
+      expect(onEventsChange.mock.calls[0][0][0].start).to.equal('2025-07-04T10:00:00.000Z');
+      expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2025-07-04T11:00:00.000Z');
     });
 
     it('should resize the start of an event to the pointer', async () => {
@@ -357,12 +353,8 @@ describe('<EventTimelinePremium /> - RTL', () => {
       });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
-      expect(new Date(onEventsChange.mock.calls[0][0][0].start).toISOString()).to.equal(
-        '2025-07-03T09:00:00.000Z',
-      );
-      expect(new Date(onEventsChange.mock.calls[0][0][0].end).toISOString()).to.equal(
-        '2025-07-03T11:00:00.000Z',
-      );
+      expect(onEventsChange.mock.calls[0][0][0].start).to.equal('2025-07-03T09:00:00.000Z');
+      expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2025-07-03T11:00:00.000Z');
     });
 
     it('should resize the end of an event to the pointer', async () => {
@@ -378,12 +370,8 @@ describe('<EventTimelinePremium /> - RTL', () => {
       });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
-      expect(new Date(onEventsChange.mock.calls[0][0][0].start).toISOString()).to.equal(
-        '2025-07-03T10:00:00.000Z',
-      );
-      expect(new Date(onEventsChange.mock.calls[0][0][0].end).toISOString()).to.equal(
-        '2025-07-03T13:00:00.000Z',
-      );
+      expect(onEventsChange.mock.calls[0][0][0].start).to.equal('2025-07-03T10:00:00Z');
+      expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2025-07-03T13:00:00.000Z');
     });
 
     it('should create an event at the clicked time', async () => {

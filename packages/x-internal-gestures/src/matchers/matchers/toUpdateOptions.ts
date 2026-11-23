@@ -32,8 +32,11 @@ export type ToUpdateOptions<R = AnyGesture> = {
    * ```
    */
   toUpdateOptions<
-    G = R extends new (...args: any[]) => infer J ? (J extends Gesture<string> ? J : never) : never,
-    // @ts-expect-error, accessing protected property for testing purposes
+    G extends Gesture<string> = R extends new (...args: any[]) => infer J
+      ? J extends Gesture<string>
+        ? J
+        : never
+      : never,
     ExpectedOptions extends Partial<G['mutableOptionsType']> = Partial<G['mutableOptionsType']>,
   >(
     expectedOptions: ExpectedOptions,

@@ -1,6 +1,7 @@
 import type { DateRangePickerProps } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { screen, waitFor, within } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   adapterToUse,
   buildFieldInteractions,
@@ -11,6 +12,7 @@ import {
 import { pickerPopperClasses } from '@mui/x-date-pickers/internals';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { isJSDOM } from 'test/utils/skipIf';
+import { createRtlProvider } from 'test/utils/RtlProvider';
 import { vi, describe, it, expect } from 'vitest';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 
@@ -43,6 +45,40 @@ describe('<DateRangePicker />', () => {
     });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
   });
+
+  it.each([false, true])(
+    'should support input theme overrides that read ownerState when readOnly is %s',
+    (readOnly) => {
+      const theme = createTheme({
+        components: {
+          MuiPickersInputBase: {
+            styleOverrides: {
+              root: ({ ownerState }) => ({
+                [`.${pickersInputBaseClasses.activeBar}`]: {
+                  backgroundColor: ownerState.isPickerReadOnly
+                    ? 'rgb(0, 128, 0)'
+                    : 'rgb(0, 0, 255)',
+                },
+              }),
+            },
+          },
+        },
+      });
+
+      render(
+        <ThemeProvider theme={theme}>
+          <DateRangePicker readOnly={readOnly} />
+        </ThemeProvider>,
+      );
+
+      const activeBar = document.querySelector<HTMLElement>(
+        `.${pickersInputBaseClasses.activeBar}`,
+      )!;
+      expect(window.getComputedStyle(activeBar).backgroundColor).to.equal(
+        readOnly ? 'rgb(0, 128, 0)' : 'rgb(0, 0, 255)',
+      );
+    },
+  );
 
   describe('form behavior', () => {
     function TestComponent({
@@ -126,6 +162,57 @@ describe('<DateRangePicker />', () => {
   describe('active range position underline (single input)', () => {
     const getPickerDay = (name: string, picker = 'January 2018') =>
       within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
+
+    describe.each(['ltr', 'rtl'] as const)('in %s layout', (direction) => {
+      describe.each(['start', 'end'] as const)('opening button at the %s', (buttonPosition) => {
+        it.skipIf(isJSDOM).each(['start', 'end'] as const)(
+          'should align the active bar with the %s date on the first opening',
+          async (rangePosition) => {
+            stubMatchMedia(true);
+            const RtlProvider = direction === 'rtl' ? createRtlProvider() : null;
+            const picker = (
+              <DateRangePicker
+                defaultRangePosition={rangePosition}
+                slotProps={{ field: { openPickerButtonPosition: buttonPosition } }}
+              />
+            );
+            const { user } = render(RtlProvider ? <RtlProvider>{picker}</RtlProvider> : picker);
+
+            await openPicker(user, {
+              type: 'date-range',
+              initialFocus: rangePosition,
+              fieldType: 'single-input',
+            });
+
+            const fieldRoot = document.querySelector<HTMLElement>('[data-active-range-position]')!;
+            const activeBar = fieldRoot.querySelector<HTMLElement>(
+              `.${pickersInputBaseClasses.activeBar}`,
+            )!;
+            const firstSection = fieldRoot.querySelector<HTMLElement>(
+              `[data-sectionindex="${rangePosition === 'start' ? 0 : 3}"]`,
+            )!;
+
+            expect(fieldRoot).to.have.attribute('data-active-range-position', rangePosition);
+            await waitFor(() => {
+              expect(activeBar.offsetWidth).to.be.greaterThan(0);
+              expect(activeBar.offsetLeft).to.equal(firstSection.offsetLeft);
+            });
+            expect(window.getComputedStyle(activeBar).transitionProperty).to.equal('width, left');
+
+            await user.keyboard('{Escape}');
+            await openPicker(user, {
+              type: 'date-range',
+              initialFocus: rangePosition,
+              fieldType: 'single-input',
+            });
+
+            await waitFor(() => {
+              expect(activeBar.offsetLeft).to.equal(firstSection.offsetLeft);
+            });
+          },
+        );
+      });
+    });
 
     it.skipIf(isJSDOM)(
       'should render the active bar with a non-zero width for the focused range position',

@@ -1,11 +1,13 @@
-import { createDate } from 'test/utils/scheduler';
 import type {
   RecurringEventByDayValue,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
 import { afterEach, describe, it, expect, vi } from 'vitest';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { isJSDOM } from 'test/utils/skipIf';
-import { parseRRule, serializeRRule } from './rRuleString';
+import { BaseTemporal, toEpochMs } from '@mui/x-scheduler-internals/internals';
+import { isSameRRule, parseRRule, serializeRRule } from './rRuleString';
+import { RecurringSeries } from './RecurringSeries';
 
 describe('recurring-events/rRuleString', () => {
   describe('parseRRuleString', () => {
@@ -16,10 +18,9 @@ describe('recurring-events/rRuleString', () => {
     });
 
     it('should resolve string until from object input', () => {
-      const result = parseRRule({ freq: 'DAILY', until: '2025-03-15T00:00:00Z' }, 'default');
+      const result = parseRRule({ freq: 'DAILY', until: '2025-03-15' }, 'UTC', true);
       expect(result.freq).to.equal('DAILY');
-      expect(typeof result.until).to.equal('object');
-      expect(result.until!).toEqualDateTime('2025-03-15T00:00:00.000Z');
+      expect(result.until).toEqualPlainDate('2025-03-15');
     });
 
     it('should parse a simple RRULE string into an object', () => {
@@ -60,7 +61,102 @@ describe('recurring-events/rRuleString', () => {
         'America/New_York',
       );
 
-      expect(fromString.until!.getTime()).to.equal(fromObject.until!.getTime());
+      // The wall time of the instant in the timezone of the event: 00:00 UTC is 20:00 EDT.
+      expect(fromString.until?.toString()).to.equal('2025-03-14T20:00:00');
+      expect(fromObject.until?.toString()).to.equal('2025-03-14T20:00:00');
+    });
+
+    it('should read a UNTIL date as that day', () => {
+      const result = parseRRule('FREQ=DAILY;UNTIL=20250315', 'America/New_York', true);
+      expect(result.until).toEqualPlainDate('2025-03-15');
+    });
+
+    describe('UNTIL', () => {
+      const getLastDay = (
+        rrule: string | SchedulerEventRecurrenceRule,
+        allDay: boolean,
+        timezone = 'UTC',
+      ) => {
+        const series = new RecurringSeries({
+          rule: parseRRule(rrule, timezone, allDay),
+          start: toEpochMs(
+            BaseTemporal.PlainDateTime.from(allDay ? '2025-07-01T00:00' : '2025-07-01T09:00'),
+            timezone,
+          ),
+          timezone,
+        });
+        return series
+          .getOccurrenceDays(
+            BaseTemporal.PlainDate.from('2025-07-01'),
+            BaseTemporal.PlainDate.from('2025-07-10'),
+          )
+          .at(-1)
+          ?.toString();
+      };
+
+      it.each<[string, string | SchedulerEventRecurrenceRule, string]>([
+        ['an instant after the occurrence', 'FREQ=DAILY;UNTIL=20250704T120000Z', '2025-07-04'],
+        [
+          'the start of the occurrence',
+          { freq: 'DAILY', until: '2025-07-04T09:00:00Z' },
+          '2025-07-04',
+        ],
+        [
+          'an instant before the occurrence',
+          { freq: 'DAILY', until: '2025-07-04T08:59:59Z' },
+          '2025-07-03',
+        ],
+        ['a midnight instant', 'FREQ=DAILY;UNTIL=20250704T000000Z', '2025-07-03'],
+        ['a midnight wall time', { freq: 'DAILY', until: '2025-07-04T00:00:00' }, '2025-07-03'],
+      ])('should end a timed series on %s at the latest start it allows', (_, rrule, expected) => {
+        expect(getLastDay(rrule, false)).to.equal(expected);
+      });
+
+      it.each<string | SchedulerEventRecurrenceRule>([
+        { freq: 'DAILY', until: '2025-07-04' },
+        'FREQ=DAILY;UNTIL=20250704',
+      ])('should end an all-day series on the day of UNTIL %s', (rrule) => {
+        expect(getLastDay(rrule, true)).to.equal('2025-07-04');
+      });
+
+      it.each<string | SchedulerEventRecurrenceRule>([
+        'FREQ=DAILY;UNTIL=20250703T230000Z',
+        { freq: 'DAILY', until: '2025-07-03T23:00:00Z' },
+        { freq: 'DAILY', until: '2025-07-04T00:00:00' },
+      ])(
+        'should read the date-time until of an all-day series as its date in the timezone of the event, with a warning: %s',
+        (rrule) => {
+          clearWarningsCache();
+          let result: ReturnType<typeof parseRRule> | undefined;
+          // 23:00 UTC on July 3rd is July 4th in Tokyo.
+          expect(() => {
+            result = parseRRule(rrule, 'Asia/Tokyo', true);
+          }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+          expect(result!.until).toEqualPlainDate('2025-07-04');
+        },
+      );
+
+      it('should read a date-time as a plain date-time for a timed series', () => {
+        const fromDateTime = parseRRule('FREQ=DAILY;UNTIL=20250704T080000Z', 'Europe/Paris');
+        expect(fromDateTime.until).to.be.instanceOf(BaseTemporal.PlainDateTime);
+        expect(fromDateTime.until?.toString()).to.equal('2025-07-04T10:00:00');
+      });
+
+      it.each<string | SchedulerEventRecurrenceRule>([
+        'FREQ=DAILY;UNTIL=20250704',
+        { freq: 'DAILY', until: '2025-07-04' },
+      ])(
+        'should read the date until of a timed series as its whole day, with a warning: %s',
+        (rrule) => {
+          clearWarningsCache();
+          let result: ReturnType<typeof parseRRule> | undefined;
+          expect(() => {
+            result = parseRRule(rrule, 'Europe/Paris');
+          }).toWarnDev('of the recurrence rule of a timed event is not a date-time.');
+          expect(result!.until).to.be.instanceOf(BaseTemporal.PlainDate);
+          expect(result!.until?.toString()).to.equal('2025-07-04');
+        },
+      );
     });
 
     describe('with a host timezone that observes daylight saving time', () => {
@@ -81,7 +177,9 @@ describe('recurring-events/rRuleString', () => {
             'America/Sao_Paulo',
           );
 
-          expect(fromString.until!.getTime()).to.equal(fromObject.until!.getTime());
+          // 02:30 UTC is 23:30 the day before in São Paulo.
+          expect(fromString.until?.toString()).to.equal('2025-03-08T23:30:00');
+          expect(fromObject.until?.toString()).to.equal('2025-03-08T23:30:00');
         },
       );
     });
@@ -113,13 +211,13 @@ describe('recurring-events/rRuleString', () => {
 
     it('should throw when UNTIL is invalid', () => {
       expect(() => parseRRule('FREQ=DAILY;UNTIL=not-a-date', 'default')).to.throw(
-        'MUI X Scheduler: Invalid UNTIL date "NOT-A-DATE". The UNTIL value must be a valid date in ISO format. Provide a valid date string.',
+        'MUI X Scheduler: Invalid UNTIL date "NOT-A-DATE". The recurrence rule cannot tell when the series ends. Use a date like 20250315 or a UTC date-time like 20250315T093000Z.',
       );
     });
 
     it('should read a UNTIL in a year below 100 as that year', () => {
-      const result = parseRRule('FREQ=DAILY;UNTIL=00990315T000000Z', 'default');
-      expect(result.until!.getFullYear()).to.equal(99);
+      const result = parseRRule('FREQ=DAILY;UNTIL=00990315T000000Z', 'UTC');
+      expect(result.until!.year).to.equal(99);
     });
 
     it('should throw when UNTIL is a date that does not exist', () => {
@@ -130,6 +228,8 @@ describe('recurring-events/rRuleString', () => {
         '20250100T000000Z',
         '20250101T240000Z',
         '20250101T006000Z',
+        '20250231',
+        '2025031',
       ]) {
         expect(() => parseRRule(`FREQ=DAILY;UNTIL=${until}`, 'default')).to.throw(
           `MUI X Scheduler: Invalid UNTIL date "${until}".`,
@@ -182,6 +282,18 @@ describe('recurring-events/rRuleString', () => {
     it('should throw when the RRULE contains unsupported properties', () => {
       expect(() => parseRRule('FREQ=DAILY;FOO=bar', 'default')).to.throw(
         'MUI X Scheduler: Unsupported RRULE property "FOO". Supported properties are: FREQ, INTERVAL, BYDAY, BYMONTHDAY, BYMONTH, UNTIL, COUNT. Remove or replace the unsupported property.',
+      );
+    });
+
+    it('should ignore BYHOUR, BYMINUTE and BYSECOND in the rule of an all-day series', () => {
+      expect(
+        parseRRule('FREQ=DAILY;BYHOUR=9;BYMINUTE=30;BYSECOND=0;COUNT=3', 'UTC', true),
+      ).to.deep.equal({ freq: 'DAILY', count: 3 });
+    });
+
+    it('should throw on BYHOUR in the rule of a timed series', () => {
+      expect(() => parseRRule('FREQ=DAILY;BYHOUR=9', 'UTC')).to.throw(
+        /Unsupported RRULE property "BYHOUR"/,
       );
     });
 
@@ -302,17 +414,17 @@ describe('recurring-events/rRuleString', () => {
   describe('serializeRRule', () => {
     it('should serialize a simple DAILY rule', () => {
       const rule = { freq: 'DAILY' as const };
-      const result = serializeRRule(rule);
+      const result = serializeRRule(rule, 'UTC');
       expect(result).to.equal('FREQ=DAILY');
     });
 
     it('should include INTERVAL only when different from 1', () => {
       const ruleWithInterval1 = { freq: 'DAILY' as const, interval: 1 };
-      const resultWithoutInterval = serializeRRule(ruleWithInterval1);
+      const resultWithoutInterval = serializeRRule(ruleWithInterval1, 'UTC');
       expect(resultWithoutInterval).to.equal('FREQ=DAILY');
 
       const ruleWithInterval2 = { freq: 'DAILY' as const, interval: 2 };
-      const resultWithInterval = serializeRRule(ruleWithInterval2);
+      const resultWithInterval = serializeRRule(ruleWithInterval2, 'UTC');
       expect(resultWithInterval).to.equal('FREQ=DAILY;INTERVAL=2');
     });
 
@@ -321,37 +433,44 @@ describe('recurring-events/rRuleString', () => {
         freq: 'WEEKLY' as const,
         byDay: ['MO', 'WE', 'FR'] as RecurringEventByDayValue[],
       };
-      const result = serializeRRule(rule);
+      const result = serializeRRule(rule, 'UTC');
       expect(result).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
     });
 
     it('should serialize BYMONTHDAY correctly', () => {
       const rule = { freq: 'MONTHLY' as const, byMonthDay: [5, 15, 28] };
-      const result = serializeRRule(rule);
+      const result = serializeRRule(rule, 'UTC');
       expect(result).to.equal('FREQ=MONTHLY;BYMONTHDAY=5,15,28');
     });
 
     it('should serialize BYMONTH correctly', () => {
       const rule = { freq: 'YEARLY' as const, byMonth: [1, 6, 12] };
-      const result = serializeRRule(rule);
+      const result = serializeRRule(rule, 'UTC');
       expect(result).to.equal('FREQ=YEARLY;BYMONTH=1,6,12');
     });
 
     it('should serialize COUNT correctly', () => {
       const rule = { freq: 'DAILY' as const, count: 5 };
-      const result = serializeRRule(rule);
+      const result = serializeRRule(rule, 'UTC');
       expect(result).to.equal('FREQ=DAILY;COUNT=5');
     });
 
-    it('should serialize the minutes and seconds of UNTIL', () => {
-      const until = createDate('2025-03-15T13:45:30Z');
-      const rule = { freq: 'DAILY' as const, until };
-      const result = serializeRRule(rule);
-      expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T134530Z');
+    it('should serialize UNTIL as a date', () => {
+      const rule = { freq: 'DAILY' as const, until: BaseTemporal.PlainDate.from('2025-03-15') };
+      const result = serializeRRule(rule, 'UTC');
+      expect(result).to.equal('FREQ=DAILY;UNTIL=20250315');
+    });
+
+    it('should serialize a timed UNTIL as a UTC date-time', () => {
+      const rule = {
+        freq: 'DAILY' as const,
+        until: BaseTemporal.PlainDateTime.from('2025-03-15T10:30'),
+      };
+      expect(serializeRRule(rule, 'Europe/Paris')).to.equal('FREQ=DAILY;UNTIL=20250315T093000Z');
     });
 
     it('should combine multiple properties correctly', () => {
-      const until = createDate('2025-03-15T00:00:00Z');
+      const until = BaseTemporal.PlainDate.from('2025-03-15');
       const rule = {
         freq: 'WEEKLY' as const,
         interval: 2,
@@ -359,21 +478,21 @@ describe('recurring-events/rRuleString', () => {
         until,
       };
 
-      const result = serializeRRule(rule);
-      expect(result).to.equal('FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z');
+      const result = serializeRRule(rule, 'UTC');
+      expect(result).to.equal('FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315');
     });
 
     it('should handle empty BYDAY, BYMONTHDAY AND BYMONTHgracefully', () => {
       const ruleWithEmptyByDay = { freq: 'WEEKLY' as const, byDay: [] };
-      const resultWithoutByDay = serializeRRule(ruleWithEmptyByDay);
+      const resultWithoutByDay = serializeRRule(ruleWithEmptyByDay, 'UTC');
       expect(resultWithoutByDay).to.equal('FREQ=WEEKLY');
 
       const ruleWithEmptyByMonthDay = { freq: 'MONTHLY' as const, byMonthDay: [] };
-      const resultWithoutByMonthDay = serializeRRule(ruleWithEmptyByMonthDay);
+      const resultWithoutByMonthDay = serializeRRule(ruleWithEmptyByMonthDay, 'UTC');
       expect(resultWithoutByMonthDay).to.equal('FREQ=MONTHLY');
 
       const ruleWithEmptyByMonth = { freq: 'YEARLY' as const, byMonth: [] };
-      const resultWithoutByMonth = serializeRRule(ruleWithEmptyByMonth);
+      const resultWithoutByMonth = serializeRRule(ruleWithEmptyByMonth, 'UTC');
       expect(resultWithoutByMonth).to.equal('FREQ=YEARLY');
     });
 
@@ -382,7 +501,7 @@ describe('recurring-events/rRuleString', () => {
         freq: 'WEEKLY' as const,
         byDay: ['FR', 'MO', 'WE'] as RecurringEventByDayValue[],
       };
-      const result = serializeRRule(rule);
+      const result = serializeRRule(rule, 'UTC');
       expect(result).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
     });
 
@@ -391,28 +510,63 @@ describe('recurring-events/rRuleString', () => {
         freq: 'MONTHLY' as const,
         byDay: ['2TU', '-1FR', '1MO'] as RecurringEventByDayValue[],
       };
-      const result = serializeRRule(rule);
+      const result = serializeRRule(rule, 'UTC');
       expect(result).to.equal('FREQ=MONTHLY;BYDAY=1MO,2TU,-1FR');
     });
 
     it('should serialize BYMONTHDAY and BYMONTH sorted numerically', () => {
       const rule = { freq: 'YEARLY' as const, byMonthDay: [28, 5, 15], byMonth: [12, 1, 6] };
-      const result = serializeRRule(rule);
+      const result = serializeRRule(rule, 'UTC');
       expect(result).to.equal('FREQ=YEARLY;BYMONTHDAY=5,15,28;BYMONTH=1,6,12');
     });
 
-    it('should round-trip correctly (parseRRuleString - serializeRRule)', () => {
-      const input = 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z';
-      const parsed = parseRRule(input, 'default');
-      const serialized = serializeRRule(parsed);
+    it.each([
+      { allDay: true, until: '20250315' },
+      { allDay: false, until: '20250315T093000Z' },
+    ])('should round-trip UNTIL=$until for allDay=$allDay', ({ allDay, until }) => {
+      const input = `FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=${until}`;
+      const parsed = parseRRule(input, 'America/New_York', allDay);
+      const serialized = serializeRRule(parsed, 'America/New_York');
       expect(serialized).to.equal(input);
     });
 
     it('should round-trip even if BYDAY order differs in input', () => {
       const input = 'FREQ=WEEKLY;BYDAY=FR,MO,WE';
       const parsed = parseRRule(input, 'default');
-      const serialized = serializeRRule(parsed);
+      const serialized = serializeRRule(parsed, 'UTC');
       expect(serialized).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
+    });
+  });
+
+  describe('isSameRRule', () => {
+    const date = BaseTemporal.PlainDate.from('2025-07-04');
+
+    it('should compare the UNTIL of both rules', () => {
+      const dateTime = BaseTemporal.PlainDateTime.from('2025-07-04T09:00');
+      expect(isSameRRule({ freq: 'DAILY', until: date }, { freq: 'DAILY', until: date })).to.equal(
+        true,
+      );
+      expect(
+        isSameRRule(
+          { freq: 'DAILY', until: dateTime },
+          { freq: 'DAILY', until: BaseTemporal.PlainDateTime.from('2025-07-04T09:00') },
+        ),
+      ).to.equal(true);
+      expect(
+        isSameRRule(
+          { freq: 'DAILY', until: dateTime },
+          { freq: 'DAILY', until: dateTime.with({ hour: 10 }) },
+        ),
+      ).to.equal(false);
+    });
+
+    it('should tell a whole day from its midnight', () => {
+      expect(
+        isSameRRule(
+          { freq: 'DAILY', until: date },
+          { freq: 'DAILY', until: date.toPlainDateTime() },
+        ),
+      ).to.equal(false);
     });
   });
 });

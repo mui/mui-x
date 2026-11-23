@@ -5,14 +5,12 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   endOfDay,
   isSameDay,
+  processDay,
   setSystemTimezone,
   startOfDay,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import type {
-  SchedulerProcessedDate,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
@@ -22,6 +20,7 @@ interface TestEvent {
   start: string;
   end: string;
   title: string;
+  allDay?: boolean;
 }
 
 const noopPersistEvents = async () => ({ success: true });
@@ -46,17 +45,14 @@ const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 
 const CACHE_TTL_MS = 300_000;
 
-const isEventInRange = (
-  event: TestEvent,
-  start: TemporalSupportedObject,
-  end: TemporalSupportedObject,
-) => Date.parse(event.start) <= end.getTime() && Date.parse(event.end) >= start.getTime();
+const isEventInRange = (event: TestEvent, start: Date, end: Date) =>
+  Date.parse(event.start) <= end.getTime() && Date.parse(event.end) >= start.getTime();
 
 /**
  * The bounds of the `callIndex`-th call of `getEvents()`, as ISO strings.
  */
 const getFetchedRange = (getEvents: { mock: { calls: unknown[][] } }, callIndex = 0) =>
-  (getEvents.mock.calls[callIndex] as TemporalSupportedObject[]).map((date) => date.toISOString());
+  (getEvents.mock.calls[callIndex] as Date[]).map((date) => date.toISOString());
 
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],
@@ -64,23 +60,11 @@ const DEFAULT_PARAMS = {
 };
 
 // Build a minimal `visibleDaysSelector` returning a `dayCount`-day window starting at the
-// store's current `visibleDate` in the display timezone. The plugin only reads `timestamp`; `value`, `key`
-// and `minutesInDay` are filled in to satisfy `SchedulerProcessedDate`.
+// store's current `visibleDate` in the display timezone. The plugin only reads `timestamp`.
 const buildViewDefinition = (dayCount = 7): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
-  visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
-    const days: SchedulerProcessedDate[] = [];
-    for (let i = 0; i < dayCount; i += 1) {
-      const value = addDays(state.visibleDate, i);
-      days.push({
-        value,
-        key: String(value.getTime()),
-        timestamp: value.getTime(),
-        minutesInDay: 24 * 60,
-      });
-    }
-    return days;
-  },
+  visibleDaysSelector: (state: any): SchedulerProcessedDay[] =>
+    Array.from({ length: dayCount }, (_, i) => processDay(addDays(state.visibleDate, i))),
 });
 
 describe('Lazy loading - EventCalendarPremiumStore', () => {
@@ -162,6 +146,37 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       '2026-04-05T03:59:59.999Z',
     ]);
   });
+
+  it.each(['Asia/Tokyo', 'America/Los_Angeles'])(
+    'should load an all-day event on its dates displayed in %s',
+    async (displayTimezone) => {
+      const dataSource = {
+        getEvents: vi.fn(async (): Promise<TestEvent[]> => [
+          { id: '1', title: 'Holiday', start: '2025-07-01', end: '2025-07-02', allDay: true },
+        ]),
+        persistEvents: noopPersistEvents,
+      };
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        displayTimezone,
+        defaultVisibleDate: createDate('2025-07-01T00:00:00', displayTimezone),
+      });
+      store.setViewDefinition(buildViewDefinition(1));
+
+      await flushEffect();
+      await flushDebounce();
+
+      // The whole July 1st of the display timezone.
+      expect(getFetchedRange(dataSource.getEvents)).to.deep.equal([
+        createDate('2025-07-01T00:00:00', displayTimezone).toISOString(),
+        new Date(createDate('2025-07-02T00:00:00', displayTimezone).getTime() - 1).toISOString(),
+      ]);
+      expect(store.state.processedEventLookup.get('1')!.start.plainDateTime.toString()).to.equal(
+        '2025-07-01T00:00:00',
+      );
+    },
+  );
 
   it('should fire the initial fetch without waiting for the debounce window', async () => {
     const dataSource = {
@@ -460,7 +475,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     let resolvePending: () => void = () => {};
     let callIndex = 0;
     const dataSource = {
-      getEvents: vi.fn((start: TemporalSupportedObject, end: TemporalSupportedObject) => {
+      getEvents: vi.fn((start: Date, end: Date) => {
         callIndex += 1;
         const events = isEventInRange(event, start, end) ? [event] : [];
         if (callIndex !== 2) {
@@ -510,7 +525,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     const pending: Array<() => void> = [];
     const dataSource = {
       getEvents: vi.fn(
-        (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
+        (start: Date, end: Date) =>
           new Promise<TestEvent[]>((resolve) => {
             pending.push(() => resolve(isEventInRange(event, start, end) ? [event] : []));
           }),
@@ -581,7 +596,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     const pending: Array<() => void> = [];
     const dataSource = {
       getEvents: vi.fn(
-        (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
+        (start: Date, end: Date) =>
           new Promise<TestEvent[]>((resolve) => {
             pending.push(() => resolve(isEventInRange(event, start, end) ? [event] : []));
           }),
@@ -636,7 +651,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       title: 'Late event',
     };
     const dataSource = {
-      getEvents: vi.fn(async (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
+      getEvents: vi.fn(async (start: Date, end: Date) =>
         isEventInRange(event, start, end) ? [event] : [],
       ),
       persistEvents: noopPersistEvents,
@@ -671,9 +686,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
   it('should not fetch again when the visible date moves within the same day', async () => {
     const dataSource = {
-      getEvents: vi.fn(
-        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-      ),
+      getEvents: vi.fn(async (_start: Date, _end: Date) => []),
       persistEvents: noopPersistEvents,
     };
     // The day view keeps the time of `visibleDate` in its days
@@ -700,9 +713,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
   it('should request the range until the end of the last visible day', async () => {
     const dataSource = {
-      getEvents: vi.fn(
-        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-      ),
+      getEvents: vi.fn(async (_start: Date, _end: Date) => []),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
@@ -741,9 +752,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     it('should fetch the whole horizon when the agenda hides the empty days', async () => {
       const dataSource = {
-        getEvents: vi.fn(
-          async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-        ),
+        getEvents: vi.fn(async (_start: Date, _end: Date) => []),
         persistEvents: noopPersistEvents,
       };
       const store = new EventCalendarPremiumStore({
@@ -765,9 +774,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     it('should only fetch the uncovered part of the horizon after navigating', async () => {
       const dataSource = {
-        getEvents: vi.fn(
-          async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-        ),
+        getEvents: vi.fn(async (_start: Date, _end: Date) => []),
         persistEvents: noopPersistEvents,
       };
       const store = new EventCalendarPremiumStore({
@@ -800,9 +807,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     it('should keep the same range across the loading flip when the agenda hides empty days and weekends', async () => {
       const dataSource = {
-        getEvents: vi.fn(
-          async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-        ),
+        getEvents: vi.fn(async (_start: Date, _end: Date) => []),
         persistEvents: noopPersistEvents,
       };
       const store = new EventCalendarPremiumStore({

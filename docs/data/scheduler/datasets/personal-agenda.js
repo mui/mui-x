@@ -45,8 +45,8 @@ export const initialEvents = [
   },
   {
     id: 'f-1',
-    start: '2025-07-03T00:00:00',
-    end: '2025-07-04T00:00:00',
+    start: '2025-07-03',
+    end: '2025-07-05',
     title: "Alice's Birthday",
     resource: 'family',
     allDay: true,
@@ -291,8 +291,8 @@ export const initialEvents = [
   // Week of Aug 4 – Aug 10 — Beach vacation
   {
     id: 't-1',
-    start: '2025-08-04T00:00:00',
-    end: '2025-08-11T00:00:00',
+    start: '2025-08-04',
+    end: '2025-08-12',
     title: 'Beach Vacation',
     resource: 'travel',
     allDay: true,
@@ -395,8 +395,8 @@ export const initialEvents = [
   },
   {
     id: 'f-4',
-    start: '2025-08-29T00:00:00',
-    end: '2025-08-30T00:00:00',
+    start: '2025-08-29',
+    end: '2025-08-31',
     title: "Bob's Birthday",
     resource: 'family',
     allDay: true,
@@ -417,8 +417,8 @@ export const initialEvents = [
   // Week of Sep 1 – Sep 7
   {
     id: 'p-4',
-    start: '2025-09-01T00:00:00',
-    end: '2025-09-02T00:00:00',
+    start: '2025-09-01',
+    end: '2025-09-03',
     title: 'Labor Day',
     resource: 'personal',
     allDay: true,
@@ -483,8 +483,8 @@ export const initialEvents = [
   },
   {
     id: 't-2',
-    start: '2025-09-10T00:00:00',
-    end: '2025-09-13T00:00:00',
+    start: '2025-09-10',
+    end: '2025-09-14',
     title: 'Tech Conference',
     resource: 'travel',
     allDay: true,
@@ -957,8 +957,8 @@ export const initialEvents = [
   },
   {
     id: 'f-8',
-    start: '2025-11-22T00:00:00',
-    end: '2025-11-23T00:00:00',
+    start: '2025-11-22',
+    end: '2025-11-24',
     title: "Richard's Birthday",
     resource: 'family',
     allDay: true,
@@ -1145,16 +1145,16 @@ export const initialEvents = [
   // Week of Dec 22 – Dec 28 — Holiday vacation
   {
     id: 't-3',
-    start: '2025-12-22T00:00:00',
-    end: '2025-12-29T00:00:00',
+    start: '2025-12-22',
+    end: '2025-12-30',
     title: 'Holiday Trip',
     resource: 'travel',
     allDay: true,
   },
   {
     id: 'f-13',
-    start: '2025-12-25T00:00:00',
-    end: '2025-12-26T00:00:00',
+    start: '2025-12-25',
+    end: '2025-12-27',
     title: 'Christmas',
     resource: 'family',
     allDay: true,
@@ -1189,8 +1189,8 @@ export const initialEvents = [
   // Week of Jan 1 – Jan 4
   {
     id: 'p-13',
-    start: '2026-01-01T00:00:00',
-    end: '2026-01-02T00:00:00',
+    start: '2026-01-01',
+    end: '2026-01-03',
     title: "New Year's Day",
     resource: 'personal',
     allDay: true,
@@ -1306,8 +1306,8 @@ export const initialEvents = [
   // Week of Jan 19 – Jan 25
   {
     id: 'p-14',
-    start: '2026-01-19T00:00:00',
-    end: '2026-01-20T00:00:00',
+    start: '2026-01-19',
+    end: '2026-01-21',
     title: 'Martin Luther King Jr. Day',
     resource: 'personal',
     allDay: true,
@@ -1381,8 +1381,8 @@ export const initialEvents = [
   },
   {
     id: 'f-15',
-    start: '2026-01-29T00:00:00',
-    end: '2026-01-30T00:00:00',
+    start: '2026-01-29',
+    end: '2026-01-31',
     title: "Sarah's Birthday",
     resource: 'family',
     allDay: true,
@@ -1576,8 +1576,8 @@ export const initialEvents = [
   },
   {
     id: 'f-17',
-    start: '2026-02-28T00:00:00',
-    end: '2026-03-01T00:00:00',
+    start: '2026-02-28',
+    end: '2026-03-02',
     title: "Mark's Birthday",
     resource: 'family',
     allDay: true,
@@ -2201,8 +2201,8 @@ export const initialEvents = [
   },
   {
     id: 'f-24',
-    start: '2026-05-29T00:00:00',
-    end: '2026-05-30T00:00:00',
+    start: '2026-05-29',
+    end: '2026-05-31',
     title: "Tom's Birthday",
     resource: 'family',
     allDay: true,
@@ -2301,8 +2301,8 @@ export const initialEvents = [
   },
   {
     id: 't-4',
-    start: '2026-06-12T00:00:00',
-    end: '2026-06-15T00:00:00',
+    start: '2026-06-12',
+    end: '2026-06-16',
     title: 'Weekend Getaway',
     resource: 'travel',
     allDay: true,
@@ -2375,8 +2375,8 @@ export const initialEvents = [
   },
   {
     id: 't-5',
-    start: '2026-06-26T00:00:00',
-    end: '2026-06-29T00:00:00',
+    start: '2026-06-26',
+    end: '2026-06-30',
     title: 'Wedding Weekend',
     resource: 'travel',
     allDay: true,

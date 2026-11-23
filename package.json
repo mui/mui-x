@@ -1,5 +1,5 @@
 {
-  "version": "9.17.0",
+  "version": "9.18.1",
   "private": true,
   "scripts": {
     "start": "pnpm i && pnpm docs:dev",
@@ -46,8 +46,9 @@
     "test:e2e-website:dev": "PLAYWRIGHT_TEST_BASE_URL=http://localhost:3001 npx playwright test test/e2e-website --config test/e2e-website/playwright.config.ts",
     "test:regressions": "pnpm -F ./test/regressions start",
     "test:argos": "code-infra argos-push --folder test/regressions/screenshots/chrome",
-    "test:charts-benchmark": "pnpm -F ./test/performance-charts test:performance",
+    "test:benchmark": "pnpm -F ./test/benchmark benchmark",
     "typescript": "lerna run --concurrency 3 --no-bail --no-sort typescript",
+    "test:types:charts": "node test/charts-declarations/run.mjs",
     "use-react-18": "code-infra set-version-overrides --pkg react@18",
     "use-material-ui-v6": "code-infra set-version-overrides --pkg @mui/material@6",
     "use-material-ui-next": "code-infra set-version-overrides --pkg @mui/material@next",
@@ -127,7 +128,7 @@
     "picomatch": "4.0.7",
     "pkg-pr-new": "0.0.93",
     "playwright": "catalog:",
-    "prettier": "3.9.10",
+    "prettier": "3.10.1",
     "pretty-quick": "4.2.2",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -153,6 +154,6 @@
   "packageManager": "pnpm@12.18.0",
   "engines": {
     "pnpm": "12.18.0",
-    "node": ">=22.23.4"
+    "node": ">=22.23.5"
   }
 }

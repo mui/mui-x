@@ -250,7 +250,7 @@ interface ChatBoxMessageSlots {
    * Actions row component (receives `{ messageId }`). Pass `null` to hide
    * actions entirely; omit to render only the declarative `extraActions` from
    * `slotProps.messageActions` if provided.
-   * @default undefined, which renders only the `extraActions` from `slotProps.messageActions`, if any
+   * @default An actions row with only the `extraActions` from `slotProps.messageActions`, if any.
    */
   messageActions?: React.ElementType | null;
   /**
@@ -359,7 +359,7 @@ interface ChatBoxWidgetSlots {
   suggestions?: React.ElementType;
   /**
    * Custom content rendered when the thread has no messages.
-   * @default null, which shows the built-in empty state
+   * @default The built-in empty state, or the suggestions when there are some.
    */
   emptyState?: React.ElementType;
 }

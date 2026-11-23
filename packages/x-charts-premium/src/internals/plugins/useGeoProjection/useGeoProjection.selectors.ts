@@ -21,6 +21,12 @@ import { getParallels, resolveProjectionInstance } from './projection.utils';
 
 const ZERO_COORDINATES: [number, number] = [0, 0];
 
+// Preserve the public ChartState alias in emitted declarations instead of importing private
+// Community state modules through paths that are not exported by the package.
+type GeoSelector<Result> = (
+  state: ChartState<[], [UseGeoProjectionSignature, UseGeoProjectionZoomSignature]>,
+) => Result;
+
 export const selectorChartGeoProjectionState = (
   state: ChartState<[], [UseGeoProjectionSignature]>,
 ): UseGeoProjectionState['geoProjection'] | undefined => state.geoProjection;
@@ -36,17 +42,19 @@ export const selectorChartGeoData: (
   (geoProjection) => geoProjection?.geoData ?? null,
 );
 
-export const selectorChartGeoFeatureKey = createSelector(
+export const selectorChartGeoFeatureKey: GeoSelector<
+  UseGeoProjectionState['geoProjection']['geoFeatureKey']
+> = createSelector(
   selectorChartGeoProjectionState,
   (geoProjection) => geoProjection?.geoFeatureKey ?? 'name',
 );
 
-export const selectorChartRawProjection = createSelector(
+export const selectorChartRawProjection: GeoSelector<GeoProjectionInput | null> = createSelector(
   selectorChartGeoProjectionState,
   (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
 );
 
-export const selectorChartZoomLevel = createSelector(
+export const selectorChartZoomLevel: GeoSelector<number> = createSelector(
   selectorChartGeoProjectionZoomState,
   function selectorChartZoomLevel(geoProjectionZoom): number {
     return geoProjectionZoom?.zoomLevel ?? 1;
@@ -93,33 +101,34 @@ const selectorChartParallels = createSelectorMemoized(
  * Features without a string `properties.name` are skipped; on duplicates,
  * the first occurrence wins.
  */
-export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
-  selectorChartGeoData,
-  selectorChartGeoFeatureKey,
-  (geoData, geoFeatureKey): ReadonlyMap<string, number[]> => {
-    const map = new Map<string, number[]>();
-    if (!geoData) {
+export const selectorChartGeoFeatureIndexesByName: GeoSelector<ReadonlyMap<string, number[]>> =
+  createSelectorMemoized(
+    selectorChartGeoData,
+    selectorChartGeoFeatureKey,
+    (geoData, geoFeatureKey): ReadonlyMap<string, number[]> => {
+      const map = new Map<string, number[]>();
+      if (!geoData) {
+        return map;
+      }
+      geoData.features.forEach((feature, index) => {
+        const name =
+          typeof geoFeatureKey === 'function'
+            ? geoFeatureKey(feature)
+            : feature.properties?.[geoFeatureKey];
+        if (typeof name !== 'string') {
+          return;
+        }
+        if (map.has(name)) {
+          map.get(name)!.push(index);
+          return;
+        }
+        map.set(name, [index]);
+      });
       return map;
-    }
-    geoData.features.forEach((feature, index) => {
-      const name =
-        typeof geoFeatureKey === 'function'
-          ? geoFeatureKey(feature)
-          : feature.properties?.[geoFeatureKey];
-      if (typeof name !== 'string') {
-        return;
-      }
-      if (map.has(name)) {
-        map.get(name)!.push(index);
-        return;
-      }
-      map.set(name, [index]);
-    });
-    return map;
-  },
-);
+    },
+  );
 
-export const selectorFitScale = createSelector(
+export const selectorFitScale: GeoSelector<number | null> = createSelector(
   selectorChartRawProjection,
   selectorChartParallels,
   selectorChartInitialCenter,
@@ -165,7 +174,7 @@ export const selectorFitScale = createSelector(
  *   scale/translation are derived here, never stored — so they stay correct across resizes.
  * - Returns `null` when no projection is registered or the name is unknown.
  */
-export const selectorChartProjection = createSelectorMemoized(
+export const selectorChartProjection: GeoSelector<GeoProjection | null> = createSelectorMemoized(
   selectorChartRawProjection,
   selectorChartParallels,
   selectorChartGeoData,
@@ -215,7 +224,7 @@ export const selectorChartProjection = createSelectorMemoized(
  * Resolves the raw `projection` input into a ready-to-use `GeoPath` instance
  * fitted to the chart's drawing area.
  */
-export const selectorChartGeoPath = createSelectorMemoized(
+export const selectorChartGeoPath: GeoSelector<GeoPath | null> = createSelectorMemoized(
   selectorChartProjection,
   (projection): GeoPath | null => {
     if (!projection) {
@@ -225,7 +234,7 @@ export const selectorChartGeoPath = createSelectorMemoized(
   },
 );
 
-export const selectorGeoTooltipPosition = createSelectorMemoized(
+export const selectorGeoTooltipPosition: GeoSelector<GeoTooltipPosition> = createSelectorMemoized(
   selectorChartGeoData,
   selectorChartProjection,
   selectorChartGeoFeatureIndexesByName,

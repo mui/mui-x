@@ -16,7 +16,6 @@ import type {
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
@@ -28,10 +27,11 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
-  getOccurrenceDataTimezone,
+  getOccurrenceLastDayNumber,
   getResourceSelectionMode,
   isBuiltInEventProperty,
   isEventOccurrence,
+  plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -46,8 +46,7 @@ import {
   hasProp,
   BUILT_IN_FORM_KEYS,
   getResentRangeBounds,
-  getEventBoundTimestamp,
-  getEventTimezonePlainDate,
+  getRulePlainDate,
   getRecurrenceRuleBound,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
@@ -107,7 +106,7 @@ const RECURRENCE_FORM_KEYS = new Set(['recurrenceSelection', 'rruleDraft']);
 // Scheduler settings read when the async validation resolves; the submit
 // continuation must not use the render-time closure values.
 interface ResolutionSettings {
-  displayTimezone: TemporalTimezone;
+  displayTimezone: string;
   shouldEventRequireResource: boolean;
   showRecurrence: boolean;
 }
@@ -141,14 +140,25 @@ export function FormContent(props: FormContentProps) {
     ),
   ).current;
 
+  // The display timezone the occurrence was read in, captured once per editing session.
+  const initialDisplayTimezone = useRefWithInit(() =>
+    schedulerOtherSelectors.displayTimezone(store.state),
+  ).current;
+
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
-    const { start, end, timezone } = occurrence.displayTimezone;
-    const startFields = formatDateAndTimeFields(start.timestamp, timezone);
-    const endFields = formatDateAndTimeFields(end.timestamp, timezone);
+    const startFields = formatDateAndTimeFields(occurrence.start.plainDateTime);
+    // The form shows the last day of an all-day event, the day before its exclusive end.
+    const endFields = formatDateAndTimeFields(
+      occurrence.allDay
+        ? plainDateFromDayNumber(
+            getOccurrenceLastDayNumber(occurrence, initialDisplayTimezone),
+          ).toPlainDateTime('23:59')
+        : occurrence.end.plainDateTime,
+    );
 
     // The rule is read and written in the event's timezone, not the display one.
-    const base = getOccurrenceDataTimezone(occurrence)?.rrule;
+    const base = isEventOccurrence(occurrence) ? occurrence.rrule : undefined;
     // The occurrence only carries the built-in event properties — custom fields
     // come from the raw model. When creating an event there is no model yet.
     const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
@@ -188,7 +198,12 @@ export function FormContent(props: FormContentProps) {
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
         base,
-        getEventTimezonePlainDate(occurrence, getEventBoundTimestamp(occurrence, 'start')),
+        getRulePlainDate(
+          occurrence,
+          occurrence.start.timestamp,
+          !!occurrence.allDay,
+          initialDisplayTimezone,
+        ),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -206,6 +221,7 @@ export function FormContent(props: FormContentProps) {
       initialValues={initialValues}
       occurrence={occurrence}
       resourceSelectionMode={resourceSelectionMode}
+      initialDisplayTimezone={initialDisplayTimezone}
       onValuesChange={pushPlaceholder}
     >
       <FormContentInner {...props} />
@@ -220,7 +236,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
-  const { occurrence, resourceSelectionMode } = formStore;
+  const { occurrence, resourceSelectionMode, initialDisplayTimezone } = formStore;
 
   // Selector hooks — only what the render itself needs; the submit continuation
   // reads its own `ResolutionSettings` snapshot instead of subscribing here.
@@ -381,7 +397,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // it untouched can move the event: the same day re-read in another timezone
       // is a different day. Only the keys the submitted range reads count — a time
       // left over from toggling all-day off and back on must not re-arm the resend.
-      const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
+      const displayTimezoneMoved = current.displayTimezone !== initialDisplayTimezone;
       const { startResent, endResent } = getResentRangeBounds(
         dirtyValues,
         values.allDay,
@@ -389,17 +405,16 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       );
       // With a `dataSource`, a resize updates the snapshot before the stored model: resend a
       // bound that differs while the model still holds what it did at the resize, or the update
-      // rebuilds it from the stale model. A bound the host moved since is kept. Compared as data
-      // instants, since the display bounds of an all-day event are normalized to whole days.
+      // rebuilds it from the stale model. A bound the host moved since is kept.
       const liveEvent = schedulerEventSelectors.processedEvent(store.state, occurrence.id);
       const modelBounds = schedulerOtherSelectors.editingModelBounds(store.state, occurrence.key);
       const boundPending = (bound: 'start' | 'end') =>
         liveEvent != null &&
-        liveEvent.dataTimezone.rrule == null &&
+        liveEvent.rrule == null &&
         !displayTimezoneMoved &&
         isEventOccurrence(occurrence) &&
-        modelBounds?.[bound] === liveEvent.dataTimezone[bound].timestamp &&
-        occurrence.dataTimezone[bound].timestamp !== liveEvent.dataTimezone[bound].timestamp;
+        modelBounds?.[bound] === liveEvent[bound].timestamp &&
+        occurrence[bound].timestamp !== liveEvent[bound].timestamp;
       // Read directly instead of subscribing: the placeholder changes on every
       // creation keystroke and would re-render the whole dialog.
       const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
@@ -411,10 +426,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // instant, which its re-read from the form can miss: a time in a repeated DST hour. On a
       // non-recurring event the store keeps the live model's bound, which the host may have
       // moved since the snapshot; the recurring update defaults it to the occurrence's own.
-      const untouchedBound = (bound: 'start' | 'end') =>
-        liveEvent != null && liveEvent.dataTimezone.rrule == null
-          ? liveEvent.displayTimezone[bound].timestamp
-          : occurrence.displayTimezone[bound].timestamp;
+      const untouchedBound = (bound: 'start' | 'end') => {
+        const source = liveEvent != null && liveEvent.rrule == null ? liveEvent : occurrence;
+        return source[bound].timestamp;
+      };
       const submittedStart = submitStart ? range.start : untouchedBound('start');
       const submittedEnd = submitEnd ? range.end : untouchedBound('end');
       if (!runSubmitChecks(values, submittedStart, submittedEnd, current) || !isValid) {
@@ -449,14 +464,16 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       const recurrencePresets = current.showRecurrence
         ? schedulerRecurringEventSelectors.presets(
             store.state,
-            getEventTimezonePlainDate(occurrence, ruleStart),
+            getRulePlainDate(occurrence, ruleStart, values.allDay, current.displayTimezone),
           )
         : null;
       let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
       if (recurrencePresets == null || values.recurrenceSelection === null) {
         rruleToSubmit = undefined;
       } else if (values.recurrenceSelection === 'custom') {
-        rruleToSubmit = values.rruleDraft;
+        // The validation of the Recurrence tab rejects a `null` until, which ends on a date that
+        // isn't set.
+        rruleToSubmit = values.rruleDraft as SchedulerProcessedEventRecurrenceRule;
       } else {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
@@ -466,14 +483,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       const end = new Date(range.end);
       if (isCreation) {
         store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
-      } else if (
-        current.showRecurrence &&
-        isEventOccurrence(occurrence) &&
-        occurrence.dataTimezone.rrule
-      ) {
+      } else if (current.showRecurrence && isEventOccurrence(occurrence) && occurrence.rrule) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
           store.state,
-          occurrence.dataTimezone.rrule,
+          occurrence.rrule,
           rruleToSubmit,
         );
 
@@ -489,7 +502,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         };
 
         await store.updateRecurringEvent({
-          occurrenceStart: occurrence.dataTimezone.start.value,
+          occurrence,
           changes,
           onSubmit: onClose,
         });

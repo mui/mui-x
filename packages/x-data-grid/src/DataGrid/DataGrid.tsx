@@ -18,6 +18,7 @@ import { useMaterialCSSVariables } from '../material/variables';
 import type { GridConfiguration } from '../models/configuration/gridConfiguration';
 import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
+import { pickDataAttributes } from '../utils/utils';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
@@ -55,6 +56,7 @@ const DataGridRaw = function DataGrid<R extends GridValidRowModel>(
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...pickDataAttributes(props)}
         {...props.slotProps?.root}
         ref={ref}
       />
@@ -860,10 +862,11 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    ids: PropTypes.instanceOf(Set).isRequired,
-    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
-  }),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      ids: PropTypes.instanceOf(Set).isRequired,
+      type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+    }),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
