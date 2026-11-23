@@ -11,7 +11,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 
 import { keyframes, styled } from '@mui/material/styles';
-import * as materialStyles from '@mui/material/styles';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -184,8 +183,7 @@ const PromptChangesToggle = styled('button', {
   },
   ...(theme.focusVisible
     ? {
-        ...materialStyles.private_applyInsetFocusVisible?.(1),
-        '&:focus-visible': theme.focusVisible,
+        '&:focus-visible': theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
       }
     : {
         '&:focus-visible': {

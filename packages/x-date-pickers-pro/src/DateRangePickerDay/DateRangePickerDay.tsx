@@ -11,7 +11,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
-import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
+import { getTodayFocusVisible, usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import type {
   DateRangePickerDayOwnerState,
@@ -211,10 +211,7 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
   },
   ...(theme.focusVisible
     ? {
-        [`&.${buttonBaseClasses.focusVisible}`]: {
-          ...theme.focusVisible,
-          ...materialStyles.private_applyInsetFocusVisible?.(1),
-        },
+        [`&.${buttonBaseClasses.focusVisible}`]: theme.applyFocusVisible?.('inset'),
       }
     : {
         '&:focus': {
@@ -266,8 +263,7 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         outlineOffset: -1,
         ...(theme.focusVisible && {
           [`&.${buttonBaseClasses.focusVisible}`]: {
-            ...theme.focusVisible,
-            ...materialStyles.private_applyInsetFocusVisible?.(2),
+            ...getTodayFocusVisible(theme),
             boxShadow: `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
           },
         }),

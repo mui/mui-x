@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
-import * as materialStyles from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import IconButton from '@mui/material/IconButton';
+import { buttonBaseClasses } from '@mui/material/ButtonBase';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
 import type {
   PickersArrowSwitcherOwnerState,
@@ -41,15 +41,15 @@ const PickersArrowSwitcherButton = styled(IconButton, {
   slot: 'Button',
 })<{
   ownerState: PickersArrowSwitcherOwnerState;
-}>({
-  ...materialStyles.private_applyInsetFocusVisible?.(1),
+}>(({ theme }) => ({
+  [`&.${buttonBaseClasses.focusVisible}`]: theme.applyFocusVisible?.('inset'),
   variants: [
     {
       props: { isButtonHidden: true },
       style: { visibility: 'hidden' },
     },
   ],
-});
+}));
 
 const useUtilityClasses = (classes: Partial<PickersArrowSwitcherClasses> | undefined) => {
   const slots = {

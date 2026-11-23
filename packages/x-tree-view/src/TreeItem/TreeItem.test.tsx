@@ -87,6 +87,7 @@ describe('<TreeItem />', () => {
       const content = screen.getByRole('treeitem').firstElementChild;
       expect(content).to.have.style('outline-style', 'solid');
       expect(content).to.have.style('outline-color', 'rgb(1, 2, 3)');
+      expect(content).to.have.style('outline-offset', '-2px');
     });
 
     it.skipIf(isJSDOM)('shows the ring on an item built with useTreeItem', async () => {

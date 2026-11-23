@@ -74,8 +74,7 @@ const DefaultYearButton = styled('button', {
   ...(theme.focusVisible && {
     '&:focus-visible': {
       backgroundColor: 'transparent',
-      ...materialStyles.private_applyInsetFocusVisible?.(1),
-      ...theme.focusVisible,
+      ...(theme.applyFocusVisible?.('inset') ?? theme.focusVisible),
     },
   }),
   '&:hover': {

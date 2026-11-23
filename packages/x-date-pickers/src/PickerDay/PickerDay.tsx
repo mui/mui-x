@@ -16,6 +16,7 @@ import { pickerDayClasses, getPickerDayUtilityClass } from './pickerDayClasses';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import type { PickerDayOwnerState, PickerDayProps } from './PickerDay.types';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
+import { getTodayFocusVisible } from '../internals/utils/todayFocusVisible';
 
 const useUtilityClasses = (
   ownerState: PickerDayOwnerState,
@@ -85,10 +86,7 @@ const PickerDayRoot = styled(ButtonBase, {
   },
   ...(theme.focusVisible
     ? {
-        [`&.${buttonBaseClasses.focusVisible}`]: {
-          ...theme.focusVisible,
-          ...materialStyles.private_applyInsetFocusVisible?.(1),
-        },
+        [`&.${buttonBaseClasses.focusVisible}`]: theme.applyFocusVisible?.('inset'),
       }
     : {
         '&:focus': {
@@ -162,8 +160,7 @@ const PickerDayRoot = styled(ButtonBase, {
         outlineOffset: -1,
         ...(theme.focusVisible && {
           [`&.${buttonBaseClasses.focusVisible}`]: {
-            ...theme.focusVisible,
-            ...materialStyles.private_applyInsetFocusVisible?.(2),
+            ...getTodayFocusVisible(theme),
             boxShadow: `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
           },
         }),

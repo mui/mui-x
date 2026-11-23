@@ -314,6 +314,7 @@ describe('<DateRangePickerDay />', () => {
       await user.keyboard('{Tab}');
 
       expect(screen.getByRole('button')).to.have.style('outline-style', 'solid');
+      expect(screen.getByRole('button')).to.have.style('outline-offset', '-2px');
       expect(screen.getByRole('button')).to.have.style(
         'box-shadow',
         'rgb(1, 2, 3) 0px 0px 0px 4px inset',
@@ -347,6 +348,7 @@ describe('<DateRangePickerDay />', () => {
         'box-shadow',
         'rgb(7, 8, 9) 0px 0px 0px 1px inset',
       );
+      expect(screen.getByRole('button')).to.have.style('outline-offset', '-4px');
     });
   });
 });

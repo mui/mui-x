@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
-import * as materialStyles from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import IconButton from '@mui/material/IconButton';
+import { buttonBaseClasses } from '@mui/material/ButtonBase';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
 import { ArrowDropDownIcon } from '../icons';
@@ -86,7 +86,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   ownerState: PickerOwnerState & { view: DateView };
 }>(({ theme }) => ({
   marginRight: 'auto',
-  ...(theme.focusVisible && materialStyles.private_applyInsetFocusVisible?.(1)),
+  [`&.${buttonBaseClasses.focusVisible}`]: theme.applyFocusVisible?.('inset'),
   variants: [
     {
       props: { view: 'year' },

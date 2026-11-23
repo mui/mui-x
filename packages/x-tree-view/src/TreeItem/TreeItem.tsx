@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import * as materialStyles from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -67,10 +66,8 @@ export const TreeItemContent = styled('div', {
   },
   ...(theme.focusVisible
     ? {
-        '[role="treeitem"]:focus-visible > &': {
-          ...materialStyles.private_applyInsetFocusVisible?.(1),
-          ...theme.focusVisible,
-        },
+        '[role="treeitem"]:focus-visible > &':
+          theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
       }
     : {
         '&[data-focused]': {

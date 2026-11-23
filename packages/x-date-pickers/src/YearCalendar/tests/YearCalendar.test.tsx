@@ -329,6 +329,7 @@ describe('<YearCalendar />', () => {
       const selectedYear = screen.getByRole('radio', { name: '2019' });
       expect(document.activeElement).to.equal(selectedYear);
       expect(selectedYear).to.have.style('outline-style', 'solid');
+      expect(selectedYear).to.have.style('outline-offset', '-2px');
       expect(selectedYear).to.have.style('box-shadow', 'rgb(1, 2, 3) 0px 0px 0px 4px inset');
     },
   );
