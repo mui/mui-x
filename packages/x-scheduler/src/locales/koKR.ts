@@ -60,15 +60,15 @@ const lagUnitNames: Record<string, string> = {
   week: '주',
 };
 
-const otherEvent = {
+const otherEventStems = {
   finish: { before: '끝나야', after: '끝나고' },
   start: { before: '시작되어야', after: '시작되고' },
 };
 
 const waitsOn = (title: string, lag: string | null, other: 'finish' | 'start', self: string) =>
   lag === null
-    ? `"${title}" 일정이 ${otherEvent[other].before} ${self} 수 있습니다.`
-    : `"${title}" 일정이 ${otherEvent[other].after} ${lag} 뒤에야 ${self} 수 있습니다.`;
+    ? `"${title}" 일정이 ${otherEventStems[other].before} ${self} 수 있습니다.`
+    : `"${title}" 일정이 ${otherEventStems[other].after} ${lag} 뒤에야 ${self} 수 있습니다.`;
 
 const koKRDialog: SchedulerDialogTranslations = {
   // EventDialog
