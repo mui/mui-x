@@ -237,7 +237,6 @@ export const useFieldState = <
     sectionIndex: number;
     value: string;
   } | null>(null);
-  const updateSectionValueOnNextInvalidDateTimeout = useTimeout();
   const setSectionUpdateToApplyOnNextInvalidDate = (newSectionValue: string) => {
     if (activeSectionIndex == null) {
       return;
@@ -247,9 +246,6 @@ export const useFieldState = <
       sectionIndex: activeSectionIndex,
       value: newSectionValue,
     };
-    updateSectionValueOnNextInvalidDateTimeout.start(0, () => {
-      sectionToUpdateOnNextInvalidDateRef.current = null;
-    });
   };
 
   const clearValue = () => {
@@ -321,7 +317,6 @@ export const useFieldState = <
     newSectionValue,
     shouldGoToNextSection,
   }: UpdateSectionValueParameters<TValue>) => {
-    updateSectionValueOnNextInvalidDateTimeout.clear();
     cleanActiveDateSectionsIfValueNullTimeout.clear();
 
     const activeDate = fieldValueManager.getDateFromSection(value, section);
@@ -491,8 +486,16 @@ export const useFieldState = <
     setCharacterQuery(null);
   }
 
+  // The pending section update must survive until the field renders the value it published.
+  // Only clear the update this render has seen: a passive effect of an earlier render can run
+  // after a newer update was registered and before the field renders the published value.
+  // @link: https://github.com/mui/mui-x/issues/24197
+  const sectionToUpdateSeenByRender = sectionToUpdateOnNextInvalidDateRef.current;
   React.useEffect(() => {
-    if (sectionToUpdateOnNextInvalidDateRef.current != null) {
+    if (
+      sectionToUpdateOnNextInvalidDateRef.current != null &&
+      sectionToUpdateOnNextInvalidDateRef.current === sectionToUpdateSeenByRender
+    ) {
       sectionToUpdateOnNextInvalidDateRef.current = null;
     }
   });
