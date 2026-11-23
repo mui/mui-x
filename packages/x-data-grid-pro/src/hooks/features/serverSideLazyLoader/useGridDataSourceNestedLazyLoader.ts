@@ -7,6 +7,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import {
   useGridEvent,
+  useGridApiMethod,
   gridSortModelSelector,
   gridFilterModelSelector,
   gridRowNodeSelector,
@@ -42,7 +43,10 @@ import {
   asReplaceUpdates,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor, GridTreeDepths } from '@mui/x-data-grid/internals';
-import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
+import type {
+  GridDataSourceNestedLazyLoaderPrivateApi,
+  GridGetRowsParamsPro as GridGetRowsParams,
+} from '../dataSource/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
@@ -212,6 +216,20 @@ export const useGridDataSourceNestedLazyLoader = (
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
 
+  // Viewport loads and revalidations run concurrently with the child requests, so they must
+  // not invalidate the data source state.
+  const fetchRootRowsIncremental = React.useCallback(
+    (params: Partial<GridGetRowsParams>) => {
+      privateApiRef.current.fetchRootRowsIncremental(params);
+    },
+    [privateApiRef],
+  );
+
+  const debouncedFetchRootRowsIncremental = React.useMemo(
+    () => debounce(fetchRootRowsIncremental, 0),
+    [fetchRootRowsIncremental],
+  );
+
   const hasFilterModelChanged = useGridDataSourceFilterModelChange(privateApiRef);
 
   // Adjust the render context range to fit the pagination model's page size
@@ -294,7 +312,7 @@ export const useGridDataSourceNestedLazyLoader = (
 
     rowRangesByParent.forEach((range, parentId) => {
       if (parentId === GRID_ROOT_GROUP_ID) {
-        debouncedFetchRows(
+        debouncedFetchRootRowsIncremental(
           adjustRowParams({
             start: range.start,
             end: range.end,
@@ -327,9 +345,16 @@ export const useGridDataSourceNestedLazyLoader = (
     () =>
       startPollingWith(() => {
         const { firstRowToRender, lastRowToRender } = renderedRowsIntervalCache.current;
-        revalidateRows(firstRowToRender, lastRowToRender);
+        if (lastRowToRender > firstRowToRender) {
+          revalidateRows(firstRowToRender, lastRowToRender);
+          return;
+        }
+        // The cache is reset on invalidation and only refilled by `renderedRowsIntervalChange`,
+        // which does not fire when the rebuilt tree renders the same interval.
+        const renderContext = gridRenderContextSelector(privateApiRef);
+        revalidateRows(renderContext.firstRowIndex, renderContext.lastRowIndex);
       }),
-    [startPollingWith, revalidateRows],
+    [startPollingWith, revalidateRows, privateApiRef],
   );
 
   /**
@@ -440,6 +465,10 @@ export const useGridDataSourceNestedLazyLoader = (
 
   const findSkeletonSectionAndFetchRows = React.useCallback(
     (firstRowIndex: number, lastRowIndex: number, options: FetchSkeletonRowsOptions = {}) => {
+      // A fetch scheduled from a stale tree would target indexes of the tree being replaced.
+      if (rowsStale.current) {
+        return false;
+      }
       const sortModel = gridSortModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
       const currentVisibleRows = getVisibleRows(privateApiRef);
@@ -497,7 +526,7 @@ export const useGridDataSourceNestedLazyLoader = (
         }
 
         if (parentId === GRID_ROOT_GROUP_ID) {
-          debouncedFetchRows(
+          debouncedFetchRootRowsIncremental(
             adjustRowParams({
               start: firstSkeletonIdx,
               end: lastSkeletonIdx,
@@ -519,7 +548,13 @@ export const useGridDataSourceNestedLazyLoader = (
 
       return true;
     },
-    [privateApiRef, debouncedFetchRows, adjustRowParams, revalidateRows, startPolling],
+    [
+      privateApiRef,
+      debouncedFetchRootRowsIncremental,
+      adjustRowParams,
+      revalidateRows,
+      startPolling,
+    ],
   );
 
   const fetchVisibleSkeletonRows = React.useCallback(
@@ -942,6 +977,13 @@ export const useGridDataSourceNestedLazyLoader = (
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
+        if (rowsStale.current) {
+          // The tree no longer matches the request params, and leaving the flag up would keep
+          // lazy loading and polling disabled until a later invalidation happens to succeed.
+          resetRowTree();
+          rowsStale.current = false;
+        }
+        privateApiRef.current.setLoading(false);
         return;
       }
 
@@ -1126,6 +1168,27 @@ export const useGridDataSourceNestedLazyLoader = (
     [props.lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
 
+  const markRowsStale = React.useCallback(() => {
+    rowsStale.current = true;
+    renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
+    throttledHandleRenderedRowsIntervalChange.clear();
+    // A queued incremental fetch would otherwise take the latest request id and strand the rebuild.
+    debouncedFetchRootRowsIncremental.clear();
+  }, [throttledHandleRenderedRowsIntervalChange, debouncedFetchRootRowsIncremental]);
+
+  const invalidateNestedRows = React.useCallback<
+    GridDataSourceNestedLazyLoaderPrivateApi['invalidateNestedRows']
+  >(() => {
+    // Nothing to rebuild on the initial load, and it would route the first response through
+    // the reset branch of `handleDataUpdate`.
+    if (!isStrategyActive || privateApiRef.current.getRowsCount() === 0) {
+      return;
+    }
+    markRowsStale();
+  }, [isStrategyActive, privateApiRef, markRowsStale]);
+
+  useGridApiMethod(privateApiRef, { invalidateNestedRows }, 'private');
+
   React.useEffect(() => {
     const rootElement = privateApiRef.current.rootElementRef?.current ?? null;
     return () => {
@@ -1134,15 +1197,20 @@ export const useGridDataSourceNestedLazyLoader = (
       // `<Activity mode="hidden">` keeps the root connected and lets the queued fetch run.
       if (!rootElement?.isConnected) {
         debouncedFetchRows.clear();
+        debouncedFetchRootRowsIncremental.clear();
       }
     };
-  }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
+  }, [
+    privateApiRef,
+    throttledHandleRenderedRowsIntervalChange,
+    stopPolling,
+    debouncedFetchRows,
+    debouncedFetchRootRowsIncremental,
+  ]);
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
-      rowsStale.current = true;
-      renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
-      throttledHandleRenderedRowsIntervalChange.clear();
+      markRowsStale();
       stopPolling();
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
@@ -1157,7 +1225,7 @@ export const useGridDataSourceNestedLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, stopPolling],
+    [privateApiRef, debouncedFetchRows, markRowsStale, stopPolling],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
@@ -1166,9 +1234,7 @@ export const useGridDataSourceNestedLazyLoader = (
         return;
       }
 
-      rowsStale.current = true;
-      renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
-      throttledHandleRenderedRowsIntervalChange.clear();
+      markRowsStale();
       stopPolling();
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
@@ -1183,13 +1249,7 @@ export const useGridDataSourceNestedLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [
-      privateApiRef,
-      debouncedFetchRows,
-      throttledHandleRenderedRowsIntervalChange,
-      stopPolling,
-      hasFilterModelChanged,
-    ],
+    [privateApiRef, debouncedFetchRows, markRowsStale, stopPolling, hasFilterModelChanged],
   );
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {
