@@ -4,8 +4,8 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 
 const isDevEnvironment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
-// React 17 renders a `setState` from the callback synchronously, which reports a "ResizeObserver loop" error.
-const shouldDefer = isDevEnvironment || !isReactVersionAtLeast(18);
+// React 17 commits state updates synchronously inside the observer callback.
+const deferByDefault = isDevEnvironment || !isReactVersionAtLeast(18);
 
 const noop = () => {};
 
@@ -13,6 +13,7 @@ export function useResizeObserver(
   ref: React.RefObject<HTMLElement | undefined | null>,
   fn: (entries: ResizeObserverEntry[]) => void,
   enabled?: boolean,
+  { defer = false }: { defer?: boolean } = {},
 ) {
   const fnRef = React.useRef(null as unknown as typeof fn);
   fnRef.current = fn;
@@ -26,10 +27,9 @@ export function useResizeObserver(
 
     const target = ref.current;
     const observer = new ResizeObserver((entries) => {
+      // A callback that changes observed layout must run outside resize delivery.
       // See https://github.com/mui/mui-x/issues/8733
-      // In dev, we avoid the React warning by moving the task to the next frame.
-      // In prod, we want the task to run in the same frame as to avoid tear.
-      if (shouldDefer) {
+      if (deferByDefault || defer) {
         frameID = requestAnimationFrame(() => {
           fnRef.current(entries);
         });
@@ -49,5 +49,5 @@ export function useResizeObserver(
 
       observer.disconnect();
     };
-  }, [ref, enabled]);
+  }, [ref, enabled, defer]);
 }

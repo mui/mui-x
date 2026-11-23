@@ -31,7 +31,7 @@ describe('useResizeObserver', () => {
   });
 
   // The hook reads the environment and the React version at module load.
-  async function mountInProduction(reactMajor: number) {
+  async function mountInProduction(reactMajor: number, options?: { defer?: boolean }) {
     vi.stubEnv('NODE_ENV', 'production');
     vi.doMock('@base-ui/utils/reactVersion', () => ({
       isReactVersionAtLeast: (version: number) => reactMajor >= version,
@@ -42,7 +42,7 @@ describe('useResizeObserver', () => {
     const onResize = vi.fn();
     function TestComponent() {
       const ref = React.useRef<HTMLDivElement>(null);
-      useResizeObserver(ref, onResize);
+      useResizeObserver(ref, onResize, true, options);
       return <div ref={ref} />;
     }
     render(<TestComponent />);
@@ -58,8 +58,16 @@ describe('useResizeObserver', () => {
     expect(onResize).toHaveBeenCalledTimes(1);
   });
 
-  it('should call the callback inside the observer delivery on React 18+', async () => {
+  it('should call the callback inside the observer delivery by default on React 18+', async () => {
     const onResize = await mountInProduction(18);
+    expect(onResize).toHaveBeenCalledTimes(1);
+  });
+
+  it('should defer callbacks that can change the observed layout on React 18+', async () => {
+    const onResize = await mountInProduction(18, { defer: true });
+    expect(onResize).not.toHaveBeenCalled();
+
+    vi.advanceTimersToNextFrame();
     expect(onResize).toHaveBeenCalledTimes(1);
   });
 });

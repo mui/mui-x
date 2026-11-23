@@ -117,6 +117,30 @@ async function initializeEnvironment(
     });
 
     describe('<DataGrid />', () => {
+      it('should toggle the scrollbar when detail panel content resizes without a ResizeObserver loop', async () => {
+        await renderFixture('DataGridPro/AutoHeightDetailPanel');
+        const summary = page.getByText('Panel content', { exact: true });
+        await summary.waitFor();
+
+        const errors = await page.evaluateHandle(() => {
+          const resizeErrors: string[] = [];
+          window.addEventListener('error', (event) => {
+            if (event.message.includes('ResizeObserver')) {
+              resizeErrors.push(event.message);
+            }
+          });
+          return resizeErrors;
+        });
+
+        const scrollbar = page.locator('.MuiDataGrid-scrollbar--vertical');
+        expect(await scrollbar.isVisible()).to.equal(false);
+        await summary.click();
+        await scrollbar.waitFor({ state: 'visible' });
+        await summary.click();
+        await scrollbar.waitFor({ state: 'hidden' });
+        expect(await errors.jsonValue()).to.deep.equal([]);
+      });
+
       it('should select the first column header when pressing tab key', async () => {
         await renderFixture('DataGrid/KeyboardNavigationFocus');
 
