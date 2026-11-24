@@ -85,12 +85,11 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
         return;
       }
       const style = getComputedStyle(textarea);
-      const paddingBorderBlock = [
-        style.paddingTop,
-        style.paddingBottom,
-        style.borderTopWidth,
-        style.borderBottomWidth,
-      ].reduce((sum, value) => sum + parseFloat(value), 0);
+      const paddingBorderBlock =
+        parseFloat(style.paddingTop) +
+        parseFloat(style.paddingBottom) +
+        parseFloat(style.borderTopWidth) +
+        parseFloat(style.borderBottomWidth);
       textarea.style.setProperty('--ChatComposer-paddingBorderBlock', `${paddingBorderBlock}px`);
     });
 
