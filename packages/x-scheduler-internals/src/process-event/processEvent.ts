@@ -1,8 +1,11 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import type { SchedulerEvent, SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
+import type { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import type { BaseTemporal } from '../internals/utils/base-temporal';
-import { createProcessedDate } from '../process-date/processDate';
-import { toEpochMs, toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
+import {
+  toZonedDateTime,
+  toEpochMs,
+  toPlainDateTime,
+} from '../internals/utils/plain-date-utils/timeZone';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import { resolveEventTimestamp } from './resolveEventTimestamp';
 import { readAllDayBounds, readAllDayExDate } from './readAllDayDate';
@@ -21,22 +24,22 @@ export function processEvent(
     );
   }
 
-  let start: SchedulerProcessedDate;
-  let end: SchedulerProcessedDate;
+  let start: BaseTemporal.ZonedDateTime;
+  let end: BaseTemporal.ZonedDateTime;
   let exDates: BaseTemporal.PlainDateTime[] | undefined;
   if (model.allDay) {
     // An all-day event is a span of dates: it covers the same days in every timezone, so its
     // bounds are the first instants of those days in the display timezone.
     const bounds = readAllDayBounds(model);
-    start = createProcessedDate(toEpochMs(bounds.start, displayTimezone), displayTimezone);
-    end = createProcessedDate(toEpochMs(bounds.end, displayTimezone), displayTimezone);
+    start = toZonedDateTime(toEpochMs(bounds.start, displayTimezone), displayTimezone);
+    end = toZonedDateTime(toEpochMs(bounds.end, displayTimezone), displayTimezone);
     exDates = model.exDates?.map((exDate) => readAllDayExDate(exDate, model.id).toPlainDateTime());
   } else {
-    start = createProcessedDate(
+    start = toZonedDateTime(
       resolveEventTimestamp(model.start, dataTimezone, model.id),
       displayTimezone,
     );
-    end = createProcessedDate(
+    end = toZonedDateTime(
       resolveEventTimestamp(model.end, dataTimezone, model.id),
       displayTimezone,
     );

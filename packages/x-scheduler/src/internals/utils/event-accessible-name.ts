@@ -1,7 +1,4 @@
-import type {
-  SchedulerProcessedDate,
-  SchedulerRenderableEventOccurrence,
-} from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import {
   formatFullDate,
@@ -26,10 +23,6 @@ export interface GetEventAccessibleNameParameters {
    * Name of the resource to announce, or `null` to announce none.
    */
   resourceName: string | null;
-  /**
-   * The timezone the occurrence is displayed in.
-   */
-  displayTimezone: string;
 }
 
 /**
@@ -38,14 +31,13 @@ export interface GetEventAccessibleNameParameters {
  * @example "Running, 7:30 AM to 8:30 AM, Monday, May 26, 2025, Resource: Sport, Recurring"
  */
 export function getEventAccessibleName(parameters: GetEventAccessibleNameParameters): string {
-  const { occurrence, locale, ampm, localeText, isRecurring, resourceName, displayTimezone } =
-    parameters;
+  const { occurrence, locale, ampm, localeText, isRecurring, resourceName } = parameters;
   const { start, end } = occurrence;
-  const isMultiDay = isOccurrenceMultiDay(occurrence, displayTimezone);
+  const isMultiDay = isOccurrenceMultiDay(occurrence);
 
   const formatDate = (date: BaseTemporal.PlainDate) => formatFullDate(locale, date);
-  const formatDateTime = (date: SchedulerProcessedDate) =>
-    `${formatDate(date.plainDateTime.toPlainDate())} ${formatTime(locale, getMinutesInDay(date.plainDateTime), ampm)}`;
+  const formatDateTime = (date: BaseTemporal.ZonedDateTime) =>
+    `${formatDate(date.toPlainDate())} ${formatTime(locale, getMinutesInDay(date), ampm)}`;
 
   // A multi-day timed event carries its times inside the date range, since they belong to
   // different days, so it has no separate `when`.
@@ -57,19 +49,19 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
       return undefined;
     }
     return localeText.eventAriaLabelTimeRange(
-      formatTime(locale, getMinutesInDay(start.plainDateTime), ampm),
-      formatTime(locale, getMinutesInDay(end.plainDateTime), ampm),
+      formatTime(locale, getMinutesInDay(start), ampm),
+      formatTime(locale, getMinutesInDay(end), ampm),
     );
   })();
 
   let date: string;
   if (!isMultiDay) {
-    date = formatDate(start.plainDateTime.toPlainDate());
+    date = formatDate(start.toPlainDate());
   } else if (occurrence.allDay) {
     // The end of an all-day occurrence is the start of the day after its last day.
     date = localeText.eventAriaLabelDateRange(
-      formatDate(start.plainDateTime.toPlainDate()),
-      formatDate(plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, displayTimezone))),
+      formatDate(start.toPlainDate()),
+      formatDate(plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence))),
     );
   } else {
     date = localeText.eventAriaLabelDateRange(formatDateTime(start), formatDateTime(end));

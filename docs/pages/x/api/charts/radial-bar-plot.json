@@ -1,5 +1,5 @@
 {
-  "props": { "className": { "type": { "name": "string" } } },
+  "props": {},
   "name": "RadialBarPlot",
   "imports": [
     "import { RadialBarPlot } from '@mui/x-charts-premium/RadialBarChart';",

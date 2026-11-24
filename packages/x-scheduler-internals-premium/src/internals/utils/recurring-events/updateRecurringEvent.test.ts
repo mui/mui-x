@@ -3,9 +3,9 @@ import {
   stringifyEventDateChanges,
   toEpochMs,
   toPlainDate,
+  toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import {
   addMinutes,
   createDate,
@@ -58,7 +58,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         {
           ...defaultEvent,
           rrule: originalRule,
-          start: createProcessedDate(originalSeriesStart.getTime(), 'default'),
+          start: toZonedDateTime(originalSeriesStart.getTime(), 'default'),
         },
         split.getTime(),
         changes,
@@ -613,7 +613,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const occurrenceStart = new Date(original.start.timestamp);
+      const occurrenceStart = new Date(original.start.epochMilliseconds);
 
       // Changes come as instants
       // 00:40 JST → 2025-01-09T15:40:00Z
@@ -676,7 +676,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       const updated = applyRecurringUpdateAll(
         original,
-        createOccurrence(original, new Date(original.start.timestamp)),
+        createOccurrence(original, new Date(original.start.epochMilliseconds)),
         {
           id: original.id,
           start: createDate('2026-10-25T01:05:00Z'), // the second 02:05
@@ -823,7 +823,7 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
 
     it('should remove recurrence when changes.rrule is explicitly undefined, even when the day changes', () => {
-      const occurrenceStart = new Date(defaultEvent.start.timestamp);
+      const occurrenceStart = new Date(defaultEvent.start.epochMilliseconds);
       // Moving the series to another day realigns its rule, unless the changes set one.
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
@@ -910,7 +910,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
     it('should update the start date of the original event when editing the first occurrence (DTSTART)', () => {
       // DTSTART = 2025-01-01
-      const occurrenceStart = new Date(defaultEvent.start.timestamp);
+      const occurrenceStart = new Date(defaultEvent.start.epochMilliseconds);
 
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
@@ -1099,7 +1099,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // OccurrenceStart in display timezone (Madrid) will look like next day,
       // but update must use data timezone
-      const occurrenceStart = new Date(original.start.timestamp);
+      const occurrenceStart = new Date(original.start.epochMilliseconds);
 
       const updated = applyRecurringUpdateOnlyThis(
         original,
@@ -1846,7 +1846,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           'Europe/Paris',
         );
         const changes: SchedulerEventUpdatedProperties = { id: event.id, title: 'New title' };
-        const occurrenceStart = new Date(occurrence.start.timestamp);
+        const occurrenceStart = new Date(occurrence.start.epochMilliseconds);
 
         for (const { created } of [
           applyRecurringUpdateOnlyThis(

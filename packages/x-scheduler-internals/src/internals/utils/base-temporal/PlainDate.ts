@@ -21,30 +21,54 @@ import {
   ISO_CALENDAR_ID,
   readCalendarAnnotation,
   resolveIsoFields,
-  type CalendarDate,
-  type CalendarImplementation,
 } from './calendar';
+import type { CalendarDate, CalendarImplementation } from './calendar';
 import { mergeDateFields } from './mergeDateFields';
-import {
-  PlainTime,
-  readTime,
-  type BaseTemporal as PlainTimeTypes,
-  type PlainTimeInput,
-} from './PlainTime';
-import { createPlainDateTime, type PlainDateTime } from './PlainDateTime';
+import { PlainTime, readTime } from './PlainTime';
+import type { BaseTemporal as PlainTimeTypes, PlainTimeInput } from './PlainTime';
+import { createPlainDateTime } from './PlainDateTime';
+import type { BaseTemporal as PlainDateTimeTypes } from './PlainDateTime';
 
 export { FIRST_SUPPORTED_DAY, LAST_SUPPORTED_DAY } from './iso';
-export { addIsoMonths as addMonths, checkIsoDate } from './calendar';
 
 // Declared apart from the class, whose `toString()` and `valueOf()` the API generator cannot handle,
 // and inside a namespace, which the API generator uses to name the type in arrays and tuples.
-// Methods use the method syntax, whose parameters TypeScript compares in both directions, so
-// `Temporal` values stay assignable to this type.
+// An ambient class rather than an interface, so the API generator documents its constructor and
+// static methods. It has no private members, so the type stays structural, and methods use the
+// method syntax, whose parameters TypeScript compares in both directions: `Temporal` values stay
+// assignable to this type.
 export declare namespace BaseTemporal {
   /**
    * A date without a time or timezone, in the ISO calendar or another calendar system.
    */
-  interface PlainDate {
+  class PlainDate {
+    /**
+     * Creates a date from its ISO year, month and day. Throws an error when they don't form a
+     * supported date.
+     * @param isoYear The year in the ISO calendar.
+     * @param isoMonth The month in the ISO calendar, from 1 to 12.
+     * @param isoDay The day of the month in the ISO calendar.
+     * @param calendar The calendar of the date. The other arguments are ISO fields in every
+     *   calendar. Defaults to `'iso8601'`.
+     */
+    constructor(isoYear: number, isoMonth: number, isoDay: number, calendar?: string | undefined);
+    /**
+     * Creates a date from another date, from fields read in their `calendar`, or from a
+     * `YYYY-MM-DD` string (`±YYYYYY` for other years than 0 to 9999) with an optional `[u-ca=…]`
+     * calendar annotation.
+     */
+    static from(
+      item: PlainDate | PlainDateFields | string,
+      options?: AssignmentOptions | undefined,
+    ): PlainDate;
+    /**
+     * Returns `-1`, `0` or `1` when `one` is before, the same day as, or after `two`, whatever their
+     * calendars.
+     */
+    static compare(
+      one: PlainDate | PlainDateFields | string,
+      two: PlainDate | PlainDateFields | string,
+    ): -1 | 0 | 1;
     /**
      * The calendar of the date, such as `'iso8601'` or `'hebrew'`.
      */
@@ -73,7 +97,7 @@ export declare namespace BaseTemporal {
      */
     readonly monthCode: string;
     /**
-     * The day of the month, starting at 1.
+     * The day of the month, from 1.
      */
     readonly day: number;
     /**
@@ -88,24 +112,22 @@ export declare namespace BaseTemporal {
      * The number of months in the year.
      */
     readonly monthsInYear: number;
+    // Date-times have every other member of a date, so this keeps them out of the APIs that take
+    // a date, such as the date field.
     /**
-     * A date has no time. Date-times have every other member of a date, so this keeps them out of
-     * the APIs that take a date, such as the date field.
+     * Always `undefined`: a date has no time.
      */
     readonly hour?: undefined;
     /**
-     * Returns the date moved by a duration in its calendar, like Temporal. Years keep the month
-     * code, or move to the month that replaces it in a year without it, and months count the
-     * months of each year. The day is then constrained to the month, or rejected with
-     * `overflow: 'reject'`. Weeks and days come last.
+     * Returns the date moved by a duration in its calendar. A day the month doesn't have moves to
+     * its last day, or throws with `overflow: 'reject'`.
      */
-    add(duration: PlainDateDuration, options?: PlainDateFromOptions): PlainDate;
+    add(duration: DurationLike, options?: ArithmeticOptions): PlainDate;
     /**
-     * Returns the date with some fields replaced, like Temporal. A month replaces the month code
-     * and the other way around, a year keeps the month code, and a year replaces the era and the
-     * year of era and the other way around.
+     * Returns the date with some fields replaced. Setting `month` or `monthCode` replaces the
+     * other, and setting `year` or `era` and `eraYear` replaces the other.
      */
-    with(fields: PlainDateWithFields, options?: PlainDateFromOptions): PlainDate;
+    with(fields: PlainDateWithFields, options?: AssignmentOptions): PlainDate;
     /**
      * Returns whether `other` represents the same date in the same calendar.
      */
@@ -115,12 +137,15 @@ export declare namespace BaseTemporal {
      */
     withCalendar(calendar: string): PlainDate;
     /**
-     * Returns the date-time at `time` on this date, midnight by default.
+     * Returns the date-time at `time` on this date, midnight by default, in the calendar of the
+     * date.
      */
-    toPlainDateTime(time?: PlainTimeTypes.PlainTime | PlainTimeInput): PlainDateTime;
+    toPlainDateTime(
+      time?: PlainTimeTypes.PlainTime | PlainTimeInput,
+    ): PlainDateTimeTypes.PlainDateTime;
     /**
-     * Returns the date as a `YYYY-MM-DD` string, followed by a `[u-ca=…]` annotation outside the
-     * ISO calendar.
+     * Returns the date as a `YYYY-MM-DD` string (`±YYYYYY` for other years than 0 to 9999),
+     * followed by a `[u-ca=…]` annotation outside the ISO calendar.
      */
     toJSON(): string;
   }
@@ -136,11 +161,29 @@ export interface PlainDateFields {
    * @default 'iso8601'
    */
   calendar?: string | undefined;
+  /**
+   * The year in the calendar.
+   */
   year?: number | undefined;
+  /**
+   * The era, such as `'ce'`, read with `eraYear`.
+   */
   era?: string | undefined;
+  /**
+   * The year in `era`.
+   */
   eraYear?: number | undefined;
+  /**
+   * The position of the month in its year, from 1.
+   */
   month?: number | undefined;
+  /**
+   * The code of the month, such as `'M05L'` for Adar I, which identifies it in every year.
+   */
   monthCode?: string | undefined;
+  /**
+   * The day of the month, from 1.
+   */
   day: number;
 }
 
@@ -153,43 +196,33 @@ export type PlainDateWithFields = Partial<Omit<PlainDateFields, 'calendar'>>;
  * A duration in years, months, weeks and days, as `add()` reads it. Its units are integers with
  * the same sign.
  */
-export interface PlainDateDuration {
+export interface DurationLike {
   years?: number | undefined;
   months?: number | undefined;
   weeks?: number | undefined;
   days?: number | undefined;
 }
 
-export interface PlainDateConstructor {
-  new (
-    isoYear: number,
-    isoMonth: number,
-    isoDay: number,
-    calendar?: string | undefined,
-  ): BaseTemporal.PlainDate;
+/**
+ * The options of `from()` and `with()` for dates, times and date-times.
+ */
+export interface AssignmentOptions {
   /**
-   * Creates a date from another date, from fields read in their `calendar`, or from a
-   * `YYYY-MM-DD` string with an optional `[u-ca=…]` calendar annotation.
+   * How to handle fields out of their range, such as February 30.
+   * `'constrain'` adjusts them to the closest valid value. `'reject'` throws an error.
+   * Invalid strings always throw an error.
+   * @default 'constrain'
    */
-  from(
-    item: BaseTemporal.PlainDate | PlainDateFields | string,
-    options?: PlainDateFromOptions | undefined,
-  ): BaseTemporal.PlainDate;
-  /**
-   * Returns `-1`, `0` or `1` when `one` is before, the same day as, or after `two`, whatever their
-   * calendars.
-   */
-  compare(
-    one: BaseTemporal.PlainDate | PlainDateFields | string,
-    two: BaseTemporal.PlainDate | PlainDateFields | string,
-  ): -1 | 0 | 1;
+  overflow?: 'constrain' | 'reject' | undefined;
 }
 
-export interface PlainDateFromOptions {
+/**
+ * The options of `add()`.
+ */
+export interface ArithmeticOptions {
   /**
-   * How to handle out-of-range parts when creating a value from an object.
-   * `'constrain'` adjusts parts where possible. `'reject'` throws an error.
-   * Invalid strings always throw an error.
+   * How to handle a day that the month the date moves to doesn't have, such as January 31 plus one
+   * month. `'constrain'` uses the last day of the month. `'reject'` throws an error.
    * @default 'constrain'
    */
   overflow?: 'constrain' | 'reject' | undefined;
@@ -198,50 +231,18 @@ export interface PlainDateFromOptions {
 type PlainDateItem = PlainDateFields | string;
 
 /**
- * Returns the first day of the ISO month containing `dayNumber`.
- */
-export function getStartOfMonth(dayNumber: number): number {
-  return dayNumber - fromDayNumber(dayNumber).day + 1;
-}
-
-/**
- * Returns the first day of the week containing `dayNumber`. Weekdays use ISO numbering.
- */
-export function getStartOfWeek(dayNumber: number, firstDayOfWeek: number): number {
-  return dayNumber - getWeekDayIndex(getIsoDayOfWeek(dayNumber), firstDayOfWeek);
-}
-
-/**
- * Returns the zero-based weekday index relative to `firstDayOfWeek`.
- * Weekdays use ISO numbering, with 0 also accepted for Sunday.
- */
-export function getWeekDayIndex(dayOfWeek: number, firstDayOfWeek: number): number {
-  return (dayOfWeek - firstDayOfWeek + 7) % 7;
-}
-
-/**
  * Creates a date from a day number without validating fields, for `createPlainDate()`.
  */
 const UNVALIDATED = Symbol('unvalidated');
 
-// Like in Temporal, a year has four digits, or a sign and six digits, but `-000000` isn't a year.
+// A year has four digits, or a sign and six digits, but `-000000` isn't a year.
 const ISO_DATE_REGEXP = /^(\d{4}|\+\d{6}|-(?!0{6})\d{6})-(\d{2})-(\d{2})$/;
 
 /**
  * The units of a Temporal duration, in the order Temporal reads them.
  */
-const DURATION_UNITS = [
-  'days',
-  'hours',
-  'microseconds',
-  'milliseconds',
-  'minutes',
-  'months',
-  'nanoseconds',
-  'seconds',
-  'weeks',
-  'years',
-] as const;
+const DURATION_UNITS =
+  'days hours microseconds milliseconds minutes months nanoseconds seconds weeks years'.split(' ');
 
 /**
  * More years than the supported days span in any calendar.
@@ -251,7 +252,7 @@ const MAX_YEARS = 600_000;
 /**
  * Reads a duration like Temporal. Its time units must be 0.
  */
-function readDuration(duration: PlainDateDuration): Required<PlainDateDuration> {
+function readDuration(duration: DurationLike): Required<DurationLike> {
   if (typeof duration !== 'object' || duration === null) {
     throw new TypeError(
       `MUI X Scheduler: \`BaseTemporal.PlainDate.prototype.add()\` received ${String(duration)}, which isn't a duration. ` +
@@ -259,7 +260,7 @@ function readDuration(duration: PlainDateDuration): Required<PlainDateDuration> 
         'Pass an object such as `{ months: 1, days: 2 }`. Duration strings such as `"P1M"` are not supported.',
     );
   }
-  const units: Required<PlainDateDuration> = { days: 0, months: 0, weeks: 0, years: 0 };
+  const units: Required<DurationLike> = { days: 0, months: 0, weeks: 0, years: 0 };
   let hasUnit = false;
   let hasTimeUnit = false;
   for (const unit of DURATION_UNITS) {
@@ -275,8 +276,8 @@ function readDuration(duration: PlainDateDuration): Required<PlainDateDuration> 
         );
       }
       hasUnit = true;
-      if (unit === 'days' || unit === 'months' || unit === 'weeks' || unit === 'years') {
-        units[unit] = number;
+      if (unit in units) {
+        units[unit as keyof DurationLike] = number;
       } else if (number !== 0) {
         hasTimeUnit = true;
       }
@@ -456,11 +457,7 @@ export class PlainDate implements BaseTemporal.PlainDate {
       : getMonthCodes(getCalendar(this.calendarId), this.calendarDate.year).length;
   }
 
-  /**
-   * Creates a date from another date, from fields read in their `calendar`, or from a
-   * `YYYY-MM-DD` string with an optional `[u-ca=…]` calendar annotation.
-   */
-  public static from(item: PlainDateItem, options?: PlainDateFromOptions): PlainDate {
+  public static from(item: PlainDateItem, options?: AssignmentOptions): PlainDate {
     const overflow = readOverflow(options, 'PlainDate.from()');
     if (item instanceof PlainDate) {
       return createPlainDate(item.dayNumber, item.calendarId);
@@ -469,21 +466,14 @@ export class PlainDate implements BaseTemporal.PlainDate {
     return createPlainDate(dayNumber, calendar.id);
   }
 
-  /**
-   * Returns `-1`, `0` or `1` when `one` is before, the same day as, or after `two`, whatever their
-   * calendars.
-   */
   public static compare(one: PlainDateItem, two: PlainDateItem): -1 | 0 | 1 {
     return compareOrder(getItemDayNumber(one), getItemDayNumber(two));
   }
 
-  /**
-   * Returns the date moved by a duration in its calendar, like Temporal. Years keep the month
-   * code, or move to the month that replaces it in a year without it, and months count the
-   * months of each year. The day is then constrained to the month, or rejected with
-   * `overflow: 'reject'`. Weeks and days come last.
-   */
-  public add(duration: PlainDateDuration, options?: PlainDateFromOptions): PlainDate {
+  // Like Temporal, years keep the month code, or move to the month that replaces it in a year
+  // without it, and months count the months of each year. The day is then constrained to the
+  // month, or rejected with `overflow: 'reject'`. Weeks and days come last.
+  public add(duration: DurationLike, options?: ArithmeticOptions): PlainDate {
     const { years, months, weeks, days } = readDuration(duration);
     const overflow = readOverflow(options, 'PlainDate.prototype.add()');
     const calendar = getCalendar(this.calendarId);
@@ -496,12 +486,8 @@ export class PlainDate implements BaseTemporal.PlainDate {
     return createPlainDate(dayNumber, calendar.id);
   }
 
-  /**
-   * Returns the date with some fields replaced, like Temporal. A month replaces the month code
-   * and the other way around, a year keeps the month code, and a year replaces the era and the
-   * year of era and the other way around.
-   */
-  public with(fields: PlainDateWithFields, options?: PlainDateFromOptions): PlainDate {
+  // Like Temporal, a year keeps the month code.
+  public with(fields: PlainDateWithFields, options?: AssignmentOptions): PlainDate {
     const apiName = 'PlainDate.prototype.with()';
     return createPlainDate(
       readDate(mergeDateFields(this, fields, apiName), readOverflow(options, apiName), apiName)
@@ -510,24 +496,18 @@ export class PlainDate implements BaseTemporal.PlainDate {
     );
   }
 
-  /**
-   * Returns whether `other` represents the same date in the same calendar.
-   */
   public equals(other: PlainDateItem): boolean {
     const date = other instanceof PlainDate ? other : PlainDate.from(other);
     return date.dayNumber === this.dayNumber && date.calendarId === this.calendarId;
   }
 
-  /**
-   * Returns the same date in another calendar.
-   */
   public withCalendar(calendar: string): PlainDate {
     const implementation = getCalendar(calendar);
     checkCalendarRange(implementation, this.dayNumber);
     return createPlainDate(this.dayNumber, implementation.id);
   }
 
-  public toPlainDateTime(time?: PlainTime | PlainTimeInput): PlainDateTime {
+  public toPlainDateTime(time?: PlainTime | PlainTimeInput): PlainDateTimeTypes.PlainDateTime {
     // A `PlainTime` already holds valid fields.
     return createPlainDateTime(
       this,
@@ -536,8 +516,7 @@ export class PlainDate implements BaseTemporal.PlainDate {
   }
 
   public toString(): string {
-    const isoDate = fromDayNumber(this.dayNumber);
-    return `${formatIsoDate(isoDate.year, isoDate.month, isoDate.day)}${formatCalendarAnnotation(this.calendarId)}`;
+    return `${formatIsoDate(this.dayNumber)}${formatCalendarAnnotation(this.calendarId)}`;
   }
 
   public toJSON(): string {
@@ -587,7 +566,7 @@ export function getDayNumber(day: PlainDateFields): number {
  * Returns the calendar of a temporal object or a set of fields: its `calendar` field, then the
  * `calendarId` of a temporal value, then the ISO calendar.
  */
-export function getItemCalendar(item: object): CalendarImplementation {
+function getItemCalendar(item: object): CalendarImplementation {
   const { calendar, calendarId } = item as { calendar?: unknown; calendarId?: unknown };
   return getCalendar(calendar ?? calendarId ?? ISO_CALENDAR_ID);
 }
@@ -610,7 +589,7 @@ export function readDate(
     if (match == null || !isValidIsoDate(year, month, day)) {
       throw new Error(
         `MUI X Scheduler: \`BaseTemporal.PlainDate.from()\` received ${JSON.stringify(item)}, which isn't an existing date in the \`YYYY-MM-DD\` or \`±YYYYYY-MM-DD\` format. ` +
-          'Other ISO 8601 forms, such as times, offsets or time zone annotations, are not supported. ' +
+          "Other ISO 8601 forms, such as times, offsets or timezone annotations, aren't supported. " +
           "Pass a date such as `'2024-05-24'`, optionally followed by a calendar annotation such as `'[u-ca=hebrew]'`.",
       );
     }

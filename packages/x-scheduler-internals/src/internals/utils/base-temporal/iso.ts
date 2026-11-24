@@ -65,6 +65,21 @@ export function getIsoDayOfWeek(dayNumber: number): number {
   return ((((dayNumber + 3) % 7) + 7) % 7) + 1;
 }
 
+/**
+ * Returns the first day of the week containing `dayNumber`. Weekdays use ISO numbering.
+ */
+export function getStartOfWeek(dayNumber: number, firstDayOfWeek: number): number {
+  return dayNumber - getWeekDayIndex(getIsoDayOfWeek(dayNumber), firstDayOfWeek);
+}
+
+/**
+ * Returns the zero-based weekday index relative to `firstDayOfWeek`.
+ * Weekdays use ISO numbering, with 0 also accepted for Sunday.
+ */
+export function getWeekDayIndex(dayOfWeek: number, firstDayOfWeek: number): number {
+  return (dayOfWeek - firstDayOfWeek + 7) % 7;
+}
+
 export function getDaysInMonth(year: number, month: number): number {
   if (month === 2) {
     return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28;
@@ -81,9 +96,17 @@ export function isValidIsoDate(year: number, month: number, day: number): boolea
 }
 
 /**
- * Formats a date as `YYYY-MM-DD`, using a signed six-digit year outside years 0 to 9999.
+ * Formats a number with leading zeros, up to `length` characters.
  */
-export function formatIsoDate(year: number, month: number, day: number) {
+export function padNumber(value: number, length: number = 2): string {
+  return String(value).padStart(length, '0');
+}
+
+/**
+ * Formats a day number as `YYYY-MM-DD`, using a signed six-digit year outside years 0 to 9999.
+ */
+export function formatIsoDate(dayNumber: number) {
+  const { year, month, day } = fromDayNumber(dayNumber);
   let yearString: string;
   if (year < 0 || year > 9999) {
     yearString = `${year < 0 ? '-' : '+'}${String(Math.abs(year)).padStart(6, '0')}`;
@@ -111,14 +134,9 @@ export const TIME_FIELD_MAXIMUMS: Readonly<IsoTimeFields> = {
   nanosecond: 999,
 };
 
-export const TIME_FIELDS = [
-  'hour',
-  'minute',
-  'second',
-  'millisecond',
-  'microsecond',
-  'nanosecond',
-] as const;
+export const TIME_FIELDS = /* @__PURE__ */ Object.keys(
+  TIME_FIELD_MAXIMUMS,
+) as readonly (keyof IsoTimeFields)[];
 
 export function isValidIsoTime(time: IsoTimeFields): boolean {
   return TIME_FIELDS.every(
@@ -140,11 +158,11 @@ export function getTimeNumber(time: IsoTimeFields): number {
 
 export function formatIsoTime(time: IsoTimeFields): string {
   const fraction =
-    `${String(time.millisecond).padStart(3, '0')}${String(time.microsecond).padStart(3, '0')}${String(time.nanosecond).padStart(3, '0')}`.replace(
+    `${padNumber(time.millisecond, 3)}${padNumber(time.microsecond, 3)}${padNumber(time.nanosecond, 3)}`.replace(
       /0+$/,
       '',
     );
-  return `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}:${String(time.second).padStart(2, '0')}${fraction ? `.${fraction}` : ''}`;
+  return `${padNumber(time.hour)}:${padNumber(time.minute)}:${padNumber(time.second)}${fraction ? `.${fraction}` : ''}`;
 }
 
 /**
@@ -213,7 +231,7 @@ export function readWithFields<T extends object>(
   ) {
     throw new TypeError(
       `MUI X Scheduler: \`BaseTemporal.${apiName}\` received ${String(fields)}, which isn't an object of fields. ` +
-        '`with()` replaces the fields of an object, and keeps the calendar of the value, so it rejects temporal values and objects with a calendar or a time zone. ' +
+        '`with()` replaces the fields of an object, and keeps the calendar of the value, so it rejects temporal values and objects with a calendar or a timezone. ' +
         'Pass only the fields to replace, such as `{ day: 1 }` for a date or `{ hour: 9 }` for a time.',
     );
   }

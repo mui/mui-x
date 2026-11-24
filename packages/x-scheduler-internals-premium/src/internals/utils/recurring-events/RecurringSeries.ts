@@ -381,7 +381,7 @@ export class RecurringSeries {
     }
     return new RecurringSeries({
       rule: event.rrule!,
-      start: event.start.timestamp,
+      start: event.start.epochMilliseconds,
       timezone: event.timezone,
       excludedDays,
     });

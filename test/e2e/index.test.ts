@@ -552,6 +552,7 @@ async function initializeEnvironment(
       // https://github.com/mui/mui-x/issues/12290
       it('should properly set the width of a group header if the resize happened in a group with fluid columns', async () => {
         await renderFixture('DataGrid/ResizeWithFlex');
+        await page.locator('.MuiDataGrid-columnSeparator--resizable').first().waitFor();
 
         const headers = await page.locator('.MuiDataGrid-columnHeaders > div').all();
         const columnHeader = headers.pop()!;

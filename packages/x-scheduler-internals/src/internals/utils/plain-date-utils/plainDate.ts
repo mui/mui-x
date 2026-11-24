@@ -6,8 +6,6 @@ import { dayNumberToIsoDate, isoDateToDayNumber } from './dayNumber';
  */
 export type PlainDateDuration = Parameters<BaseTemporal.PlainDate['add']>[0];
 
-const ISO_CALENDAR_ID = 'iso8601';
-
 const MAX_CACHED_PLAIN_DATES = 10_000;
 // The plain dates are immutable, so a day number keeps its plain date: the views build the same
 // days on every render, and a lookup is faster than creating one. Emptied at 10,000 entries.
@@ -45,11 +43,8 @@ export function plainDateFromDayNumber(dayNumber: number): BaseTemporal.PlainDat
 export function getDayNumber(plainDate: BaseTemporal.PlainDate): number {
   let dayNumber = dayNumberLookup.get(plainDate);
   if (dayNumber === undefined) {
-    const isoPlainDate =
-      plainDate.calendarId === ISO_CALENDAR_ID
-        ? plainDate
-        : plainDate.withCalendar(ISO_CALENDAR_ID);
-    dayNumber = isoDateToDayNumber(isoPlainDate.year, isoPlainDate.month, isoPlainDate.day);
+    // The copy of BaseTemporal only implements the ISO calendar.
+    dayNumber = isoDateToDayNumber(plainDate.year, plainDate.month, plainDate.day);
     dayNumberLookup.set(plainDate, dayNumber);
   }
   return dayNumber;
@@ -69,7 +64,7 @@ const MAX_CACHED_KEYS = 10_000;
 const plainDateKeys = new Map<number, string>();
 
 /**
- * The key of `plainDate` that the processed dates and the occurrences use: its ISO date, such as
+ * The key of `plainDate` that the days and the occurrences use: its ISO date, such as
  * `2026-03-07`, whatever the locale.
  * Cached per day, since a lookup is faster than building the string. The cache ignores the
  * calendar, as all the plain dates of the Scheduler share one, the ISO calendar for now.
@@ -113,16 +108,20 @@ export function plainTimeFromMsInDay(msInDay: number): BaseTemporal.PlainTime {
 }
 
 /**
- * The wall-clock time of a time or date-time, in milliseconds since midnight. The microseconds and
- * nanoseconds are dropped.
+ * The wall-clock time of a time, a date-time or a zoned date-time, in milliseconds since midnight.
+ * The microseconds and nanoseconds are dropped.
  */
-export function getMsInDay(time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime): number {
+export function getMsInDay(
+  time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime | BaseTemporal.ZonedDateTime,
+): number {
   return ((time.hour * 60 + time.minute) * 60 + time.second) * 1000 + time.millisecond;
 }
 
 /**
- * The number of minutes since midnight of a time or date-time.
+ * The number of minutes since midnight of a time, a date-time or a zoned date-time.
  */
-export function getMinutesInDay(time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime): number {
+export function getMinutesInDay(
+  time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime | BaseTemporal.ZonedDateTime,
+): number {
   return time.hour * 60 + time.minute;
 }
