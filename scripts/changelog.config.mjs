@@ -21,13 +21,15 @@ import {
  * @typedef {ReleaseEntry & { parsed: ParsedEntryLabels }} XEntry
  * @typedef {{ name: string; version: string | null; plan: Plan; entries: XEntry[] }} Tier
  * @typedef {{ key: string; title: string; tiers?: Tier[]; entries: XEntry[] }} XSection
- * @typedef {{ facts: ReleaseFacts; sections: XSection[]; team: string[]; community: string[] }} XRelease
+ * @typedef {{ facts: ReleaseFacts; version: string; sections: XSection[]; team: string[]; community: string[] }} XRelease
  * @typedef {'base' | 'pro' | 'premium'} Plan
  */
 
 const CHAT_HEADLESS = '@mui/x-chat-headless';
 const CHARTS_VENDOR = '@mui/x-charts-vendor';
 const MISCELLANEOUS = 'miscellaneous';
+const RELEASE = 'release';
+const VERSION_PLACEHOLDER = '__VERSION__';
 const PLANS = /** @type {const} */ (['base', 'pro', 'premium']);
 
 const BADGES = {
@@ -173,6 +175,11 @@ function destinations(entry) {
     keys.push(pkg ?? product.base);
   }
 
+  // Release PRs quote other packages' changes.
+  if (hasLabel(RELEASE)(entry)) {
+    return keys;
+  }
+
   // Package names and source paths identify shared changes without PR-specific overrides.
   const text = [entry.message, entry.prTitle, entry.body].join('\n');
 
@@ -192,6 +199,8 @@ export default {
   includeDirectCommits: true,
   prepare(facts) {
     const packages = new Map(facts.packages.map((pkg) => [pkg.name, pkg]));
+    // False before `release:version` runs.
+    const bumped = facts.packages.some((pkg) => !pkg.private && pkg.changed !== false);
 
     const entries = facts.entries.filter(not(hasLabel('dependencies'))).map((entry) => ({
       ...entry,
@@ -229,11 +238,18 @@ export default {
         }
 
         return [
-          { name, version: pkg.version, plan, entries: entriesOf(name), changed: pkg.changed },
+          {
+            name,
+            version: bumped ? pkg.version : VERSION_PLACEHOLDER,
+            plan,
+            entries: entriesOf(name),
+            changed: pkg.changed,
+          },
         ];
       });
 
-      const shown = tiers.some((tier) => tier.entries.length > 0 || tier.changed !== false);
+      const shown =
+        !bumped || tiers.some((tier) => tier.entries.length > 0 || tier.changed !== false);
 
       if (tiers.length > 0 && shown) {
         sections.push({ key: product.key, title: product.title, tiers, entries: [] });
@@ -254,14 +270,13 @@ export default {
       });
     }
 
-    const { team, community } = creditAuthors(facts.entries, {
-      exclude: ['renovate[bot]', 'code-infra-renovate[bot]'],
-    });
+    const { team, community } = creditAuthors(facts.entries, { exclude: [/\[bot\]$/] });
+    const version = facts.lastRelease === `v${facts.version}` ? VERSION_PLACEHOLDER : facts.version;
 
-    return { facts, sections, team, community };
+    return { facts, version, sections, team, community };
   },
-  view: ({ facts, sections, team, community }) => md`
-## ${facts.version}
+  view: ({ facts, version, sections, team, community }) => md`
+## ${version}
 
 <!-- generated comparing ${facts.lastRelease}...${facts.release} -->
 
