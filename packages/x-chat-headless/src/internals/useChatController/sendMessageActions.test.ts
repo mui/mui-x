@@ -418,6 +418,42 @@ describe('createSendMessageActions', () => {
       });
     });
 
+    it('calls an onFinish attached mid-stream when the first stream errors and reconnectToStream is set', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn();
+      const runtimeRef: { current: { adapter: ChatAdapter; onFinish?: typeof onFinish } } = {
+        current: { adapter: createAdapter() },
+      };
+      runtimeRef.current.adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(
+          new ReadableStream<ChatMessageChunk>({
+            start(controller) {
+              controller.enqueue({ type: 'start', messageId: 'a1' });
+            },
+            pull(controller) {
+              runtimeRef.current.onFinish = onFinish;
+              controller.error(new Error('Network failure'));
+            },
+          }),
+        ),
+        reconnectToStream: vi.fn(),
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef,
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(onFinish.mock.calls[0][0]).toMatchObject({ isError: true });
+    });
+
     it('calls onFinish once when the reconnected stream errors', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
@@ -1092,6 +1128,35 @@ describe('createSendMessageActions', () => {
       expect(setRuntimeError.mock.calls[0][0].message).toBe('Regen failed');
       expect(setRuntimeError.mock.calls[0][0].details.messageId).toBe('a1');
       expect(store.state.isStreaming).toBe(false);
+    });
+
+    it('restores the removed assistant run when another message arrives before adapter.regenerate rejects', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      store.setActiveConversation('c1');
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          store.addMessage({
+            id: 'u2',
+            role: 'user',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Realtime' }],
+          });
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messagesById.a1).toBeDefined();
+      expect(store.state.messagesById.u2).toBeDefined();
     });
 
     it('restores the removed assistant run when the returned stream cannot be read', async () => {
