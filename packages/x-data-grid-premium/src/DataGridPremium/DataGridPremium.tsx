@@ -17,6 +17,8 @@ import {
   getRowValue,
   GridMultiSelectMeasurer,
   pickDataAttributes,
+  useIsColumnKeyboardReorderTarget,
+  useIsRowKeyboardReorderTarget,
 } from '@mui/x-data-grid-pro/internals';
 import type { PropValidator, GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
@@ -79,6 +81,8 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
     useIsCellEditable,
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
+    useIsRowKeyboardReorderTarget,
+    useIsColumnKeyboardReorderTarget,
     // The A1 column-letter adornment comes from the injected formula feature —
     // the grid only bundles this thin passthrough.
     useColumnHeaderAdornment: (field) => {
