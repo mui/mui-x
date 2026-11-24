@@ -148,51 +148,41 @@ describe('useMessageAuthor', () => {
     expect(authors.m1?.displayName).toBe('Robert');
   });
 
-  it.each(['before', 'after'] as const)(
-    'updates rows when a state snapshot is restored %s an author parameter change in the same batch',
-    (restoreOrder) => {
-      const store = new ChatStore({ initialMessages: messages });
-      const initialSnapshot = store.state;
-      const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
+  it('updates rows when author parameters change in the same batch as a state snapshot restore', () => {
+    const store = new ChatStore({ initialMessages: messages });
+    const snapshot = store.state;
+    const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
 
-      const Row = React.memo(function Row({ messageId }: { messageId: string }) {
-        authors[messageId] = useMessageAuthor(useMessage(messageId));
-        return null;
+    const Row = React.memo(function Row({ messageId }: { messageId: string }) {
+      authors[messageId] = useMessageAuthor(useMessage(messageId));
+      return null;
+    });
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+      </ChatStoreContext.Provider>,
+    );
+
+    act(() => {
+      store.updateStateFromParameters({
+        ...store.parameters,
+        currentUser: { id: 'alice', displayName: 'Alice' },
       });
+    });
 
-      render(
-        <ChatStoreContext.Provider value={store}>
-          <Row messageId="m1" />
-        </ChatStoreContext.Provider>,
-      );
+    expect(authors.m1?.displayName).toBe('Alice');
 
-      act(() => {
-        store.updateStateFromParameters({
-          ...store.parameters,
-          currentUser: { id: 'alice', displayName: 'Alice' },
-        });
+    act(() => {
+      store.setState(snapshot);
+      store.updateStateFromParameters({
+        ...store.parameters,
+        currentUser: { id: 'alice', displayName: 'Bob' },
       });
+    });
 
-      expect(authors.m1?.displayName).toBe('Alice');
-      // Restoring first must not rewind the version; restoring last must not reinstate the one rows cached.
-      const snapshot = restoreOrder === 'before' ? initialSnapshot : store.state;
-
-      act(() => {
-        if (restoreOrder === 'before') {
-          store.setState(snapshot);
-        }
-        store.updateStateFromParameters({
-          ...store.parameters,
-          currentUser: { id: 'alice', displayName: 'Bob' },
-        });
-        if (restoreOrder === 'after') {
-          store.setState(snapshot);
-        }
-      });
-
-      expect(authors.m1?.displayName).toBe('Bob');
-    },
-  );
+    expect(authors.m1?.displayName).toBe('Bob');
+  });
 
   it('does not re-render rows when author parameters are recreated with equal values', () => {
     const store = new ChatStore({

@@ -273,17 +273,8 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
 
   private dirtyControlledModels = new Set<ControlledModel>();
 
-  // Kept on the instance and re-applied in `setState`, so restoring a state snapshot can't
-  // reinstate an author version that mounted rows already cached.
+  // Kept on the instance so the version only grows, even after a state snapshot is restored.
   private authorParametersRevision = 0;
-
-  setState(newState: ChatInternalState<Cursor>) {
-    super.setState(
-      newState.authorParametersVersion === this.authorParametersRevision
-        ? newState
-        : { ...newState, authorParametersVersion: this.authorParametersRevision },
-    );
-  }
 
   /** Whether any controlled model has been internally mutated since the last parameter sync. */
   get hasDirtyControlledModels(): boolean {
