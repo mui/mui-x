@@ -28,6 +28,7 @@ import {
 const CHAT_HEADLESS = '@mui/x-chat-headless';
 const CHARTS_VENDOR = '@mui/x-charts-vendor';
 const MISCELLANEOUS = 'miscellaneous';
+const VIRTUALIZER = 'virtualizer';
 const RELEASE = 'release';
 const VERSION_PLACEHOLDER = '__VERSION__';
 const PLANS = /** @type {const} */ (['base', 'pro', 'premium']);
@@ -38,7 +39,10 @@ const BADGES = {
     "[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')",
 };
 
-/** Products in display order; each tier lists its package. */
+/**
+ * Products in display order; each tier lists its package. A companion follows the tiers: `always`,
+ * or only with entries. `entriesOnly` hides a product that only has version bumps.
+ */
 const PRODUCTS = [
   {
     key: 'data grid',
@@ -59,8 +63,8 @@ const PRODUCTS = [
     base: '@mui/x-charts',
     pro: '@mui/x-charts-pro',
     premium: '@mui/x-charts-premium',
+    companion: { key: 'charts vendor', name: CHARTS_VENDOR, always: false },
   },
-  { key: 'charts vendor', title: 'Charts Vendor', base: CHARTS_VENDOR },
   { key: 'tree view', title: 'Tree View', base: '@mui/x-tree-view', pro: '@mui/x-tree-view-pro' },
   {
     key: 'scheduler',
@@ -68,10 +72,14 @@ const PRODUCTS = [
     base: '@mui/x-scheduler',
     premium: '@mui/x-scheduler-premium',
   },
+  {
+    key: 'chat',
+    title: 'Chat',
+    base: '@mui/x-chat',
+    companion: { key: 'chat headless', name: CHAT_HEADLESS, always: true },
+    entriesOnly: true,
+  },
   { key: 'codemod', title: 'Codemod', base: '@mui/x-codemod' },
-  { key: 'chat', title: 'Chat', base: '@mui/x-chat' },
-  { key: 'chat headless', title: 'Chat Headless', base: CHAT_HEADLESS },
-  { key: 'virtualizer', title: 'Virtualizer', base: '@mui/x-virtualizer' },
 ];
 
 const GROUPS = { docs: 'Docs', core: 'Core' };
@@ -133,7 +141,9 @@ const LABELS = {
  * @returns {string[]}
  */
 function destinations(entry) {
-  const { override, scopes, scopePlans, plan } = entry.parsed;
+  const { override, scopePlans, plan } = entry.parsed;
+  // The virtualizer has no section; its other scopes place the entry.
+  const scopes = entry.parsed.scopes.filter((scope) => scope !== VIRTUALIZER);
 
   if (override) {
     return [override];
@@ -142,6 +152,13 @@ function destinations(entry) {
   const keys = scopes.length === 0 ? [MISCELLANEOUS] : [];
 
   for (const scope of scopes) {
+    const companion = PRODUCTS.find((candidate) => candidate.companion?.key === scope)?.companion;
+
+    if (companion) {
+      keys.push(companion.name);
+      continue;
+    }
+
     const product = PRODUCTS.find((candidate) => candidate.key === scope);
 
     if (!product) {
@@ -215,8 +232,16 @@ export default {
     const sections = [];
 
     for (const product of PRODUCTS) {
-      const tiers = PLANS.flatMap((plan) => {
-        const name = product[plan];
+      const { companion } = product;
+
+      /** @type {{ plan: Plan; name: string | undefined }[]} */
+      const candidates = PLANS.map((plan) => ({ plan, name: product[plan] }));
+
+      if (companion && (companion.always || entriesOf(companion.name).length > 0)) {
+        candidates.push({ plan: 'base', name: companion.name });
+      }
+
+      const tiers = candidates.flatMap(({ plan, name }) => {
         const pkg = name ? packages.get(name) : undefined;
 
         if (!name) {
@@ -248,8 +273,11 @@ export default {
         ];
       });
 
+      const hasEntries = tiers.some((tier) => tier.entries.length > 0);
+
       const shown =
-        !bumped || tiers.some((tier) => tier.entries.length > 0 || tier.changed !== false);
+        hasEntries ||
+        (!product.entriesOnly && (!bumped || tiers.some((tier) => tier.changed !== false)));
 
       if (tiers.length > 0 && shown) {
         sections.push({ key: product.key, title: product.title, tiers, entries: [] });
