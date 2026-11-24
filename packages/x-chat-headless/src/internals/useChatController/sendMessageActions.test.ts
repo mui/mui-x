@@ -423,22 +423,23 @@ describe('createSendMessageActions', () => {
       store.setActiveConversation('c1');
       const onFinish = vi.fn();
       const runtimeRef: { current: { adapter: ChatAdapter; onFinish?: typeof onFinish } } = {
-        current: { adapter: createAdapter() },
-      };
-      runtimeRef.current.adapter = createAdapter({
-        sendMessage: vi.fn().mockResolvedValue(
-          new ReadableStream<ChatMessageChunk>({
-            start(controller) {
-              controller.enqueue({ type: 'start', messageId: 'a1' });
-            },
-            pull(controller) {
-              runtimeRef.current.onFinish = onFinish;
-              controller.error(new Error('Network failure'));
-            },
+        current: {
+          adapter: createAdapter({
+            sendMessage: vi.fn().mockResolvedValue(
+              new ReadableStream<ChatMessageChunk>({
+                start(controller) {
+                  controller.enqueue({ type: 'start', messageId: 'a1' });
+                },
+                pull(controller) {
+                  runtimeRef.current.onFinish = onFinish;
+                  controller.error(new Error('Network failure'));
+                },
+              }),
+            ),
+            reconnectToStream: vi.fn(),
           }),
-        ),
-        reconnectToStream: vi.fn(),
-      });
+        },
+      };
 
       const { sendMessage } = createSendMessageActions({
         store,
@@ -1166,7 +1167,16 @@ describe('createSendMessageActions', () => {
       const lockedStream = createStream([{ type: 'start', messageId: 'a2' }]);
       lockedStream.getReader();
       const adapter = createAdapter({
-        regenerate: vi.fn().mockResolvedValue(lockedStream),
+        regenerate: vi.fn().mockImplementation(async () => {
+          // A message from elsewhere (e.g. realtime) is not the replacement reply.
+          store.addMessage({
+            id: 'u2',
+            role: 'user',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Realtime' }],
+          });
+          return lockedStream;
+        }),
         reconnectToStream: vi.fn(),
       });
 
@@ -1181,6 +1191,7 @@ describe('createSendMessageActions', () => {
       await regenerate('a1');
 
       expect(store.state.messagesById.a1).toBeDefined();
+      expect(store.state.messagesById.u2).toBeDefined();
       expect(setRuntimeError).toHaveBeenCalledTimes(1);
       expect(setRuntimeError.mock.calls[0][0].code).toBe('REGENERATE_ERROR');
       expect(store.state.isStreaming).toBe(false);

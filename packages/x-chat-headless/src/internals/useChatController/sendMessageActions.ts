@@ -475,7 +475,12 @@ export function createSendMessageActions<Cursor = string>(params: {
       // Restore the snapshot assistant messages (D4) unless the returned stream already
       // added a reply. A later failure (e.g. a throwing onFinish) must not overwrite it.
       const idsBeforeRun = new Set(messageIdsBeforeRun);
-      if (!didReceiveStream || store.state.messageIds.every((id) => idsBeforeRun.has(id))) {
+      const didAddReply =
+        didReceiveStream &&
+        store.state.messageIds.some(
+          (id) => !idsBeforeRun.has(id) && store.state.messagesById[id]?.role === 'assistant',
+        );
+      if (!didAddReply) {
         for (const removedMessage of removedMessages) {
           store.addMessage(removedMessage);
         }
