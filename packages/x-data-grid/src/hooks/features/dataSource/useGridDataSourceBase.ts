@@ -94,6 +94,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
+  // The latest incremental root request of each row range. Those requests load or revalidate
+  // one range each, so they are only replaced by a newer request for the same range.
+  const lastIncrementalRequestIds = React.useRef(new Map<string, number>());
   // `false` while a request is in flight, and for any request that errors or is discarded as
   // stale. Lets the mount effect tell "rows are already displayed" from "the fetch never landed".
   const rowsAreUpToDate = React.useRef(false);
@@ -149,17 +152,30 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
 
+      // Registering the request before the cache lookup makes a cache hit replace the requests
+      // still in flight, so they don't override the cached data we're about to apply.
+      const rangeKey = `${fetchParams.start}-${fetchParams.end}`;
+      let incrementalRequestId: number | undefined;
       if (invalidate) {
         options.clearDataSourceState?.();
+        // Replaces every root request in flight.
+        lastRequestId.current += 1;
+        lastIncrementalRequestIds.current.clear();
+      } else {
+        // Replaces the requests in flight for the same range only. A cached revalidation of the
+        // rows on screen must not discard the page that is loading further down.
+        incrementalRequestId = (lastIncrementalRequestIds.current.get(rangeKey) ?? 0) + 1;
+        lastIncrementalRequestIds.current.set(rangeKey, incrementalRequestId);
       }
+      const requestId = lastRequestId.current;
+      const isLatestRequest = () =>
+        lastRequestId.current === requestId &&
+        (invalidate || lastIncrementalRequestIds.current.get(rangeKey) === incrementalRequestId);
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
       if (!skipCache && responses.every((response) => response !== undefined)) {
-        // Bump the request id so any cache-miss request still in flight is treated as
-        // stale and won't override the cached data we're about to apply.
-        lastRequestId.current += 1;
         apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
@@ -177,8 +193,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         apiRef.current.setLoading(true);
       }
 
-      const requestId = lastRequestId.current + 1;
-      lastRequestId.current = requestId;
       rowsAreUpToDate.current = false;
       pendingRequestCount.current += 1;
 
@@ -188,7 +202,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
         cacheResponses.forEach((response, key) => cache.set(key, response));
 
-        if (lastRequestId.current === requestId) {
+        if (isLatestRequest()) {
           apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             response: getRowsResponse,
             fetchParams,
@@ -197,7 +211,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           rowsAreUpToDate.current = true;
         }
       } catch (originalError) {
-        if (lastRequestId.current === requestId) {
+        if (isLatestRequest()) {
           apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             error: originalError as Error,
             fetchParams,
@@ -223,7 +237,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         }
       } finally {
         pendingRequestCount.current -= 1;
-        if (standardRowsUpdateStrategyActive && lastRequestId.current === requestId) {
+        if (standardRowsUpdateStrategyActive && isLatestRequest()) {
           apiRef.current.setLoading(false);
         }
       }

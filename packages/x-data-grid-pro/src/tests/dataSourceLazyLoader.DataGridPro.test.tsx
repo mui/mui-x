@@ -2322,6 +2322,87 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           });
         });
       });
+
+      describe('concurrent root requests', () => {
+        // Revalidates the loaded root rows of the range, like a polling tick does
+        const revalidateRootRows = (lastRowIndex: number) => {
+          act(() => {
+            apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+              firstRowIndex: 0,
+              lastRowIndex,
+              firstColumnIndex: 0,
+              lastColumnIndex: 0,
+            });
+            // Runs the throttled handler, then the debounced fetch it queues
+            vi.advanceTimersByTime(1);
+          });
+        };
+
+        const settleRequests = async (requests: DeferredRequest[]) => {
+          await act(async () => {
+            requests.forEach((request) => request.resolve());
+            await vi.advanceTimersByTimeAsync(0);
+          });
+        };
+
+        it('should apply a root page response that lands after a cached revalidation of another page', async () => {
+          render(
+            <TestConcurrentRequests
+              treeRows={threePagesTreeRows}
+              deferRequest={(params) => isRootRequest(params) && (params.start as number) > 0}
+              dataSourceCache={undefined}
+              defaultGroupingExpansionDepth={0}
+              lazyLoadingRequestThrottleMs={0}
+            />,
+          );
+          // The first page is loaded and cached, the next one is held back
+          await waitFor(() => {
+            expect(deferredRequests.some((request) => request.params.start === 10)).to.equal(true);
+          });
+          expect(apiRef.current!.getRow('R9')).to.equal(null);
+
+          vi.useFakeTimers();
+          onTestFinished(() => {
+            vi.useRealTimers();
+          });
+          revalidateRootRows(5);
+
+          await settleRequests(deferredRequests.splice(0));
+
+          expect(apiRef.current!.getRow('R9')).not.to.equal(null);
+        });
+
+        it('should keep the latest response when the same root page is revalidated twice and resolves out of order', async () => {
+          let deferRootRequests = false;
+          render(
+            <TestConcurrentRequests
+              deferRequest={() => deferRootRequests}
+              defaultGroupingExpansionDepth={0}
+              lazyLoadingRequestThrottleMs={0}
+            />,
+          );
+          await waitFor(() => expect(apiRef.current!.getRow('P1')).not.to.equal(null));
+          const initialValue = apiRef.current!.getRow('P1').value;
+
+          vi.useFakeTimers();
+          onTestFinished(() => {
+            vi.useRealTimers();
+          });
+          deferRootRequests = true;
+          // Two ranges of rendered rows, both within the first page
+          revalidateRootRows(2);
+          revalidateRootRows(1);
+          expect(deferredRequests).to.have.length(2);
+          const [olderRequest, newerRequest] = deferredRequests.splice(0);
+
+          await settleRequests([newerRequest]);
+          const latestValue = apiRef.current!.getRow('P1').value;
+          expect(latestValue).to.be.greaterThan(initialValue);
+
+          await settleRequests([olderRequest]);
+          expect(apiRef.current!.getRow('P1').value).to.equal(latestValue);
+        });
+      });
     });
   });
 
