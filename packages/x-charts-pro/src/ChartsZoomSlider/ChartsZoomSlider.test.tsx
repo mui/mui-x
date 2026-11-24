@@ -392,6 +392,30 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       expect(screen.getAllByRole('tooltip')[0].textContent).to.equal('G2');
     });
 
+    it('should show the zoom range categories in the tooltips when the axis is reversed', () => {
+      render(
+        <BarChartPro
+          {...horizontalBarProps}
+          yAxis={[
+            {
+              ...horizontalBarProps.yAxis[0],
+              reverse: true,
+              zoom: { minSpan: 5, slider: { enabled: true, showTooltip: 'always' } },
+            },
+          ]}
+          initialZoom={[{ axisId: 'y', start: 10, end: 35 }]}
+        />,
+        barOptions,
+      );
+
+      expect(
+        screen
+          .getAllByRole('tooltip')
+          .map((tooltip) => tooltip.textContent)
+          .sort(),
+      ).to.deep.equal(['G2', 'G7']);
+    });
+
     it('should scroll down the categories when dragging the slider down', async () => {
       const { user } = render(
         <BarChartPro {...horizontalBarProps} initialZoom={[{ axisId: 'y', start: 0, end: 25 }]} />,
