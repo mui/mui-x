@@ -75,16 +75,18 @@ export function createSendMessageActions<Cursor = string>(params: {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
     let capturedFinishPayload: ChatOnFinishPayload | undefined;
+    // Skip building a payload nobody reads when the app has no onFinish listener.
+    const captureFinish = runtimeRef.current.onFinish
+      ? (payload: ChatOnFinishPayload) => {
+          capturedFinishPayload = payload;
+        }
+      : undefined;
     const processOptions = {
       conversationId,
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
-      onFinish: shouldDeferFinish
-        ? (payload: ChatOnFinishPayload) => {
-            capturedFinishPayload = payload;
-          }
-        : runtimeRef.current.onFinish,
+      onFinish: shouldDeferFinish ? captureFinish : runtimeRef.current.onFinish,
       onData: runtimeRef.current.onData,
       // Unique-per-run fallback the stream binds to when the adapter omits a
       // `messageId` on `start`. A backend-supplied id still overrides it (see
@@ -145,6 +147,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       } else {
         finalResult = await processStream(store, reconnectStream, {
           ...processOptions,
+          onFinish: undefined,
           messageId: result.messageId,
           reconnectFromSequence: result.nextSequence,
           seenEventIds: result.seenEventIds,
@@ -430,7 +433,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     // Fresh fallback id: the prior assistant run was just removed above, so a
     // regenerated reply with no adapter-supplied id targets a new message.
     const fallbackMessageId = createLocalId();
-    let didReceiveStream = false;
+    const messageIdsBeforeRun = new Set(store.state.messageIds);
 
     try {
       const stream = await adapter.regenerate({
@@ -440,7 +443,6 @@ export function createSendMessageActions<Cursor = string>(params: {
         messages: getMessages(storeUnknown),
         signal: abortController.signal,
       });
-      didReceiveStream = true;
 
       const result = await processStreamWithReconnect(
         stream,
@@ -470,9 +472,9 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      // Restore the snapshot assistant messages (D4) only on a pre-stream rejection.
-      // A later failure (e.g. a throwing onFinish) must not overwrite the new reply.
-      if (!didReceiveStream) {
+      // Restore the snapshot assistant messages (D4) only when no new reply reached the
+      // store. A later failure (e.g. a throwing onFinish) must not overwrite the new reply.
+      if (store.state.messageIds.every((id) => messageIdsBeforeRun.has(id))) {
         for (const removedMessage of removedMessages) {
           store.addMessage(removedMessage);
         }

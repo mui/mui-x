@@ -383,17 +383,14 @@ describe('createSendMessageActions', () => {
       const onFinish = vi.fn();
       const onError = vi.fn();
       const reconnectToStream = vi.fn();
-      let pullCount = 0;
       const adapter = createAdapter({
         sendMessage: vi.fn().mockResolvedValue(
           new ReadableStream<ChatMessageChunk>({
+            start(controller) {
+              controller.enqueue({ type: 'start', messageId: 'a1' });
+            },
             pull(controller) {
-              pullCount += 1;
-              if (pullCount === 1) {
-                controller.enqueue({ type: 'start', messageId: 'a1' });
-              } else {
-                controller.error(new Error('Network failure'));
-              }
+              controller.error(new Error('Network failure'));
             },
           }),
         ),
@@ -436,11 +433,6 @@ describe('createSendMessageActions', () => {
         reconnectToStream: vi.fn().mockResolvedValue(
           new ReadableStream<ChatStreamEnvelope>({
             start(controller) {
-              controller.enqueue({
-                sequence: 2,
-                eventId: 'e2',
-                chunk: { type: 'text-delta', id: 'text-1', delta: 'Hello' },
-              });
               controller.error(new Error('Network failure'));
             },
           }),
@@ -1099,6 +1091,33 @@ describe('createSendMessageActions', () => {
       expect(setRuntimeError.mock.calls[0][0].code).toBe('REGENERATE_ERROR');
       expect(setRuntimeError.mock.calls[0][0].message).toBe('Regen failed');
       expect(setRuntimeError.mock.calls[0][0].details.messageId).toBe('a1');
+      expect(store.state.isStreaming).toBe(false);
+    });
+
+    it('restores the removed assistant run when the returned stream cannot be read', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      store.setActiveConversation('c1');
+      const setRuntimeError = vi.fn();
+      const lockedStream = createStream([{ type: 'start', messageId: 'a2' }]);
+      lockedStream.getReader();
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockResolvedValue(lockedStream),
+        reconnectToStream: vi.fn(),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messagesById.a1).toBeDefined();
+      expect(setRuntimeError).toHaveBeenCalledTimes(1);
+      expect(setRuntimeError.mock.calls[0][0].code).toBe('REGENERATE_ERROR');
       expect(store.state.isStreaming).toBe(false);
     });
 
