@@ -1,4 +1,5 @@
 import { getLabel } from '../../../internals/getLabel';
+import { getAxisDataValue } from '../../../internals/indexDuplicatedAxisData';
 import type { DescriptionGetter } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const descriptionGetter: DescriptionGetter<'bar'> = (params) => {
@@ -20,7 +21,7 @@ const descriptionGetter: DescriptionGetter<'bar'> = (params) => {
   return localeText.barDescription({
     value,
     formattedValue: formattedValue ?? '',
-    categoryValue,
+    categoryValue: getAxisDataValue(categoryAxis, identifier.dataIndex) ?? null,
     formattedCategoryValue: formattedCategory ?? '',
     seriesLabel: label,
   });

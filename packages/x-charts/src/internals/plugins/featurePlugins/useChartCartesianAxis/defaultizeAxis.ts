@@ -10,6 +10,7 @@ import {
 import type { XAxis, YAxis } from '../../../../models';
 import type { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
 import type { DatasetType } from '../../../../models/seriesType/config';
+import { indexDuplicatedAxisData } from '../../../indexDuplicatedAxisData';
 
 type InXAxis = XAxis & { zoom?: boolean | ZoomOptions };
 
@@ -87,7 +88,7 @@ export function defaultizeXAxis(
     };
   });
 
-  return parsedAxes;
+  return parsedAxes.map((axis) => indexDuplicatedAxisData(axis));
 }
 
 type InYAxis = YAxis & { zoom?: boolean | ZoomOptions };
@@ -162,5 +163,5 @@ export function defaultizeYAxis(
     };
   });
 
-  return parsedAxes;
+  return parsedAxes.map((axis) => indexDuplicatedAxisData(axis));
 }

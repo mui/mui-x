@@ -2,6 +2,7 @@ import type { ChartsAxisData } from '../../../../models/axis';
 import type { ProcessedSeries } from '../../corePlugins/useChartSeries';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import { isPolarSeriesType } from '../../../isPolar';
+import { getAxisDataValue } from '../../../indexDuplicatedAxisData';
 
 type PolarAxes = { axis: Record<string, { data?: readonly any[] }>; axisIds: string[] };
 
@@ -23,7 +24,7 @@ export function getPolarAxisClickPayload({
   processedSeries: ProcessedSeries<ChartSeriesType>;
 }): ChartsAxisData | null {
   const axes = isRotationAxis ? rotationAxes : radiusAxes;
-  const axisValue = axes.axis[axes.axisIds[0]]?.data?.[dataIndex];
+  const axisValue = getAxisDataValue(axes.axis[axes.axisIds[0]], dataIndex);
 
   if (axisValue === undefined) {
     return null;

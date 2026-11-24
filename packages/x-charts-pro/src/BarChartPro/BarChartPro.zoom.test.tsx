@@ -3,6 +3,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
+import { barClasses } from '@mui/x-charts/BarChart';
 import { BarChartPro } from './BarChartPro';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
@@ -268,6 +269,19 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
       expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
     });
 
+    it('should resolve a string range on an axis with duplicated values', () => {
+      render(
+        <BarChartPro
+          {...barChartProps}
+          xAxis={[{ ...barChartProps.xAxis[0], data: ['A', 'B', 'C', 'C'] }]}
+          initialZoom={[{ axisId: 'x', value: ['B', 'C'] }]}
+        />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+    });
+
     it('should resolve a function range value', () => {
       render(
         <BarChartPro
@@ -288,5 +302,24 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
     });
+  });
+
+  it('should keep duplicated band values distinct when zoomed', () => {
+    const { container } = render(
+      <BarChartPro
+        {...barChartProps}
+        xAxis={[{ ...barChartProps.xAxis[0], data: ['A', 'A', 'B', 'A'] }]}
+        initialZoom={[{ axisId: 'x', start: 50, end: 100 }]}
+      />,
+      options,
+    );
+
+    expect(getAxisTickValues('x')).to.deep.equal(['B', 'A']);
+
+    const xs = Array.from(container.querySelectorAll(`.${barClasses.element}`), (bar) =>
+      Number(bar.getAttribute('x')),
+    );
+    expect(xs).to.have.length(2);
+    expect(xs[0]).to.be.lessThan(xs[1]);
   });
 });

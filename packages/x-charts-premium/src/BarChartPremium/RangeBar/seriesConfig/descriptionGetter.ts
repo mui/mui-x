@@ -1,4 +1,4 @@
-import { getLabel } from '@mui/x-charts/internals';
+import { getAxisDataValue, getLabel } from '@mui/x-charts/internals';
 import type { DescriptionGetter } from '@mui/x-charts/internals';
 
 const descriptionGetter: DescriptionGetter<'rangeBar'> = (params) => {
@@ -21,7 +21,7 @@ const descriptionGetter: DescriptionGetter<'rangeBar'> = (params) => {
   return localeText.rangeBarDescription({
     value,
     formattedValue,
-    categoryValue,
+    categoryValue: getAxisDataValue(categoryAxis, identifier.dataIndex) ?? null,
     formattedCategoryValue,
     seriesLabel: label,
   });

@@ -1,3 +1,4 @@
+import { getAxisDataValue } from '@mui/x-charts/internals';
 import type { DescriptionGetter } from '@mui/x-charts/internals';
 
 const descriptionGetter: DescriptionGetter<'heatmap'> = (params) => {
@@ -26,8 +27,8 @@ const descriptionGetter: DescriptionGetter<'heatmap'> = (params) => {
     }) ?? '';
 
   return localeText.heatmapDescription({
-    x: xValue,
-    y: yValue,
+    x: getAxisDataValue(xAxis, identifier.xIndex) ?? null,
+    y: getAxisDataValue(yAxis, identifier.yIndex) ?? null,
     value,
     formattedValue: formattedValue ?? '',
     formattedXValue,

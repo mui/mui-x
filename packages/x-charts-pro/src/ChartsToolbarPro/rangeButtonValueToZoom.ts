@@ -1,4 +1,5 @@
 import { warnOnce } from '@mui/x-internals/warning';
+import { getAxisData } from '@mui/x-charts/internals';
 
 /**
  * A calendar interval unit for range buttons.
@@ -266,7 +267,7 @@ export function getRangeButtonDomainParams(
   const isOrdinal = scaleType === 'band' || scaleType === 'point';
   return {
     scaleType,
-    data: axis.data,
+    data: getAxisData(axis),
     domain: isOrdinal
       ? { min: 0, max: domain.length - 1 }
       : { min: Number(domain[0]), max: Number(domain[domain.length - 1]) },

@@ -11,6 +11,7 @@ import type {
 import type { ComputedAxis, PolarAxisDefaultized, AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
 import { getLabel } from '../internals/getLabel';
+import { getAxisDataValue } from '../internals/indexDuplicatedAxisData';
 import { utcFormatter } from './utils';
 import {
   useRadiusAxes,
@@ -97,7 +98,7 @@ function defaultAxisTooltipConfig(
     axisId: axis.id,
     mainAxis: axis,
     dataIndex,
-    axisValue,
+    axisValue: getAxisDataValue(axis, dataIndex) ?? null,
     axisFormattedValue,
     seriesItems: [],
   };

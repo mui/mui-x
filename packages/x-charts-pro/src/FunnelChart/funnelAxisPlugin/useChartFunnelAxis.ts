@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { errorOnce } from '@mui/x-internals/warning';
 import {
+  getAxisDataValue,
   getChartPoint,
   getCartesianAxisIndex,
   selectorChartDrawingArea,
@@ -151,8 +152,10 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
         return;
       }
 
-      // The .data exist because otherwise the dataIndex would be null or -1.
-      const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
+      const axisValue = getAxisDataValue(
+        (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID],
+        dataIndex,
+      );
 
       const seriesValues: Record<string, number | null | undefined> = {};
 

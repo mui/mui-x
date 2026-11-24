@@ -83,6 +83,42 @@ describe('BarChart - click event', () => {
       });
     });
 
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    it.skipIf(isJSDOM)(
+      'should provide the original axis value when band values are duplicated',
+      async () => {
+        const onAxisClick = vi.fn();
+        const { user, container } = render(
+          <div style={{ width: 400, height: 400 }}>
+            <BarChart
+              {...config}
+              dataset={undefined}
+              series={[{ data: [4, 1, 2], id: 's1' }]}
+              xAxis={[{ data: ['A', 'B', 'A'], position: 'none' }]}
+              onAxisClick={onAxisClick}
+            />
+          </div>,
+        );
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
+
+        await user.pointer([
+          {
+            keys: '[MouseLeft]',
+            target: layerContainer,
+            coords: { clientX: 330, clientY: 60 },
+          },
+        ]);
+
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
+          dataIndex: 2,
+          axisValue: 'A',
+          seriesValues: { s1: 2 },
+        });
+      },
+    );
+
     // Regression test for https://github.com/mui/mui-x/issues/20364
     // A click with a small pointer drift should still be handled and not discarded as a pan.
     it.skipIf(isJSDOM)(

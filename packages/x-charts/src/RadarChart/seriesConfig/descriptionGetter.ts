@@ -1,4 +1,5 @@
 import { getLabel } from '../../internals/getLabel';
+import { getAxisDataValue } from '../../internals/indexDuplicatedAxisData';
 import type { DescriptionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const descriptionGetter: DescriptionGetter<'radar'> = (params) => {
@@ -23,7 +24,7 @@ const descriptionGetter: DescriptionGetter<'radar'> = (params) => {
   return localeText.radarDescription({
     value,
     formattedValue: formattedValue ?? '',
-    categoryValue,
+    categoryValue: getAxisDataValue(rotationAxis, dataIndex) ?? null,
     formattedCategoryValue: formattedCategory ?? '',
     seriesLabel: label,
   });

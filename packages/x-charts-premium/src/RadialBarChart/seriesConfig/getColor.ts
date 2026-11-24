@@ -1,4 +1,4 @@
-import { resolveColorProcessor } from '@mui/x-charts/internals';
+import { getAxisData, resolveColorProcessor } from '@mui/x-charts/internals';
 import type { ColorProcessor } from '@mui/x-charts/internals';
 
 const getColor: ColorProcessor<'radialBar'> = (series, rotationAxis, radiusAxis) => {
@@ -7,7 +7,7 @@ const getColor: ColorProcessor<'radialBar'> = (series, rotationAxis, radiusAxis)
     series,
     valueColorScale: verticalLayout ? radiusAxis?.colorScale : rotationAxis?.colorScale,
     categoryColorScale: verticalLayout ? rotationAxis?.colorScale : radiusAxis?.colorScale,
-    categoryValues: verticalLayout ? rotationAxis?.data : radiusAxis?.data,
+    categoryValues: getAxisData(verticalLayout ? rotationAxis : radiusAxis),
   });
 };
 

@@ -1,4 +1,4 @@
-import { getLabel } from '@mui/x-charts/internals';
+import { getAxisDataValue, getLabel } from '@mui/x-charts/internals';
 import type { ComputedAxis } from '@mui/x-charts/internals';
 import type { SeriesId } from '@mui/x-charts/models';
 import type { ChartExcelColumn, ChartExcelTable } from '../chartExcelData.types';
@@ -19,7 +19,7 @@ export function getSeriesLabel(
  * only when none of those were given, and there the index is the plotted coordinate.
  */
 export function getCategory(axis: ComputedAxis | undefined, dataIndex: number): unknown {
-  return axis?.data?.[dataIndex] ?? dataIndex;
+  return getAxisDataValue(axis, dataIndex) ?? dataIndex;
 }
 
 export const FORMATTED_VALUE_KEY = 'formattedValue';

@@ -1,4 +1,5 @@
 import { getLabel } from '../../internals/getLabel';
+import { getAxisDataValue } from '../../internals/indexDuplicatedAxisData';
 import type { DescriptionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const descriptionGetter: DescriptionGetter<'line'> = (params) => {
@@ -21,7 +22,7 @@ const descriptionGetter: DescriptionGetter<'line'> = (params) => {
   const formattedYValue = series.valueFormatter(yValue, { dataIndex });
 
   return localeText.lineDescription({
-    x: xValue,
+    x: getAxisDataValue(xAxis, dataIndex) ?? null,
     y: yValue,
     formattedXValue: formattedXValue ?? '',
     formattedYValue: formattedYValue ?? '',

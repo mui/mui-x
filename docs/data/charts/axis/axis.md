@@ -47,6 +47,12 @@ Some series types also require specific axis attributes:
 - In line charts, the `xAxis` must have a `data` array so each y-value maps to a specific x-value for proper chart rendering.
 - In bar charts, the axis that represents categories (x-axis for vertical bars or y-axis for horizontal bars) must use `scaleType: 'band'`.
 
+Band and point axes give each item of `data` its own position, even when a value is repeated.
+In that case the axis uses the item indexes as its scale domain.
+Axis functions such as `valueFormatter` still receive the values from `data`, but hooks reading the axis, such as `useXAxis()`, `useXScale()` and `useXAxisTicks()`, work with indexes.
+Series that place their items by value, such as scatter series, can't be drawn on this axis.
+Axes with `Date` objects as data are not affected: repeated dates are merged into a single position.
+
 ## Axis formatter
 
 Axis data can be displayed in ticks, tooltips, and other locations.

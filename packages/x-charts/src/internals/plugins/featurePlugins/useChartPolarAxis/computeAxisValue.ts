@@ -16,6 +16,7 @@ import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
 import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
+import { getAxisData } from '../../../indexDuplicatedAxisData';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
 import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
@@ -144,7 +145,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
         colorScale:
           axis.colorMap &&
           (axis.colorMap.type === 'ordinal'
-            ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+            ? getOrdinalColorScale({ values: getAxisData(axis), ...axis.colorMap })
             : getColorScale(axis.colorMap)),
         isFullCircle,
       } as ComputedAxis<'band', any, ChartsAxisProps>;
@@ -165,7 +166,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
         colorScale:
           axis.colorMap &&
           (axis.colorMap.type === 'ordinal'
-            ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+            ? getOrdinalColorScale({ values: getAxisData(axis), ...axis.colorMap })
             : getColorScale(axis.colorMap)),
         isFullCircle,
       } as ComputedAxis<'point', any, ChartsAxisProps>;

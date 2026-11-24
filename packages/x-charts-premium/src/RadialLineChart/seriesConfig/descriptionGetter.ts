@@ -1,4 +1,4 @@
-import { getLabel } from '@mui/x-charts/internals';
+import { getAxisDataValue, getLabel } from '@mui/x-charts/internals';
 import type { DescriptionGetter } from '@mui/x-charts/internals';
 
 const descriptionGetter: DescriptionGetter<'radialLine'> = (params) => {
@@ -22,7 +22,7 @@ const descriptionGetter: DescriptionGetter<'radialLine'> = (params) => {
 
   // We reuse the description for the LineChart with x/y for the rotation/radius.
   return localeText.lineDescription({
-    x: xValue,
+    x: getAxisDataValue(rotationAxis, dataIndex) ?? null,
     y: yValue,
     formattedXValue: formattedXValue ?? '',
     formattedYValue: formattedYValue ?? '',

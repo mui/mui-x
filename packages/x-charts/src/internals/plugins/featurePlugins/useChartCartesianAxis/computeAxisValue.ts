@@ -29,6 +29,7 @@ import type { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartS
 import type { ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
+import { getAxisData } from '../../../indexDuplicatedAxisData';
 import {
   DEFAULT_AXIS_SIZE_HEIGHT,
   DEFAULT_AXIS_SIZE_WIDTH,
@@ -229,7 +230,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
           colorScale:
             axis.colorMap &&
             (axis.colorMap.type === 'ordinal'
-              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              ? getOrdinalColorScale({ values: getAxisData(axis), ...axis.colorMap })
               : getColorScale(axis.colorMap)),
         } as ComputedAxis<'band', any, ChartsAxisProps>;
       }
@@ -246,7 +247,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
           colorScale:
             axis.colorMap &&
             (axis.colorMap.type === 'ordinal'
-              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              ? getOrdinalColorScale({ values: getAxisData(axis), ...axis.colorMap })
               : getColorScale(axis.colorMap)),
         } as ComputedAxis<'point', any, ChartsAxisProps>;
       }

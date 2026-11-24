@@ -3,6 +3,7 @@ import type { SeriesId } from '../../../../models/seriesType/common';
 import type { ProcessedSeries } from '../../corePlugins/useChartSeries';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { ComputeResult } from './computeAxisValue';
+import { getAxisDataValue } from '../../../indexDuplicatedAxisData';
 
 const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
 type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;
@@ -24,7 +25,7 @@ export function getAxisClickPayload({
   axes: ComputeResult<ChartsAxisProps>['axis'];
   processedSeries: ProcessedSeries<ChartSeriesType>;
 }): ChartsAxisData | null {
-  const axisValue = axes[axisId]?.data?.[dataIndex];
+  const axisValue = getAxisDataValue(axes[axisId], dataIndex);
 
   if (axisValue === undefined) {
     return null;

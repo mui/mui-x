@@ -8,6 +8,7 @@ import type {
   ChartsRadiusAxisProps,
 } from '../../../../models/axis';
 import type { DatasetType } from '../../../../models/seriesType/config';
+import { indexDuplicatedAxisData } from '../../../indexDuplicatedAxisData';
 
 export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
   inAxis: MakeOptional<PolarAxisConfig<TScale, any>, 'id'>[] | undefined,
@@ -30,7 +31,7 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
   const inputAxes: MakeOptional<PolarAxisConfig<ScaleName, any>, 'id'>[] =
     inAxis && inAxis.length > 0 ? inAxis : [{ id: DEFAULT_AXIS_KEY }];
 
-  return inputAxes.map((axisConfig, index) => {
+  const axes = inputAxes.map((axisConfig, index) => {
     const id = `defaultized-${axisName}-axis-${index}`;
     const dataKey = axisConfig.dataKey;
 
@@ -56,4 +57,6 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
       ...axisConfig,
     } as PolarAxisConfig<TScale, any>;
   });
+
+  return axes.map((axis) => indexDuplicatedAxisData(axis));
 }

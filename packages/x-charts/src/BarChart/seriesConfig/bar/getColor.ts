@@ -1,5 +1,6 @@
 import type { ColorProcessor } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { resolveColorProcessor } from '../../../internals/resolveColorProcessor';
+import { getAxisData } from '../../../internals/indexDuplicatedAxisData';
 
 const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
   const verticalLayout = series.layout === 'vertical';
@@ -7,7 +8,7 @@ const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
     series,
     valueColorScale: verticalLayout ? yAxis?.colorScale : xAxis?.colorScale,
     categoryColorScale: verticalLayout ? xAxis?.colorScale : yAxis?.colorScale,
-    categoryValues: verticalLayout ? xAxis?.data : yAxis?.data,
+    categoryValues: getAxisData(verticalLayout ? xAxis : yAxis),
   });
 };
 
