@@ -458,9 +458,10 @@ export function createSendMessageActions<Cursor = string>(params: {
       // Pre-stream rejection: put each removed message back after its nearest surviving
       // original predecessor (or before the first survivor), keeping changes made meanwhile.
       const removedById = new Map(removedMessages.map((message) => [message.id, message]));
-      const liveMessages = getMessages(storeUnknown).filter(
-        (message) => !removedById.has(message.id),
-      );
+      const currentMessages = getMessages(storeUnknown);
+      // A Map lookup avoids inherited keys (e.g. an id of "constructor") on `messagesById`.
+      const currentById = new Map(currentMessages.map((message) => [message.id, message]));
+      const liveMessages = currentMessages.filter((message) => !removedById.has(message.id));
       const liveIds = new Set(liveMessages.map((message) => message.id));
       const restoredAfter = new Map<string | undefined, ChatMessage[]>();
       let previousLiveId: string | undefined;
@@ -469,7 +470,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         const removedMessage = removedById.get(id);
         if (removedMessage) {
           const group = restoredAfter.get(previousLiveId) ?? [];
-          group.push(store.state.messagesById[id] ?? removedMessage);
+          group.push(currentById.get(id) ?? removedMessage);
           restoredAfter.set(previousLiveId, group);
         } else if (liveIds.has(id)) {
           previousLiveId = id;

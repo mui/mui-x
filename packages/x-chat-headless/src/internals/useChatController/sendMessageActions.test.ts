@@ -1167,6 +1167,28 @@ describe('createSendMessageActions', () => {
       expect(store.state.messageIds).toEqual(['a1', 'u1']);
     });
 
+    it('restores a reply whose id matches an Object.prototype key when regenerating rejects', async () => {
+      const [u1, a1] = makeThread();
+      const reply = { ...a1, id: 'constructor' };
+      const store = new ChatStore({ initialMessages: [u1, reply] });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockRejectedValue(new Error('Regen failed')),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('constructor');
+
+      expect(store.state.messageIds).toEqual(['u1', 'constructor']);
+      expect(store.state.messagesById.constructor).toBe(reply);
+    });
+
     it('does not write messages when a rejected regenerate had nothing to restore', async () => {
       const [u1] = makeThread();
       const store = new ChatStore({ initialMessages: [u1] });
