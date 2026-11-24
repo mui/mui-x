@@ -529,8 +529,6 @@ export default defineConfig(
       'docs/data/**/demos/*/*.jsx',
       'docs/src/pages/production-error/demos/*/*.tsx',
     ],
-    // Legacy showcase directories also contain shared helpers.
-    ignores: ['docs/data/data-grid/demos/*/*.tsx'],
     plugins: {
       'docs-infra': { rules: { 'require-demo-focus': lintJavascriptDemoFocus } },
     },

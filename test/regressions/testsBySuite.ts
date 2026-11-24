@@ -73,8 +73,6 @@ const docsImports = import.meta.glob<React.ComponentType>(
 Object.keys(docsImports).forEach((path: string) => {
   const [name, ...suiteArray] = path
     .replace('../../docs/data/', '')
-    // Only TSX entries use the new layout during the staged migration.
-    // Legacy Data Grid pages also have a `demos` directory: preserve it.
     .replace(/\/demos\/[^/]+(?=\/[^/]+\.tsx$)/, '')
     .replace(/\.(js|tsx)$/, '')
     .split('/')
