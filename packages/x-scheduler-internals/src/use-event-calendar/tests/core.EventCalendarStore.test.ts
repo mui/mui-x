@@ -67,6 +67,21 @@ describe('Core - EventCalendarStore', () => {
       },
     );
 
+    it.skipIf(!isJSDOM)(
+      'should display the occurrences at the offset Date applies when the timezone of the system has no name',
+      () => {
+        // A POSIX `TZ`, which `Intl` doesn't name: `Date` applies -03:00.
+        setSystemTimezone('UTC+3');
+        const store = new EventCalendarStore({
+          events: [EventBuilder.new().id('meeting').singleDay('2025-07-04T09:00:00').build()],
+        });
+
+        expect(store.state.displayTimezone).to.equal('-03:00');
+        const { start } = store.state.processedEventLookup.get('meeting')!;
+        expect(start.toPlainDateTime().toString()).to.equal('2025-07-04T09:00:00');
+      },
+    );
+
     it('should initialize default state', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS);
 

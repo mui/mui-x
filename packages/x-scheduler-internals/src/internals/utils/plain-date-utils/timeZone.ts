@@ -53,16 +53,24 @@ function readOffset(format: TimezoneOffsets['format'], epochMs: number): number 
 }
 
 /**
- * The IANA identifier of a timezone, the timezone of the system for `'default'`.
+ * The identifier of a timezone, the timezone of the system for `'default'`.
  */
 export function getTimezoneId(timezone: string): string {
   if (timezone !== 'default') {
     return timezone;
   }
   const systemTimezone: string | undefined = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  // An unknown `TZ`, on a server for example, leaves the timezone of the system without an
-  // identifier, and `Date` reads it as UTC.
-  return systemTimezone == null || systemTimezone === 'Etc/Unknown' ? 'UTC' : systemTimezone;
+  if (systemTimezone != null && systemTimezone !== 'Etc/Unknown') {
+    return systemTimezone;
+  }
+  // A `TZ` without an IANA name, on a server for example: a path such as `:/etc/localtime`, a
+  // POSIX rule such as `UTC+3`, or an unknown name. `Date` still applies an offset, the same all
+  // year for these, so the identifier is this offset, read the way `Date` reads it.
+  const offsetMinutes = -new Date().getTimezoneOffset();
+  const absoluteMinutes = Math.abs(offsetMinutes);
+  const hours = String(Math.floor(absoluteMinutes / 60)).padStart(2, '0');
+  const minutes = String(absoluteMinutes % 60).padStart(2, '0');
+  return `${offsetMinutes < 0 ? '-' : '+'}${hours}:${minutes}`;
 }
 
 function getSystemTimezoneOffsetMs(epochMs: number): number {

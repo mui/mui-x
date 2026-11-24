@@ -7,6 +7,7 @@ import {
   getEndOfDayMs,
   getPlainDateRangeMs,
   getStartOfDayMs,
+  getTimezoneId,
   toEpochMs,
   toLocalMs,
   toMsInDay,
@@ -28,6 +29,30 @@ function epochMsOf(date: string, time: string, timezone: string) {
 }
 
 describe('timeZone', () => {
+  describe('getTimezoneId', () => {
+    it('should return the identifier of a named timezone as is', () => {
+      expect(getTimezoneId('Europe/Paris')).to.equal('Europe/Paris');
+    });
+
+    it.skipIf(!isJSDOM)('should read the default timezone as the timezone of the system', () => {
+      setSystemTimezone('America/New_York');
+      expect(getTimezoneId('default')).to.equal('America/New_York');
+    });
+
+    // `Intl` names none of these, and `Date` applies the same offset all year to them.
+    it.skipIf(!isJSDOM).each([
+      ['UTC+3', '-03:00'],
+      ['Foo/Bar', '+00:00'],
+      ['Etc/Unknown', '+00:00'],
+    ])('should read the default timezone of TZ=%s as the offset Date applies, %s', (tz, id) => {
+      setSystemTimezone(tz);
+      expect(getTimezoneId('default')).to.equal(id);
+      expect(toPlainDateTime(Date.UTC(2025, 6, 1, 12), id).toString()).to.equal(
+        toPlainDateTime(Date.UTC(2025, 6, 1, 12), 'default').toString(),
+      );
+    });
+  });
+
   describe('toLocalMs', () => {
     const getOffsetMs = (timezone: string, epochMs: number) =>
       toLocalMs(epochMs, timezone) - epochMs;
