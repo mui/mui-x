@@ -30,6 +30,38 @@ describe('<ChartsYAxis />', () => {
     ).toWarnDev(expectedError);
   });
 
+  it('should apply tickLabelInterval per group level on grouped axes', () => {
+    render(
+      <ChartsContainer
+        width={400}
+        height={300}
+        series={[{ type: 'bar', layout: 'horizontal', data: [1, 2, 3, 4] }]}
+        xAxis={[{ position: 'none' }]}
+        yAxis={[
+          {
+            id: 'grouped-y-axis',
+            scaleType: 'band',
+            data: ['a', 'b', 'c', 'd'],
+            tickLabelInterval: (_, index) => index % 2 === 0,
+            groups: [
+              { getValue: (value: string) => value },
+              { getValue: (value: string) => (value < 'c' ? 'G1' : 'G2') },
+            ],
+          },
+        ]}
+      >
+        <ChartsYAxis axisId="grouped-y-axis" />
+      </ChartsContainer>,
+    );
+
+    expect(screen.queryByText('a')).not.to.equal(null);
+    expect(screen.queryByText('b')).to.equal(null);
+    expect(screen.queryByText('c')).not.to.equal(null);
+    expect(screen.queryByText('d')).to.equal(null);
+    expect(screen.queryByText('G1')).not.to.equal(null);
+    expect(screen.queryByText('G2')).to.equal(null);
+  });
+
   it('should render with valid axisId', () => {
     render(
       <ChartsContainer {...defaultProps}>

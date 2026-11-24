@@ -42,6 +42,7 @@ function ChartsGroupedYAxisTicks(inProps: ChartsYAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    tickLabelInterval,
   } = defaultizedProps;
 
   const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
@@ -65,6 +66,20 @@ function ChartsGroupedYAxisTicks(inProps: ChartsYAxisProps) {
     direction: 'y',
     groups,
   });
+
+  // The `tickLabelInterval` index counts labels within their group.
+  const hiddenLabels = new Set<(typeof yTicks)[number]>();
+  if (typeof tickLabelInterval === 'function') {
+    groups.forEach((_, groupIndex) => {
+      yTicks
+        .filter((tick) => tick.groupIndex === groupIndex && tick.formattedValue !== undefined)
+        .forEach((tick, index) => {
+          if (!tickLabelInterval(tick.value, index)) {
+            hiddenLabels.add(tick);
+          }
+        });
+    });
+  }
 
   return (
     <React.Fragment>
@@ -92,7 +107,7 @@ function ChartsGroupedYAxisTicks(inProps: ChartsYAxisProps) {
               <Tick x2={tickXSize} className={classes.tick} {...slotProps?.axisTick} />
             )}
 
-            {tickLabel !== undefined && (
+            {tickLabel !== undefined && !hiddenLabels.has(item) && (
               <TickLabel
                 x={labelPositionX}
                 y={yTickLabel}
