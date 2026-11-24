@@ -296,6 +296,69 @@ function ControlledMessageList(props: {
   );
 }
 
+function createHistoryListMessages() {
+  return vi.fn(async ({ cursor }: { cursor?: string }) =>
+    cursor == null
+      ? {
+          messages: [createMessage('m2', 'assistant'), createMessage('m3', 'assistant')],
+          cursor: 'cursor-1',
+          hasMore: true,
+        }
+      : { messages: [createMessage('m1', 'assistant')], cursor: undefined, hasMore: false },
+  );
+}
+
+function ReturnToTop() {
+  // Runs in the mount commit, after the list's layout effects, so the browser coalesces both scrolls.
+  React.useLayoutEffect(() => {
+    document.querySelector<HTMLElement>('[role="log"]')!.scrollTop = 0;
+  }, []);
+  return null;
+}
+
+function HistoryList(props: {
+  onReachTop: MessageListRootProps['onReachTop'];
+  returnToTopOnMount?: boolean;
+}) {
+  const { onReachTop, returnToTopOnMount } = props;
+  const ids = useMessageIds();
+
+  if (ids.length === 0) {
+    return null;
+  }
+
+  // 80px of rows in a 60px viewport: the bottom (scrollTop 20) is inside the 40px top zone.
+  return (
+    <React.Fragment>
+      <MessageListRoot
+        estimatedItemSize={40}
+        onReachTop={onReachTop}
+        renderItem={({ id }) => (
+          <div data-testid={`message-${id}`} style={{ boxSizing: 'border-box', height: 40 }}>
+            {id}
+          </div>
+        )}
+        style={{ height: 60, overflowY: 'auto' }}
+      />
+      {returnToTopOnMount ? <ReturnToTop /> : null}
+    </React.Fragment>
+  );
+}
+
+function HistoryListMountedWhenLoaded(props: {
+  listMessages: ChatAdapter['listMessages'];
+  onReachTop: MessageListRootProps['onReachTop'];
+  returnToTopOnMount?: boolean;
+}) {
+  const { listMessages, ...other } = props;
+
+  return (
+    <ChatRoot adapter={createAdapter({ listMessages })} initialActiveConversationId="c1">
+      <HistoryList {...other} />
+    </ChatRoot>
+  );
+}
+
 const conversationAMessages = [
   createMessage('a1', 'assistant'),
   createMessage('a2', 'assistant'),
@@ -550,38 +613,8 @@ describe('MessageListRoot', () => {
     'does not load history from the mount scroll when it lands in the top zone',
     async () => {
       const onReachTop = vi.fn();
-      const listMessages = vi.fn(async ({ cursor }: { cursor?: string }) =>
-        cursor == null
-          ? {
-              messages: [createMessage('m2', 'assistant'), createMessage('m3', 'assistant')],
-              cursor: 'cursor-1',
-              hasMore: true,
-            }
-          : { messages: [createMessage('m1', 'assistant')], cursor: undefined, hasMore: false },
-      );
-
-      function MountWhenLoaded() {
-        const ids = useMessageIds();
-        // 80px of rows in a 60px viewport: the bottom (scrollTop 20) is inside the 40px top zone.
-        return ids.length === 0 ? null : (
-          <MessageListRoot
-            estimatedItemSize={40}
-            onReachTop={onReachTop}
-            renderItem={({ id }) => (
-              <div data-testid={`message-${id}`} style={{ boxSizing: 'border-box', height: 40 }}>
-                {id}
-              </div>
-            )}
-            style={{ height: 60, overflowY: 'auto' }}
-          />
-        );
-      }
-
-      render(
-        <ChatRoot adapter={createAdapter({ listMessages })} initialActiveConversationId="c1">
-          <MountWhenLoaded />
-        </ChatRoot>,
-      );
+      const listMessages = createHistoryListMessages();
+      render(<HistoryListMountedWhenLoaded listMessages={listMessages} onReachTop={onReachTop} />);
       const log = await screen.findByRole('log');
 
       expect(log.scrollTop).toBe(20);
@@ -595,7 +628,25 @@ describe('MessageListRoot', () => {
 
       // A real scroll to the top still loads history.
       log.scrollTop = 0;
-      fireEvent.scroll(log);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('message-m1')).toBeVisible();
+      });
+      expect(onReachTop).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'loads history when the user returns to the top before the mount scroll event',
+    async () => {
+      const onReachTop = vi.fn();
+      render(
+        <HistoryListMountedWhenLoaded
+          listMessages={createHistoryListMessages()}
+          onReachTop={onReachTop}
+          returnToTopOnMount
+        />,
+      );
 
       await waitFor(() => {
         expect(screen.getByTestId('message-m1')).toBeVisible();
