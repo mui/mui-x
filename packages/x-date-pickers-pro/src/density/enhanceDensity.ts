@@ -1,22 +1,9 @@
-import type { CSSInterpolation, Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import { unstable_enhanceDensity as enhanceCommunityDensity } from '@mui/x-date-pickers/density';
 import type { DensityEnhancedTheme } from '@mui/x-date-pickers/density';
 import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 import { pickersArrowSwitcherClasses, pickersToolbarClasses } from '@mui/x-date-pickers/internals';
 import { addRootOverride, getDensitySizing } from '@mui/x-internals/densityTheme';
-import type { TimeRangePickerTabsClassKey } from '../TimeRangePicker/timeRangePickerTabsClasses';
-import type { TimeRangePickerToolbarClassKey } from '../TimeRangePicker/timeRangePickerToolbarClasses';
-
-// The time range picker tabs and toolbar resolve theme overrides by name, but
-// the package's theme augmentation does not list them, so pin their keys here.
-type ProDensityComponents = NonNullable<Theme['components']> & {
-  MuiTimeRangePickerTabs?: {
-    styleOverrides?: Partial<Record<TimeRangePickerTabsClassKey, CSSInterpolation>>;
-  };
-  MuiTimeRangePickerToolbar?: {
-    styleOverrides?: Partial<Record<TimeRangePickerToolbarClassKey, CSSInterpolation>>;
-  };
-};
 
 /**
  * Make the Pro date and time pickers density-aware: the community enhancer
@@ -29,7 +16,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const enhanced = enhanceCommunityDensity(theme);
   const { spacing } = theme;
   const { touchTarget } = getDensitySizing(theme);
-  const components: ProDensityComponents = enhanced.components;
+  const { components } = enhanced;
 
   // Range days use the same box and gutters as the community day; the range
   // highlight and preview pseudo-elements read the two vars, so they follow.
