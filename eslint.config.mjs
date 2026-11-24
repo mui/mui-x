@@ -319,14 +319,16 @@ export default defineConfig(
     // A copy of BaseTemporal and of its zoned date-time helpers from the Base UI version, which
     // keeps its code style. Change the Base UI version first, then copy it again:
     // - Copy the files of its `base-temporal/` folder that the Scheduler has, and its
-    //   `internals/temporal-utils/zonedDateTime.ts`. Its tests stay there: they cover the copy.
+    //   `internals/temporal-utils/zonedDateTime.ts`. Its tests stay there: they cover the copy,
+    //   except the ISO-only `getCalendar()`, which `x-scheduler/src/base-temporal` tests.
     // - In the errors, replace the prefix with "MUI X Scheduler", and drop the "See …" link that
     //   ends some of them.
     // - The Scheduler only uses the ISO calendar, so the copy strips the support of the other
     //   calendars: in `calendar.ts`, the code from `const registry` to `type MonthCodesSource`
     //   (the Gregorian calendar, `registerCalendar()` and the lookup of the calendars) becomes the
     //   ISO-only `getCalendar()` of the copy. The error of `checkCalendarRange()` says "the
-    //   Scheduler" for the library.
+    //   Scheduler" for the library. The rest of the copy stays identical, including the Gregorian
+    //   helpers nothing calls anymore and the docs and errors that name other calendars.
     // - Run `pnpm extract-error-codes`, then the Scheduler tests.
     files: [
       `${BASE_TEMPORAL_COPY}/*${EXTENSION_TS}`,
