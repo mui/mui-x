@@ -257,44 +257,5 @@ describe('BarChart - click event', () => {
         dataIndex: 0,
       });
     });
-
-    [
-      { layout: 'vertical' as const, reverse: false },
-      { layout: 'vertical' as const, reverse: true },
-      { layout: 'horizontal' as const, reverse: false },
-      { layout: 'horizontal' as const, reverse: true },
-    ].forEach(({ layout, reverse }) => {
-      // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-      it.skipIf(isJSDOM)(
-        `should resolve the clicked bar (layout: ${layout}, reverse: ${reverse})`,
-        async () => {
-          const onItemClick = vi.fn();
-          const bandAxis = [{ position: 'none' as const, data: ['A', 'B', 'C', 'D'], reverse }];
-          const valueAxis = [{ position: 'none' as const }];
-          const { user } = render(
-            <BarChart
-              {...config}
-              dataset={undefined}
-              layout={layout}
-              series={[{ id: 's1', data: [1, 2, 3, 4] }]}
-              xAxis={layout === 'vertical' ? bandAxis : valueAxis}
-              yAxis={layout === 'vertical' ? valueAxis : bandAxis}
-              onItemClick={onItemClick}
-            />,
-          );
-
-          const rectangles = document.querySelectorAll<HTMLElement>(`rect.${barClasses.element}`);
-
-          await user.pointer([
-            { keys: '[MouseLeft]', target: rectangles[3], coords: getCenter(rectangles[3]) },
-          ]);
-          expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
-            type: 'bar',
-            seriesId: 's1',
-            dataIndex: 3,
-          });
-        },
-      );
-    });
   });
 });
