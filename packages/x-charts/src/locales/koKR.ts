@@ -199,7 +199,9 @@ export const koKRLocaleText: Partial<ChartsLocaleText> = {
     targetLabel,
   }) {
     return [
-      sourceLabel && targetLabel ? `${sourceLabel}에서 ${targetLabel}까지` : (sourceLabel ?? targetLabel),
+      sourceLabel && targetLabel
+        ? `${sourceLabel}에서 ${targetLabel}까지`
+        : (sourceLabel ?? targetLabel),
       formattedValue,
     ]
       .filter(Boolean)
