@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createTheme, unstable_enhanceDensity as enhanceMaterial } from '@mui/material/styles';
 import { enhanceDensity } from './enhanceDensity';
 
-// Built through material's own enhancer (the pinned PR build): it writes the
+// Built through material's own enhancer: it writes the
 // `unstable_densityScale` contract and installs the keyed `theme.spacing`.
 const enhancedTheme = (components = {}, options = {}) =>
   enhanceMaterial(createTheme({ components, ...options }));
