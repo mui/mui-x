@@ -98,6 +98,7 @@ export function useMessageListBehavior(parameters: {
   const resizeFrameRef = React.useRef(0);
   const isMountedRef = React.useRef(true);
   const hasMountedRef = React.useRef(false);
+  const skipNextTopLoadRef = React.useRef(false);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
@@ -303,12 +304,17 @@ export function useMessageListBehavior(parameters: {
       updateUnseenMessageCount(0);
     }
 
+    const skipTopLoad = skipNextTopLoadRef.current;
+    skipNextTopLoadRef.current = false;
+
     if (root.scrollTop > estimatedItemSize) {
       topReachedRef.current = false;
       return;
     }
 
-    void maybeLoadMoreHistory();
+    if (!skipTopLoad) {
+      void maybeLoadMoreHistory();
+    }
   }, [
     captureAnchor,
     estimatedItemSize,
@@ -318,16 +324,23 @@ export function useMessageListBehavior(parameters: {
   ]);
 
   React.useLayoutEffect(() => {
-    // Scroll before the first `updateIsAtBottom()` so the latch stays true and `onReachBottom` doesn't fire;
-    // `instant` overrides CSS smooth scrolling so the scroll is synchronous.
-    if (!hasMountedRef.current && autoScrollEnabled && itemIdsRef.current.length > 0) {
-      scrollToBottom({ behavior: 'instant' });
-    } else {
-      updateIsAtBottom();
-      anchorRef.current = captureAnchor(itemIdsRef.current);
+    // Mount only. Runs before the first `updateIsAtBottom()` so the latch stays true and
+    // `onReachBottom` doesn't fire; `instant` overrides CSS smooth scrolling so the scroll is synchronous.
+    if (hasMountedRef.current) {
+      return;
     }
     hasMountedRef.current = true;
-  }, [autoScrollEnabled, captureAnchor, scrollToBottom, updateIsAtBottom]);
+    if (autoScrollEnabled && itemIdsRef.current.length > 0) {
+      scrollToBottom({ behavior: 'instant' });
+      // The scroll event this emits is not the user reaching the top, so it must not load history.
+      skipNextTopLoadRef.current = (rootRef.current?.scrollTop ?? 0) > 0;
+    }
+  }, [autoScrollEnabled, scrollToBottom]);
+
+  React.useLayoutEffect(() => {
+    updateIsAtBottom();
+    anchorRef.current = captureAnchor(itemIdsRef.current);
+  }, [captureAnchor, updateIsAtBottom]);
 
   React.useLayoutEffect(() => {
     const previousItemIds = previousItemIdsRef.current;

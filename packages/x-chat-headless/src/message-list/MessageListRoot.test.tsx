@@ -7,6 +7,7 @@ import { ChatRoot } from '../chat/ChatRoot';
 import { MessageListRoot } from './MessageListRoot';
 import type { MessageListRootHandle, MessageListRootProps } from './MessageListRoot';
 import { useMessageListContext } from './internals/MessageListContext';
+import { useMessageIds } from '../hooks/useMessage';
 
 const { render } = createRenderer();
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -314,8 +315,10 @@ const conversationBMessages = [
 
 function SwitchableConversationList(props: {
   onReachBottom: MessageListRootProps['onReachBottom'];
+  autoScroll?: MessageListRootProps['autoScroll'];
+  switchedAutoScroll?: MessageListRootProps['autoScroll'];
 }) {
-  const { onReachBottom } = props;
+  const { onReachBottom, autoScroll = { buffer: 10 }, switchedAutoScroll = autoScroll } = props;
   const [messages, setMessages] = React.useState(conversationAMessages);
 
   return (
@@ -324,8 +327,10 @@ function SwitchableConversationList(props: {
         switch conversation
       </button>
       <MessageListRoot
-        autoScroll={{ buffer: 10 }}
+        autoScroll={messages === conversationAMessages ? autoScroll : switchedAutoScroll}
         estimatedItemSize={40}
+        // Explicit items so the item set and `autoScroll` change in the same commit.
+        items={messages.map((message) => message.id)}
         onReachBottom={onReachBottom}
         renderItem={({ id }) => (
           <div data-testid={`message-${id}`} style={{ boxSizing: 'border-box', height: 40 }}>
@@ -532,7 +537,7 @@ describe('MessageListRoot', () => {
     const log = screen.getByRole('log');
 
     expect(log.scrollHeight).toBe(240);
-    expect(log.scrollTop).toBe(80);
+    expect(log.scrollTop).toBe(log.scrollHeight - log.clientHeight);
     // Let the async scroll event from the mount scroll be handled.
     await new Promise((resolve) => {
       requestAnimationFrame(() => requestAnimationFrame(resolve));
@@ -540,6 +545,64 @@ describe('MessageListRoot', () => {
     expect(onReachBottom).toHaveBeenCalledTimes(0);
     expect(screen.getByTestId('message-list-bottom-state')).to.have.text('true');
   });
+
+  it.skipIf(isJSDOM)(
+    'does not load history from the mount scroll when it lands in the top zone',
+    async () => {
+      const onReachTop = vi.fn();
+      const listMessages = vi.fn(async ({ cursor }: { cursor?: string }) =>
+        cursor == null
+          ? {
+              messages: [createMessage('m2', 'assistant'), createMessage('m3', 'assistant')],
+              cursor: 'cursor-1',
+              hasMore: true,
+            }
+          : { messages: [createMessage('m1', 'assistant')], cursor: undefined, hasMore: false },
+      );
+
+      function MountWhenLoaded() {
+        const ids = useMessageIds();
+        // 80px of rows in a 60px viewport: the bottom (scrollTop 20) is inside the 40px top zone.
+        return ids.length === 0 ? null : (
+          <MessageListRoot
+            estimatedItemSize={40}
+            onReachTop={onReachTop}
+            renderItem={({ id }) => (
+              <div data-testid={`message-${id}`} style={{ boxSizing: 'border-box', height: 40 }}>
+                {id}
+              </div>
+            )}
+            style={{ height: 60, overflowY: 'auto' }}
+          />
+        );
+      }
+
+      render(
+        <ChatRoot adapter={createAdapter({ listMessages })} initialActiveConversationId="c1">
+          <MountWhenLoaded />
+        </ChatRoot>,
+      );
+      const log = await screen.findByRole('log');
+
+      expect(log.scrollTop).toBe(20);
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      });
+      expect(onReachTop).toHaveBeenCalledTimes(0);
+      expect(listMessages).not.toHaveBeenCalledWith(
+        expect.objectContaining({ cursor: 'cursor-1' }),
+      );
+
+      // A real scroll to the top still loads history.
+      log.scrollTop = 0;
+      fireEvent.scroll(log);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('message-m1')).toBeVisible();
+      });
+      expect(onReachTop).toHaveBeenCalledTimes(1);
+    },
+  );
 
   it.skipIf(isJSDOM)('does not scroll on mount when autoScroll is disabled', async () => {
     render(<ControlledMessageList autoScroll={false} />);
@@ -957,13 +1020,7 @@ describe('MessageListRoot', () => {
           expect(log.scrollHeight).toBeGreaterThan(160);
         });
 
-        // The list mounts pinned; leave and re-enter the bottom zone once (single legitimate fire).
-        log.scrollTop = 0;
-        fireEvent.scroll(log);
-        log.scrollTop = log.scrollHeight;
-        fireEvent.scroll(log);
-
-        expect(onReachBottom).toHaveBeenCalledTimes(1);
+        expect(onReachBottom).toHaveBeenCalledTimes(0);
 
         // Appends while pinned keep the list at the bottom: `true → true`, no fire.
         fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
@@ -976,7 +1033,7 @@ describe('MessageListRoot', () => {
           expect(log.scrollTop).toBe(160);
         });
 
-        expect(onReachBottom).toHaveBeenCalledTimes(1);
+        expect(onReachBottom).toHaveBeenCalledTimes(0);
       },
     );
 
@@ -1082,6 +1139,36 @@ describe('MessageListRoot', () => {
         fireEvent.scroll(log);
 
         expect(onReachBottom).toHaveBeenCalledTimes(1);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'does not fire on a conversation switch that also enables autoScroll',
+      async () => {
+        const onReachBottom = vi.fn();
+        // Same effective buffer (40) on both sides, so only `autoScrollEnabled` changes.
+        render(
+          <SwitchableConversationList
+            autoScroll={false}
+            switchedAutoScroll={{ buffer: 40 }}
+            onReachBottom={onReachBottom}
+          />,
+        );
+        const log = screen.getByRole('log');
+
+        await waitFor(() => {
+          expect(log.scrollHeight).toBe(240);
+        });
+        expect(log.scrollTop).toBe(0);
+
+        // Conversation B is 200px tall, so scrollTop 0 lands inside the 40px bottom zone.
+        fireEvent.click(screen.getByRole('button', { name: 'switch conversation' }));
+
+        await waitFor(() => {
+          expect(log.scrollHeight).toBe(200);
+        });
+
+        expect(onReachBottom).toHaveBeenCalledTimes(0);
       },
     );
 
