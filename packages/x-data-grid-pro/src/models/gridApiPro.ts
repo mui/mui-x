@@ -18,6 +18,7 @@ import type {
   GridDetailPanelPrivateApi,
 } from '../hooks';
 import type { GridRowReorderPrivateApi } from './gridRowReorderApi';
+import type { GridKeyboardReorderPrivateApi } from './gridKeyboardReorderApi';
 import type {
   GridDataSourceApiPro,
   GridDataSourcePrivateApiPro,
@@ -46,6 +47,7 @@ export interface GridPrivateApiPro
     GridDetailPanelPrivateApi,
     GridInfiniteLoaderPrivateApi,
     GridRowReorderPrivateApi,
+    GridKeyboardReorderPrivateApi,
     GridDataSourcePrivateApiPro {}
 
 /**

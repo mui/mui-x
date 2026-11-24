@@ -4,9 +4,10 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { BaseTemporal } from '../base-temporal';
 import {
   addDaysOnWallClock,
-  differenceInDays,
   getEndOfDayMs,
+  getPlainDateRangeMs,
   getStartOfDayMs,
+  getTimezoneId,
   toEpochMs,
   toLocalMs,
   toMsInDay,
@@ -28,6 +29,33 @@ function epochMsOf(date: string, time: string, timezone: string) {
 }
 
 describe('timeZone', () => {
+  describe('getTimezoneId', () => {
+    it('should return the identifier of a named timezone as is', () => {
+      expect(getTimezoneId('Europe/Paris')).to.equal('Europe/Paris');
+    });
+
+    it.skipIf(!isJSDOM)('should read the default timezone as the timezone of the system', () => {
+      setSystemTimezone('America/New_York');
+      expect(getTimezoneId('default')).to.equal('America/New_York');
+    });
+
+    // `Intl` names none of these, or names them with the opposite offset (`+05:00` for `GMT+5`).
+    // `Date` applies the same offset all year to them.
+    it.skipIf(!isJSDOM).each([
+      ['UTC+3', '-03:00'],
+      ['UTC-5', '+05:00'],
+      ['GMT+5', '-05:00'],
+      ['Foo/Bar', '+00:00'],
+      ['Etc/Unknown', '+00:00'],
+    ])('should read the default timezone of TZ=%s as the offset Date applies, %s', (tz, id) => {
+      setSystemTimezone(tz);
+      expect(getTimezoneId('default')).to.equal(id);
+      expect(toPlainDateTime(Date.UTC(2025, 6, 1, 12), id).toString()).to.equal(
+        toPlainDateTime(Date.UTC(2025, 6, 1, 12), 'default').toString(),
+      );
+    });
+  });
+
   describe('toLocalMs', () => {
     const getOffsetMs = (timezone: string, epochMs: number) =>
       toLocalMs(epochMs, timezone) - epochMs;
@@ -184,34 +212,43 @@ describe('timeZone', () => {
     });
   });
 
+  describe('getPlainDateRangeMs', () => {
+    const range = (first: string, last: string, timezone: string) => {
+      const { start, end } = getPlainDateRangeMs(
+        BaseTemporal.PlainDate.from(first),
+        BaseTemporal.PlainDate.from(last),
+        timezone,
+      );
+      return [start, end].map((ms) => new Date(ms).toISOString());
+    };
+
+    it('should return the first instant of the first day and the last instant of the last day', () => {
+      expect(range('2025-07-01', '2025-07-07', 'America/New_York')).to.deep.equal([
+        '2025-07-01T04:00:00.000Z',
+        '2025-07-08T03:59:59.999Z',
+      ]);
+    });
+
+    it('should cover a single day across a DST transition', () => {
+      // Europe/Paris springs forward from 02:00 to 03:00 on March 29th, 2026: the day lasts 23 hours.
+      const [start, end] = range('2026-03-29', '2026-03-29', 'Europe/Paris');
+      expect([start, end]).to.deep.equal(['2026-03-28T23:00:00.000Z', '2026-03-29T21:59:59.999Z']);
+      expect(Date.parse(end) - Date.parse(start) + 1).to.equal(23 * HOUR);
+    });
+
+    it('should start on a day whose midnight a DST transition skips at the end of the gap', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+      expect(range('2026-03-08', '2026-03-09', 'America/Havana')[0]).to.equal(
+        '2026-03-08T05:00:00.000Z', // 01:00 CDT
+      );
+    });
+  });
+
   describe('addDaysOnWallClock', () => {
     it('should return an instant in the second occurrence of a repeated time unchanged for 0 days', () => {
       // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026.
       const secondOccurrence = Date.UTC(2026, 9, 25, 1, 30); // the second 02:30, CET
       expect(addDaysOnWallClock(secondOccurrence, 0, 'Europe/Paris')).to.equal(secondOccurrence);
-    });
-  });
-
-  describe('differenceInDays', () => {
-    const difference = (later: string, earlier: string, timezone: string) =>
-      differenceInDays(new Date(later).getTime(), new Date(earlier).getTime(), timezone);
-
-    it('should count the full days on the wall clock of the timezone', () => {
-      // 2 dates apart, but the last day isn't full.
-      expect(difference('2025-07-06T13:00:00Z', '2025-07-04T14:00:00Z', 'UTC')).to.equal(1);
-      expect(difference('2025-07-04T14:00:00Z', '2025-07-06T13:00:00Z', 'UTC')).to.equal(-1);
-      expect(difference('2025-07-04T14:00:00Z', '2025-07-04T14:00:00Z', 'UTC')).to.equal(0);
-      // 23:00 to 01:00 in New York is 03:00 to 05:00 in UTC.
-      expect(
-        difference('2025-07-06T05:00:00Z', '2025-07-04T03:00:00Z', 'America/New_York'),
-      ).to.equal(2);
-    });
-
-    it('should count a day shortened by a DST transition as a full day', () => {
-      // America/New_York springs forward on March 9th, 2025: noon to noon lasts 23 hours.
-      expect(
-        difference('2025-03-09T16:00:00Z', '2025-03-08T17:00:00Z', 'America/New_York'),
-      ).to.equal(1);
     });
   });
 });

@@ -113,6 +113,7 @@
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
+    "tabIndex": { "description": "The <code>tabIndex</code> of the root element." },
     "today": { "description": "If <code>true</code>, today&#39;s day is highlighted." },
     "TouchRippleProps": { "description": "Props applied to the <code>TouchRipple</code> element." },
     "touchRippleRef": {

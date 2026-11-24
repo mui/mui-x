@@ -2,23 +2,21 @@ import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 
 describe('<CalendarGrid.TimeEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = createProcessedDate(Date.now(), 'default');
-  const eventEnd = createProcessedDate(eventStart.timestamp + 3_600_000, 'default');
+  const eventStart = toZonedDateTime(Date.now(), 'default');
+  const eventEnd = toZonedDateTime(eventStart.epochMilliseconds + 3_600_000, 'default');
 
   // Mounts the event in the column context it needs.
   function renderEvent(node: React.ReactElement) {
     return render(
       <EventCalendarProvider events={[]}>
         <CalendarGrid.Root>
-          <CalendarGrid.TimeColumn value={eventStart.plainDateTime.toPlainDate()}>
-            {node}
-          </CalendarGrid.TimeColumn>
+          <CalendarGrid.TimeColumn value={eventStart.toPlainDate()}>{node}</CalendarGrid.TimeColumn>
         </CalendarGrid.Root>
       </EventCalendarProvider>,
     );
@@ -28,7 +26,6 @@ describe('<CalendarGrid.TimeEvent />', () => {
     <CalendarGrid.TimeEvent
       eventId="fake-id"
       occurrenceKey="fake-key"
-      internalInfos={undefined}
       start={eventStart}
       end={eventEnd}
       renderDragPreview={() => null}
@@ -46,7 +43,6 @@ describe('<CalendarGrid.TimeEvent />', () => {
       <CalendarGrid.TimeEvent
         eventId="fake-id"
         occurrenceKey="fake-key"
-        internalInfos={undefined}
         start={eventStart}
         end={eventEnd}
         elementPosition={{
@@ -75,7 +71,6 @@ describe('<CalendarGrid.TimeEvent />', () => {
       <CalendarGrid.TimeEvent
         eventId="fake-id"
         occurrenceKey="fake-key"
-        internalInfos={undefined}
         start={eventStart}
         end={eventEnd}
         renderDragPreview={() => null}

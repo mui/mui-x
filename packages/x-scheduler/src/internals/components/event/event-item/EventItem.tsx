@@ -12,10 +12,11 @@ import { Button } from '@base-ui/react/button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
+  formatMonthShortAndDayOfMonth,
   getDayNumber,
+  getOccurrenceFirstDayNumber,
   getOccurrenceLastDayNumber,
   plainDateFromDayNumber,
-  formatMonthShortAndDayOfMonth,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
@@ -188,11 +189,10 @@ export const EventItem = React.forwardRef(function EventItem(
     localeText,
   });
 
-  // The processed dates are read in the display timezone, like the day.
-  const { start } = occurrence;
-  const startsBeforeDay =
-    !start.plainDateTime.toPlainDate().equals(date.plainDate) && start.timestamp < date.timestamp;
-  const endsAfterDay = getOccurrenceLastDayNumber(occurrence) > getDayNumber(date.plainDate);
+  // The bounds of the occurrence are read in the display timezone, like the day.
+  const dayNumber = getDayNumber(date);
+  const startsBeforeDay = getOccurrenceFirstDayNumber(occurrence) < dayNumber;
+  const endsAfterDay = getOccurrenceLastDayNumber(occurrence) > dayNumber;
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -264,7 +264,7 @@ export const EventItem = React.forwardRef(function EventItem(
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
           data-event-id={occurrence.id}
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
-          data-occurrence-timestamp={occurrence.unstable_internalInfos.dataStart}
+          data-occurrence-timestamp={occurrence.start.epochMilliseconds}
           aria-label={accessibleName}
           {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
           {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}

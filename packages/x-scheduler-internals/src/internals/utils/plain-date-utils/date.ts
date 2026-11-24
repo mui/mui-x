@@ -1,7 +1,7 @@
-import type { BaseTemporal } from '../base-temporal';
+import { BaseTemporal } from '../base-temporal';
 import type { PlainDateDuration } from './plainDate';
 import {
-  getEndOfDayMs,
+  addDaysToDayStart,
   getStartOfDayMs,
   localToEpochMs,
   moveTimestampToPlainDate,
@@ -45,6 +45,22 @@ export function isDateOnlyString(value: string): boolean {
 }
 
 /**
+ * Reads a `YYYY-MM-DD` string as a plain date, or returns `null` when it isn't an existing date.
+ * `BaseTemporal.PlainDate.from()` rejects the dates that don't exist, like 2025-06-31, but also
+ * reads other formats and calendar annotations, hence the format check first.
+ */
+export function parseDateOnlyString(value: string): BaseTemporal.PlainDate | null {
+  if (!isDateOnlyString(value)) {
+    return null;
+  }
+  try {
+    return BaseTemporal.PlainDate.from(value);
+  } catch {
+    return null;
+  }
+}
+
+/**
  * The instant of an ISO date or date-time without an offset, read as a wall-clock time in
  * `timezone`. The times a DST transition skips or repeats resolve like `localToEpochMs()`,
  * as the occurrences of recurring events do.
@@ -79,22 +95,39 @@ export function parseNonIsoString(value: string, timezone: string): number {
 }
 
 /**
- * Snaps an all-day event's bounds to span their whole days in `timezone`; non-all-day bounds are
- * returned unchanged. The end is exclusive: the first instant after the last day.
+ * Snaps the bounds of an all-day event to whole days in `timezone`: the start to the first instant
+ * of its day, the end to the first instant of the day after its last instant, at least one day
+ * after the start.
  */
-export function normalizeAllDayBounds(
+export function snapAllDayBounds(
   start: number,
   end: number,
-  allDay: boolean | undefined,
   timezone: string,
 ): { start: number; end: number } {
-  if (!allDay) {
-    return { start, end };
+  const snappedStart = getStartOfDayMs(start, timezone);
+  let snappedEnd = addDaysToDayStart(end - 1, 1, timezone);
+  if (snappedEnd <= snappedStart) {
+    snappedEnd = addDaysToDayStart(snappedStart, 1, timezone);
   }
-  return { start: getStartOfDayMs(start, timezone), end: getEndOfDayMs(end, timezone) + 1 };
+  return { start: snappedStart, end: snappedEnd };
 }
 
-export { createProcessedDate } from '../../../process-date/processDate';
+/**
+ * Snaps the bounds of a timed event made all-day to the whole days it covers in its own
+ * `timezone`, as the first instants of those days in `displayTimezone`.
+ */
+export function snapToOwnDays(
+  start: number,
+  end: number,
+  timezone: string,
+  displayTimezone: string,
+): { start: number; end: number } {
+  const ownDays = snapAllDayBounds(start, end, timezone);
+  return {
+    start: toEpochMs(toPlainDate(ownDays.start, timezone), displayTimezone),
+    end: toEpochMs(toPlainDate(ownDays.end, timezone), displayTimezone),
+  };
+}
 
 /**
  * Moves a date by a duration of the calendar, keeping its time of day on the wall clock of

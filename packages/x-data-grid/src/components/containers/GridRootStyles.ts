@@ -74,6 +74,9 @@ export const GridRootStyles = styled('div', {
   const selectedOpacity = vars.colors.interactive.selectedOpacity;
   const selectedHoverColor = selectedColor;
   const selectedHoverOpacity = `calc(${selectedOpacity} + ${hoverOpacity})`;
+  // Lighter than the hover state, and a layer on top of the hover and selection backgrounds
+  const reorderTargetRowTint = `rgba(from ${vars.colors.foreground.base} r g b / calc(${hoverOpacity} * 0.4))`;
+  const reorderTargetHeaderTint = `rgba(from ${selectedColor} r g b / calc(${selectedOpacity} * 1.5))`;
 
   const fallbackColors = {
     hover: vars.colors.interactive.hover,
@@ -407,6 +410,14 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnHeader--moving']}`]: {
       backgroundColor: hoverBackground,
     },
+    [`& .${c['columnHeader--reorderTarget']}`]: {
+      backgroundImage: `linear-gradient(${reorderTargetHeaderTint}, ${reorderTargetHeaderTint})`,
+    },
+    // Pinned cells paint their own background
+    [`& .${c['row--reorderTarget']}, & .${c['row--reorderTarget']} .${c['cell--pinnedLeft']}, & .${c['row--reorderTarget']} .${c['cell--pinnedRight']}`]:
+      {
+        backgroundImage: `linear-gradient(${reorderTargetRowTint}, ${reorderTargetRowTint})`,
+      },
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 40, // Should be above the column separator
@@ -907,6 +918,12 @@ export const GridRootStyles = styled('div', {
         zIndex: 50,
       },
     },
+    // The cells a click can reference while a formula is edited. Pinned rows are outside
+    // the render zone, and the utility columns (`__check__`, …) cannot be referenced.
+    [`&.${c['root--formulaReferencePicking']} .${c.virtualScrollerRenderZone} .${c.cell}:not(.${c['cell--editing']}, [data-field^="__"])`]:
+      {
+        cursor: 'cell',
+      },
     [`& .${c['cell--fillPreview']}`]: {
       // Paint the tint as an image layer on top of the cell's own background color,
       // so opaque backgrounds (pinned cells) stay opaque.

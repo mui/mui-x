@@ -1,12 +1,15 @@
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import InputAdornment from '@mui/material/InputAdornment';
+import type { DateFieldProps } from '@mui/x-date-pickers/DateField';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import type { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import { screen } from '@mui/internal-test-utils';
-import { createPickerRenderer } from 'test/utils/pickers';
+import { createPickerRenderer, buildFieldInteractions, expectFieldValue } from 'test/utils/pickers';
 import { vi, describe, it, expect } from 'vitest';
 
 describe('<DateField />', () => {
-  const { render } = createPickerRenderer();
+  const { render, adapter } = createPickerRenderer();
 
   describe('slotProps behavior', () => {
     it('should respect the `slotProps.textField.slotProps.input`', () => {
@@ -125,6 +128,46 @@ describe('<DateField />', () => {
       );
 
       expect(screen.getByRole('figure', { name: 'test-adornment-icon' })).to.have.text('x');
+    });
+  });
+
+  describe('localeText behavior', () => {
+    function DateFieldWithLocaleText({
+      localeText,
+      ...other
+    }: DateFieldProps & { localeText?: PickersInputLocaleText }) {
+      return (
+        <LocalizationProvider localeText={localeText}>
+          <DateField {...other} />
+        </LocalizationProvider>
+      );
+    }
+
+    const { renderWithProps } = buildFieldInteractions({
+      render,
+      Component: DateFieldWithLocaleText,
+    });
+
+    const yearPlaceholder = (params: { digitAmount: number }) => 'A'.repeat(params.digitAmount);
+
+    it('should update the section placeholders when the localeText changes', () => {
+      const view = renderWithProps({ format: `${adapter.formats.month} ${adapter.formats.year}` });
+
+      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
+
+      view.setProps({ localeText: { fieldYearPlaceholder: yearPlaceholder } });
+      expectFieldValue(view.getSectionsContainer(), 'MMMM AAAA');
+    });
+
+    it('should keep the section values when the localeText changes', async () => {
+      const view = renderWithProps({ format: `${adapter.formats.month} ${adapter.formats.year}` });
+
+      await view.selectSection('month');
+      await view.pressKey('j');
+      expectFieldValue(view.getSectionsContainer(), 'January YYYY');
+
+      view.setProps({ localeText: { fieldYearPlaceholder: yearPlaceholder } });
+      expectFieldValue(view.getSectionsContainer(), 'January AAAA');
     });
   });
 });

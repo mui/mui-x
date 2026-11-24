@@ -108,6 +108,29 @@ describe('RangeBarPlot - labels', () => {
     ]);
   });
 
+  it('should call `barLabel` with the whole bar dimensions with `barLabelPlacement="outside"`', () => {
+    const barLabel = vi.fn(() => 'custom label');
+
+    const { container } = render(
+      <BarChartPremium
+        {...config}
+        series={[
+          { type: 'rangeBar', id: 's1', barLabel, barLabelPlacement: 'outside', data: [[2, 6]] },
+        ]}
+        slots={{ barLabel: GeometryLabel }}
+      />,
+    );
+
+    const bar = getBarRect(container, 0);
+
+    // The slot gets the half of the bar that contains the end of the range.
+    expect(getLabelGeometry(container, 0).height).to.equal(bar.height / 2);
+    expect(barLabel.mock.lastCall).to.deep.equal([
+      { seriesId: 's1', dataIndex: 0, value: [2, 6] },
+      { bar: { width: bar.width, height: bar.height } },
+    ]);
+  });
+
   it('should not render a label when `barLabel` returns null', () => {
     const { container } = render(
       <BarChartPremium

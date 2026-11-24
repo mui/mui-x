@@ -7,12 +7,15 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
+  getDayTimezone,
+  getLastInstant,
   timestampToEventString,
-  getEndOfDayMs,
-  getStartOfDayMs,
   localToEpochMs,
   MS_PER_DAY,
+  snapAllDayBounds,
+  snapToOwnDays,
   toLocalDayNumber,
+  toLocalMs,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import type { SchedulerDependency } from '../../models';
@@ -52,11 +55,19 @@ export interface ComputeAutoSchedulingCascadeParameters {
    * predecessor moved.
    */
   enforcedDependencies?: readonly SchedulerDependency[];
+  /**
+   * The display timezone as the `displayTimezone` parameter gives it, `"default"` included: the
+   * `Date`s of all-day entries are read and written in it, and an all-day event made timed takes
+   * it. Between an all-day event and a timed event, the dates of the all-day event are read in it
+   * only when the timed event has no timezone.
+   */
+  displayTimezone: string;
 }
 
 /**
  * The dates of an event as the engine works on them: instants, with the timezone its days and
- * its wall-clock times are read in.
+ * its wall-clock times are read in. The end of an all-day event is its last instant, where its
+ * occurrences end exclusively.
  */
 interface ResolvedDates {
   start: number;
@@ -78,8 +89,7 @@ export interface AutoSchedulingCascadeResult {
 }
 
 /**
- * The dates of an event from its instants. An all-day event spans whole days, like
- * `normalizeAllDayBounds()`.
+ * The dates of an event from its instants. An all-day event spans whole days of `timezone`.
  */
 function resolveDates(
   start: number,
@@ -90,17 +100,23 @@ function resolveDates(
   if (!allDay) {
     return { start, end, timezone, allDay };
   }
-  return {
-    start: getStartOfDayMs(start, timezone),
-    end: getEndOfDayMs(end, timezone),
-    timezone,
-    allDay,
-  };
+  const bounds = snapAllDayBounds(start, end, timezone);
+  return { start: bounds.start, end: getLastInstant(bounds.end, true), timezone, allDay };
 }
 
-function resolveProcessedEventDates(processedEvent: SchedulerProcessedEvent): ResolvedDates {
-  const { dataStart, dataEnd } = processedEvent.unstable_internalInfos;
-  return resolveDates(dataStart, dataEnd, processedEvent.timezone, processedEvent.allDay ?? false);
+function resolveProcessedEventDates(
+  processedEvent: SchedulerProcessedEvent,
+  displayTimezone: string,
+): ResolvedDates {
+  // An all-day event spans whole days of the display timezone, up to the last instant of its last
+  // day.
+  const allDay = !!processedEvent.allDay;
+  return {
+    start: processedEvent.start.epochMilliseconds,
+    end: getLastInstant(processedEvent.end.epochMilliseconds, allDay),
+    timezone: getDayTimezone(processedEvent, displayTimezone),
+    allDay,
+  };
 }
 
 // The range of `Date`.
@@ -108,18 +124,41 @@ const MAX_TIMESTAMP = 8.64e15;
 
 /**
  * The earliest instant `dependency` allows for the successor's bounded edge, or `null` when
- * the lag runs past the supported date range. The lag is added in the successor's timezone.
+ * the lag runs past the supported date range. The lag is added in the timezone the bound is read
+ * in: the successor's, or the display timezone for a successor without one after an all-day
+ * predecessor.
  */
 function getDependencyBound(
   dependency: SchedulerDependency,
   sourceDates: ResolvedDates,
   targetDates: ResolvedDates,
+  displayTimezone: string,
 ): number | null {
   const edges = getDependencyEdges(dependency.type);
+  let sourceEdge = sourceDates[edges.source];
+  let lagTimezone = targetDates.timezone;
+  if (sourceDates.allDay !== targetDates.allDay) {
+    // Between an all-day and a timed event, the dates of the all-day event are read in the
+    // timezone of the timed one, or in the display timezone when it has none, like a calendar
+    // reads its floating dates (RFC 4791): the same edge of its date there, or the wall time of
+    // the timed predecessor on the days of the all-day successor.
+    const timedTimezone = sourceDates.allDay ? targetDates.timezone : sourceDates.timezone;
+    const timezone = timedTimezone === 'default' ? displayTimezone : timedTimezone;
+    if (sourceDates.allDay) {
+      sourceEdge = getAllDayEdgeMs(
+        toLocalDayNumber(sourceEdge, sourceDates.timezone),
+        edges.source,
+        timezone,
+      );
+      lagTimezone = timezone;
+    } else {
+      sourceEdge = localToEpochMs(toLocalMs(sourceEdge, timezone), targetDates.timezone);
+    }
+  }
   const timestamp = addDependencyLag(
-    sourceDates[edges.source],
+    sourceEdge,
     getEffectiveDependencyLag(dependency, targetDates.allDay),
-    targetDates.timezone,
+    lagTimezone,
   );
   // `NaN` fails the comparison too.
   return Math.abs(timestamp) <= MAX_TIMESTAMP ? timestamp : null;
@@ -167,6 +206,7 @@ function minimalDayShift(
 export function getDependencyViolation(
   processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
   dependency: SchedulerDependency,
+  displayTimezone: string,
 ): number {
   // The engine never constrains an event by itself.
   if (
@@ -175,11 +215,15 @@ export function getDependencyViolation(
   ) {
     return 0;
   }
-  const targetDates = resolveProcessedEventDates(processedEventLookup.get(dependency.target)!);
+  const targetDates = resolveProcessedEventDates(
+    processedEventLookup.get(dependency.target)!,
+    displayTimezone,
+  );
   const bound = getDependencyBound(
     dependency,
-    resolveProcessedEventDates(processedEventLookup.get(dependency.source)!),
+    resolveProcessedEventDates(processedEventLookup.get(dependency.source)!, displayTimezone),
     targetDates,
+    displayTimezone,
   );
   if (bound === null) {
     return 0;
@@ -200,7 +244,9 @@ export function getDependencyViolation(
  *
  * Each dependency bounds one edge of the successor by one edge of the predecessor plus
  * the lag (FS: `start >= pred.end`, SS: `start >= pred.start`, FF: `end >= pred.end`,
- * SF: `end >= pred.start`), the lag being added in the successor's timezone.
+ * SF: `end >= pred.start`), the lag being added in the successor's timezone. Between an all-day
+ * and a timed event, the dates of the all-day event are read in the timezone of the timed one, or
+ * in the display timezone when it has none.
  *
  * Push-only: events only move later, and pre-existing violations stay as-is unless their
  * dependency is enforced. A seed whose entry moves `start` is being placed by the user and
@@ -227,6 +273,7 @@ export function computeAutoSchedulingCascade(
     isEventReadOnly,
     deleted,
     enforcedDependencies = [],
+    displayTimezone,
   } = parameters;
 
   const newDates = new Map<SchedulerEventId, ResolvedDates>();
@@ -273,29 +320,29 @@ export function computeAutoSchedulingCascade(
       continue;
     }
     const model = processedEvent.modelInBuiltInFormat;
-    const dataTimezone = model.timezone ?? 'default';
+    const allDay = entry.allDay ?? processedEvent.allDay ?? false;
+    // Like the store, an all-day event made timed is written in the display timezone, where it
+    // moves unless the entry gives its own timezone.
+    const becomesTimed = !!processedEvent.allDay && !allDay;
+    const dataTimezone = becomesTimed ? displayTimezone : (model.timezone ?? 'default');
     // An explicit `undefined` clears the property in the store (back to 'default').
     const nextTimezone = 'timezone' in entry ? (entry.timezone ?? 'default') : dataTimezone;
-    if (
-      entry.start == null &&
-      entry.end == null &&
-      entry.allDay == null &&
-      nextTimezone === dataTimezone
-    ) {
+    // The days of an all-day event do not depend on its timezone.
+    const changesTimezone = nextTimezone !== dataTimezone && !allDay;
+    if (entry.start == null && entry.end == null && entry.allDay == null && !changesTimezone) {
       continue;
     }
-    if (nextTimezone !== dataTimezone) {
+    if (changesTimezone) {
       timezoneChanges.set(entry.id, { model, dataTimezone, nextTimezone });
     }
-    const allDay = entry.allDay ?? processedEvent.allDay ?? false;
-    // Mirrors the store: entries are serialized in the data timezone
+    // Mirrors the store: the entries of a timed event are serialized in the data timezone
     // (`timestampToEventString`) and the model is then read in the (new) timezone.
     const resolveEntryTimestamp = (
       value: Date | undefined,
       modelString: string,
       currentTimestamp: number,
     ) => {
-      if (nextTimezone === dataTimezone) {
+      if (!changesTimezone) {
         return value == null ? currentTimestamp : value.getTime();
       }
       const nextString =
@@ -304,14 +351,26 @@ export function computeAutoSchedulingCascade(
           : timestampToEventString(value.getTime(), modelString, dataTimezone);
       return resolveEventTimestamp(nextString, nextTimezone, entry.id);
     };
+    let entryStart = resolveEntryTimestamp(
+      entry.start,
+      model.start,
+      processedEvent.start.epochMilliseconds,
+    );
+    let entryEnd = resolveEntryTimestamp(
+      entry.end,
+      model.end,
+      processedEvent.end.epochMilliseconds,
+    );
+    if (allDay && !processedEvent.allDay && entry.start == null && entry.end == null) {
+      // Like the store, a timed event made all-day without bounds keeps the dates of its timezone.
+      const ownDays = snapToOwnDays(entryStart, entryEnd, dataTimezone, displayTimezone);
+      entryStart = ownDays.start;
+      entryEnd = ownDays.end;
+    }
     const dates = resolveDates(
-      resolveEntryTimestamp(
-        entry.start,
-        model.start,
-        processedEvent.unstable_internalInfos.dataStart,
-      ),
-      resolveEntryTimestamp(entry.end, model.end, processedEvent.unstable_internalInfos.dataEnd),
-      nextTimezone,
+      entryStart,
+      entryEnd,
+      allDay ? displayTimezone : nextTimezone,
       allDay,
     );
     const { start: startTimestamp, end: endTimestamp } = dates;
@@ -449,6 +508,10 @@ export function computeAutoSchedulingCascade(
   // entry in the old timezone and the model is then read in the new one, so the entry
   // carries the instant whose old-zone wall time is the intended new-zone wall time.
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
+    if (dates.allDay) {
+      // The exclusive end of the occurrences, which the store writes as a date.
+      return { start: new Date(dates.start), end: new Date(dates.end + 1) };
+    }
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
       return { start: new Date(dates.start), end: new Date(dates.end) };
@@ -469,7 +532,10 @@ export function computeAutoSchedulingCascade(
     let dates = currentDatesById.get(eventId);
     if (dates === undefined) {
       const processedEvent = processedEventLookup.get(eventId);
-      dates = processedEvent === undefined ? null : resolveProcessedEventDates(processedEvent);
+      dates =
+        processedEvent === undefined
+          ? null
+          : resolveProcessedEventDates(processedEvent, displayTimezone);
       currentDatesById.set(eventId, dates);
     }
     return dates;
@@ -506,7 +572,10 @@ export function computeAutoSchedulingCascade(
         enforcedIds.has(dependency.id)
       ) {
         const sourceDates = newDates.get(sourceId) ?? currentDates;
-        bound = sourceDates === null ? null : getDependencyBound(dependency, sourceDates, base);
+        bound =
+          sourceDates === null
+            ? null
+            : getDependencyBound(dependency, sourceDates, base, displayTimezone);
       } else {
         const sourceDates =
           (processed.has(sourceId) ? newDates.get(sourceId) : undefined) ?? currentDates;
@@ -515,11 +584,11 @@ export function computeAutoSchedulingCascade(
           continue;
         }
         if (sourceDates !== null) {
-          const nextBound = getDependencyBound(dependency, sourceDates, base);
+          const nextBound = getDependencyBound(dependency, sourceDates, base, displayTimezone);
           const previousBound =
             currentDates === null || current === null
               ? null
-              : getDependencyBound(dependency, currentDates, current);
+              : getDependencyBound(dependency, currentDates, current, displayTimezone);
           if (nextBound !== null && (previousBound === null || nextBound > previousBound)) {
             bound = nextBound;
           }

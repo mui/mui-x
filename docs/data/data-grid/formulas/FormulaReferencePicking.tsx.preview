@@ -1,0 +1,15 @@
+<DataGridPremium
+  featureDependencies={{ formula: formulaFeature }}
+  rows={rows}
+  pinnedRows={pinnedRows}
+  columns={columns}
+  formulaReferencePicking
+  formulaA1Notation
+  showToolbar
+  slotProps={{ toolbar: { formulaBar: true } }}
+  rowSelection={false}
+  density="compact"
+  showCellVerticalBorder
+  showColumnVerticalBorder
+  disablePivoting
+/>

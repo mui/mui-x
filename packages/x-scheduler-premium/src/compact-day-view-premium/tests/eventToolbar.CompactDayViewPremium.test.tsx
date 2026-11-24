@@ -90,9 +90,9 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     expect(updatedEvents.some((item: SchedulerEvent) => item.id === 'event-1')).to.equal(true);
   });
 
-  it('should exclude the occurrence of its own day when deleted from another timezone', async () => {
+  it('should exclude the displayed day of the occurrence when deleted from another timezone', async () => {
     const onEventsChange = vi.fn();
-    // A UTC all-day series whose display bounds normalize to New York July 3rd → 4th.
+    // An all-day series on July 4th, displayed on July 4th in New York too.
     const event = utcJuly4AllDayBuilder()
       .id('event-1')
       .title('Weekly sync')
@@ -103,7 +103,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
       <StandaloneCompactDayViewPremium
         features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
-        visibleDate={createDate('2025-07-03T00:00:00', 'America/New_York')}
+        visibleDate={createDate('2025-07-04T00:00:00', 'America/New_York')}
         displayTimezone="America/New_York"
         onEventsChange={onEventsChange}
       />,
@@ -113,7 +113,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-    // The exception lands on the event's own July 4th, not the displayed July 3rd.
+    // The exception lands on July 4th.
     const updatedEvents = onEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: SchedulerEvent) => item.id === 'event-1')!;
     expect(series.exDates).to.have.length(1);

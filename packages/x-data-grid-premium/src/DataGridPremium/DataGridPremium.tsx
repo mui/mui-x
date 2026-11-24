@@ -17,6 +17,8 @@ import {
   getRowValue,
   GridMultiSelectMeasurer,
   pickDataAttributes,
+  useIsColumnKeyboardReorderTarget,
+  useIsRowKeyboardReorderTarget,
 } from '@mui/x-data-grid-pro/internals';
 import type { PropValidator, GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
@@ -79,6 +81,8 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
     useIsCellEditable,
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
+    useIsRowKeyboardReorderTarget,
+    useIsColumnKeyboardReorderTarget,
     // The A1 column-letter adornment comes from the injected formula feature —
     // the grid only bundles this thin passthrough.
     useColumnHeaderAdornment: (field) => {
@@ -538,7 +542,8 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */.instanceOf(Set),
+  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */
+    .instanceOf(Set),
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -748,6 +753,17 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * @default GRID_FORMULA_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
    */
   formulaFunctions: PropTypes.object,
+  /**
+   * If `true`, clicking a cell while a formula is being edited writes a reference to that cell
+   * into the formula instead of ending the edit, when the caret is where a reference is expected
+   * (after `=`, an operator, `(` or `,`) or on a reference, which is then replaced.
+   * Dragging over cells, or clicking with the Shift key pressed, writes a range.
+   * Clicking with the Ctrl key pressed (Command on macOS) adds the reference as another argument
+   * of the function call the caret is in.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  formulaReferencePicking: PropTypes.bool,
   /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
@@ -1712,10 +1728,11 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    ids: PropTypes.instanceOf(Set).isRequired,
-    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
-  }),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      ids: PropTypes.instanceOf(Set).isRequired,
+      type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+    }),
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
    * - Selecting a parent selects all its filtered descendants automatically.

@@ -4,7 +4,9 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
+  ALL_DAY_IGNORED_RRULE_KEYS,
   BaseTemporal,
   isDateOnlyString,
   toEpochMs,
@@ -23,10 +25,12 @@ import {
 const UNTIL_REGEX = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?$/;
 
 /**
- * Reads `UNTIL`. The date form covers its whole day. The UTC date-time form is the exact cutoff of
- * a timed series, read on the wall clock of `timezone`; for an all-day series, only its date in
- * `timezone` counts. Returns `null` for a malformed value or a date or time that does not exist,
- * like February 31st.
+ * Reads `UNTIL`, which has the type of the start of the series (RFC 5545): a date on an all-day
+ * series, which covers its whole day, and a UTC date-time on a timed one, its exact cutoff read on
+ * the wall clock of `timezone`. The other type is read leniently, with a warning: a date-time on an
+ * all-day series counts by its date in `timezone`, and a date on a timed series covers its whole
+ * day. Returns `null` for a malformed value or a date or time that does not exist, like
+ * February 31st.
  */
 function parseUntil(
   value: string,
@@ -37,28 +41,49 @@ function parseUntil(
   if (!match) {
     return null;
   }
+  const isDate = match[4] === undefined;
   const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
+  let until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime;
   try {
-    if (match[4] === undefined) {
-      return BaseTemporal.PlainDate.from({ year, month, day }, { overflow: 'reject' });
+    if (isDate) {
+      until = BaseTemporal.PlainDate.from({ year, month, day }, { overflow: 'reject' });
+    } else {
+      // The trailing `Z` makes the value a UTC instant (RFC 5545).
+      const utcDateTime = BaseTemporal.PlainDateTime.from(
+        { year, month, day, hour, minute, second },
+        { overflow: 'reject' },
+      );
+      const epochMs = toEpochMs(utcDateTime, 'UTC');
+      until = allDay ? toPlainDate(epochMs, timezone) : toPlainDateTime(epochMs, timezone);
     }
-    // The trailing `Z` makes the value a UTC instant (RFC 5545).
-    const utcDateTime = BaseTemporal.PlainDateTime.from(
-      { year, month, day, hour, minute, second },
-      { overflow: 'reject' },
-    );
-    return readUntilTimestamp(toEpochMs(utcDateTime, 'UTC'), timezone, allDay);
   } catch {
     return null;
   }
+  if (allDay !== isDate) {
+    warnUntilOfOtherType(value, allDay);
+  }
+  return until;
 }
 
-function readUntilTimestamp(
-  epochMs: number,
-  timezone: string,
-  allDay: boolean,
-): BaseTemporal.PlainDate | BaseTemporal.PlainDateTime {
-  return allDay ? toPlainDate(epochMs, timezone) : toPlainDateTime(epochMs, timezone);
+/**
+ * Warns about an `until` whose type isn't the one of the start of its series.
+ */
+function warnUntilOfOtherType(value: string, allDay: boolean) {
+  if (process.env.NODE_ENV !== 'production') {
+    warnOnce(
+      allDay
+        ? [
+            `MUI X Scheduler: The until "${value}" of the recurrence rule of an all-day event is not a date.`,
+            'RFC 5545 requires the until to have the type of the start, so other calendars can read it differently. The Scheduler uses its date in the timezone of the event.',
+            'Write it as a date, like until: "2025-07-10" or UNTIL=20250710. See https://mui.com/x/react-scheduler/recurring-events/#end-boundary.',
+          ].join('\n')
+        : [
+            `MUI X Scheduler: The until "${value}" of the recurrence rule of a timed event is not a date-time.`,
+            'RFC 5545 requires the until to have the type of the start, so other calendars can read it differently. The Scheduler includes its whole day.',
+            'Write it as a date-time, like until: "2025-07-10T23:59:59" or UNTIL=20250710T235959Z. See https://mui.com/x/react-scheduler/recurring-events/#end-boundary.',
+          ].join('\n'),
+    );
+  }
 }
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -199,20 +224,27 @@ function readRuleObject(
   if (input.until != null) {
     // Read first, to throw a clear error for an invalid date.
     const timestamp = resolveEventTimestamp(input.until, timezone);
-    rule = {
-      ...rule,
+    const isDate = isDateOnlyString(input.until);
+    if (allDay !== isDate) {
+      warnUntilOfOtherType(input.until, allDay);
+    }
+    let until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime;
+    if (isDate) {
       // A date-only string covers its whole day, even one whose midnight the timezone skips.
-      until: isDateOnlyString(input.until)
-        ? BaseTemporal.PlainDate.from(input.until)
-        : readUntilTimestamp(timestamp, timezone, allDay),
-    };
+      until = BaseTemporal.PlainDate.from(input.until);
+    } else {
+      until = allDay ? toPlainDate(timestamp, timezone) : toPlainDateTime(timestamp, timezone);
+    }
+    rule = { ...rule, until };
   }
   return rule;
 }
 
 /**
  * Reads and validates a recurrence rule, from an RRULE string or a rule object.
- * The occurrences of the rules it returns can be computed.
+ * The occurrences of the rules it returns can be computed. The `until` has the type of the start
+ * of the series: a date on an all-day series, a date-time on a timed one. The other type is read
+ * leniently, with a warning.
  */
 export function parseRRule(
   input: string | SchedulerEventRecurrenceRule,
@@ -249,6 +281,10 @@ function readRuleString(
           'Each RRULE part must be in the format "KEY=VALUE". ' +
           'Check the recurrence rule string format.',
       );
+    }
+
+    if (allDay && ALL_DAY_IGNORED_RRULE_KEYS.has(key)) {
+      continue;
     }
 
     if (!SUPPORTED_RRULE_KEYS.has(key)) {

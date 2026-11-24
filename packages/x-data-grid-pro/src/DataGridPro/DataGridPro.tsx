@@ -22,6 +22,10 @@ import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
+import {
+  useIsColumnKeyboardReorderTarget,
+  useIsRowKeyboardReorderTarget,
+} from '../hooks/features/keyboardReorder/useGridKeyboardReorderTarget';
 import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
@@ -37,6 +41,8 @@ const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedPr
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
     useColumnHeaderAdornment: () => null,
+    useIsRowKeyboardReorderTarget,
+    useIsColumnKeyboardReorderTarget,
   },
 };
 const packageInfo = {
@@ -313,7 +319,8 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */.instanceOf(Set),
+  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */
+    .instanceOf(Set),
   /**
    * If `true`, column autosizing on header separator double-click is disabled.
    * @default false
@@ -1090,10 +1097,11 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    ids: PropTypes.instanceOf(Set).isRequired,
-    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
-  }),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      ids: PropTypes.instanceOf(Set).isRequired,
+      type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+    }),
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
    * - Selecting a parent selects all its filtered descendants automatically.

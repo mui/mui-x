@@ -434,6 +434,44 @@ export function PickerPopper(inProps: PickerPopperProps) {
   );
   const paperRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(paperRef, popupRef);
+
+  // The popper is not modal: after a press outside of it, let the focus leave until it comes back.
+  const isFocusOutsideAllowedRef = React.useRef(false);
+  React.useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+
+    const doc = ownerDocument(rootRefObject.current);
+    const isInsidePaper = (event: Event) =>
+      !!paperRef.current && event.composedPath().includes(paperRef.current);
+
+    function handlePress(event: Event) {
+      isFocusOutsideAllowedRef.current = !isInsidePaper(event);
+    }
+
+    function handleFocusIn(event: FocusEvent) {
+      if (isInsidePaper(event)) {
+        isFocusOutsideAllowedRef.current = false;
+      }
+    }
+
+    doc.addEventListener('pointerdown', handlePress, true);
+    doc.addEventListener('mousedown', handlePress, true);
+    doc.addEventListener('focusin', handleFocusIn, true);
+
+    return () => {
+      doc.removeEventListener('pointerdown', handlePress, true);
+      doc.removeEventListener('mousedown', handlePress, true);
+      doc.removeEventListener('focusin', handleFocusIn, true);
+      isFocusOutsideAllowedRef.current = false;
+    };
+  }, [open, rootRefObject]);
+  const isTrapFocusEnabledProp = slotProps?.desktopTrapFocus?.isEnabled;
+  const isTrapFocusEnabled = React.useCallback(
+    () => !isFocusOutsideAllowedRef.current && (isTrapFocusEnabledProp?.() ?? true),
+    [isTrapFocusEnabledProp],
+  );
   const handlePaperRef = useForkRef(handleRef, clickAwayRef as React.Ref<HTMLDivElement>);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -481,6 +519,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
           disableRestoreFocus
           disableEnforceFocus={viewContainerRole === 'tooltip'}
           {...slotProps?.desktopTrapFocus}
+          isEnabled={isTrapFocusEnabled}
         >
           <Transition
             {...TransitionProps}

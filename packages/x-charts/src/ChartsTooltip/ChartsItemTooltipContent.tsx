@@ -225,22 +225,31 @@ DefaultSingleValueContent.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  item: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    color: PropTypes.string.isRequired,
-    formattedValue: PropTypes.any.isRequired,
-    identifier: PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
+  item: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      color: PropTypes.string.isRequired,
+      formattedValue: PropTypes.any.isRequired,
+      identifier: PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+      }).isRequired,
+      label: PropTypes.string,
+      markShape: PropTypes.oneOf([
+        'circle',
+        'cross',
+        'diamond',
+        'square',
+        'star',
+        'triangle',
+        'wye',
+      ]),
+      markType: PropTypes.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
+        PropTypes.func,
+      ]),
+      value: PropTypes.any.isRequired,
     }).isRequired,
-    label: PropTypes.string,
-    markShape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']),
-    markType: PropTypes.oneOfType([
-      PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
-      PropTypes.func,
-    ]),
-    value: PropTypes.any.isRequired,
-  }).isRequired,
 } as any;
 
 ChartsItemTooltipContent.propTypes /* remove-proptypes */ = {
