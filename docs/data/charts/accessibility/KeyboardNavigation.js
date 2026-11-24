@@ -32,6 +32,7 @@ const series = [
   { label: 'Series A', data: data.map((p) => p.y1), highlightScope },
   { label: 'Series B', data: data.map((p) => p.y2), highlightScope },
 ];
+
 const lineSeries = series.map((s) => ({
   ...s,
   highlightScope: { highlight: 'series', fade: 'global' },
