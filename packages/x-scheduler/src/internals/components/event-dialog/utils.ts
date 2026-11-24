@@ -428,7 +428,8 @@ export function getRecurrenceRuleBound(
 }
 
 /**
- * The canonical IANA identifier of a timezone; `default` resolves to the system timezone.
+ * The canonical identifier of a timezone, an IANA name or an offset; `default` resolves to the
+ * system timezone.
  */
 function getCanonicalTimezoneId(timezone: string): string {
   const id = getTimezoneId(timezone);
