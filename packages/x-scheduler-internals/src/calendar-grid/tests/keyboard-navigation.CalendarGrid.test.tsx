@@ -4,14 +4,13 @@ import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { GridRowType } from '@mui/x-scheduler-internals/models';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import {
   addDays,
   addHours,
   createDate,
   createSchedulerRenderer,
   endOfDay,
-  processDay,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
@@ -28,7 +27,7 @@ describe('CalendarGrid keyboard navigation', () => {
 
   // The days of the cells of a row.
   const toRowDays = (rowDays: Date[]) =>
-    rowDays.map((day) => ({ plainDate: toPlainDate(day.getTime(), 'default') }));
+    rowDays.map((day) => toPlainDate(day.getTime(), 'default'));
 
   function GridWithHeaderAndDayCells({
     rowTypes,
@@ -42,7 +41,11 @@ describe('CalendarGrid keyboard navigation', () => {
         <CalendarGrid.Root rowTypes={rowTypes} rowsPerType={rowsPerType}>
           <CalendarGrid.HeaderRow>
             {days.map((day, i) => (
-              <CalendarGrid.HeaderCell key={i} date={processDay(day)} data-testid={`header-${i}`}>
+              <CalendarGrid.HeaderCell
+                key={i}
+                date={toPlainDate(day.getTime(), 'default')}
+                data-testid={`header-${i}`}
+              >
                 {day.toLocaleDateString('en-US', { weekday: 'short' })}
               </CalendarGrid.HeaderCell>
             ))}
@@ -196,7 +199,11 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.Root rowTypes={['header', 'day-grid']} rowsPerType={{ 'day-grid': 3 }}>
             <CalendarGrid.HeaderRow>
               {week0Days.map((day, i) => (
-                <CalendarGrid.HeaderCell key={i} date={processDay(day)} data-testid={`header-${i}`}>
+                <CalendarGrid.HeaderCell
+                  key={i}
+                  date={toPlainDate(day.getTime(), 'default')}
+                  data-testid={`header-${i}`}
+                >
                   {day.toLocaleDateString('en-US', { weekday: 'short' })}
                 </CalendarGrid.HeaderCell>
               ))}
@@ -361,7 +368,11 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.Root rowTypes={['header', 'day-grid', 'time-grid']} rowsPerType={{}}>
             <CalendarGrid.HeaderRow>
               {days.slice(0, 3).map((day, i) => (
-                <CalendarGrid.HeaderCell key={i} date={processDay(day)} data-testid={`header-${i}`}>
+                <CalendarGrid.HeaderCell
+                  key={i}
+                  date={toPlainDate(day.getTime(), 'default')}
+                  data-testid={`header-${i}`}
+                >
                   {day.toLocaleDateString('en-US', { weekday: 'short' })}
                 </CalendarGrid.HeaderCell>
               ))}
@@ -461,8 +472,8 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.DayEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
-                  start={createProcessedDate(day1.getTime(), 'default')}
-                  end={createProcessedDate(addHours(day1, 1).getTime(), 'default')}
+                  start={toZonedDateTime(day1.getTime(), 'default')}
+                  end={toZonedDateTime(addHours(day1, 1).getTime(), 'default')}
                   renderDragPreview={() => null}
                   data-testid="event-1"
                 />
@@ -474,8 +485,8 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.DayEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
-                  start={createProcessedDate(day2.getTime(), 'default')}
-                  end={createProcessedDate(addHours(day2, 1).getTime(), 'default')}
+                  start={toZonedDateTime(day2.getTime(), 'default')}
+                  end={toZonedDateTime(addHours(day2, 1).getTime(), 'default')}
                   renderDragPreview={() => null}
                   data-testid="event-2"
                 />
@@ -522,8 +533,8 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.TimeEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
-                  start={createProcessedDate(addHours(day1, 9).getTime(), 'default')}
-                  end={createProcessedDate(addHours(day1, 10).getTime(), 'default')}
+                  start={toZonedDateTime(addHours(day1, 9).getTime(), 'default')}
+                  end={toZonedDateTime(addHours(day1, 10).getTime(), 'default')}
                   renderDragPreview={() => null}
                   data-testid="time-event-1"
                 />
@@ -535,8 +546,8 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.TimeEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
-                  start={createProcessedDate(addHours(day2, 9).getTime(), 'default')}
-                  end={createProcessedDate(addHours(day2, 10).getTime(), 'default')}
+                  start={toZonedDateTime(addHours(day2, 9).getTime(), 'default')}
+                  end={toZonedDateTime(addHours(day2, 10).getTime(), 'default')}
                   renderDragPreview={() => null}
                   data-testid="time-event-2"
                 />

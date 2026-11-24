@@ -56,9 +56,10 @@ export interface ComputeAutoSchedulingCascadeParameters {
    */
   enforcedDependencies?: readonly SchedulerDependency[];
   /**
-   * The timezone of the store's all-day bounds: the `Date`s of all-day entries are read and
-   * written in it, and an all-day event made timed takes it. Between an all-day event and a timed
-   * event, the dates of the all-day event are read in it only when the timed event has no timezone.
+   * The display timezone as the `displayTimezone` parameter gives it, `"default"` included: the
+   * `Date`s of all-day entries are read and written in it, and an all-day event made timed takes
+   * it. Between an all-day event and a timed event, the dates of the all-day event are read in it
+   * only when the timed event has no timezone.
    */
   displayTimezone: string;
 }
@@ -111,8 +112,8 @@ function resolveProcessedEventDates(
   // day.
   const allDay = !!processedEvent.allDay;
   return {
-    start: processedEvent.start.timestamp,
-    end: getLastInstant(processedEvent.end.timestamp, allDay),
+    start: processedEvent.start.epochMilliseconds,
+    end: getLastInstant(processedEvent.end.epochMilliseconds, allDay),
     timezone: getDayTimezone(processedEvent, displayTimezone),
     allDay,
   };
@@ -353,9 +354,13 @@ export function computeAutoSchedulingCascade(
     let entryStart = resolveEntryTimestamp(
       entry.start,
       model.start,
-      processedEvent.start.timestamp,
+      processedEvent.start.epochMilliseconds,
     );
-    let entryEnd = resolveEntryTimestamp(entry.end, model.end, processedEvent.end.timestamp);
+    let entryEnd = resolveEntryTimestamp(
+      entry.end,
+      model.end,
+      processedEvent.end.epochMilliseconds,
+    );
     if (allDay && !processedEvent.allDay && entry.start == null && entry.end == null) {
       // Like the store, a timed event made all-day without bounds keeps the dates of its timezone.
       const ownDays = snapToOwnDays(entryStart, entryEnd, dataTimezone, displayTimezone);

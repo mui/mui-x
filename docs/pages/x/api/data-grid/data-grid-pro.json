@@ -1660,6 +1660,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--reorderTarget",
+      "className": "MuiDataGridPro-columnHeader--reorderTarget",
+      "description": "Styles applied to the column header if a keyboard reorder press would move its column.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--sortable",
       "className": "MuiDataGridPro-columnHeader--sortable",
       "description": "Styles applied to the column header if the column is sortable.",
@@ -2527,6 +2533,12 @@
       "key": "row--lastVisible",
       "className": "MuiDataGridPro-row--lastVisible",
       "description": "Styles applied to the last visible row element on every page of the grid.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--reorderTarget",
+      "className": "MuiDataGridPro-row--reorderTarget",
+      "description": "Styles applied to the row element if a keyboard reorder press would move the row.",
       "isGlobal": false
     },
     {

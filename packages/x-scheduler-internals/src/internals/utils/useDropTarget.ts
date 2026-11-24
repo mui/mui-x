@@ -302,10 +302,10 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   // representation.
   const allDayToggled = allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
-  if (allDayToggled || originalOccurrence.start.timestamp !== start) {
+  if (allDayToggled || originalOccurrence.start.epochMilliseconds !== start) {
     changes.start = new Date(start);
   }
-  if (allDayToggled || originalOccurrence.end.timestamp !== end) {
+  if (allDayToggled || originalOccurrence.end.epochMilliseconds !== end) {
     changes.end = new Date(end);
   }
 

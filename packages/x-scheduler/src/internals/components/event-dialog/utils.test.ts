@@ -280,7 +280,7 @@ describe('getRecurrenceRuleBound', () => {
 
   it("should return the occurrence's own bound when it is not resent", () => {
     const start = getRecurrenceRuleBound(occurrence, seeded, false, 'America/New_York', 'start');
-    expect(start).to.equal(occurrence.start.timestamp);
+    expect(start).to.equal(occurrence.start.epochMilliseconds);
   });
 
   it('should return the edited bound when it is resent', () => {
@@ -315,7 +315,7 @@ describe('getRecurrenceRuleBound', () => {
       'America/New_York',
       'start',
     );
-    expect(start).to.equal(occurrence.start.timestamp);
+    expect(start).to.equal(occurrence.start.epochMilliseconds);
   });
 
   it('should return the end of an edited all-day range', () => {
@@ -366,7 +366,7 @@ describe('getRulePlainDate', () => {
       .toOccurrence();
     // The first instant of July 7th in Paris is still July 6th in New York.
     expect(
-      getRulePlainDate(occurrence, occurrence.start.timestamp, true, 'Europe/Paris'),
+      getRulePlainDate(occurrence, occurrence.start.epochMilliseconds, true, 'Europe/Paris'),
     ).toEqualPlainDate('2025-07-07');
   });
 });

@@ -348,8 +348,8 @@ export class CellValueUpdater {
       ),
     );
 
-    // Insert the created rows in the order of the paste
-    const createdRowIds = new Set<GridRowId>();
+    // Insert the created rows in the order of the paste.
+    const createdRows = new Map<GridRowId, GridValidRowModel>();
     rowIdsToUpdate.forEach((rowId) => {
       const row = rowsToInsert.get(rowId);
       if (!row) {
@@ -360,7 +360,7 @@ export class CellValueUpdater {
       if (
         finalRowId == null ||
         apiRef.current.getRow(finalRowId) !== null ||
-        createdRowIds.has(finalRowId)
+        createdRows.has(finalRowId)
       ) {
         warnOnce(
           [
@@ -370,22 +370,29 @@ export class CellValueUpdater {
         );
         return;
       }
-      createdRowIds.add(finalRowId);
+      createdRows.set(finalRowId, row);
       rowUpdates.push(row);
     });
 
-    // Apply the rows before `clipboardPasteEnd`, so that its listeners (for example,
-    // the undo/redo history) see the grid with the pasted values.
+    // Track this batch through throttled updates. A controlled `rows` prop can replace
+    // the grid state before `clipboardPasteEnd`, including during `updateRows()` on React 17.
+    const cache = apiRef.current.caches.rows;
+    const batchModels =
+      createdRows.size > 0 && cache.updates.type === 'partial'
+        ? (cache.updates.modelLookupRef ??= { current: cache.dataRowIdToModelLookup })
+        : undefined;
     await rowUpdates.flush();
 
-    // A change of the `rows` prop can replace the rows while the paste waits for them
-    const createdRows = new Map<GridRowId, GridValidRowModel>();
-    createdRowIds.forEach((rowId) => {
-      const row = apiRef.current.getRow(rowId);
-      if (row) {
-        createdRows.set(rowId, row);
+    if (batchModels) {
+      for (const rowId of createdRows.keys()) {
+        const row = batchModels.current[rowId];
+        if (row) {
+          createdRows.set(rowId, row);
+        } else {
+          createdRows.delete(rowId);
+        }
       }
-    });
+    }
 
     apiRef.current.publishEvent('clipboardPasteEnd', { oldRows, newRows, createdRows });
     this.rowsToUpdate.clear();

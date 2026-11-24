@@ -272,6 +272,10 @@ export interface GridClasses {
    */
   'columnHeader--moving': string;
   /**
+   * Styles applied to the column header if a keyboard reorder press would move its column.
+   */
+  'columnHeader--reorderTarget': string;
+  /**
    * Styles applied to the column header if the type of the column is `number`.
    */
   'columnHeader--numeric': string;
@@ -763,6 +767,10 @@ export interface GridClasses {
    */
   'row--beingDragged': string;
   /**
+   * Styles applied to the row element if a keyboard reorder press would move the row.
+   */
+  'row--reorderTarget': string;
+  /**
    * Styles applied to the first visible row element on every page of the grid.
    */
   'row--firstVisible': string;
@@ -1234,6 +1242,7 @@ export const gridClassesOverrides = {
     'columnHeader--numeric',
     'columnHeader--pinnedLeft',
     'columnHeader--pinnedRight',
+    'columnHeader--reorderTarget',
     'columnHeader--siblingFocused',
     'columnHeader--sortable',
     'columnHeader--sorted',
@@ -1280,6 +1289,7 @@ export const gridClassesOverrides = {
     'row--editing',
     'row--firstVisible',
     'row--lastVisible',
+    'row--reorderTarget',
     'rowReorderCell',
     'rowReorderCell--draggable',
     'rowReorderCellContainer',

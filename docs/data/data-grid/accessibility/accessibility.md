@@ -237,6 +237,17 @@ Add <kbd class="key">Ctrl</kbd> to act on whole rows instead: they select rows w
 |                                         <kbd class="key">Enter</kbd> | Sort column when column header is focused          |
 |  <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> | Open column menu when column header is focused     |
 
+### Reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+|                                                                                                                                                    Keys | Description                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------- |
+|                                                                              <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Move the row of the focused cell, when [row reordering](/x/react-data-grid/row-ordering/) is enabled |
+|                                                                           <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> | Move the column of the focused cell or column header                                                 |
+|                    <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> / <kbd><kbd class="key">Alt</kbd>+<kbd class="key">End</kbd></kbd> | Move the row of the focused cell to the first or last position of the page                           |
+| <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> / <kbd><kbd class="key">Alt</kbd>+<kbd class="key">End</kbd></kbd> on a column header | Move the column as far as allowed toward the start or the end                                        |
+
+The Data Grid announces each move to screen readers through a live region, as well as the reason when a row or column can't move.
+
 ### Group and pivot
 
 |                                                                Keys | Description                      |

@@ -40,9 +40,9 @@ describe('processEvent', () => {
       // Kiritimati is at UTC+14.
       const processed = processEvent(event, 'Pacific/Kiritimati');
       const { start, end } = processed;
-      expect(start.plainDateTime.toString()).to.equal('2025-01-02T00:00:00');
-      expect(end.plainDateTime.toString()).to.equal('2025-01-02T02:00:00');
-      expect(start.timestamp).to.equal(Date.parse('2025-01-01T10:00:00Z'));
+      expect(start.toPlainDateTime().toString()).to.equal('2025-01-02T00:00:00');
+      expect(end.toPlainDateTime().toString()).to.equal('2025-01-02T02:00:00');
+      expect(start.epochMilliseconds).to.equal(Date.parse('2025-01-01T10:00:00Z'));
     });
 
     it('should read an end after 9999 in a timezone east of UTC', () => {
@@ -54,10 +54,10 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'Asia/Tokyo');
 
-      expect(toPlainDate(processed.end.timestamp, processed.timezone).toString()).to.equal(
+      expect(toPlainDate(processed.end.epochMilliseconds, processed.timezone).toString()).to.equal(
         '+010000-01-01',
       );
-      expect(processed.end.plainDateTime.toPlainDate().toString()).to.equal('+010000-01-01');
+      expect(processed.end.toPlainDate().toString()).to.equal('+010000-01-01');
     });
 
     it('should read the instants of the exDates in the timezone of the event', () => {
@@ -146,9 +146,9 @@ describe('processEvent', () => {
       (displayTimezone) => {
         const processed = processEvent(utcJuly4AllDayBuilder().build(), displayTimezone);
 
-        expect(processed.start.plainDateTime.toString()).to.equal('2025-07-04T00:00:00');
-        expect(processed.end.plainDateTime.toString()).to.equal('2025-07-05T00:00:00');
-        expect(processed.start.timestamp).to.equal(
+        expect(processed.start.toPlainDateTime().toString()).to.equal('2025-07-04T00:00:00');
+        expect(processed.end.toPlainDateTime().toString()).to.equal('2025-07-05T00:00:00');
+        expect(processed.start.epochMilliseconds).to.equal(
           toEpochMs(BaseTemporal.PlainDate.from('2025-07-04'), displayTimezone),
         );
       },
@@ -162,8 +162,8 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'America/New_York');
 
-      expect(processed.start.plainDateTime.toString()).to.equal('2025-07-04T00:00:00');
-      expect(processed.end.plainDateTime.toString()).to.equal('2025-07-05T00:00:00');
+      expect(processed.start.toPlainDateTime().toString()).to.equal('2025-07-04T00:00:00');
+      expect(processed.end.toPlainDateTime().toString()).to.equal('2025-07-05T00:00:00');
       expect(processed.timezone).to.equal('Asia/Tokyo');
     });
 
@@ -186,7 +186,7 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'Pacific/Apia');
 
-      expect(processed.start.timestamp).to.equal(processed.end.timestamp);
+      expect(processed.start.epochMilliseconds).to.equal(processed.end.epochMilliseconds);
     });
 
     it.each([
@@ -259,8 +259,12 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'America/New_York');
 
-      expect(processed.start.timestamp).to.equal(new Date('2025-01-01T14:00:00Z').getTime());
-      expect(toMsInDay(processed.start.timestamp, processed.timezone)).to.equal(9 * 3_600_000);
+      expect(processed.start.epochMilliseconds).to.equal(
+        new Date('2025-01-01T14:00:00Z').getTime(),
+      );
+      expect(toMsInDay(processed.start.epochMilliseconds, processed.timezone)).to.equal(
+        9 * 3_600_000,
+      );
     });
 
     it('should produce different UTC instants for same wall-time string in different timezones', () => {
@@ -278,9 +282,15 @@ describe('processEvent', () => {
       const processedTokyo = processEvent(eventTokyo, 'UTC');
 
       // 09:00 NY (UTC-5) = 14:00 UTC vs 09:00 Tokyo (UTC+9) = 00:00 UTC
-      expect(processedNY.start.timestamp).to.not.equal(processedTokyo.start.timestamp);
-      expect(processedNY.start.timestamp).to.equal(new Date('2025-01-01T14:00:00Z').getTime());
-      expect(processedTokyo.start.timestamp).to.equal(new Date('2025-01-01T00:00:00Z').getTime());
+      expect(processedNY.start.epochMilliseconds).to.not.equal(
+        processedTokyo.start.epochMilliseconds,
+      );
+      expect(processedNY.start.epochMilliseconds).to.equal(
+        new Date('2025-01-01T14:00:00Z').getTime(),
+      );
+      expect(processedTokyo.start.epochMilliseconds).to.equal(
+        new Date('2025-01-01T00:00:00Z').getTime(),
+      );
     });
 
     it('should resolve wall-time exDates to date objects in dataTimezone', () => {
@@ -311,10 +321,16 @@ describe('processEvent', () => {
       const processed = processEvent(event, 'Europe/Paris', schedulerRecurringEventsPlugin);
 
       // Same instants; day and hour reads answer in the event's timezone.
-      expect(processed.start.timestamp).to.equal(new Date('2025-01-01T14:00:00Z').getTime());
+      expect(processed.start.epochMilliseconds).to.equal(
+        new Date('2025-01-01T14:00:00Z').getTime(),
+      );
       // 14:00 UTC = 09:00 in New York (UTC-5)
-      expect(toMsInDay(processed.start.timestamp, processed.timezone)).to.equal(9 * 3_600_000);
-      expect(toMsInDay(processed.end.timestamp, processed.timezone)).to.equal(10 * 3_600_000);
+      expect(toMsInDay(processed.start.epochMilliseconds, processed.timezone)).to.equal(
+        9 * 3_600_000,
+      );
+      expect(toMsInDay(processed.end.epochMilliseconds, processed.timezone)).to.equal(
+        10 * 3_600_000,
+      );
       expect(processed.exDates![0].toString()).to.equal('2025-01-05T09:00:00');
     });
 
@@ -336,12 +352,16 @@ describe('processEvent', () => {
       const processedAfter = processEvent(eventAfter, 'America/New_York');
 
       // Both should show 09:00 local
-      expect(getMinutesInDay(processedBefore.start.plainDateTime)).to.equal(9 * 60);
-      expect(getMinutesInDay(processedAfter.start.plainDateTime)).to.equal(9 * 60);
+      expect(getMinutesInDay(processedBefore.start)).to.equal(9 * 60);
+      expect(getMinutesInDay(processedAfter.start)).to.equal(9 * 60);
 
       // But different UTC timestamps
-      expect(processedBefore.start.timestamp).to.equal(new Date('2025-01-01T14:00:00Z').getTime());
-      expect(processedAfter.start.timestamp).to.equal(new Date('2025-03-10T13:00:00Z').getTime());
+      expect(processedBefore.start.epochMilliseconds).to.equal(
+        new Date('2025-01-01T14:00:00Z').getTime(),
+      );
+      expect(processedAfter.start.epochMilliseconds).to.equal(
+        new Date('2025-03-10T13:00:00Z').getTime(),
+      );
     });
 
     it('should preserve original string values in modelInBuiltInFormat', () => {
