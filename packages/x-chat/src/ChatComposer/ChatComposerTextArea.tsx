@@ -55,9 +55,9 @@ const ChatComposerTextAreaStyled = styled('textarea', {
   outline: 'none',
   boxSizing: 'border-box',
   minHeight: 40,
-  // `maxRows` lines plus the rendered vertical padding (measured, as `sx` can change it). Without
-  // `--ChatComposer-maxRows`, this custom property is invalid and `maxHeight` falls back to 200px.
-  '--ChatComposer-maxRowsHeight': `calc(var(--ChatComposer-maxRows) * 1lh + var(--ChatComposer-paddingBlock, 2 * ${theme.spacing(TEXT_AREA_PADDING)}))`,
+  // `maxRows` lines plus the rendered vertical padding and borders (measured, as `sx` can change
+  // them). Without `--ChatComposer-maxRows`, this property is invalid and `maxHeight` is 200px.
+  '--ChatComposer-maxRowsHeight': `calc(var(--ChatComposer-maxRows) * 1lh + var(--ChatComposer-paddingBorderBlock, 2 * ${theme.spacing(TEXT_AREA_PADDING)}))`,
   maxHeight: 'var(--ChatComposer-maxRowsHeight, 200px)',
   overflowY: 'auto',
   scrollbarWidth: 'thin',
@@ -85,8 +85,13 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
         return;
       }
       const style = getComputedStyle(textarea);
-      const paddingBlock = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
-      textarea.style.setProperty('--ChatComposer-paddingBlock', `${paddingBlock}px`);
+      const paddingBorderBlock = [
+        style.paddingTop,
+        style.paddingBottom,
+        style.borderTopWidth,
+        style.borderBottomWidth,
+      ].reduce((sum, value) => sum + parseFloat(value), 0);
+      textarea.style.setProperty('--ChatComposer-paddingBorderBlock', `${paddingBorderBlock}px`);
     });
 
     return (

@@ -217,7 +217,7 @@ describe('ChatComposerTextArea', () => {
       </ChatBox>,
     );
 
-    const textbox = screen.getByRole('textbox') as HTMLTextAreaElement;
+    const textbox = screen.getByRole('textbox');
     fireEvent.change(textbox, { target: { value: Array(8).fill('line').join('\n') } });
 
     const style = getComputedStyle(textbox);
@@ -227,24 +227,24 @@ describe('ChatComposerTextArea', () => {
     expect(textbox.scrollHeight).to.be.greaterThan(textbox.clientHeight);
   });
 
-  it.skipIf(isJSDOM)('includes custom vertical padding in the maxRows cap', () => {
+  it.skipIf(isJSDOM)('includes custom vertical padding and borders in the maxRows cap', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
         variant="compact"
-        slotProps={{ composerInput: { maxRows: 2, sx: { py: 2 } } }}
+        slotProps={{ composerInput: { maxRows: 2, sx: { py: 2, border: '4px solid' } } }}
       >
         {null}
       </ChatBox>,
     );
 
-    const textbox = screen.getByRole('textbox') as HTMLTextAreaElement;
+    const textbox = screen.getByRole('textbox');
     fireEvent.change(textbox, { target: { value: Array(8).fill('line').join('\n') } });
 
     const style = getComputedStyle(textbox);
     const lineHeight = parseFloat(style.lineHeight);
     expect(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom)).to.equal(32);
-    expect(textbox.getBoundingClientRect().height).to.be.closeTo(2 * lineHeight + 32, 1);
+    expect(textbox.getBoundingClientRect().height).to.be.closeTo(2 * lineHeight + 32 + 8, 1);
   });
 
   it.skipIf(isJSDOM)('lets a theme styleOverrides maxHeight win over the maxRows cap', () => {
@@ -252,7 +252,7 @@ describe('ChatComposerTextArea', () => {
       components: {
         MuiChatComposer: { styleOverrides: { textArea: { maxHeight: 50 } } },
       },
-    } as any);
+    });
 
     render(
       <ThemeProvider theme={theme}>
@@ -266,7 +266,7 @@ describe('ChatComposerTextArea', () => {
       </ThemeProvider>,
     );
 
-    const textbox = screen.getByRole('textbox') as HTMLTextAreaElement;
+    const textbox = screen.getByRole('textbox');
     expect(getComputedStyle(textbox).maxHeight).to.equal('50px');
   });
 });
