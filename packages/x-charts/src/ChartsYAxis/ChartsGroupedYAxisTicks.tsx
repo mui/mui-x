@@ -67,7 +67,7 @@ function ChartsGroupedYAxisTicks(inProps: ChartsYAxisProps) {
     groups,
   });
 
-  // The `tickLabelInterval` index counts labels within their group.
+  // The `tickLabelInterval` index counts labels within their level.
   const hiddenLabels = new Set<(typeof yTicks)[number]>();
   if (typeof tickLabelInterval === 'function') {
     groups.forEach((_, groupIndex) => {

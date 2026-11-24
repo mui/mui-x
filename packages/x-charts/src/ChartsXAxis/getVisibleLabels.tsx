@@ -108,7 +108,10 @@ export function getVisibleGroupedLabels(
       return;
     }
 
-    const candidates = [levelTicks, getMiddleTicks(levelTicks, parentTicks)];
+    const onScreenTicks = levelTicks.filter((tick) =>
+      options.isXInside(tick.offset + tick.labelOffset),
+    );
+    const candidates = [levelTicks, getMiddleTicks(onScreenTicks, parentTicks)];
     for (const candidate of candidates) {
       const visible = getVisibleLabels(candidate, levelOptions);
       const fits = candidate.every(
@@ -128,17 +131,27 @@ export function getVisibleGroupedLabels(
   return visibleLabels;
 }
 
-/* Returns the middle tick of each parent group. */
+/* Returns the middle tick of each parent group. Both lists are sorted by `dataIndex`. */
 function getMiddleTicks(levelTicks: GroupedTickItemType[], parentTicks: GroupedTickItemType[]) {
-  return parentTicks.flatMap((parent, parentIndex) => {
-    const start = parent.dataIndex ?? 0;
-    const end = parentTicks[parentIndex + 1]?.dataIndex ?? Infinity;
-    const children = levelTicks.filter(
-      (tick) => (tick.dataIndex ?? 0) >= start && (tick.dataIndex ?? 0) < end,
-    );
+  const middleTicks: GroupedTickItemType[] = [];
+  let childIndex = 0;
 
-    return children.length > 0 ? [children[Math.floor((children.length - 1) / 2)]] : [];
+  parentTicks.forEach((parent, parentIndex) => {
+    const end = parentTicks[parentIndex + 1]?.dataIndex ?? Infinity;
+    const firstChildIndex = childIndex;
+
+    while (childIndex < levelTicks.length && (levelTicks[childIndex].dataIndex ?? 0) < end) {
+      childIndex += 1;
+    }
+
+    if (childIndex > firstChildIndex) {
+      middleTicks.push(
+        levelTicks[firstChildIndex + Math.floor((childIndex - firstChildIndex - 1) / 2)],
+      );
+    }
   });
+
+  return middleTicks;
 }
 
 function getTickLabelSize<T extends TickItem>(

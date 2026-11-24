@@ -92,6 +92,41 @@ describe('getVisibleGroupedLabels', () => {
     ]);
   });
 
+  it('should pick the middle label among the children on screen', () => {
+    const ticks = [
+      tick(0, -30, 'a', 0),
+      tick(0, -20, 'b', 1),
+      tick(0, 0, 'c', 2),
+      tick(0, 10, 'd', 3),
+      tick(0, 20, 'e', 4),
+      tick(0, 30, 'f', 5),
+      tick(0, 40, 'g', 6),
+      tick(1, -15, 'X', 0),
+      tick(1, 30, 'Y', 4),
+    ];
+
+    expect(visibleValues(ticks, getVisibleGroupedLabels(ticks, groups, options))).to.deep.equal([
+      'c',
+      'f',
+      'Y',
+    ]);
+  });
+
+  it('should show the middle label of each parent group on reversed axes', () => {
+    const ticks = [
+      tick(0, 100, 'a', 0),
+      tick(0, 90, 'b', 1),
+      tick(0, 80, 'c', 2),
+      tick(0, 70, 'd', 3),
+      tick(1, 95, 'X', 0),
+      tick(1, 75, 'Y', 2),
+    ];
+
+    expect(
+      visibleValues(ticks, getVisibleGroupedLabels(ticks, groups, { ...options, reverse: true })),
+    ).to.deep.equal(['a', 'c', 'X', 'Y']);
+  });
+
   it('should hide a level when its middle labels do not fit either', () => {
     const ticks = [
       tick(0, 0, 'a', 0),
