@@ -2668,8 +2668,9 @@ premiumStoreClasses.forEach((storeClass) => {
         ).not.to.throw();
       });
 
-      (['all', 'this-and-following'] as const).forEach((scope) => {
-        it(`should keep no timezone on an all-day series made timed in the default display timezone with scope '${scope}'`, () => {
+      it.each(['only-this', 'this-and-following', 'all'] as const)(
+        'should keep no timezone on an all-day series made timed in the default display timezone with scope %s',
+        (scope) => {
           const onEventsChange = vi.fn();
           const event = EventBuilder.new()
             .id('holiday')
@@ -2693,15 +2694,18 @@ premiumStoreClasses.forEach((storeClass) => {
           });
           store.selectRecurringEventScope(scope);
 
+          // The event the change writes: the series itself, or the event split or detached from
+          // it on the changed occurrence.
           const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
           const updated = updatedEvents.find((item) =>
             scope === 'all' ? item.id === 'holiday' : item.id !== 'holiday',
           )!;
           expect(updated).not.to.have.property('timezone');
-          // The whole series starts on its first day, the split one on the changed occurrence.
           expect(updated.start).to.equal(`2025-07-0${scope === 'all' ? 1 : 3}T09:00:00`);
-        });
+        },
+      );
 
+      (['all', 'this-and-following'] as const).forEach((scope) => {
         it(`should make a series all-day on its displayed days when a day is given with scope '${scope}'`, () => {
           const onEventsChange = vi.fn();
           // Fridays at 08:00 in Tokyo are Thursdays in New York; July 18th is July 17th there.
