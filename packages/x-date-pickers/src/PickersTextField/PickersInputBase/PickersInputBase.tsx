@@ -71,6 +71,12 @@ export const PickersInputBaseRoot = styled('div', {
   ],
 }));
 
+const PickersInputBaseDefaultRoot = styled(PickersInputBaseRoot)(({ theme }) => ({
+  ...(theme.focusVisible && {
+    [`&.${pickersInputBaseClasses.focused}`]: theme.focusVisible,
+  }),
+}));
+
 export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, {
   name: 'MuiPickersInputBase',
   slot: 'SectionsContainer',
@@ -403,7 +409,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const classes = useUtilityClasses(classesProp, ownerState);
 
-  const InputRoot = slots?.root || PickersInputBaseRoot;
+  const InputRoot = slots?.root || PickersInputBaseDefaultRoot;
   const inputRootProps = useSlotProps({
     elementType: InputRoot,
     externalSlotProps: slotProps?.root,

@@ -1,11 +1,16 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import type { DateFieldProps } from '@mui/x-date-pickers/DateField';
 import {
+  PickersInputBase,
   PickersTextField,
   pickersInputBaseClasses,
   pickersTextFieldClasses,
 } from '@mui/x-date-pickers/PickersTextField';
 import { createPickerRenderer, PICKERS_TEXT_FIELD_STUB_PROPS } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 
 describe('<PickersTextField /> - slot forwarding', () => {
@@ -235,5 +240,77 @@ describe('<PickersTextField /> - format placeholder opacity', () => {
 
     const [opacity] = getSectionsOpacity(container);
     expect(opacity).to.equal('0');
+  });
+});
+
+describe.skipIf(isJSDOM)('<PickersTextField /> - theme.focusVisible', () => {
+  const { render } = createPickerRenderer();
+
+  const renderField = (props: DateFieldProps) =>
+    render(
+      <ThemeProvider theme={createTheme({ focusVisible: true })}>
+        <DateField {...props} />
+      </ThemeProvider>,
+    );
+
+  const getFocusedRoot = () => {
+    const root = document.querySelector<HTMLElement>(`.${pickersInputBaseClasses.root}`)!;
+    expect(root).to.have.class(pickersInputBaseClasses.focused);
+    return root;
+  };
+
+  it('draws an inset ring on a standard field without an underline', async () => {
+    const { user } = renderField({
+      variant: 'standard',
+      slotProps: { textField: { slotProps: { input: { disableUnderline: true } } } },
+    });
+
+    await user.keyboard('{Tab}');
+
+    const root = getFocusedRoot();
+    expect(root).to.have.style('outline-style', 'solid');
+    expect(root).to.have.style('outline-offset', '-2px');
+    expect(root).to.have.style('padding-left', '4px');
+  });
+
+  it('draws an outset ring on a filled field without an underline', async () => {
+    const { user } = renderField({
+      variant: 'filled',
+      slotProps: { textField: { slotProps: { input: { disableUnderline: true } } } },
+    });
+
+    await user.keyboard('{Tab}');
+
+    const root = getFocusedRoot();
+    expect(root).to.have.style('outline-style', 'solid');
+    expect(root).to.have.style('outline-offset', '2px');
+  });
+
+  it('draws an outset ring on a bare input', async () => {
+    const { user } = renderField({
+      slotProps: { textField: { slots: { input: PickersInputBase } } },
+    });
+
+    await user.keyboard('{Tab}');
+
+    const root = getFocusedRoot();
+    expect(root).to.have.style('outline-style', 'solid');
+    expect(root).to.have.style('outline-offset', '2px');
+  });
+
+  it('keeps the underline as the only focus cue on a standard field', async () => {
+    const { user } = renderField({ variant: 'standard' });
+
+    await user.keyboard('{Tab}');
+
+    expect(getFocusedRoot()).to.have.style('outline-style', 'none');
+  });
+
+  it('keeps the outline border as the only focus cue on an outlined field', async () => {
+    const { user } = renderField({});
+
+    await user.keyboard('{Tab}');
+
+    expect(getFocusedRoot()).to.have.style('outline-style', 'none');
   });
 });

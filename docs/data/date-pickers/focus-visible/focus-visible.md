@@ -23,6 +23,10 @@ See Material UI's [Focus visible](/material-ui/customization/focus-visible/) pa
 
 When `focusVisible` is enabled, these elements show the focus ring: day cells, month and year buttons, clocks, and the buttons in the calendar header.
 
+The fields follow the Material UI inputs.
+A standard or filled field shows the focus ring when its underline is turned off with `disableUnderline`.
+An outlined field, or a field that keeps its underline, uses the border or the underline to show focus instead.
+
 :::info
 The focus ring only shows when you use the keyboard. Clicking doesn't show it.
 

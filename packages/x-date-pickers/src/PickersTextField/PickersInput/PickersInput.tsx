@@ -112,6 +112,14 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
           },
         },
       },
+      {
+        props: ({ ownerState }) => Boolean(theme.focusVisible) && !ownerState.inputHasUnderline,
+        style: {
+          [`&.${pickersInputClasses.focused}`]:
+            theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
+          paddingInline: 4,
+        },
+      },
     ],
   };
 });
