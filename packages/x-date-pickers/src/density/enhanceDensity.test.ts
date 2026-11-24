@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createTheme, unstable_enhanceDensity as enhanceMaterial } from '@mui/material/styles';
 import { enhanceDensity } from './enhanceDensity';
 
-// Built through material's own enhancer (the pinned PR build): it writes the
+// Built through material's own enhancer: it writes the
 // `unstable_densityScale` contract and installs the keyed `theme.spacing`.
 const enhancedTheme = (components = {}, options = {}) =>
   enhanceMaterial(createTheme({ components, ...options }));
@@ -35,8 +35,21 @@ describe('enhanceDensity', () => {
     ]);
     expect(dayCalendar?.slideTransition).toEqual([{ minHeight: 'calc(calc(32px + 4px) * 6)' }]);
     expect(theme.components.MuiDateCalendar?.styleOverrides?.root).toEqual([
-      { height: 'calc(12px + 32px + 4px + calc(32px + 4px) * 7)' },
+      {
+        height: 'calc(12px + 32px + 4px + calc(32px + 4px) * 7)',
+        maxHeight: 'none',
+        width: 'max(320px, calc(calc(32px + 4px) * 7 + 2 * 24px))',
+      },
     ]);
+  });
+
+  it('gives the month and year grids the width of the day view', () => {
+    const theme = enhanceDensity(enhancedTheme());
+    const width = 'max(320px, calc(calc(32px + 4px) * 7 + 2 * 24px))';
+    const [month] = theme.components.MuiMonthCalendar?.styleOverrides?.root as any[];
+    const [year] = theme.components.MuiYearCalendar?.styleOverrides?.root as any[];
+    expect(month.width).toBe(width);
+    expect(year.width).toBe(width);
   });
 
   it('scopes the year grid block inset to the three-per-row layout', () => {

@@ -51,8 +51,11 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // The date time picker caps its clock columns at that constant with
   // `maxHeight`, so a shorter calendar leaves that row at the clock height.
   const headerBlock = `${spacing('small')} + ${touchTarget} + ${spacing('xxSmall')}`;
+  const viewWidth = `max(320px, calc(${dayRow} * 7 + 2 * ${spacing('large')}))`;
   addRootOverride(components, 'MuiDateCalendar', {
     height: `calc(${headerBlock} + ${dayRow} * 7)`,
+    maxHeight: 'none',
+    width: viewWidth,
   });
 
   // Calendar header: the bar is as high as its arrow buttons.
@@ -79,6 +82,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     borderRadius: `calc(${touchTarget} / 2)`,
   };
   addRootOverride(components, 'MuiMonthCalendar', {
+    width: viewWidth,
     rowGap: spacing('medium'),
     paddingBlock: spacing('xSmall'),
     variants: [{ props: { monthsPerRow: 3 }, style: { columnGap: spacing('large') } }],
@@ -87,6 +91,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // The four-per-row variant resets the block padding after the base rule, so
   // the block inset is scoped to the three-per-row layout.
   addRootOverride(components, 'MuiYearCalendar', {
+    width: viewWidth,
     rowGap: spacing('small'),
     // The year list fills the calendar view below the header (280 = 7 * 40).
     maxHeight: `calc(${dayRow} * 7)`,
