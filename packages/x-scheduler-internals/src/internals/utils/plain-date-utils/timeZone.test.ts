@@ -39,9 +39,12 @@ describe('timeZone', () => {
       expect(getTimezoneId('default')).to.equal('America/New_York');
     });
 
-    // `Intl` names none of these, and `Date` applies the same offset all year to them.
+    // `Intl` names none of these, or names them with the opposite offset (`+05:00` for `GMT+5`).
+    // `Date` applies the same offset all year to them.
     it.skipIf(!isJSDOM).each([
       ['UTC+3', '-03:00'],
+      ['UTC-5', '+05:00'],
+      ['GMT+5', '-05:00'],
       ['Foo/Bar', '+00:00'],
       ['Etc/Unknown', '+00:00'],
     ])('should read the default timezone of TZ=%s as the offset Date applies, %s', (tz, id) => {

@@ -60,12 +60,13 @@ export function getTimezoneId(timezone: string): string {
     return timezone;
   }
   const systemTimezone: string | undefined = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  if (systemTimezone != null && systemTimezone !== 'Etc/Unknown') {
+  if (systemTimezone != null && systemTimezone !== 'Etc/Unknown' && !/^[+-]/.test(systemTimezone)) {
     return systemTimezone;
   }
   // A `TZ` without an IANA name, on a server for example: a path such as `:/etc/localtime`, a
-  // POSIX rule such as `UTC+3`, or an unknown name. `Date` still applies an offset, the same all
-  // year for these, so the identifier is this offset, read the way `Date` reads it.
+  // POSIX rule such as `UTC+3`, or an unknown name. `Intl` names some POSIX rules as offsets, with
+  // the opposite sign: `+05:00` for `GMT+5`, where `Date` applies -05:00. `Date` applies the same
+  // offset all year to all these, so the identifier is this offset, read the way `Date` reads it.
   const offsetMinutes = -new Date().getTimezoneOffset();
   const absoluteMinutes = Math.abs(offsetMinutes);
   const hours = String(Math.floor(absoluteMinutes / 60)).padStart(2, '0');
