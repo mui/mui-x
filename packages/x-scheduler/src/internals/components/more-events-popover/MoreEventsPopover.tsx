@@ -87,7 +87,6 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   // Context hooks
   const store = useSchedulerStoreContext();
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { classes } = useEventCalendarStyledContext();
   const isRtl = useRtl();
 
@@ -224,11 +223,9 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
             getFocusFallback={getFocusFallback}
           >
             <EventItem
-              variant={
-                isOccurrenceAllDayOrMultipleDay(occurrence, displayTimezone) ? 'filled' : 'compact'
-              }
+              variant={isOccurrenceAllDayOrMultipleDay(occurrence) ? 'filled' : 'compact'}
               occurrence={occurrence}
-              date={day}
+              date={day.plainDate}
             />
           </EventContextMenuTrigger>
         ))}
@@ -269,14 +266,14 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
 
   // The day's occurrences are laid out by the view, not stored, so the trigger pushes them.
   const updatePopover = useStableCallback((data: MoreEventsData) => {
-    if (state.open && state.data?.day.key === data.day.key) {
+    if (state.open && state.data?.day.plainDate.equals(data.day.plainDate)) {
       setState((prev) => ({ ...prev, data }));
     }
   });
 
   // The trigger unmounts once every event fits in the cell, taking the popover's anchor with it.
   const closePopoverForDay = useStableCallback((dayKey: string) => {
-    if (state.open && state.data?.day.key === dayKey) {
+    if (state.open && state.data?.day.plainDate.toString() === dayKey) {
       closePopover();
     }
   });
@@ -319,9 +316,10 @@ export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
     updatePopover({ occurrences, day });
   }, [occurrences, day, updatePopover]);
 
+  const dayKey = day.plainDate.toString();
   useIsoLayoutEffect(() => {
-    return () => closePopoverForDay(day.key);
-  }, [day.key, closePopoverForDay]);
+    return () => closePopoverForDay(dayKey);
+  }, [dayKey, closePopoverForDay]);
 
   return React.cloneElement(children as React.ReactElement<any>, {
     onClick: (event: React.MouseEvent<HTMLElement>) => {

@@ -34,7 +34,6 @@ export function useEventAccessibleName(parameters: UseEventAccessibleNameParamet
   const store = useSchedulerStoreContext();
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const usesPrimaryResource = resourceNameProp === undefined;
   const primaryResource = useStore(
     store,
@@ -52,8 +51,7 @@ export function useEventAccessibleName(parameters: UseEventAccessibleNameParamet
         localeText,
         isRecurring,
         resourceName,
-        displayTimezone,
       }),
-    [occurrence, locale, ampm, localeText, isRecurring, resourceName, displayTimezone],
+    [occurrence, locale, ampm, localeText, isRecurring, resourceName],
   );
 }

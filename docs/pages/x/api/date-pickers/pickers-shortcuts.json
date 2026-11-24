@@ -4,7 +4,6 @@
       "type": { "name": "enum", "description": "'accept'<br>&#124;&nbsp;'set'" },
       "default": "\"accept\""
     },
-    "className": { "type": { "name": "string" } },
     "dense": { "type": { "name": "bool" }, "default": "false" },
     "disablePadding": { "type": { "name": "bool" }, "default": "false" },
     "items": {

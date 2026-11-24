@@ -10,7 +10,6 @@
       "required": true
     },
     "value": { "type": { "name": "string" }, "required": true },
-    "className": { "type": { "name": "string" } },
     "color": {
       "type": {
         "name": "enum",

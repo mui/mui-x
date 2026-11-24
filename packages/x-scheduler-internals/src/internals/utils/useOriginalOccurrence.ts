@@ -1,12 +1,9 @@
 'use client';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import type { BaseTemporal } from './base-temporal';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
-import type {
-  SchedulerEventId,
-  SchedulerEventOccurrence,
-  SchedulerProcessedDate,
-} from '../../models';
+import type { SchedulerEventId, SchedulerEventOccurrence } from '../../models';
 import { generateOccurrenceFromEvent } from './event-utils';
 
 /**
@@ -35,7 +32,7 @@ export namespace useOriginalOccurrence {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     /** The rendered display bounds of the occurrence (or segment). */
-    start: SchedulerProcessedDate;
-    end: SchedulerProcessedDate;
+    start: BaseTemporal.ZonedDateTime;
+    end: BaseTemporal.ZonedDateTime;
   }
 }

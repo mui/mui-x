@@ -4,7 +4,8 @@ import type {
   SchedulerProcessedEvent,
 } from '../../models';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
-import { createProcessedDate, snapAllDayBounds } from './plain-date-utils/date';
+import { snapAllDayBounds } from './plain-date-utils/date';
+import { toZonedDateTime } from './plain-date-utils/timeZone';
 
 const PLACEHOLDER_KEY = 'occurrence-placeholder';
 
@@ -30,8 +31,8 @@ export function getPlaceholderOccurrence(
   if (placeholder.surfaceType === 'time-grid') {
     return {
       ...properties,
-      start: createProcessedDate(placeholder.start, displayTimezone),
-      end: createProcessedDate(placeholder.end, displayTimezone),
+      start: toZonedDateTime(placeholder.start, displayTimezone),
+      end: toZonedDateTime(placeholder.end, displayTimezone),
     };
   }
 
@@ -54,8 +55,8 @@ export function getPlaceholderOccurrence(
   return {
     ...properties,
     allDay,
-    start: createProcessedDate(bounds.start, displayTimezone),
-    end: createProcessedDate(bounds.end, displayTimezone),
+    start: toZonedDateTime(bounds.start, displayTimezone),
+    end: toZonedDateTime(bounds.end, displayTimezone),
     ...(placeholder.surfaceType === 'timeline'
       ? { resource: placeholder.resourceId ?? originalEvent?.resource }
       : {}),

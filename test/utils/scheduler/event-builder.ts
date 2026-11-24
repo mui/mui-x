@@ -272,7 +272,7 @@ export class EventBuilder {
     if (this.event.allDay) {
       const day = toPlainDate(
         occurrenceStartDate == null
-          ? baseProcessed.start.timestamp
+          ? baseProcessed.start.epochMilliseconds
           : resolveEventTimestamp(occurrenceStartDate, this.displayTimezone),
         this.displayTimezone,
       );
@@ -284,7 +284,8 @@ export class EventBuilder {
     } else {
       const dataTimezone = this.event.timezone ?? 'default';
       const rawStart = resolveEventTimestamp(occurrenceStartDate ?? this.event.start, dataTimezone);
-      const originalDurationMs = baseProcessed.end.timestamp - baseProcessed.start.timestamp;
+      const originalDurationMs =
+        baseProcessed.end.epochMilliseconds - baseProcessed.start.epochMilliseconds;
       occurrenceModel = {
         ...this.event,
         start: new Date(rawStart).toISOString(),
@@ -333,7 +334,7 @@ export function createOccurrence(
   const startMs = occurrenceStart.getTime();
   const occurrence = schedulerRecurringEventsPlugin
     .getOccurrencesForVisibleDays(event, startMs, startMs, displayTimezone)
-    .find((item) => item.start.timestamp === startMs);
+    .find((item) => item.start.epochMilliseconds === startMs);
   if (occurrence == null) {
     throw new Error(
       `No occurrence of the event "${event.id}" starts at ${occurrenceStart.toISOString()}.`,

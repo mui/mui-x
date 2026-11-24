@@ -1,4 +1,5 @@
 import { ResourceBuilder, startOfDay } from 'test/utils/scheduler';
+import { getTimezoneId } from '@mui/x-scheduler-internals/internals';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { disposeSymbol } from '@mui/x-internals/disposable';
@@ -40,7 +41,8 @@ describe('Core - EventTimelinePremiumStore', () => {
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
-        displayTimezone: 'default',
+        // The timezone of the system, by its identifier.
+        displayTimezone: getTimezoneId('default'),
         editingOccurrence: null,
         nowTimestamp: Date.now(),
         occurrencePlaceholder: null,

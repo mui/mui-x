@@ -175,7 +175,7 @@ export class SchedulerSchedulingPlugin<
         isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
         updated,
         deleted: deletedSet,
-        displayTimezone: this.store.state.displayTimezone,
+        displayTimezone: this.store.getDisplayTimezoneParameter(),
       });
       if (result.blocked.length > 0) {
         const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
@@ -356,7 +356,7 @@ export class SchedulerSchedulingPlugin<
       deleted: new Set(),
       enforcedDependencies:
         enforced !== null && isDependencyActive(processedEventLookup, enforced) ? [enforced] : [],
-      displayTimezone: this.store.state.displayTimezone,
+      displayTimezone: this.store.getDisplayTimezoneParameter(),
     });
     if (result.blocked.length > 0) {
       return { status: 'rejected', reason: 'cascadeBlocked', eventId: result.blocked[0] };

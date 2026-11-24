@@ -10,14 +10,14 @@ import {
   ResourceBuilder,
   startOfDay,
 } from 'test/utils/scheduler';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 
 describe('<TimelineGrid.EventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = createProcessedDate(startOfDay(new Date()).getTime(), 'default');
-  const end = createProcessedDate(endOfDay(new Date()).getTime(), 'default');
+  const start = toZonedDateTime(startOfDay(new Date()).getTime(), 'default');
+  const end = toZonedDateTime(endOfDay(new Date()).getTime(), 'default');
 
   describeConformance(<TimelineGrid.EventResizeHandler side="start" />, () => ({
     refInstanceof: window.HTMLDivElement,
@@ -64,8 +64,8 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
                   <TimelineGrid.Event
                     eventId="fake-id"
                     occurrenceKey="fake-key"
-                    start={createProcessedDate(eventStart.getTime(), 'default')}
-                    end={createProcessedDate(eventEnd.getTime(), 'default')}
+                    start={toZonedDateTime(eventStart.getTime(), 'default')}
+                    end={toZonedDateTime(eventEnd.getTime(), 'default')}
                     renderDragPreview={() => null}
                   >
                     <TimelineGrid.EventResizeHandler side="end" data-testid="resize-end" />

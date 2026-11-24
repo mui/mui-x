@@ -97,7 +97,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       // Measured on the axis so it stays consistent with the cursor offsets when a
       // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        -timestampToTimelineAxisOffsetMs(config, start.timestamp),
+        -timestampToTimelineAxisOffsetMs(config, start.epochMilliseconds),
         0,
       );
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
@@ -105,8 +105,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         eventId,
         occurrenceKey,
         originalOccurrence: getOriginalOccurrence(),
-        start: start.timestamp,
-        end: end.timestamp,
+        start: start.epochMilliseconds,
+        end: end.epochMilliseconds,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
         sourceResourceId: rowResourceId,
       };
