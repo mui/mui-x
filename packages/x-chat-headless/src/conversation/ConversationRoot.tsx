@@ -13,6 +13,7 @@ import type { ConversationRootOwnerState } from './conversation.types';
 export interface ConversationRootSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
 }

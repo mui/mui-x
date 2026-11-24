@@ -22,6 +22,7 @@ import type { MessageRootOwnerState } from './message.types';
 export interface MessageRootSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
 }

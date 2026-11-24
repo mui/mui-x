@@ -156,6 +156,7 @@
       "type": { "name": "object" },
       "default": "GRID_FORMULA_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided"
     },
+    "formulaReferencePicking": { "type": { "name": "bool" }, "default": "false" },
     "getAggregationPosition": {
       "type": { "name": "func" },
       "default": "(groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')",
@@ -985,6 +986,7 @@
     {
       "name": "toolbar",
       "description": "Toolbar component rendered in the grid header.",
+      "default": "GridToolbar",
       "class": "MuiDataGridPremium-toolbar"
     },
     {
@@ -2154,6 +2156,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--reorderTarget",
+      "className": "MuiDataGridPremium-columnHeader--reorderTarget",
+      "description": "Styles applied to the column header if a keyboard reorder press would move its column.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--sortable",
       "className": "MuiDataGridPremium-columnHeader--sortable",
       "description": "Styles applied to the column header if the column is sortable.",
@@ -2958,6 +2966,12 @@
       "isGlobal": false
     },
     {
+      "key": "root--formulaReferencePicking",
+      "className": "MuiDataGridPremium-root--formulaReferencePicking",
+      "description": "Styles applied to the root element while a click on a cell writes a reference into the formula being edited (Premium formulas).",
+      "isGlobal": false
+    },
+    {
       "key": "row--beingDragged",
       "className": "MuiDataGridPremium-row--beingDragged",
       "description": "Styles applied to the row element when it is being dragged (entire row).",
@@ -3003,6 +3017,12 @@
       "key": "row--lastVisible",
       "className": "MuiDataGridPremium-row--lastVisible",
       "description": "Styles applied to the last visible row element on every page of the grid.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--reorderTarget",
+      "className": "MuiDataGridPremium-row--reorderTarget",
+      "description": "Styles applied to the row element if a keyboard reorder press would move the row.",
       "isGlobal": false
     },
     {

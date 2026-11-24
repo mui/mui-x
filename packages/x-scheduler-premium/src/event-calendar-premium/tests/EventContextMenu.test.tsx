@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { act, screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
 import {
-  adapter,
+  createDate,
   createMatchMedia,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -30,8 +30,8 @@ import { RecurringScopeDialog } from '../../internals/components/recurring-scope
  * one in `event-calendar-premium/tests/EventDialog.test.tsx`.
  */
 class PremiumTestStore extends ExtendableEventCalendarStore<any, any> {
-  public constructor(parameters: any, adapterParam: any) {
-    super(parameters, adapterParam, 'EventCalendarPremiumStore', schedulerRecurringEventsPlugin);
+  public constructor(parameters: any) {
+    super(parameters, 'EventCalendarPremiumStore', schedulerRecurringEventsPlugin);
   }
 }
 
@@ -39,7 +39,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
   const { render } = createSchedulerRenderer();
 
   it('should open the recurring scope dialog instead of deleting immediately when Delete is clicked on a recurring occurrence', () => {
-    const weeklyEventBuilder = EventBuilder.new(adapter)
+    const weeklyEventBuilder = EventBuilder.new()
       .title('Weekly sync')
       .singleDay('2025-05-26T09:00:00Z', 30)
       .recurrent('WEEKLY');
@@ -87,7 +87,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });
 
-  it('should identify the deleted occurrence by its data-timezone start from another timezone', () => {
+  it('should identify the deleted occurrence by its displayed day from another timezone', () => {
     const weeklyEventBuilder = utcJuly4AllDayBuilder()
       .title('Weekly sync')
       .recurrent('WEEKLY')
@@ -124,11 +124,10 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     fireEvent.contextMenu(screen.getByRole('button', { name: 'Weekly sync' }));
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
 
-    // The display bounds of this occurrence normalize to New York July 3rd; the
-    // exception must land on the event's own July 4th.
+    // An all-day occurrence is identified by the day it is displayed on: July 4th in New York.
     expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
-    expect(adapter.getTime(deleteRecurringEventSpy!.mock.lastCall![0].occurrenceStart)).to.equal(
-      adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+    expect(deleteRecurringEventSpy!.mock.lastCall![0].occurrence.start.timestamp).to.equal(
+      createDate('2025-07-04T00:00:00', 'America/New_York').getTime(),
     );
     // The recurring branch defers to the scope dialog instead of deleting right away.
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
@@ -144,7 +143,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     });
 
     it('should leave focus in the scope dialog once the menu has closed', async () => {
-      const weeklyEvent = EventBuilder.new(adapter)
+      const weeklyEvent = EventBuilder.new()
         .title('Weekly sync')
         .singleDay('2025-07-03T09:00:00Z', 30)
         .recurrent('WEEKLY')
@@ -203,7 +202,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     }
 
     it('should move focus to the day cell once the scope dialog deletes the event in the month view', async () => {
-      const weeklyEvent = EventBuilder.new(adapter)
+      const weeklyEvent = EventBuilder.new()
         .title('Weekly sync')
         .singleDay('2025-07-03T09:00:00Z', 30)
         .recurrent('WEEKLY')
@@ -222,12 +221,12 @@ describe('EventContextMenu - recurring events (Premium)', () => {
 
     it('should move focus to the next event of the "+N more" popover once the scope dialog deletes the event', async () => {
       const otherEvents = [8, 10, 11, 12, 13].map((hour) =>
-        EventBuilder.new(adapter)
+        EventBuilder.new()
           .title(`Event ${hour}`)
           .singleDay(`2025-07-03T${String(hour).padStart(2, '0')}:00:00Z`, 30)
           .build(),
       );
-      const weeklyEvent = EventBuilder.new(adapter)
+      const weeklyEvent = EventBuilder.new()
         .title('Weekly sync')
         .singleDay('2025-07-03T09:00:00Z', 30)
         .recurrent('WEEKLY')
@@ -258,7 +257,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     });
 
     function renderRecurringEvent() {
-      const weeklyEvent = EventBuilder.new(adapter)
+      const weeklyEvent = EventBuilder.new()
         .title('Weekly sync')
         .singleDay('2025-07-03T09:00:00Z', 30)
         .recurrent('WEEKLY')

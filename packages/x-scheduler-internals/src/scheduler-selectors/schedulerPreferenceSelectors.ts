@@ -24,7 +24,6 @@ const weekInfoSelector = createSelectorMemoized(
 );
 
 export const schedulerPreferenceSelectors = {
-  all: allSchedulerPreferencesSelector,
   /**
    * Whether the times are on a 12-hour clock: the `ampm` preference, or the hour cycle of the locale
    * of the dates.

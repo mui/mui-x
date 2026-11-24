@@ -2,7 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "apiRef": { "description": "The ref object that exposes the chart API methods." },
-    "className": { "description": "A CSS class name applied to the root element." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "desc": {
       "description": "The description of the chart. Used to provide an accessible description for the chart."
@@ -141,7 +140,7 @@
     "baseMenuItem": "The component used for menu items.",
     "baseMenuList": "The component used for menu lists.",
     "basePopper": "The component used for poppers.",
-    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
+    "baseToggleButton": "The component used for toggle buttons. Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
     "baseToggleButtonGroup": "The component used for toggle button groups.",
     "baseTooltip": "The component used for tooltips.",
     "exportIcon": "Icon displayed on the toolbar&#39;s export button.",

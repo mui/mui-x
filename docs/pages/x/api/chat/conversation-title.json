@@ -3,7 +3,12 @@
   "name": "ConversationTitle",
   "imports": ["import { ConversationTitle } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "title", "description": "The component that renders the title.", "class": null }
+    {
+      "name": "title",
+      "description": "The component that renders the title.",
+      "default": "'div'",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiConversationTitle",

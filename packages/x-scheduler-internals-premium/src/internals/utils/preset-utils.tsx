@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  addToAdapterDate,
+  addToDate,
   formatDayOfMonth,
   formatMonthAndYear,
   formatMonthShort,
@@ -30,8 +30,7 @@ function createPlainDateRange(
   return {
     getStartPlainDate,
     getEndPlainDate: (startPlainDate, unitCount) => startPlainDate.add(toDuration(unitCount)),
-    navigate: (adapter, date, amount, timezone) =>
-      addToAdapterDate(adapter, date, toDuration(amount), timezone),
+    navigate: (date, amount, timezone) => addToDate(date, toDuration(amount), timezone),
   };
 }
 

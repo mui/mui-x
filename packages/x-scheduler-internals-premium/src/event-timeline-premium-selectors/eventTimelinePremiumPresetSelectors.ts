@@ -18,8 +18,6 @@ import {
 } from '../internals/utils/preset-utils';
 
 export const eventTimelinePremiumPresetSelectors = {
-  preset: (state: State) => state.preset,
-  presets: (state: State) => state.presets,
   config: createSelectorMemoized(
     // Read in the display timezone, like the visible date of the Event Calendar views.
     schedulerOtherSelectors.visiblePlainDate,
@@ -75,8 +73,8 @@ export const eventTimelinePremiumPresetSelectors = {
       // The config is the axis of the timeline: the first instant of its first date, the last
       // instant before the date after it, and its hour window.
       const axis: TimelineAxis = {
-        start: toEpochMs(startPlainDate, 0, displayTimezone),
-        end: toEpochMs(endPlainDate, 0, displayTimezone) - 1,
+        start: toEpochMs(startPlainDate, displayTimezone),
+        end: toEpochMs(endPlainDate, displayTimezone) - 1,
         timezone: displayTimezone,
         dayStartMinute,
         dayEndMinute,

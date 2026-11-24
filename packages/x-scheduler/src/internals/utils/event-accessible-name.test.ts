@@ -23,6 +23,7 @@ function getName(
     localeText,
     isRecurring: false,
     resourceName: null,
+    displayTimezone: 'default',
     ...overrides,
   });
 }
@@ -52,7 +53,7 @@ describe('getEventAccessibleName', () => {
   it('should announce the date range of a multi-day all-day event', () => {
     const occurrence = EventBuilder.new()
       .title('Conference')
-      .span('2025-07-03', '2025-07-05', { allDay: true })
+      .span('2025-07-03', '2025-07-06', { allDay: true })
       .toOccurrence();
 
     expect(getName(occurrence)).to.equal(
@@ -135,8 +136,7 @@ describe('getEventAccessibleName', () => {
   it.skipIf(!isJSDOM)(
     'should announce the days of the display timezone, whatever the timezone of the system',
     () => {
-      // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
-      // December 30th and 31st as the same day in the other timezones.
+      // Pacific/Apia skipped December 30th, 2011.
       setSystemTimezone('Pacific/Apia');
       const occurrence = EventBuilder.new()
         .title('Trip')

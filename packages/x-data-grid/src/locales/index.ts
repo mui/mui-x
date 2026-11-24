@@ -28,6 +28,7 @@ export * from './roRO';
 export * from './ruRU';
 export * from './skSK';
 export * from './svSE';
+export * from './thTH';
 export * from './trTR';
 export * from './ukUA';
 export * from './urPK';

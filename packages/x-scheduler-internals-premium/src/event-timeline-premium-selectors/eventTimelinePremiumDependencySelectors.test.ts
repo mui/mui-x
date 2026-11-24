@@ -70,22 +70,6 @@ const getState = () => {
 };
 
 describe('eventTimelinePremiumDependencySelectors', () => {
-  it('should return the dependencyModelList from the state', () => {
-    const state = getState();
-
-    expect(eventTimelinePremiumDependencySelectors.modelList(state)).to.equal(
-      state.dependencyModelList,
-    );
-  });
-
-  it('should return the dependencyModelLookup from the state', () => {
-    const state = getState();
-
-    expect(eventTimelinePremiumDependencySelectors.modelLookup(state)).to.equal(
-      state.dependencyModelLookup,
-    );
-  });
-
   it('should return the dependency by id', () => {
     const state = getState();
 
@@ -254,7 +238,7 @@ describe('eventTimelinePremiumDependencySelectors', () => {
   });
 
   it('should describe an all-day successor with the lag it can actually carry', () => {
-    const allDayTarget = EventBuilder.new().id('event-all-day').allDay().build();
+    const allDayTarget = EventBuilder.new().id('event-all-day').fullDay('2025-07-03').build();
     const state = getEventTimelinePremiumStateFromParameters({
       resources: TEST_RESOURCES,
       events: [eventA, allDayTarget],

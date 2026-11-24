@@ -17,7 +17,6 @@ import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { vi, describe, it, expect } from 'vitest';
 import {
   buildDependency,
-  createDependencyTimelineRenderer,
   getArrowPaths,
   getEventRow,
   mockAllEventRowBounds,
@@ -55,7 +54,6 @@ describe('EventTimelinePremium - features', () => {
   const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
-  const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
 
   function Timeline(
     props: Partial<React.ComponentProps<typeof EventTimelinePremium<SchedulerEvent, any>>>,
@@ -133,7 +131,7 @@ describe('EventTimelinePremium - features', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const [updatedEvent] = handleEventsChange.mock.calls[0][0];
     expect(updatedEvent.rrule).to.deep.equal(dailyEvent.rrule);
-    expect(new Date(updatedEvent.start).toISOString()).to.equal('2025-07-04T09:00:00.000Z');
+    expect(updatedEvent.start).to.equal('2025-07-04T09:00:00.000Z');
   });
 
   it('should keep the rrule of an event edited in the dialog without the recurring events feature', async () => {
@@ -177,30 +175,6 @@ describe('EventTimelinePremium - features', () => {
     }).toWarnDev('The `features` prop of <EventTimelinePremium /> changed after the first render');
 
     expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(1);
-  });
-  it('should render the events without arrows or terminals without the dependencies feature', async () => {
-    await expect(() =>
-      renderTimeline({
-        events: [predecessor, successor],
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-        features: { recurringEvents: recurringEventsFeature },
-      }),
-    ).toWarnDev('the dependencies feature is missing');
-
-    expect(getAllEventsByTitle('Event A')).to.have.length(1);
-    expect(getAllEventsByTitle('Event B')).to.have.length(1);
-    expect(getArrowPaths()).to.have.length(0);
-    expect(document.querySelector('[data-dependency-terminal]')).to.equal(null);
-  });
-
-  it('should render the arrows and terminals with the dependencies feature', async () => {
-    await renderTimeline({
-      events: [predecessor, successor],
-      dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-    });
-
-    expect(getArrowPaths()).to.have.length(1);
-    expect(document.querySelector('[data-dependency-terminal]')).not.to.equal(null);
   });
 
   describe('public dependencies props', () => {
@@ -267,7 +241,10 @@ describe('EventTimelinePremium - features', () => {
         ),
       ).toWarnDev('the dependencies feature is missing');
 
+      expect(getAllEventsByTitle('Event A')).to.have.length(1);
+      expect(getAllEventsByTitle('Event B')).to.have.length(1);
       expect(getArrowPaths()).to.have.length(0);
+      expect(document.querySelector('[data-dependency-terminal]')).to.equal(null);
     });
 
     it('should warn when `onDependenciesChange` is passed without `dependencies`', async () => {

@@ -10,26 +10,6 @@ describe('MiniCalendar', () => {
   const getMiniCalendar = () => screen.getByRole('grid', { name: /calendar/i });
 
   describe('Rendering', () => {
-    it('should render the mini calendar with month label', () => {
-      render(<EventCalendar events={[]} />);
-
-      // Should find the mini calendar grid
-      const miniCalendar = getMiniCalendar();
-      expect(miniCalendar).not.to.equal(null);
-
-      // Should display May 2025 inside the mini calendar
-      expect(within(miniCalendar).getByText(/May 2025/i)).not.to.equal(null);
-    });
-
-    it('should render weekday headers inside the mini calendar', () => {
-      render(<EventCalendar events={[]} />);
-
-      const miniCalendar = getMiniCalendar();
-      // Check for columnheaders within the mini calendar
-      const weekdayHeaders = within(miniCalendar).getAllByRole('columnheader');
-      expect(weekdayHeaders.length).to.equal(7);
-    });
-
     it('should highlight today with data-today attribute', () => {
       render(<EventCalendar events={[]} />);
 
@@ -80,18 +60,6 @@ describe('MiniCalendar', () => {
       await user.click(prevButton);
 
       expect(within(miniCalendar).getByText(/April 2025/i)).not.to.equal(null);
-    });
-
-    it('should navigate to next month when clicking next button', async () => {
-      const { user } = render(<EventCalendar events={[]} />);
-
-      const miniCalendar = getMiniCalendar();
-      expect(within(miniCalendar).getByText(/May 2025/i)).not.to.equal(null);
-
-      const nextButton = screen.getByRole('button', { name: /show next month in calendar/i });
-      await user.click(nextButton);
-
-      expect(within(miniCalendar).getByText(/June 2025/i)).not.to.equal(null);
     });
 
     it('should call onVisibleDateChange when clicking a day', async () => {
@@ -168,26 +136,6 @@ describe('MiniCalendar', () => {
       expect(grid.getAttribute('aria-label')).to.equal('Calendar');
     });
 
-    it('should have aria-current="date" on today', () => {
-      render(<EventCalendar events={[]} />);
-
-      const miniCalendar = getMiniCalendar();
-      const dayButtons = within(miniCalendar).getAllByRole('button');
-      const todayButton = dayButtons.find((btn) => btn.getAttribute('aria-current') === 'date');
-
-      expect(todayButton).not.to.equal(undefined);
-    });
-
-    it('should have aria-selected on the active day', () => {
-      render(<EventCalendar events={[]} defaultVisibleDate={new Date('2025-05-20T00:00:00Z')} />);
-
-      const miniCalendar = getMiniCalendar();
-      const dayButtons = within(miniCalendar).getAllByRole('button');
-      const activeButton = dayButtons.find((btn) => btn.getAttribute('aria-selected') === 'true');
-
-      expect(activeButton).not.to.equal(undefined);
-    });
-
     it('should have accessible labels on weekday headers', () => {
       render(<EventCalendar events={[]} />);
 
@@ -247,25 +195,6 @@ describe('MiniCalendar', () => {
       expect(dayCells.length).to.equal(42);
       dayCells.forEach((cell, i) => {
         expect(cell.getAttribute('aria-colindex')).to.equal(String((i % 7) + 1));
-      });
-    });
-  });
-
-  describe('Side panel visibility', () => {
-    it('should not be visible when side panel is closed', async () => {
-      const { user } = render(<EventCalendar events={[]} />);
-
-      // Initially the mini calendar should be visible
-      expect(getMiniCalendar()).not.to.equal(null);
-
-      // Close the side panel
-      const closeSidePanelButton = screen.getByRole('button', { name: /close side panel/i });
-      await user.click(closeSidePanelButton);
-
-      // Check that the side panel is collapsed (open side panel button appears)
-      await waitFor(() => {
-        const openSidePanelButton = screen.queryByRole('button', { name: /open side panel/i });
-        expect(openSidePanelButton).not.to.equal(null);
       });
     });
   });

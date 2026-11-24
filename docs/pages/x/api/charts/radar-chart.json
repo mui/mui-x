@@ -12,7 +12,6 @@
       "required": true
     },
     "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
-    "className": { "type": { "name": "string" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -163,7 +162,8 @@
     },
     {
       "name": "baseToggleButton",
-      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "description": "The component used for toggle buttons.\nNote: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "default": "ToggleButton",
       "class": null
     },
     {

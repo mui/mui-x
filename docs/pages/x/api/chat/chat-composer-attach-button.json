@@ -24,11 +24,13 @@
     {
       "name": "attachButton",
       "description": "The component that renders the attach button.",
+      "default": "'button'",
       "class": "MuiChatComposerAttachButton-attachButton"
     },
     {
       "name": "attachInput",
       "description": "The component that renders the attach input.",
+      "default": "'input'",
       "class": null
     }
   ],

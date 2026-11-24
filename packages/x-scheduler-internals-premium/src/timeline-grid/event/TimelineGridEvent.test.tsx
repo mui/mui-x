@@ -2,19 +2,20 @@ import { screen } from '@mui/internal-test-utils';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import {
-  adapter,
   createSchedulerRenderer,
   describeConformance,
+  endOfDay,
   ResourceBuilder,
+  startOfDay,
 } from 'test/utils/scheduler';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import { describe, it, expect } from 'vitest';
 
 describe('<TimelineGrid.Event />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter, 'default');
-  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter, 'default');
+  const start = createProcessedDate(startOfDay(new Date()).getTime(), 'default');
+  const end = createProcessedDate(endOfDay(new Date()).getTime(), 'default');
 
   // Mounts the event in the row context it needs.
   function renderEvent(node: React.ReactElement) {
@@ -33,7 +34,6 @@ describe('<TimelineGrid.Event />', () => {
     <TimelineGrid.Event
       eventId="fake-id"
       occurrenceKey="fake-key"
-      dataTimezone={undefined}
       start={start}
       end={end}
       renderDragPreview={() => null}
@@ -46,30 +46,11 @@ describe('<TimelineGrid.Event />', () => {
     }),
   );
 
-  it('should render events without the dependencies feature', () => {
-    renderEvent(
-      <TimelineGrid.Event
-        eventId="fake-id"
-        occurrenceKey="fake-key"
-        dataTimezone={undefined}
-        start={start}
-        end={end}
-        renderDragPreview={() => null}
-        data-testid="event"
-      />,
-    );
-
-    const event = screen.getByTestId('event');
-    expect(event).not.to.equal(null);
-    expect(event).not.to.have.attribute('data-dependency-drop-target');
-  });
-
   it('should use a precomputed timeline position', () => {
     renderEvent(
       <TimelineGrid.Event
         eventId="fake-id"
         occurrenceKey="fake-key"
-        dataTimezone={undefined}
         start={start}
         end={end}
         elementPosition={{
@@ -95,7 +76,6 @@ describe('<TimelineGrid.Event />', () => {
       <TimelineGrid.Event
         eventId="fake-id"
         occurrenceKey="fake-key"
-        dataTimezone={undefined}
         start={start}
         end={end}
         renderDragPreview={() => null}

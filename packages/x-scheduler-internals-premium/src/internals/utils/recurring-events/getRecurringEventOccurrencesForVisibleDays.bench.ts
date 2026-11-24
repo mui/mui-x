@@ -1,11 +1,14 @@
 import { describe, test } from 'vitest';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   RecurringEventWeekDayCode,
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { BaseTemporal, createEventRangeIndex } from '@mui/x-scheduler-internals/internals';
+import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
+import { innerGetEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
+import { EventBuilder } from 'test/utils/scheduler';
+import { schedulerRecurringEventsPlugin } from '../../plugins/schedulerRecurringEventsPlugin';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
 const RULES: SchedulerEventRecurrenceRule[] = [
@@ -18,7 +21,8 @@ const RULES: SchedulerEventRecurrenceRule[] = [
   { freq: 'MONTHLY', byDay: ['2TU'] },
   { freq: 'MONTHLY', byDay: ['-1FR'], count: 60 },
   { freq: 'YEARLY' },
-  { freq: 'DAILY', until: '2026-09-30T23:59:59Z' },
+  // The rule of the all-day series (every tenth one), so its until is a date.
+  { freq: 'DAILY', until: '2026-09-30' },
 ];
 
 /**
@@ -26,25 +30,28 @@ const RULES: SchedulerEventRecurrenceRule[] = [
  * every frequency, with COUNT/UNTIL rules, exception dates and all-day series.
  */
 function createRecurringEvents(
-  dataTimezone: TemporalTimezone,
-  displayTimezone: TemporalTimezone,
+  dataTimezone: string,
+  displayTimezone: string,
 ): SchedulerProcessedEvent[] {
   return Array.from({ length: 200 }, (_, index) => {
     const day = String((index % 28) + 1).padStart(2, '0');
     const hour = String(7 + (index % 11)).padStart(2, '0');
-    const builder = EventBuilder.new(adapter)
+    const builder = EventBuilder.new()
       .id(index)
       .withDataTimezone(dataTimezone)
       .withDisplayTimezone(displayTimezone);
 
-    if (index % 10 === 9) {
-      builder.span(`2024-01-${day}T00:00:00`, `2024-01-${day}T23:59:59`, { allDay: true });
+    const allDay = index % 10 === 9;
+    if (allDay) {
+      const nextDay = String((index % 28) + 2).padStart(2, '0');
+      builder.span(`2024-01-${day}`, `2024-01-${nextDay}`, { allDay: true });
     } else {
       builder.singleDay(`2024-01-${day}T${hour}:30:00`, 45 + (index % 4) * 30);
     }
 
     if (index % 7 === 0) {
-      builder.exDates([`2026-10-${day}T${hour}:30:00`]);
+      // The exceptions of an all-day series are dates.
+      builder.exDates([allDay ? `2026-10-${day}` : `2026-10-${day}T${hour}:30:00`]);
     }
 
     return builder.rrule(RULES[index % RULES.length]).toProcessed();
@@ -63,21 +70,47 @@ const RANGES = {
 function expandAll(
   events: SchedulerProcessedEvent[],
   [start, end]: readonly [string, string],
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ) {
-  const rangeStart = adapter.getTime(adapter.date(start, 'default'));
-  const rangeEnd = adapter.getTime(adapter.date(end, 'default'));
+  const rangeStart = Date.parse(start);
+  const rangeEnd = Date.parse(end);
   let count = 0;
   for (const event of events) {
     count += getRecurringEventOccurrencesForVisibleDays(
       event,
       rangeStart,
       rangeEnd,
-      adapter,
       displayTimezone,
     ).length;
   }
   return count;
+}
+
+const VIEWS = {
+  week: ['2026-10-19', '2026-10-25'],
+  month: ['2026-09-28', '2026-11-08'],
+} as const;
+
+// The occurrences of the series grouped by the days of a view, like the week and month views do.
+function groupByDay(
+  events: SchedulerProcessedEvent[],
+  [first, last]: readonly [string, string],
+  displayTimezone: string,
+  hideWeekends: boolean,
+) {
+  const days = getDayListFromPlainDates({
+    firstPlainDate: BaseTemporal.PlainDate.from(first),
+    lastPlainDate: BaseTemporal.PlainDate.from(last),
+    timezone: displayTimezone,
+    excludedWeekdays: hideWeekends ? [6, 7] : undefined,
+  });
+  return innerGetEventOccurrencesGroupedByDay({
+    days,
+    eventRangeIndex: createEventRangeIndex(events, true),
+    visibleResources: {},
+    displayTimezone,
+    recurringEventsPlugin: schedulerRecurringEventsPlugin,
+  }).size;
 }
 
 describe('recurring event expansion', () => {
@@ -123,7 +156,7 @@ describe('recurring event expansion', () => {
     // COUNT includes the occurrences from DTSTART to the visible range: the daily and weekly series
     // count them, the monthly one steps through them.
     const events = (['DAILY', 'WEEKLY', 'MONTHLY'] as const).map((freq) =>
-      EventBuilder.new(adapter)
+      EventBuilder.new()
         .withDataTimezone('America/New_York')
         .singleDay('2016-01-04T09:00:00')
         .rrule({ freq, byDay: freq === 'WEEKLY' ? ['MO', 'TH'] : undefined, count: 5000 })
@@ -153,7 +186,7 @@ describe('recurring event expansion', () => {
     ];
     const createSeries = (length: number) =>
       Array.from({ length }, (_, index) =>
-        EventBuilder.new(adapter)
+        EventBuilder.new()
           .id(index)
           .singleDay('1970-01-05T09:00:00')
           .rrule({ freq: 'WEEKLY', byDay: BY_DAYS[index], count: 20_000 })
@@ -175,5 +208,30 @@ describe('recurring event expansion', () => {
       }),
       BENCH_OPTIONS,
     );
+  });
+
+  describe.each([
+    ['default', 'default'],
+    ['America/New_York', 'Europe/Paris'],
+  ] as const)('200 series in %s displayed in %s', (dataTimezone, displayTimezone) => {
+    test('grouped by day', { timeout: 0 }, async ({ bench }) => {
+      const events = createRecurringEvents(dataTimezone, displayTimezone);
+
+      await bench.compare(
+        bench('week view', () => {
+          groupByDay(events, VIEWS.week, displayTimezone, false);
+        }),
+        bench('week view without weekends', () => {
+          groupByDay(events, VIEWS.week, displayTimezone, true);
+        }),
+        bench('month view', () => {
+          groupByDay(events, VIEWS.month, displayTimezone, false);
+        }),
+        bench('month view without weekends', () => {
+          groupByDay(events, VIEWS.month, displayTimezone, true);
+        }),
+        BENCH_OPTIONS,
+      );
+    });
   });
 });

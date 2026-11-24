@@ -8,6 +8,7 @@ import type { ConversationListPreviewOwnerState } from './conversationList.types
 export interface ConversationListPreviewSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
 }

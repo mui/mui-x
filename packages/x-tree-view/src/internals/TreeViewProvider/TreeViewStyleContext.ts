@@ -37,15 +37,18 @@ export interface TreeViewClasses {
 export interface TreeViewSlots {
   /**
    * The default icon used to collapse the item.
+   * @default TreeViewCollapseIcon
    */
   collapseIcon?: React.ElementType | null;
   /**
    * The default icon used to expand the item.
+   * @default TreeViewExpandIcon
    */
   expandIcon?: React.ElementType | null;
   /**
    * The default icon displayed next to an end item.
    * This is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.
+   * @default null
    */
   endIcon?: React.ElementType | null;
 }

@@ -3,7 +3,12 @@
   "name": "ComposerRoot",
   "imports": ["import { ComposerRoot } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "root", "description": "The component that renders the root.", "class": null }
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "'form'",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,

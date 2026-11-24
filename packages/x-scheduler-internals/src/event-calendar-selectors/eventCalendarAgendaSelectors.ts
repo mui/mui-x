@@ -1,5 +1,4 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type { EventCalendarState as State } from '../use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -8,7 +7,7 @@ import {
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import { eventCalendarViewSelectors } from './eventCalendarViewSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models';
+import type { EventCalendarFetchRange, SchedulerProcessedDay } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayListFromPlainDates } from '../get-day-list';
 import { BaseTemporal } from '../internals/utils/base-temporal';
@@ -62,7 +61,6 @@ const horizonEndPlainDate = createSelectorMemoized(
 );
 
 const visibleDays = createSelectorMemoized(
-  (state: State) => state.adapter,
   eventCalendarViewSelectors.agendaDayCount,
   baseRange,
   baseVisibleDays,
@@ -74,7 +72,6 @@ const visibleDays = createSelectorMemoized(
   schedulerResourceSelectors.visibleMap,
   schedulerOtherSelectors.recurringEventsPlugin,
   (
-    adapter,
     dayCount,
     range,
     baseDays,
@@ -99,7 +96,6 @@ const visibleDays = createSelectorMemoized(
 
     // Compute occurrences for the current accumulated range
     let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
-      adapter,
       days: accumulatedDays,
       eventRangeIndex,
       visibleResources,
@@ -107,8 +103,7 @@ const visibleDays = createSelectorMemoized(
       recurringEventsPlugin,
     });
 
-    const hasEvents = (day: SchedulerProcessedDate) =>
-      (occurrenceMap.get(day.key)?.length ?? 0) > 0;
+    const hasEvents = (day: SchedulerProcessedDay) => (occurrenceMap.get(day.key)?.length ?? 0) > 0;
 
     let daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
 
@@ -139,7 +134,6 @@ const visibleDays = createSelectorMemoized(
       accumulatedDays = accumulatedDays.concat(more);
 
       occurrenceMap = innerGetEventOccurrencesGroupedByDay({
-        adapter,
         days: accumulatedDays,
         eventRangeIndex,
         visibleResources,

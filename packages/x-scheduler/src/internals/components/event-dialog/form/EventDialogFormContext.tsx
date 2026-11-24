@@ -37,6 +37,10 @@ export interface EventDialogFormProviderProps {
    */
   resourceSelectionMode: ResourceSelectionMode;
   /**
+   * The display timezone the occurrence was read in. Captured when the provider mounts.
+   */
+  initialDisplayTimezone: string;
+  /**
    * Called synchronously after each write with the new values and the written keys.
    */
   onValuesChange?: (values: EventDialogFormValues, changedKeys: string[]) => void;
@@ -57,6 +61,7 @@ export function EventDialogFormProvider(props: EventDialogFormProviderProps) {
       new EventDialogFormStore(props.initialValues as EventDialogFormValues, {
         occurrence: props.occurrence,
         resourceSelectionMode: props.resourceSelectionMode,
+        initialDisplayTimezone: props.initialDisplayTimezone,
         onValuesChange,
       }),
   ).current;

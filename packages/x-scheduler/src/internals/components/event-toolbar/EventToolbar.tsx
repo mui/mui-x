@@ -58,7 +58,7 @@ export function EventToolbar(props: EventToolbarProps) {
   const { classes, localeText } = useEventEditingStyledContext();
 
   // Rendered only while armed (desktop anchored surface + mobile dock), so Escape here disarms both.
-  useDisarmOnEscape({ active: true, onDisarm: stopEditing });
+  useDisarmOnEscape({ onDisarm: stopEditing });
 
   const handleEdit = (event: React.MouseEvent) => {
     // A canceled edit disarms and unmounts this toolbar, so the activation's retained stable

@@ -165,7 +165,6 @@ export class SchedulerSchedulingPlugin<
     let cascaded: SchedulerEventUpdatedProperties[] = [];
     if (updated && updated.length > 0 && this.store.state.dependencyModelList.length > 0) {
       const result = computeAutoSchedulingCascade({
-        adapter: this.store.state.adapter,
         processedEventLookup: this.store.state.processedEventLookup,
         activeDependenciesBySource: eventTimelinePremiumDependencySelectors.activeModelListBySource(
           this.store.state,
@@ -176,6 +175,7 @@ export class SchedulerSchedulingPlugin<
         isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
         updated,
         deleted: deletedSet,
+        displayTimezone: this.store.state.displayTimezone,
       });
       if (result.blocked.length > 0) {
         const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
@@ -319,10 +319,10 @@ export class SchedulerSchedulingPlugin<
     }
 
     // Relaxing a dependency the dates already break moves nothing, so it is never blocked.
-    const { processedEventLookup } = this.store.state;
+    const { processedEventLookup, displayTimezone } = this.store.state;
     const isStricter =
-      getDependencyViolation(processedEventLookup, updated) >
-      getDependencyViolation(processedEventLookup, dependency);
+      getDependencyViolation(processedEventLookup, updated, displayTimezone) >
+      getDependencyViolation(processedEventLookup, dependency, displayTimezone);
     const rejection = this.commitDependencyChange(
       dependencyModelList.map((entry) => (entry.id === dependencyId ? updated : entry)),
       isStricter ? updated : null,
@@ -342,13 +342,12 @@ export class SchedulerSchedulingPlugin<
     nextList: SchedulerDependency[],
     enforced: SchedulerDependency | null,
   ): SchedulerDependencyCascadeRejection | null {
-    const { adapter, processedEventLookup } = this.store.state;
+    const { processedEventLookup } = this.store.state;
     const activeDependencies = getActiveDependencies(
       buildDependenciesState(nextList).dependencyModelLookup,
       processedEventLookup,
     );
     const result = computeAutoSchedulingCascade({
-      adapter,
       processedEventLookup,
       activeDependenciesBySource: groupByEventId(activeDependencies, 'source'),
       activeDependenciesByTarget: groupByEventId(activeDependencies, 'target'),
@@ -357,6 +356,7 @@ export class SchedulerSchedulingPlugin<
       deleted: new Set(),
       enforcedDependencies:
         enforced !== null && isDependencyActive(processedEventLookup, enforced) ? [enforced] : [],
+      displayTimezone: this.store.state.displayTimezone,
     });
     if (result.blocked.length > 0) {
       return { status: 'rejected', reason: 'cascadeBlocked', eventId: result.blocked[0] };

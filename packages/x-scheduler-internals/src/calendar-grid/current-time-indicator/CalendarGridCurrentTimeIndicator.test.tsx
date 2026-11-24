@@ -2,19 +2,19 @@ import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
   describeConformance,
   setSystemTimezone,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 
 describe('<CalendarGrid.CurrentTimeIndicator />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.now('default');
+  const day = new Date();
 
   describeConformance(<CalendarGrid.CurrentTimeIndicator />, () => ({
     refInstanceof: window.HTMLDivElement,
@@ -22,7 +22,7 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn value={buildTemporalPlainDate(adapter, day, 'default')}>
+            <CalendarGrid.TimeColumn value={toPlainDate(day.getTime(), 'default')}>
               {node}
             </CalendarGrid.TimeColumn>
           </CalendarGrid.Root>
@@ -42,14 +42,12 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
       () => {
         setSystemTimezone('UTC');
         // Another day than today, to check that only the time of day of now is used.
-        const columnDay = adapter.date('2025-05-06T12:00:00Z', 'America/New_York');
+        const columnDay = createDate('2025-05-06T12:00:00Z');
 
         renderAtNow(
           <EventCalendarProvider events={[]} displayTimezone="America/New_York">
             <CalendarGrid.Root>
-              <CalendarGrid.TimeColumn
-                value={buildTemporalPlainDate(adapter, columnDay, 'America/New_York')}
-              >
+              <CalendarGrid.TimeColumn value={toPlainDate(columnDay.getTime(), 'America/New_York')}>
                 <CalendarGrid.CurrentTimeIndicator data-testid="indicator" />
               </CalendarGrid.TimeColumn>
             </CalendarGrid.Root>

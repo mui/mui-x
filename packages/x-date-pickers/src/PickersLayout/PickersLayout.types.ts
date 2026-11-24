@@ -27,6 +27,7 @@ export interface ExportedPickersLayoutSlots<TValue extends PickerValidValue> {
   /**
    * Custom component for wrapping the layout.
    * It wraps the toolbar, views, action bar, and shortcuts.
+   * @default PickersLayout
    */
   layout?: React.JSXElementConstructor<
     PickersLayoutProps<TValue> & React.RefAttributes<HTMLDivElement>
@@ -73,11 +74,13 @@ export interface PickersLayoutSlots<
 > extends ExportedPickersLayoutSlots<TValue> {
   /**
    * Tabs enabling toggling between views.
+   * @default DateTimePickerTabs, TimeRangePickerTabs, or DateTimeRangePickerTabs, depending on the Picker. The other Pickers have no tabs.
    */
   tabs?: React.ElementType<{}>;
   /**
    * Custom component for the toolbar.
    * It is placed above the Picker views.
+   * @default DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, or their range versions, depending on the Picker.
    */
   toolbar?: React.JSXElementConstructor<BaseToolbarProps>;
 }

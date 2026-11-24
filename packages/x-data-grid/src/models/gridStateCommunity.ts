@@ -29,6 +29,7 @@ import type { GridColumnResizeState } from '../hooks/features/columnResize';
 import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
 import type { GridListViewState } from '../hooks/features/listView/useGridListView';
 import type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
+import type { GridKeyboardUseState } from '../hooks/features/keyboardUse/gridKeyboardUseInterfaces';
 
 /**
  * Some props are passed on the state to enable grid selectors to select
@@ -68,6 +69,7 @@ export interface GridStateCommunity {
   rowSpanning: GridRowSpanningState;
   listViewColumn: GridListViewState;
   rowReorder: GridRowReorderState;
+  keyboardUse: GridKeyboardUseState;
 }
 
 /**

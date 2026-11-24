@@ -1,8 +1,5 @@
 {
-  "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "className": { "type": { "name": "string" } }
-  },
+  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
   "name": "RadarAxisHighlight",
   "imports": [
     "import { RadarAxisHighlight } from '@mui/x-charts/RadarChart';",

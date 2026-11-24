@@ -1,16 +1,18 @@
 import {
-  adapter,
+  addDays,
+  createDate,
   getEventCalendarStateFromParameters,
   setSystemTimezone,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { EventCalendarPreferences } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
+import { toPlainDateTime } from '@mui/x-scheduler-internals/internals';
 import { createDayTimeGridViewDefinition } from './day-time-grid-view-definition';
 
 describe('createDayTimeGridViewDefinition', () => {
   // 2025-07-03 is a Thursday.
-  const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
+  const visibleDate = createDate('2025-07-03T00:00:00Z');
 
   function getState(defaultPreferences?: Partial<EventCalendarPreferences>, dateLocale?: string) {
     return getEventCalendarStateFromParameters({
@@ -24,29 +26,27 @@ describe('createDayTimeGridViewDefinition', () => {
   describe('contiguous day counts', () => {
     it('renders a single day starting from the visible date for dayCount=1', () => {
       const days = createDayTimeGridViewDefinition(1).visibleDaysSelector(getState());
-      expect(days).to.have.length(1);
-      expect(days[0].value).toEqualDateTime(visibleDate);
+      expect(days.map((day) => day.plainDate.toString())).to.deep.equal(['2025-07-03']);
     });
 
     it('starts the days at midnight when the visible date has a time of day', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2025-07-03T14:30:00Z', 'default'),
+        visibleDate: createDate('2025-07-03T14:30:00Z'),
       });
       const days = createDayTimeGridViewDefinition(3).visibleDaysSelector(state);
-      expect(days.map((day) => adapter.toJsDate(day.value).toISOString())).to.deep.equal([
-        '2025-07-03T00:00:00.000Z',
-        '2025-07-04T00:00:00.000Z',
-        '2025-07-05T00:00:00.000Z',
-      ]);
+      expect(days.map((day) => toPlainDateTime(day.timestamp, 'default').toString())).to.deep.equal(
+        ['2025-07-03T00:00:00', '2025-07-04T00:00:00', '2025-07-05T00:00:00'],
+      );
     });
 
     it('renders 3 consecutive days starting from the visible date for dayCount=3', () => {
       const days = createDayTimeGridViewDefinition(3).visibleDaysSelector(getState());
-      expect(days).to.have.length(3);
-      days.forEach((day, index) => {
-        expect(day.value).toEqualDateTime(adapter.addDays(visibleDate, index));
-      });
+      expect(days.map((day) => day.plainDate.toString())).to.deep.equal([
+        '2025-07-03',
+        '2025-07-04',
+        '2025-07-05',
+      ]);
     });
   });
 
@@ -109,10 +109,10 @@ describe('createDayTimeGridViewDefinition', () => {
       const definition = createDayTimeGridViewDefinition(3);
       const state = getState();
       expect(definition.siblingVisibleDateGetter({ state, delta: 1 })).toEqualDateTime(
-        adapter.addDays(visibleDate, 3),
+        addDays(visibleDate, 3),
       );
       expect(definition.siblingVisibleDateGetter({ state, delta: -1 })).toEqualDateTime(
-        adapter.addDays(visibleDate, -3),
+        addDays(visibleDate, -3),
       );
     });
 
@@ -123,16 +123,14 @@ describe('createDayTimeGridViewDefinition', () => {
         // London leaves summer time on October 25th, 2026, when 02:00 becomes 01:00 again.
         const state = getEventCalendarStateFromParameters({
           events: [],
-          visibleDate: adapter.date('2026-10-24T02:00:00', 'Europe/London'),
+          visibleDate: createDate('2026-10-24T02:00:00', 'Europe/London'),
           displayTimezone: 'Europe/London',
         });
         const nextVisibleDate = createDayTimeGridViewDefinition(1).siblingVisibleDateGetter({
           state,
           delta: 1,
         });
-        expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
-          '2026-10-25T02:00:00.000Z',
-        );
+        expect(nextVisibleDate.toISOString()).to.equal('2026-10-25T02:00:00.000Z');
       },
     );
 
@@ -153,7 +151,7 @@ describe('createDayTimeGridViewDefinition', () => {
       // starts at 01:00, and the next one at midnight.
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2024-09-10T12:00:00', 'America/Santiago'),
+        visibleDate: createDate('2024-09-10T12:00:00', 'America/Santiago'),
         displayTimezone: 'America/Santiago',
         defaultPreferences: { weekStartsOn: 7 },
       });
@@ -161,7 +159,7 @@ describe('createDayTimeGridViewDefinition', () => {
         state,
         delta: 1,
       });
-      expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal('2024-09-15T03:00:00.000Z');
+      expect(nextVisibleDate.toISOString()).to.equal('2024-09-15T03:00:00.000Z');
     });
   });
 });

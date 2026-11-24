@@ -589,6 +589,7 @@
     {
       "name": "toolbar",
       "description": "Toolbar component rendered in the grid header.",
+      "default": "GridToolbar",
       "class": "MuiDataGrid-toolbar"
     },
     {
@@ -1482,6 +1483,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--reorderTarget",
+      "className": "MuiDataGrid-columnHeader--reorderTarget",
+      "description": "Styles applied to the column header if a keyboard reorder press would move its column.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--sortable",
       "className": "MuiDataGrid-columnHeader--sortable",
       "description": "Styles applied to the column header if the column is sortable.",
@@ -2298,6 +2305,12 @@
       "isGlobal": false
     },
     {
+      "key": "root--formulaReferencePicking",
+      "className": "MuiDataGrid-root--formulaReferencePicking",
+      "description": "Styles applied to the root element while a click on a cell writes a reference into the formula being edited (Premium formulas).",
+      "isGlobal": false
+    },
+    {
       "key": "row--beingDragged",
       "className": "MuiDataGrid-row--beingDragged",
       "description": "Styles applied to the row element when it is being dragged (entire row).",
@@ -2343,6 +2356,12 @@
       "key": "row--lastVisible",
       "className": "MuiDataGrid-row--lastVisible",
       "description": "Styles applied to the last visible row element on every page of the grid.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--reorderTarget",
+      "className": "MuiDataGrid-row--reorderTarget",
+      "description": "Styles applied to the row element if a keyboard reorder press would move the row.",
       "isGlobal": false
     },
     {

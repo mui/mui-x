@@ -21,6 +21,7 @@ import type { GridDensity } from '../../models/gridDensity';
 import { useIsSSR } from '../../hooks/utils/useIsSSR';
 import { GridHeader } from '../GridHeader';
 import { GridBody, GridFooterPlaceholder } from '../base';
+import { GridLiveRegion } from '../GridLiveRegion';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -97,6 +98,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
         <GridFooterPlaceholder />
       </div>
       {sidePanel}
+      <GridLiveRegion />
       {cssVariables.tag}
     </GridRootStyles>
   );

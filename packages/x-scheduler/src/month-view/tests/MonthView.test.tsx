@@ -3,14 +3,18 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  addMonths,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
+  endOfDay,
   EventBuilder,
   getAllEventsByTitle,
   ResourceBuilder,
   SchedulerStoreRunner,
   setSystemTimezone,
+  startOfDay,
+  startOfMonth,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
@@ -105,7 +109,7 @@ describe('<MonthView />', () => {
     expect(handleViewChange.mock.calls[0][0]).to.equal('day');
     expect(handleVisibleDateChange.mock.calls.length).to.equal(1);
     expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(
-      adapter.date('2025-05-15T00:00:00Z', 'default'),
+      createDate('2025-05-15T00:00:00Z'),
     );
   });
 
@@ -897,10 +901,34 @@ describe('<MonthView />', () => {
       expect(screen.queryByRole('dialog')).not.to.equal(null);
     });
 
+    it('should fill the times of a creation started on the grid when all-day is unticked', async () => {
+      vi.setSystemTime(new Date('2025-05-01T09:20:00Z'));
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getAllByRole('gridcell')[10]);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      const clickedDay = (screen.getByLabelText(/start date/i) as HTMLInputElement).value;
+
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
+
+      expect(screen.getByLabelText(/start time/i)).to.have.value('10:00');
+      expect(screen.getByLabelText(/end time/i)).to.have.value('10:30');
+      expect(screen.getByLabelText(/start date/i)).to.have.value(clickedDay);
+      expect(screen.getByLabelText(/end date/i)).to.have.value(clickedDay);
+    });
+
     it('should clamp the span of a creation placeholder to each week row', () => {
       // Friday May 9 to Tuesday May 13: two days left in the first week row, three in the next.
-      const start = adapter.startOfDay(adapter.date('2025-05-09T00:00:00Z', 'default'));
-      const end = adapter.endOfDay(adapter.date('2025-05-13T00:00:00Z', 'default'));
+      const start = startOfDay(createDate('2025-05-09T00:00:00Z'));
+      const end = endOfDay(createDate('2025-05-13T00:00:00Z'));
 
       render(
         <EventCalendarProvider events={[]} resources={[]}>
@@ -913,8 +941,8 @@ describe('<MonthView />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -949,7 +977,7 @@ describe('<MonthView />', () => {
                 type: 'creation',
                 surfaceType: 'day-grid',
                 start: Date.parse('2025-07-10T00:00:00Z'),
-                end: Date.parse('2025-07-14T23:59:59.999Z'),
+                end: Date.parse('2025-07-15T00:00:00Z'),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -969,23 +997,23 @@ describe('<MonthView />', () => {
   describe('All day events', () => {
     const allDayEvents = [
       EventBuilder.new()
-        .span('2025-05-05T00:00:00Z', '2025-05-07T23:59:59Z', { allDay: true })
+        .span('2025-05-05', '2025-05-08', { allDay: true })
         .title('Multi-day Conference')
         .build(),
       EventBuilder.new()
-        .span('2025-04-28T00:00:00Z', '2025-05-06T23:59:59Z', { allDay: true }) // Previos week - Current week
+        .span('2025-04-28', '2025-05-07', { allDay: true }) // Previos week - Current week
         .title('Long Event')
         .build(),
       EventBuilder.new()
-        .span('2025-05-12T00:00:00Z', '2025-05-14T23:59:59Z', { allDay: true })
+        .span('2025-05-12', '2025-05-15', { allDay: true })
         .title('Grid Row Test')
         .build(),
       EventBuilder.new()
-        .span('2025-05-08T00:00:00Z', '2025-05-10T23:59:59Z', { allDay: true })
+        .span('2025-05-08', '2025-05-11', { allDay: true })
         .title('Three Day Event')
         .build(),
       EventBuilder.new()
-        .span('2025-05-19T00:00:00Z', '2025-05-27T23:59:59Z', { allDay: true })
+        .span('2025-05-19', '2025-05-28', { allDay: true })
         .title('Multiple week event')
         .build(),
     ];
@@ -1030,7 +1058,7 @@ describe('<MonthView />', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
         <EventCalendarProvider
-          events={[EventBuilder.new().span('2025-05-04Z', '2025-05-07Z', { allDay: true }).build()]}
+          events={[EventBuilder.new().span('2025-05-04', '2025-05-08', { allDay: true }).build()]}
           resources={[]}
         >
           <EventDialogProvider>
@@ -1105,15 +1133,15 @@ describe('<MonthView />', () => {
     it('should handle multiple overlapping all-day events with different grid rows', () => {
       const overlappingEvents = [
         EventBuilder.new()
-          .span('2025-05-12T00:00:00Z', '2025-05-14T23:59:59Z', { allDay: true })
+          .span('2025-05-12', '2025-05-15', { allDay: true })
           .title('Event 1')
           .build(),
         EventBuilder.new()
-          .span('2025-05-13T00:00:00Z', '2025-05-15T23:59:59Z', { allDay: true })
+          .span('2025-05-13', '2025-05-16', { allDay: true })
           .title('Event 2')
           .build(),
         EventBuilder.new()
-          .span('2025-05-16T00:00:00Z', '2025-05-17T23:59:59Z', { allDay: true })
+          .span('2025-05-16', '2025-05-18', { allDay: true })
           .title('Event 3')
           .build(),
       ];
@@ -1258,7 +1286,7 @@ describe('<MonthView />', () => {
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /previous month/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
+        addMonths(startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
@@ -1278,7 +1306,7 @@ describe('<MonthView />', () => {
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /next month/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
+        addMonths(startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });
   });
@@ -1515,30 +1543,19 @@ describe('<MonthView />', () => {
         .getAllByRole('row')
         .filter((row) => row.getAttribute('aria-rowindex') !== '1');
 
-      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug).
+      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug) — and end
+      // on the Saturday and Sunday of the weekend of the United States.
       dataRows.forEach((row) => {
         const cells = within(row).getAllByRole('gridcell');
-        expect(cells.length).to.equal(7);
-      });
-    });
-
-    it('should start each week row on Sunday when weekStartsOn=7', () => {
-      render(
-        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 7 }}>
-          <EventDialogProvider>
-            <MonthView />
-          </EventDialogProvider>
-        </EventCalendarProvider>,
-      );
-
-      const grid = screen.getByRole('grid');
-      const dataRows = within(grid)
-        .getAllByRole('row')
-        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
-
-      dataRows.forEach((row) => {
-        const cells = within(row).getAllByRole('gridcell');
-        expect(cells.length).to.equal(7);
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+        ]);
       });
     });
 
@@ -1563,8 +1580,7 @@ describe('<MonthView />', () => {
     it.skipIf(!isJSDOM)(
       'should fill an event on two days of the display timezone, whatever the timezone of the system',
       () => {
-        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
-        // December 30th and 31st as the same day in the other timezones.
+        // Pacific/Apia skipped December 30th, 2011.
         setSystemTimezone('Pacific/Apia');
         const event = EventBuilder.new()
           .title('Trip')

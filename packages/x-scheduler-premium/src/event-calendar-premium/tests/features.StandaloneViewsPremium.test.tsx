@@ -8,7 +8,7 @@ import { StandaloneCompactThreeDayViewPremium } from '@mui/x-scheduler-premium/c
 import { StandaloneCompactWeekViewPremium } from '@mui/x-scheduler-premium/compact-week-view-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
@@ -23,8 +23,8 @@ const dailyEvent = EventBuilder.new()
   .recurrent('DAILY', { count: 3 })
   .build();
 
-const seriesStart = adapter.date('2025-07-01T00:00:00Z', 'default');
-const secondDay = adapter.date('2025-07-02T00:00:00Z', 'default');
+const seriesStart = createDate('2025-07-01T00:00:00Z');
+const secondDay = createDate('2025-07-02T00:00:00Z');
 
 // Single-day views show July 2nd with the feature, where only an expanded series has an occurrence.
 const views = [

@@ -11,6 +11,7 @@ import type { ComposerAttachmentListOwnerState } from './composer.types';
 export interface ComposerAttachmentListSlots {
   /**
    * The component that renders the attachment list.
+   * @default 'div'
    */
   attachmentList: React.ElementType;
 }

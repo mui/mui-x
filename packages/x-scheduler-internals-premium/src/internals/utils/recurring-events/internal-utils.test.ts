@@ -1,4 +1,3 @@
-import { adapter } from 'test/utils/scheduler';
 import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
@@ -16,21 +15,18 @@ import {
 describe('recurring-events/internal-utils', () => {
   describe('getWeekDayCode', () => {
     it('should return the RFC 5545 code of the weekday', () => {
-      const testMonday = adapter.date('2025-10-20T00:00:00Z', 'default'); // Monday
-      expect(getWeekDayCode(adapter, testMonday, 'default')).to.equal('MO');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 1), 'default')).to.equal('TU');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 2), 'default')).to.equal('WE');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 3), 'default')).to.equal('TH');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 4), 'default')).to.equal('FR');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 5), 'default')).to.equal('SA');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 6), 'default')).to.equal('SU');
+      const testMonday = Date.parse('2025-10-20T00:00:00Z'); // Monday
+      const codes = [0, 1, 2, 3, 4, 5, 6].map((dayIndex) =>
+        getWeekDayCode(testMonday + dayIndex * 86_400_000, 'UTC'),
+      );
+      expect(codes).to.deep.equal(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
     });
 
     it('should read the weekday in the timezone', () => {
       // Monday at 03:00 UTC is Sunday at 22:00 in New York.
-      const date = adapter.date('2025-10-20T03:00:00Z', 'default');
-      expect(getWeekDayCode(adapter, date, 'UTC')).to.equal('MO');
-      expect(getWeekDayCode(adapter, date, 'America/New_York')).to.equal('SU');
+      const timestamp = Date.parse('2025-10-20T03:00:00Z');
+      expect(getWeekDayCode(timestamp, 'UTC')).to.equal('MO');
+      expect(getWeekDayCode(timestamp, 'America/New_York')).to.equal('SU');
     });
   });
 
@@ -133,9 +129,11 @@ describe('recurring-events/internal-utils', () => {
         });
       });
 
-      it('throws when any entry lacks an ordinal (e.g., plain MO)', () => {
-        const mixed: SchedulerProcessedEventRecurrenceRule['byDay'] = ['2TU', 'MO'];
-        expect(() => parsesByDayForMonthlyFrequency(mixed)).to.throw();
+      it('should throw when the entry lacks an ordinal (for example, plain MO)', () => {
+        const plain: SchedulerProcessedEventRecurrenceRule['byDay'] = ['MO'];
+        expect(() => parsesByDayForMonthlyFrequency(plain)).to.throw(
+          /single element with an ordinal/,
+        );
       });
     });
   });

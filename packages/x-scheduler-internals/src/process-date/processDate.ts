@@ -1,15 +1,9 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import type { Adapter } from '../use-adapter';
-import { buildProcessedDate } from '../internals/utils/plain-date-utils/adapter';
+import type { SchedulerProcessedDate } from '../models';
+import { toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
 
 /**
- * Creates the processed date of a date object, read in `timezone`.
+ * Returns the processed date of an instant in `timezone`, read from the offsets of the timezone.
  */
-export function processDate(
-  date: TemporalSupportedObject,
-  adapter: Adapter,
-  timezone: TemporalTimezone,
-): SchedulerProcessedDate {
-  return buildProcessedDate(date, adapter.getTime(date), timezone);
+export function createProcessedDate(epochMs: number, timezone: string): SchedulerProcessedDate {
+  return { plainDateTime: toPlainDateTime(epochMs, timezone), timestamp: epochMs };
 }
