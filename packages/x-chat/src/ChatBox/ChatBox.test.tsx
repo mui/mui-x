@@ -1003,6 +1003,56 @@ describe('ChatBox', () => {
       });
     });
 
+    it('passes the ChatBox variant to the layout and pane slots for theme styleOverrides', () => {
+      // MUI resolves every MuiChatBox override for each styled slot, some without ownerState.
+      const compactOnly = ({ ownerState }: { ownerState?: { variant?: string } }) =>
+        ownerState?.variant === 'compact' ? { backgroundColor: 'rgb(1, 2, 3)' } : {};
+      const theme = createTheme({
+        components: {
+          MuiChatBox: {
+            styleOverrides: {
+              layout: compactOnly,
+              conversationsPane: compactOnly,
+              threadPane: compactOnly,
+            },
+          },
+        },
+      });
+      const renderChatBox = (variant: 'default' | 'compact') =>
+        render(
+          <ThemeProvider theme={theme}>
+            <ChatBox
+              adapter={createAdapter()}
+              initialConversations={conversations}
+              features={conversationListFeatures}
+              variant={variant}
+            >
+              {null}
+            </ChatBox>
+          </ThemeProvider>,
+        );
+      const slotSelectors = [
+        '.MuiChatBox-layout',
+        '.MuiChatBox-conversationsPane',
+        '.MuiChatBox-threadPane',
+      ];
+
+      const { unmount } = renderChatBox('default');
+      slotSelectors.forEach((selector) => {
+        expect(document.querySelector(selector)).not.toHaveComputedStyle({
+          backgroundColor: 'rgb(1, 2, 3)',
+        });
+      });
+      unmount();
+
+      renderChatBox('compact');
+      slotSelectors.forEach((selector) => {
+        expect(document.querySelector(selector)).toHaveComputedStyle({
+          backgroundColor: 'rgb(1, 2, 3)',
+        });
+      });
+    });
+
     it('applies slotProps sx to the layout and pane slots without leaking it to the DOM', () => {
       render(
         <ChatBox
