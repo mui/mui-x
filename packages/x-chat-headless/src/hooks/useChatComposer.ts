@@ -43,7 +43,7 @@ function revokeAttachmentPreviewUrl(previewUrl: string) {
 
 export function useChatComposer<Cursor = string>(): UseChatComposerValue {
   const store = useChatStore<Cursor>();
-  const { actions } = useChatRuntimeContext<Cursor>();
+  const { sendMessageIfIdle } = useChatRuntimeContext<Cursor>();
   // URLs the composer currently owns (still attached to the draft).
   const ownedPreviewUrlsRef = React.useRef(new Map<string, string>());
   // URLs that have been transferred to a sent message (#7). Each entry is
@@ -255,29 +255,37 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       }
     };
 
-    const sendPromise = actions.sendMessage({
+    const sendPromise = sendMessageIfIdle({
       id: messageId,
       parts,
       attachments: [...nextAttachments],
       author: store.currentUser,
     });
 
-    // Accepted sends add the message and start streaming synchronously, so check before yielding.
-    // Either signal is enough: the adapter may already have replaced the message or ended the stream.
     // Restore only into an empty composer, so a newer draft is never overwritten.
     const isComposerEmpty = () =>
       store.state.composerValue === '' && store.state.composerAttachments.length === 0;
 
-    if (!store.state.messagesById[messageId] && !store.state.isStreaming) {
+    if (!sendPromise) {
       if (isComposerEmpty()) {
         restoreDraft();
       }
-      // URLs the composer did not reclaim are never cleaned up by the store, since the message never entered it.
+      // The message never entered the store, so hand URLs still shown in the composer back to it and revoke the rest.
+      const attachmentIdByPreviewUrl = new Map(
+        store.state.composerAttachments.map((attachment) => [
+          attachment.previewUrl,
+          attachment.localId,
+        ]),
+      );
       for (const url of messageOwnedPreviewUrlsRef.current.get(messageId)?.values() ?? []) {
-        revokeAttachmentPreviewUrl(url);
+        const localId = attachmentIdByPreviewUrl.get(url);
+        if (localId) {
+          ownedPreviewUrlsRef.current.set(localId, url);
+        } else {
+          revokeAttachmentPreviewUrl(url);
+        }
       }
       messageOwnedPreviewUrlsRef.current.delete(messageId);
-      await sendPromise;
       return;
     }
 
@@ -287,7 +295,7 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
     if (store.state.messagesById[messageId]?.status === 'error' && isComposerEmpty()) {
       restoreDraft();
     }
-  }, [actions, store]);
+  }, [sendMessageIfIdle, store]);
 
   return React.useMemo(
     () => ({

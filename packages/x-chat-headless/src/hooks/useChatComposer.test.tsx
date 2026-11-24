@@ -441,6 +441,7 @@ describe('useChatComposer', () => {
   });
 
   it('does not overwrite a newer draft when a send is rejected during an async onFinish', async () => {
+    const objectUrls = mockObjectUrlApis();
     let resolveOnFinish!: () => void;
     const onFinish = vi.fn(
       () =>
@@ -448,59 +449,73 @@ describe('useChatComposer', () => {
           resolveOnFinish = resolve;
         }),
     );
-    let store!: ReturnType<typeof useChatStore>;
-    let replaceOnClear = false;
+    const onComposerValueChange = vi.fn<(value: string) => void>();
     const adapter = createAdapter({
       sendMessage: vi.fn(async () => createStream([{ type: 'finish' }])),
     });
-    const { Wrapper } = createProviderWrapper({
-      adapter,
-      onFinish,
-      initialActiveConversationId: 'c1',
-      onComposerValueChange: (value) => {
-        if (replaceOnClear && value === '') {
-          replaceOnClear = false;
-          store.setComposerValue('Replacement');
+
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        onFinish,
+        initialActiveConversationId: 'c1',
+        onComposerValueChange,
+      });
+      const { result } = renderHook(
+        () => ({ composer: useChatComposer(), store: useChatStore() }),
+        { wrapper: Wrapper },
+      );
+
+      act(() => {
+        result.current.composer.setValue('First');
+      });
+
+      let firstSubmit!: Promise<void>;
+      act(() => {
+        firstSubmit = result.current.composer.submit();
+      });
+
+      await waitFor(() => {
+        expect(onFinish).toHaveBeenCalledTimes(1);
+      });
+
+      act(() => {
+        result.current.composer.setValue('Second');
+        result.current.composer.addAttachment(
+          new File(['img'], 'photo.png', { type: 'image/png' }),
+        );
+      });
+      const [photo] = result.current.composer.attachments;
+      // The replacement draft keeps the same image, so its preview URL must stay alive.
+      onComposerValueChange.mockImplementationOnce((value) => {
+        if (value === '') {
+          result.current.store.setComposerValue('Replacement');
+          result.current.store.addComposerAttachment(photo);
         }
-      },
-    });
-    const { result } = renderHook(
-      () => {
-        store = useChatStore();
-        return useChatComposer();
-      },
-      { wrapper: Wrapper },
-    );
+      });
 
-    act(() => {
-      result.current.setValue('First');
-    });
+      await act(async () => {
+        await result.current.composer.submit();
+      });
 
-    let firstSubmit!: Promise<void>;
-    act(() => {
-      firstSubmit = result.current.submit();
-    });
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+      expect(result.current.composer.value).toBe('Replacement');
+      expect(result.current.composer.attachments).toEqual([photo]);
+      expect(objectUrls.revokeObjectURL).not.toHaveBeenCalledWith(photo.previewUrl);
 
-    await waitFor(() => {
-      expect(onFinish).toHaveBeenCalledTimes(1);
-    });
+      act(() => {
+        result.current.composer.removeAttachment(photo.localId);
+      });
 
-    act(() => {
-      result.current.setValue('Second');
-    });
-    replaceOnClear = true;
+      expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith(photo.previewUrl);
 
-    await act(async () => {
-      await result.current.submit();
-    });
-
-    expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
-    expect(result.current.value).toBe('Replacement');
-
-    await act(async () => {
-      resolveOnFinish();
-      await firstSubmit;
-    });
+      await act(async () => {
+        resolveOnFinish();
+        await firstSubmit;
+      });
+    } finally {
+      objectUrls.restore();
+    }
   });
 
   it('clears the draft when the adapter replaces the message id while sending', async () => {
@@ -514,6 +529,37 @@ describe('useChatComposer', () => {
         // Swap the optimistic message for the server one before the first await.
         emit({ type: 'message-removed', messageId: message.id });
         emit({ type: 'message-added', message: { ...message, id: 'server-id', status: 'sent' } });
+        return createStream([{ type: 'finish' }]);
+      }),
+    });
+    const { Wrapper } = createProviderWrapper({ adapter, initialActiveConversationId: 'c1' });
+    const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(emit).not.toBe(undefined);
+    });
+
+    act(() => {
+      result.current.setValue('Submit this once');
+    });
+
+    await act(async () => {
+      await result.current.submit();
+    });
+
+    expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+    expect(result.current.value).toBe('');
+  });
+
+  it('clears the draft when the adapter removes the active conversation while sending', async () => {
+    let emit!: Parameters<NonNullable<ChatAdapter['subscribe']>>[0]['onEvent'];
+    const adapter = createAdapter({
+      subscribe: ({ onEvent }) => {
+        emit = onEvent;
+        return () => {};
+      },
+      sendMessage: vi.fn(async () => {
+        emit({ type: 'conversation-removed', conversationId: 'c1' });
         return createStream([{ type: 'finish' }]);
       }),
     });

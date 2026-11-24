@@ -192,8 +192,6 @@ export function createSendMessageActions<Cursor = string>(params: {
       status: 'sending',
     };
 
-    // Keep the guard and addMessage synchronous (before any await, here and in `sendMessage`):
-    // useChatComposer detects a rejected send by checking the store right after calling sendMessage.
     isSending = true;
     store.addMessage(nextMessage);
     store.setStreaming(true, conversationId);
@@ -305,6 +303,15 @@ export function createSendMessageActions<Cursor = string>(params: {
     };
 
     await sendExistingMessage(message, input.attachments);
+  }
+
+  // Returns `null` instead of silently dropping the message when a send is already in progress.
+  function sendMessageIfIdle(input: UseChatSendMessageInput): Promise<void> | null {
+    if (isSending || store.state.isStreaming) {
+      return null;
+    }
+
+    return sendMessage(input);
   }
 
   async function retry(messageId: string): Promise<void> {
@@ -484,5 +491,5 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
   }
 
-  return { sendMessage, retry, regenerate, pruneAttachmentsByMessageIds };
+  return { sendMessage, sendMessageIfIdle, retry, regenerate, pruneAttachmentsByMessageIds };
 }
