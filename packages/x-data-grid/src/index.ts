@@ -16,6 +16,7 @@ export * from './models';
 export * from './context';
 export * from './colDef';
 export * from './utils';
+export * from './density';
 
 export type { DataGridProps, GridExperimentalFeatures } from './models/props/DataGridProps';
 export type { GridExportFormat, GridExportExtension } from './models/gridExport';

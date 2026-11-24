@@ -577,6 +577,13 @@ export default defineConfig(
     },
   },
   {
+    files: ['packages/x-date-pickers-pro/src/index.ts'],
+    rules: {
+      // The Pro `unstable_enhanceDensity` shadows the community one re-exported by `export *`.
+      'import/export': 'off',
+    },
+  },
+  {
     files: [
       'packages/x-scheduler/**/*{.tsx,.ts,.js}',
       'packages/x-scheduler-internals/**/*{.tsx,.ts,.js}',

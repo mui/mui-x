@@ -1,4 +1,5 @@
 [
+  { "name": "DensityEnhancedTheme", "kind": "TypeAlias" },
   { "name": "getRichTreeViewUtilityClass", "kind": "Function" },
   { "name": "getSimpleTreeViewUtilityClass", "kind": "Function" },
   { "name": "getTreeItemLoaderUtilityClass", "kind": "Function" },
@@ -64,6 +65,7 @@
   { "name": "TreeViewItemsReorderingAction", "kind": "TypeAlias" },
   { "name": "TreeViewSelectionPropagation", "kind": "Interface" },
   { "name": "TreeViewValidItem", "kind": "TypeAlias" },
+  { "name": "unstable_enhanceDensity", "kind": "Function" },
   { "name": "useApplyPropagationToSelectedItemsOnMount", "kind": "Function" },
   { "name": "useRichTreeViewApiRef", "kind": "Function" },
   { "name": "useSimpleTreeViewApiRef", "kind": "Function" },

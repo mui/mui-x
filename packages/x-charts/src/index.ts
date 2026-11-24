@@ -51,3 +51,4 @@ export * from './ChartsSvgLayer';
 
 // Locales should be imported from `@mui/x-charts/locales`
 // export * from './locales';
+export * from './density';

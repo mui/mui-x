@@ -657,6 +657,7 @@
   { "name": "Unstable_ChartsRadialGrid", "kind": "Variable" },
   { "name": "Unstable_ChartsRadiusAxis", "kind": "Variable" },
   { "name": "Unstable_ChartsRotationAxis", "kind": "Variable" },
+  { "name": "unstable_enhanceDensity", "kind": "Function" },
   { "name": "Unstable_FunnelChart", "kind": "Variable" },
   { "name": "Unstable_RadarChart", "kind": "Variable" },
   { "name": "Unstable_RadarDataProvider", "kind": "Variable" },

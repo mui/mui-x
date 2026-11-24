@@ -298,3 +298,5 @@ export const useSyncExternalStore: <Snapshot>(
   getSnapshot: () => Snapshot,
   getServerSnapshot?: () => Snapshot,
 ) => Snapshot = useSyncExternalStoreShim;
+
+export { getDensityScale, getDensitySizing, gridDensityHeight } from '../density/densityScale';

@@ -19,3 +19,4 @@ export {
   useApplyPropagationToSelectedItemsOnMount,
 } from '@mui/x-tree-view/hooks';
 export * from './hooks';
+export { unstable_enhanceDensity } from './density';
