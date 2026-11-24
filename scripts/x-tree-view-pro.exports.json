@@ -64,6 +64,7 @@
   { "name": "TreeViewItemsReorderingAction", "kind": "TypeAlias" },
   { "name": "TreeViewSelectionPropagation", "kind": "Interface" },
   { "name": "TreeViewValidItem", "kind": "TypeAlias" },
+  { "name": "unstable_enhanceDensity", "kind": "Function" },
   { "name": "useApplyPropagationToSelectedItemsOnMount", "kind": "Function" },
   { "name": "useRichTreeViewProApiRef", "kind": "Function" },
   { "name": "useTreeItem", "kind": "Variable" },
