@@ -25,7 +25,7 @@ const kzKZPickers: Partial<PickersLocaleText> = {
 
   // DateRange labels
   start: 'Бастау',
-  end: 'Cоңы',
+  end: 'Соңы',
   // startDate: 'Start date',
   // startTime: 'Start time',
   // endDate: 'End date',

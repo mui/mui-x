@@ -12,7 +12,6 @@
       "required": true
     },
     "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
-    "className": { "type": { "name": "string" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"

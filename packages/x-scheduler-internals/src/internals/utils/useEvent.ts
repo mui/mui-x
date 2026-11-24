@@ -1,8 +1,8 @@
 'use client';
 import { useStore } from '@base-ui/utils/store';
-import type { SchedulerProcessedDate } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context/useSchedulerStoreContext';
 import { schedulerOccurrenceSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
+import type { BaseTemporal } from './base-temporal';
 
 export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
   const { start, end, occurrenceKey } = parameters;
@@ -21,11 +21,11 @@ export namespace useEvent {
     /**
      * The time at which the event starts.
      */
-    start: SchedulerProcessedDate;
+    start: BaseTemporal.ZonedDateTime;
     /**
      * The time at which the event ends.
      */
-    end: SchedulerProcessedDate;
+    end: BaseTemporal.ZonedDateTime;
     /**
      * The unique key of the event occurrence.
      */

@@ -41,6 +41,7 @@ import type { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridColumnResizeApi } from '../../hooks/features/columnResize';
 import type { GridPivotingPrivateApiCommunity } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import type { GridInfiniteLoaderPrivateApi } from './gridInfiniteLoaderApi';
+import type { GridLiveRegionPrivateApi } from './gridLiveRegionApi';
 
 export interface GridApiCommon<
   GridState extends GridStateCommunity = GridStateCommunity,
@@ -97,7 +98,8 @@ export interface GridPrivateOnlyApiCommon<
     GridRowSpanningPrivateApi,
     GridParamsPrivateApi,
     GridPivotingPrivateApiCommunity,
-    GridInfiniteLoaderPrivateApi {
+    GridInfiniteLoaderPrivateApi,
+    GridLiveRegionPrivateApi {
   virtualizer: Virtualizer;
 }
 
