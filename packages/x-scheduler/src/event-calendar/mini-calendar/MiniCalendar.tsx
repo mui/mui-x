@@ -302,7 +302,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
                       aria-current={isToday ? 'date' : undefined}
                       aria-selected={isActive}
                       tabIndex={isActive ? 0 : -1}
-                      onClick={(event) => store.goToDate(day.value, event)}
+                      onClick={(event) => store.goToDate(new Date(day.timestamp), event)}
                     >
                       {formatDayOfMonth(locale, day.plainDate)}
                     </MiniCalendarDayButton>

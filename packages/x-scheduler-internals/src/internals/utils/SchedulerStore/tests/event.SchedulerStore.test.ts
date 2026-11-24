@@ -1,6 +1,8 @@
 import {
   addDays,
   createDate,
+  createOccurrence,
+  createStoreOccurrence,
   EventBuilder,
   premiumStoreClasses,
   ResourceBuilder,
@@ -8,11 +10,16 @@ import {
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type {
+  RecurringEventScope,
   SchedulerEvent,
   SchedulerEventId,
   SchedulerEventModelStructure,
+  SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
@@ -130,12 +137,10 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          displayTimezone: {
-            start: processDate(createDate('2025-07-01T09:00:00.000Z'), 'default'),
-            end: processDate(createDate('2025-07-01T10:00:00.000Z'), 'default'),
-            timezone: 'default',
-            exDates: undefined,
-          },
+          start: createProcessedDate(Date.parse('2025-07-01T09:00:00.000Z'), 'default'),
+          end: createProcessedDate(Date.parse('2025-07-01T10:00:00.000Z'), 'default'),
+          timezone: 'default',
+          exDates: undefined,
           allDay: false,
         });
       });
@@ -162,8 +167,8 @@ storeClasses.forEach((storeClass) => {
         store.updateEvent({
           id: '1',
           title: 'Event 1 updated',
-          start: createDate('2025-07-01T09:30:00.000Z'),
-          end: createDate('2025-07-01T10:30:00.000Z'),
+          start: createDate('2025-07-01T00:00:00.000Z'),
+          end: createDate('2025-07-02T00:00:00.000Z'),
           allDay: true,
         });
 
@@ -173,8 +178,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             myTitle: 'Event 1 updated',
-            myStart: '2025-07-01T09:30:00.000Z',
-            myEnd: '2025-07-01T10:30:00.000Z',
+            myStart: '2025-07-01',
+            myEnd: '2025-07-02',
             allDay: true,
           },
         ]);
@@ -378,15 +383,16 @@ storeClasses.forEach((storeClass) => {
             displayTimezone: 'America/New_York',
             onEventsChange,
           });
-          const dataStart = schedulerEventSelectors.processedEvent(store.state, '1')!.dataTimezone
-            .start.value;
+          const start = new Date(
+            schedulerEventSelectors.processedEvent(store.state, '1')!.start.timestamp,
+          );
 
           let result: ReturnType<typeof store.updateEvent>;
           expect(() => {
             result = store.updateEvent({
               id: '1',
-              start: dataStart,
-              end: addDays(dataStart, 2),
+              start,
+              end: addDays(start, 2),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -528,12 +534,12 @@ storeClasses.forEach((storeClass) => {
           store.cutEvent('1');
 
           expect(() => {
-            store.pasteEvent({ allDay: true });
+            store.pasteEvent({ resource: null });
           }).not.toWarnDev();
 
           expect(onEventsChange.mock.calls.length).to.equal(1);
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
-            { ...unchangedEvent, allDay: true },
+            { ...unchangedEvent, resource: null },
           ]);
         });
 
@@ -1080,8 +1086,7 @@ storeClasses.forEach((storeClass) => {
           expect(onEventsChange.mock.calls.length).to.equal(0);
           expect(store.state.pendingRecurringEventOperation).to.deep.include({
             kind: 'delete',
-            eventId: event.id,
-            occurrenceStart: occurrence.dataTimezone.start.value,
+            occurrence,
           });
 
           store.selectRecurringEventScope('only-this');
@@ -1154,8 +1159,7 @@ storeClasses.forEach((storeClass) => {
             onEventsChange,
           });
           store.deleteRecurringEvent({
-            eventId: 'gone',
-            occurrenceStart: createDate('2025-05-26T10:00:00'),
+            occurrence: EventBuilder.new().id('gone').toOccurrence(),
             onSubmit,
           });
           expect(store.state.pendingRecurringEventOperation).to.not.equal(null);
@@ -1727,6 +1731,7 @@ storeClasses.forEach((storeClass) => {
           allDay: true,
         });
 
+        // A timed event pasted as all-day covers its own day.
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           event,
@@ -1734,6 +1739,8 @@ storeClasses.forEach((storeClass) => {
             ...event,
             id: createdEventId,
             allDay: true,
+            start: '2025-07-03',
+            end: '2025-07-04',
             extractedFromId: event.id,
           },
         ]);
@@ -1807,12 +1814,15 @@ storeClasses.forEach((storeClass) => {
           allDay: true,
         });
 
+        // A timed event pasted as all-day covers its own day.
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           {
             ...event,
             id: createdEventId,
             allDay: true,
+            start: '2025-07-03',
+            end: '2025-07-04',
           },
         ]);
       });
@@ -1928,10 +1938,10 @@ storeClasses.forEach((storeClass) => {
           store.cutEvent('1');
 
           expect(() => {
-            store.pasteEvent({ allDay: true });
+            store.pasteEvent({ resource: null });
           }).not.toWarnDev();
 
-          expect(onEventsChange.mock.lastCall?.[0][0].allDay).to.equal(true);
+          expect(onEventsChange.mock.lastCall?.[0][0].resource).to.equal(null);
         });
 
         // A copy never touches the source event, so its own `readOnly` flag doesn't gate it.
@@ -2111,7 +2121,8 @@ storeClasses.forEach((storeClass) => {
         'should warn and ignore the update without the recurring events plugin',
         () => {
           const onEventsChange = vi.fn();
-          const event = EventBuilder.new().build();
+          const builder = EventBuilder.new();
+          const event = builder.build();
           const store = new storeClass.Value({
             resources: TEST_RESOURCES,
             events: [event],
@@ -2120,7 +2131,7 @@ storeClasses.forEach((storeClass) => {
 
           expect(() => {
             store.updateRecurringEvent({
-              occurrenceStart: createDate(event.start as string),
+              occurrence: builder.toOccurrence(),
               changes: { id: event.id, title: 'updated' },
             });
           }).toWarnDev([
@@ -2131,6 +2142,299 @@ storeClasses.forEach((storeClass) => {
           expect(store.state.pendingRecurringEventOperation).to.equal(null);
         },
       );
+    });
+
+    describe('all-day events', () => {
+      it('should write an all-day update as dates in the display timezone with an exclusive end', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateEvent({
+          id: 'trip',
+          start: createDate('2025-07-10T00:00:00', 'Asia/Tokyo'),
+          end: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+        });
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.start).to.equal('2025-07-10');
+        expect(updated.end).to.equal('2025-07-12');
+        expect(processEvent(updated, 'Asia/Tokyo').start.plainDateTime.toString()).to.equal(
+          '2025-07-10T00:00:00',
+        );
+      });
+
+      it('should create an all-day event from dates read in the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+
+        store.createEvent({
+          title: 'Trip',
+          allDay: true,
+          start: createDate('2025-07-04T00:00:00', 'America/New_York'),
+          end: createDate('2025-07-05T00:00:00', 'America/New_York'),
+        });
+
+        const created: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(created.start).to.equal('2025-07-04');
+        expect(created.end).to.equal('2025-07-05');
+      });
+
+      it('should keep date-only creation strings as they are', () => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+
+        store.createEvent({ title: 'Trip', allDay: true, start: '2025-07-04', end: '2025-07-05' });
+
+        const created: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(created.start).to.equal('2025-07-04');
+        expect(created.end).to.equal('2025-07-05');
+      });
+
+      it('should refuse an all-day Date that is not the first instant of a day', () => {
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange: vi.fn(),
+        });
+
+        // `new Date('YYYY-MM-DD')` is midnight in UTC: 20:00 of the previous day in New York.
+        expect(() =>
+          store.createEvent({
+            title: 'Trip',
+            allDay: true,
+            start: new Date('2025-07-04'),
+            end: new Date('2025-07-06'),
+          }),
+        ).to.throw(/first instant of a day/);
+      });
+
+      it('should refuse the inclusive end of the last day of an all-day event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-06', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        expect(() =>
+          store.updateEvent({ id: 'trip', end: createDate('2025-07-05T23:59:59.999Z') }),
+        ).to.throw(/first instant of a day/);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should paste an all-day event on the pasted day with its day count', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00') });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-23');
+      });
+
+      it('should paste an all-day event on the pasted day of the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00', 'Asia/Tokyo') });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-23');
+      });
+
+      it('should paste a timed event as a one-day all-day event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().id('standup').singleDay('2025-07-04T09:00:00Z').build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00'), allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-21');
+      });
+
+      it('should paste a timed event as an all-day event on its own day when no start is given', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().id('standup').singleDay('2025-07-04T09:00:00Z').build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.cutEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+      });
+
+      it('should paste an all-day event as a timed event with the default duration', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          eventCreation: { duration: 60 },
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T14:00:00'), allDay: false });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(false);
+        expect(pasted.start).to.equal('2025-07-20T14:00:00');
+        expect(pasted.end).to.equal('2025-07-20T15:00:00');
+      });
+
+      it('should paste an all-day event as a timed event on its first day of the display timezone when no start is given', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.cutEvent('trip');
+
+        store.pasteEvent({ allDay: false });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(Boolean(pasted.allDay)).to.equal(false);
+        expect(pasted.timezone).to.equal('Asia/Tokyo');
+        expect(pasted.start).to.equal('2025-07-04T00:00:00');
+        expect(pasted.end).to.equal('2025-07-04T00:30:00');
+      });
+
+      it('should refuse to paste a cut read-only all-day event as a timed event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .readOnly()
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.cutEvent('trip');
+
+        expect(() => {
+          expect(store.pasteEvent({ allDay: false })).to.equal(null);
+        }).toWarnDev([
+          `MUI X Scheduler: The event with id="trip" was not pasted.\n${READ_ONLY_EVENT_REASON}`,
+        ]);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should make an all-day event timed on its displayed days in the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('holiday')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateEvent({ id: 'holiday', allDay: false });
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated).not.to.have.property('allDay');
+        expect(updated.timezone).to.equal('Asia/Tokyo');
+        expect(updated.start).to.equal('2025-07-04T00:00:00');
+        expect(updated.end).to.equal('2025-07-05T00:00:00');
+      });
+
+      it('should duplicate an all-day occurrence as dates', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.duplicateEventOccurrence(
+          'trip',
+          createDate('2025-07-20T00:00:00'),
+          createDate('2025-07-23T00:00:00'),
+        );
+
+        const duplicated: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(duplicated.start).to.equal('2025-07-20');
+        expect(duplicated.end).to.equal('2025-07-23');
+      });
     });
 
     describe('dev warnings', () => {
@@ -2152,7 +2456,577 @@ storeClasses.forEach((storeClass) => {
 // plugin, so the community store is not expected to honor it.
 premiumStoreClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
+    describe('Method: pasteEvent', () => {
+      it('should paste a copy of a timed series as an all-day series with its exceptions as dates', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('UTC')
+          .singleDay('2025-07-04T09:00:00Z')
+          .rrule({ freq: 'DAILY' })
+          .exDates(['2025-07-05T09:00:00Z'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'UTC',
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+        expect(pasted.exDates).to.deep.equal(['2025-07-05']);
+        expect(() => processEvent(pasted, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+
+      it('should paste a timed series as an all-day series on the days of its timezone', () => {
+        const onEventsChange = vi.fn();
+        // Fridays at 20:00 in New York are Saturdays in Tokyo: the series stays on Fridays.
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('America/New_York')
+          .singleDay('2025-07-04T20:00:00')
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25T20:00:00' })
+          .exDates(['2025-07-11T20:00:00'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+        // The until is written as its day in the event timezone, July 25th.
+        expect(pasted.rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25' });
+        expect(pasted.exDates).to.deep.equal(['2025-07-11']);
+      });
+
+      it('should paste an all-day series whose rule has time parts as a timed series without them', () => {
+        const onEventsChange = vi.fn();
+        // Calendar apps can export BYHOUR on an all-day rule, where RFC 5545 ignores it.
+        const event: SchedulerEvent = {
+          ...EventBuilder.new()
+            .id('holiday')
+            .span('2025-07-01', '2025-07-02', { allDay: true })
+            .build(),
+          rrule: 'FREQ=DAILY;BYHOUR=9;BYMINUTE=30;COUNT=5',
+        };
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.copyEvent('holiday');
+
+        store.pasteEvent({ allDay: false, start: createDate('2025-07-01T09:00:00') });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.rrule).to.equal('FREQ=DAILY;COUNT=5');
+        expect(() => processEvent(pasted, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+    });
+
     describe('Method: updateRecurringEvent', () => {
+      ['2025-07-01', '2025-07-03'].forEach((day) => {
+        it(`should drop the time parts of the rule of an all-day series dropped on the time grid on ${day}`, () => {
+          const onEventsChange = vi.fn();
+          const event: SchedulerEvent = {
+            ...EventBuilder.new()
+              .id('holiday')
+              .span('2025-07-01', '2025-07-02', { allDay: true })
+              .build(),
+            rrule: 'FREQ=DAILY;BYHOUR=9;COUNT=5',
+          };
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(store, 'holiday', createDate(`${day}T00:00:00`)),
+            changes: {
+              id: 'holiday',
+              allDay: false,
+              start: createDate(`${day}T09:00:00`),
+              end: createDate(`${day}T09:30:00`),
+            },
+          });
+          store.selectRecurringEventScope('all');
+
+          const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+          // The series keeps its first day, at the time of the drop.
+          expect(updated.start).to.equal('2025-07-01T09:00:00');
+          expect(() => processEvent(updated, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+        });
+      });
+
+      it('should rewrite the exception dates when an update makes a series all-day', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('UTC')
+          .singleDay('2025-07-04T09:00:00Z')
+          .rrule({ freq: 'DAILY' })
+          .exDates(['2025-07-11T09:00:00Z'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'UTC',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(store, 'standup', createDate('2025-07-04T09:00:00Z')),
+          changes: {
+            id: 'standup',
+            allDay: true,
+            start: createDate('2025-07-04T00:00:00', 'UTC'),
+            end: createDate('2025-07-05T00:00:00', 'UTC'),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.allDay).to.equal(true);
+        expect(updated.start).to.equal('2025-07-04');
+        expect(updated.end).to.equal('2025-07-05');
+        expect(updated.exDates).to.deep.equal(['2025-07-11']);
+        expect(() => processEvent(updated, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+
+      it('should make a series all-day on the days of its timezone when no day is given', () => {
+        const onEventsChange = vi.fn();
+        // Fridays at 20:00 in New York, until July 18th, are Saturdays in Tokyo.
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('America/New_York')
+          .singleDay('2025-07-04T20:00:00')
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-18T20:00:00' })
+          .exDates(['2025-07-11T20:00:00'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'standup',
+            createDate('2025-07-18T20:00:00', 'America/New_York'),
+          ),
+          changes: { id: 'standup', allDay: true },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.start).to.equal('2025-07-04');
+        expect(updated.end).to.equal('2025-07-05');
+        // The rule keeps its days: its until is written as its day in the event timezone, July 18th.
+        expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-18' });
+        expect(updated.exDates).to.deep.equal(['2025-07-11']);
+        expect(() =>
+          processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+        ).not.to.throw();
+      });
+
+      (['all', 'this-and-following'] as const).forEach((scope) => {
+        it(`should make a series all-day on its displayed days when a day is given with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          // Fridays at 08:00 in Tokyo are Thursdays in New York; July 18th is July 17th there.
+          const event = EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('Asia/Tokyo')
+            .singleDay('2025-07-04T08:00:00')
+            .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+            .exDates(['2025-07-18T08:00:00'])
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+
+          // The occurrence shown on Thursday, July 10th, dropped on the all-day row of that day.
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'standup',
+              createDate('2025-07-11T08:00:00', 'Asia/Tokyo'),
+            ),
+            changes: {
+              id: 'standup',
+              allDay: true,
+              start: createDate('2025-07-10T00:00:00', 'America/New_York'),
+              end: createDate('2025-07-11T00:00:00', 'America/New_York'),
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+          )!;
+          expect(updated.start).to.equal(scope === 'all' ? '2025-07-03' : '2025-07-10');
+          expect((updated.rrule as SchedulerEventRecurrenceRule).byDay).to.deep.equal(['TH']);
+          expect(updated.exDates).to.deep.equal(['2025-07-17']);
+        });
+
+        (
+          [
+            { freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25T23:59:59' },
+            'FREQ=WEEKLY;BYDAY=FR;UNTIL=20250726T030000Z',
+          ] as const
+        ).forEach((rrule) => {
+          it(`should move the last day of a series made all-day on a given day with scope '${scope}' and the rule ${JSON.stringify(rrule)}`, () => {
+            const onEventsChange = vi.fn();
+            // Fridays at 23:00 in New York until July 25th are Saturdays in Tokyo, until July 26th.
+            const event: SchedulerEvent = {
+              ...EventBuilder.new()
+                .id('standup')
+                .withDataTimezone('America/New_York')
+                .singleDay('2025-07-04T23:00:00')
+                .build(),
+              rrule: rrule as SchedulerEvent['rrule'],
+            };
+            const store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              displayTimezone: 'Asia/Tokyo',
+              onEventsChange,
+            });
+
+            // The occurrence shown on Saturday, July 12th, dropped on the all-day row of that day.
+            store.updateRecurringEvent({
+              occurrence: createStoreOccurrence(
+                store,
+                'standup',
+                createDate('2025-07-11T23:00:00', 'America/New_York'),
+              ),
+              changes: {
+                id: 'standup',
+                allDay: true,
+                start: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+                end: createDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
+              },
+            });
+            store.selectRecurringEventScope(scope);
+
+            const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+            const updated = updatedEvents.find((item) =>
+              scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+            )!;
+            const processed = processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
+            expect(processed.rrule!.byDay).to.deep.equal(['SA']);
+            expect(processed.rrule!.until!.toString()).to.match(/^2025-07-26/);
+          });
+        });
+
+        it(`should write the until of a timed series made all-day as its date with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-01T09:00:00', '2025-07-01T09:30:00')
+            .rrule({ freq: 'DAILY', until: '2025-07-08T09:00:00' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'standup',
+              createDate('2025-07-03T09:00:00', 'America/New_York'),
+            ),
+            changes: { id: 'standup', allDay: true },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+          )!;
+          expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal('2025-07-08');
+          expect(() =>
+            processEvent(updated, 'America/New_York', schedulerRecurringEventsPlugin),
+          ).not.to.throw();
+        });
+
+        it(`should write the until of a rule given with a timed series made all-day as its date with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          // Before 09:00, the last occurrence is the one of July 7th.
+          const event = EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-01T09:00:00', '2025-07-01T09:30:00')
+            .rrule({ freq: 'DAILY', until: '2025-07-08T08:00:00' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+          const rule = schedulerEventSelectors.processedEventRequired(
+            store.state,
+            'standup',
+          ).rrule!;
+
+          // Like the dialog: the rule is edited, its until is the one of the timed series.
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'standup',
+              createDate('2025-07-03T09:00:00', 'America/New_York'),
+            ),
+            changes: { id: 'standup', allDay: true, rrule: { ...rule, interval: 2 } },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+          )!;
+          const written = updated.rrule as SchedulerEventRecurrenceRule;
+          expect(written.interval).to.equal(2);
+          expect(written.until).to.equal('2025-07-07');
+          expect(() =>
+            processEvent(updated, 'America/New_York', schedulerRecurringEventsPlugin),
+          ).not.to.throw();
+        });
+
+        (
+          [
+            { until: '2025-07-25T23:00:00', expected: '2025-07-26' },
+            // Before 23:00, the last Friday is July 18th, July 19th in Tokyo.
+            { until: '2025-07-25T22:00:00', expected: '2025-07-24' },
+          ] as const
+        ).forEach(({ until, expected }) => {
+          it(`should write the moved until ${until} of a series made all-day on a given day as a date with scope '${scope}'`, () => {
+            const onEventsChange = vi.fn();
+            const event = EventBuilder.new()
+              .id('standup')
+              .withDataTimezone('America/New_York')
+              .singleDay('2025-07-04T23:00:00')
+              .rrule({ freq: 'WEEKLY', byDay: ['FR'], until })
+              .build();
+            const store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              displayTimezone: 'Asia/Tokyo',
+              onEventsChange,
+            });
+
+            // The occurrence shown on Saturday, July 12th, dropped on the all-day row of that day.
+            store.updateRecurringEvent({
+              occurrence: createStoreOccurrence(
+                store,
+                'standup',
+                createDate('2025-07-11T23:00:00', 'America/New_York'),
+              ),
+              changes: {
+                id: 'standup',
+                allDay: true,
+                start: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+                end: createDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
+              },
+            });
+            store.selectRecurringEventScope(scope);
+
+            const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+            const updated = updatedEvents.find((item) =>
+              scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+            )!;
+            expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(expected);
+            expect(() =>
+              processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+            ).not.to.throw();
+          });
+        });
+
+        it(`should write the until of an all-day series made timed on a given time as a date-time with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new()
+            .id('holiday')
+            .span('2025-07-01', '2025-07-02', { allDay: true })
+            .rrule({ freq: 'DAILY', until: '2025-07-08' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'Asia/Tokyo',
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'holiday',
+              createDate('2025-07-03T00:00:00', 'Asia/Tokyo'),
+            ),
+            changes: {
+              id: 'holiday',
+              allDay: false,
+              start: createDate('2025-07-03T09:00:00', 'Asia/Tokyo'),
+              end: createDate('2025-07-03T10:00:00', 'Asia/Tokyo'),
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'holiday' : item.id !== 'holiday',
+          )!;
+          expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(
+            '2025-07-08T23:59:59',
+          );
+          expect(() =>
+            processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+          ).not.to.throw();
+        });
+      });
+
+      it('should keep the last day of an all-day series with a date-time until made timed in another timezone', () => {
+        const onEventsChange = vi.fn();
+        // Its until, 03:00 UTC on July 9th, is July 8th in New York: the series ends on July 8th.
+        const event = EventBuilder.new()
+          .id('trip')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .rrule({ freq: 'DAILY', until: '2025-07-09T03:00:00Z' })
+          .build();
+        const createStore = () =>
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'Asia/Tokyo',
+            onEventsChange,
+          });
+        clearWarningsCache();
+        let store!: ReturnType<typeof createStore>;
+        expect(() => {
+          store = createStore();
+        }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'trip',
+            createDate('2025-07-04T00:00:00', 'Asia/Tokyo'),
+          ),
+          changes: {
+            id: 'trip',
+            allDay: false,
+            start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
+            end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.timezone).to.equal('Asia/Tokyo');
+        expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(
+          '2025-07-08T23:59:59',
+        );
+      });
+
+      it('should keep the last day of an all-day RRULE string with a date-time until made timed in another timezone', () => {
+        const onEventsChange = vi.fn();
+        // 00:00 UTC on July 19th is July 18th in New York: the series ends on Friday, July 18th.
+        const event: SchedulerEvent = {
+          ...EventBuilder.new()
+            .id('review')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-04', '2025-07-05', { allDay: true })
+            .build(),
+          rrule: 'FREQ=WEEKLY;BYDAY=FR;UNTIL=20250719T000000Z',
+        };
+        const createStore = () =>
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/Los_Angeles',
+            onEventsChange,
+          });
+        clearWarningsCache();
+        let store!: ReturnType<typeof createStore>;
+        expect(() => {
+          store = createStore();
+        }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'review',
+            createDate('2025-07-11T00:00:00', 'America/Los_Angeles'),
+          ),
+          changes: {
+            id: 'review',
+            allDay: false,
+            start: createDate('2025-07-11T18:00:00', 'America/Los_Angeles'),
+            end: createDate('2025-07-11T19:00:00', 'America/Los_Angeles'),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        // The last instant of July 18th in Los Angeles, after its occurrence at 18:00.
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.rrule).to.equal('FREQ=WEEKLY;BYDAY=FR;UNTIL=20250719T065959Z');
+      });
+
+      it("should keep the RRULE string of a timed series made all-day with scope 'all'", () => {
+        const onEventsChange = vi.fn();
+        // 13:00 UTC is 09:00 in New York, the time of the series.
+        const event: SchedulerEvent = {
+          ...EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-01T09:00:00', '2025-07-01T09:30:00')
+            .build(),
+          rrule: 'FREQ=DAILY;UNTIL=20250708T130000Z',
+        };
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'standup',
+            createDate('2025-07-03T09:00:00', 'America/New_York'),
+          ),
+          changes: { id: 'standup', allDay: true },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.rrule).to.equal('FREQ=DAILY;UNTIL=20250708');
+      });
+
       it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {
         // The rule is passed through as is: saving it with a new count keeps the 3rd.
         const event = utcJuly4AllDayBuilder()
@@ -2167,13 +3041,14 @@ premiumStoreClasses.forEach((storeClass) => {
           onEventsChange,
         });
         const occurrence = schedulerEventSelectors.processedEventRequired(store.state, 'report');
-        expect(occurrence.dataTimezone.rrule!.byMonthDay).to.deep.equal([3]);
+        expect(occurrence.rrule!.byMonthDay).to.deep.equal([3]);
 
         store.updateRecurringEvent({
-          occurrenceStart: occurrence.dataTimezone.start.value,
+          // The occurrence of August 3rd: the series starts on July 4th, which isn't a 3rd.
+          occurrence: createOccurrence(occurrence, new Date('2025-08-03T00:00:00Z')),
           changes: {
             id: 'report',
-            rrule: { ...occurrence.dataTimezone.rrule!, count: 5 },
+            rrule: { ...occurrence.rrule!, count: 5 },
           },
         });
         store.selectRecurringEventScope('all');
@@ -2209,7 +3084,11 @@ premiumStoreClasses.forEach((storeClass) => {
           });
 
           store.updateRecurringEvent({
-            occurrenceStart: createDate('2025-07-20T00:00:00', 'UTC'),
+            occurrence: createStoreOccurrence(
+              store,
+              'report',
+              createDate('2025-07-20T00:00:00', 'UTC'),
+            ),
             changes: {
               id: 'report',
               rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [20] },
@@ -2223,6 +3102,117 @@ premiumStoreClasses.forEach((storeClass) => {
             updatedEvents.find((item) => item.id === 'report')!;
           expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byMonthDay: [20] });
         });
+      });
+    });
+
+    describe('Method: deleteRecurringEvent', () => {
+      // December 30th, 2011 does not exist in Pacific/Apia: the two-day occurrence of that date,
+      // from a weekly series of Fridays, only shows on December 31st.
+      const createApiaStore = (onEventsChange: (events: SchedulerEvent[]) => void) =>
+        new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [
+            EventBuilder.new()
+              .id('trip')
+              .span('2011-12-23', '2011-12-25', { allDay: true })
+              .rrule({ freq: 'WEEKLY' })
+              .build(),
+          ],
+          displayTimezone: 'Pacific/Apia',
+          onEventsChange,
+        });
+
+      const deleteSkippedDayOccurrence = (scope: RecurringEventScope) => {
+        const onEventsChange = vi.fn();
+        const store = createApiaStore(onEventsChange);
+        const occurrence = createStoreOccurrence(
+          store,
+          'trip',
+          createDate('2011-12-31T00:00:00', 'Pacific/Apia'),
+        );
+        expect(occurrence.key).to.equal('trip::2011-12-30');
+
+        store.deleteRecurringEvent({ occurrence });
+        store.selectRecurringEventScope(scope);
+
+        return onEventsChange.mock.lastCall![0][0] as SchedulerEvent;
+      };
+
+      it("should exclude the occurrence of a date the display timezone skips with scope 'only-this'", () => {
+        const updated = deleteSkippedDayOccurrence('only-this');
+
+        expect(updated.exDates).to.deep.equal(['2011-12-30']);
+        const keys = schedulerRecurringEventsPlugin
+          .getOccurrencesForVisibleDays(
+            processEvent(updated, 'Pacific/Apia', schedulerRecurringEventsPlugin),
+            createDate('2011-12-31T00:00:00', 'Pacific/Apia').getTime(),
+            createDate('2011-12-31T00:00:00', 'Pacific/Apia').getTime(),
+            'Pacific/Apia',
+          )
+          .map((occurrence) => occurrence.key);
+        expect(keys).to.deep.equal([]);
+      });
+
+      it("should end the series before the occurrence of a date the display timezone skips with scope 'this-and-following'", () => {
+        const updated = deleteSkippedDayOccurrence('this-and-following');
+
+        expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal('2011-12-29');
+      });
+    });
+
+    describe('Method: updateRecurringEvent on a date the display timezone skips', () => {
+      // A daily series of 6 dates from December 28th, 2011: December 30th doesn't exist in
+      // Pacific/Apia, where its occurrence starts at the same instant as the one of the 31st.
+      const editSkippedDayOccurrence = (scope: RecurringEventScope) => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [
+            EventBuilder.new()
+              .id('trip')
+              .span('2011-12-28', '2011-12-29', { allDay: true })
+              .rrule({ freq: 'DAILY', count: 6 })
+              .build(),
+          ],
+          displayTimezone: 'Pacific/Apia',
+          onEventsChange,
+        });
+        const occurrence = schedulerRecurringEventsPlugin
+          .getOccurrencesForVisibleDays(
+            schedulerEventSelectors.processedEventRequired(store.state, 'trip'),
+            createDate('2011-12-28T00:00:00', 'Pacific/Apia').getTime(),
+            createDate('2012-01-02T00:00:00', 'Pacific/Apia').getTime(),
+            'Pacific/Apia',
+          )
+          .find((item) => item.key === 'trip::2011-12-30')!;
+
+        store.updateRecurringEvent({ occurrence, changes: { id: 'trip', title: 'Renamed' } });
+        store.selectRecurringEventScope(scope);
+
+        const events: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+        return {
+          series: events.find((item) => item.id === 'trip')!,
+          created: events.find((item) => item.id !== 'trip')!,
+        };
+      };
+
+      it("should split the series on the date the display timezone skips with scope 'this-and-following'", () => {
+        const { series, created } = editSkippedDayOccurrence('this-and-following');
+
+        expect((series.rrule as SchedulerEventRecurrenceRule).until).to.equal('2011-12-29');
+        expect(created.start).to.equal('2011-12-30');
+        expect(created.end).to.equal('2011-12-31');
+        // 2 occurrences before the split and 4 after it: the 6 of the series.
+        expect((created.rrule as SchedulerEventRecurrenceRule).count).to.equal(4);
+      });
+
+      it("should detach the occurrence on the date the display timezone skips with scope 'only-this'", () => {
+        const { series, created } = editSkippedDayOccurrence('only-this');
+
+        expect(series.exDates).to.deep.equal(['2011-12-30']);
+        expect(created.start).to.equal('2011-12-30');
+        expect(created.end).to.equal('2011-12-31');
+        expect(created.title).to.equal('Renamed');
       });
     });
 

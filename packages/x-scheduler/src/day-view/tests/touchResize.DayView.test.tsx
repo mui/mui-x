@@ -68,8 +68,8 @@ describe('DayView - touch resize', () => {
     expect(onEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = onEventsChange.mock.calls[0][0];
     // Start stays at 10:00, end moves later than 11:00.
-    expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
-    expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
+    expect(updatedEvents[0].start).to.equal('2025-07-03T10:00:00Z');
+    expect(updatedEvents[0].end).to.equal('2025-07-03T16:00:00.000Z');
   });
 
   // The preview hosts the resize handles but must never be a focusable button, nor use

@@ -1,6 +1,8 @@
 import type { RefObject } from '@mui/x-internals/types';
 import {
+  gridExpandedSortedRowIdsSelector,
   gridExpandedSortedRowIndexLookupSelector,
+  gridPaginationRowRangeSelector,
   gridRowNodeSelector,
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
@@ -12,12 +14,14 @@ import type {
   GridSortModel,
   GridTreeNode,
 } from '@mui/x-data-grid';
+import { gridIsRowDragActiveSelector } from '@mui/x-data-grid/internals';
 import type { RowReorderDragDirection, RowReorderDropPosition } from '@mui/x-data-grid/internals';
 import type { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { gridColumnReorderDragColSelector } from '../columnReorder/columnReorderSelector';
 
-// Row reordering logic shared by the HTML drag and drop path (`useGridRowReorder`)
-// and the pointer events path (`useGridRowReorderPointer`).
+// Row reordering logic shared by the HTML drag and drop path (`useGridRowReorder`),
+// the pointer events path (`useGridRowReorderPointer`), and the keyboard.
 
 /**
  * Time in ms a dragged row must hover a collapsed group before the group expands.
@@ -309,6 +313,97 @@ export async function commitRowReorder(
   if (listener.failed) {
     throw listener.error;
   }
+}
+
+/**
+ * Returns whether a row or a column is being dragged.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @returns {boolean} `true` during a row or a column drag.
+ */
+export function isReorderSessionActive(apiRef: RefObject<GridPrivateApiPro>): boolean {
+  return gridIsRowDragActiveSelector(apiRef) || gridColumnReorderDragColSelector(apiRef) !== '';
+}
+
+export type RowMoveTargetResult =
+  { target: RowReorderDropTarget; targetIndex: number } | { refusal: 'edge' | 'invalid' };
+
+/**
+ * Returns where a step moves a row of a flat tree, within the current page.
+ * A step is one position, or as far as allowed, from the keyboard or any other input that isn't a drag.
+ * Pinned rows and footers are never targets.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {object} params The move.
+ * @param {GridRowId} params.rowId The moved row.
+ * @param {RowReorderDragDirection} params.direction The direction of the move.
+ * @param {boolean} params.toEdge Whether to move as far as allowed instead of one row.
+ * @param {boolean} params.hasCustomValidation Whether `isValidRowReorder` is set. Then a move to the edge stops before the first rejected row.
+ * @returns {RowMoveTargetResult} The drop target and its index among the sorted rows, or why the row can't move.
+ */
+export function getRowMoveTarget(
+  apiRef: RefObject<GridPrivateApiPro>,
+  params: {
+    rowId: GridRowId;
+    direction: RowReorderDragDirection;
+    toEdge: boolean;
+    hasCustomValidation: boolean;
+  },
+): RowMoveTargetResult {
+  const { rowId, direction, toEdge, hasCustomValidation } = params;
+  const rowIds = gridExpandedSortedRowIdsSelector(apiRef);
+  const sourceIndex = gridExpandedSortedRowIndexLookupSelector(apiRef)[rowId];
+  if (sourceIndex === undefined) {
+    return { refusal: 'invalid' };
+  }
+
+  const range = gridPaginationRowRangeSelector(apiRef);
+  const firstIndex = range?.firstRowIndex ?? 0;
+  const lastIndex = range?.lastRowIndex ?? rowIds.length - 1;
+  const step = direction === 'up' ? -1 : 1;
+  const dropPosition: RowReorderDropPosition = direction === 'up' ? 'above' : 'below';
+
+  const isInRange = (index: number) =>
+    index >= firstIndex &&
+    index <= lastIndex &&
+    gridRowNodeSelector(apiRef, rowIds[index])?.type === 'leaf';
+  const isValid = (index: number) =>
+    checkRowReorderValid(apiRef, {
+      sourceRowId: rowId,
+      targetRowId: rowIds[index],
+      dropPosition,
+      dragDirection: direction,
+    });
+
+  let targetIndex = sourceIndex + step;
+  if (!isInRange(targetIndex)) {
+    return { refusal: 'edge' };
+  }
+  if (!isValid(targetIndex)) {
+    return { refusal: 'invalid' };
+  }
+
+  if (!toEdge) {
+    return { target: { rowId: rowIds[targetIndex], position: dropPosition }, targetIndex };
+  }
+
+  if (!hasCustomValidation) {
+    // Footers sit at the edges of the page only
+    let edgeIndex = direction === 'up' ? firstIndex : lastIndex;
+    while (edgeIndex !== targetIndex && !isInRange(edgeIndex)) {
+      edgeIndex -= step;
+    }
+    if (isValid(edgeIndex)) {
+      return {
+        target: { rowId: rowIds[edgeIndex], position: dropPosition },
+        targetIndex: edgeIndex,
+      };
+    }
+  }
+
+  while (isInRange(targetIndex + step) && isValid(targetIndex + step)) {
+    targetIndex += step;
+  }
+
+  return { target: { rowId: rowIds[targetIndex], position: dropPosition }, targetIndex };
 }
 
 /**

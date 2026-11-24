@@ -5,11 +5,12 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   endOfDay,
   isSameDay,
+  processDay,
   setSystemTimezone,
   startOfDay,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
@@ -19,6 +20,7 @@ interface TestEvent {
   start: string;
   end: string;
   title: string;
+  allDay?: boolean;
 }
 
 const noopPersistEvents = async () => ({ success: true });
@@ -58,23 +60,11 @@ const DEFAULT_PARAMS = {
 };
 
 // Build a minimal `visibleDaysSelector` returning a `dayCount`-day window starting at the
-// store's current `visibleDate` in the display timezone. The plugin only reads `timestamp`; `value`, `key`
-// and `minutesInDay` are filled in to satisfy `SchedulerProcessedDate`.
+// store's current `visibleDate` in the display timezone. The plugin only reads `timestamp`.
 const buildViewDefinition = (dayCount = 7): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
-  visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
-    const days: SchedulerProcessedDate[] = [];
-    for (let i = 0; i < dayCount; i += 1) {
-      const value = addDays(state.visibleDate, i);
-      days.push({
-        value,
-        key: String(value.getTime()),
-        timestamp: value.getTime(),
-        minutesInDay: 24 * 60,
-      });
-    }
-    return days;
-  },
+  visibleDaysSelector: (state: any): SchedulerProcessedDay[] =>
+    Array.from({ length: dayCount }, (_, i) => processDay(addDays(state.visibleDate, i))),
 });
 
 describe('Lazy loading - EventCalendarPremiumStore', () => {
@@ -156,6 +146,37 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       '2026-04-05T03:59:59.999Z',
     ]);
   });
+
+  it.each(['Asia/Tokyo', 'America/Los_Angeles'])(
+    'should load an all-day event on its dates displayed in %s',
+    async (displayTimezone) => {
+      const dataSource = {
+        getEvents: vi.fn(async (): Promise<TestEvent[]> => [
+          { id: '1', title: 'Holiday', start: '2025-07-01', end: '2025-07-02', allDay: true },
+        ]),
+        persistEvents: noopPersistEvents,
+      };
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        displayTimezone,
+        defaultVisibleDate: createDate('2025-07-01T00:00:00', displayTimezone),
+      });
+      store.setViewDefinition(buildViewDefinition(1));
+
+      await flushEffect();
+      await flushDebounce();
+
+      // The whole July 1st of the display timezone.
+      expect(getFetchedRange(dataSource.getEvents)).to.deep.equal([
+        createDate('2025-07-01T00:00:00', displayTimezone).toISOString(),
+        new Date(createDate('2025-07-02T00:00:00', displayTimezone).getTime() - 1).toISOString(),
+      ]);
+      expect(store.state.processedEventLookup.get('1')!.start.plainDateTime.toString()).to.equal(
+        '2025-07-01T00:00:00',
+      );
+    },
+  );
 
   it('should fire the initial fetch without waiting for the debounce window', async () => {
     const dataSource = {

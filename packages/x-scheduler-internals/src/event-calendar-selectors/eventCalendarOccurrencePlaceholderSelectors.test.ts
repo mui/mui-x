@@ -26,7 +26,7 @@ function getStateInUTCOnApiaSystem() {
       type: 'creation',
       surfaceType: 'day-grid',
       start: Date.UTC(2011, 11, 30),
-      end: Date.UTC(2011, 11, 30, 23, 59, 59),
+      end: Date.UTC(2011, 11, 31),
       resourceId: null,
     },
   };
@@ -61,14 +61,15 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     );
 
     // A placeholder from Monday, January 8th to Wednesday, January 17th, 2024, across two rows.
+    // Its end is exclusive: the first instant of January 18th.
     const state: EventCalendarState = {
       ...DEFAULT_EVENT_CALENDAR_STATE,
       displayTimezone: 'UTC',
       occurrencePlaceholder: {
         type: 'creation',
         surfaceType: 'day-grid',
-        start: Date.UTC(2024, 0, 8, 9),
-        end: Date.UTC(2024, 0, 17, 18),
+        start: Date.UTC(2024, 0, 8),
+        end: Date.UTC(2024, 0, 18),
         resourceId: null,
       },
     };
@@ -133,6 +134,28 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           state,
           firstDay,
           nextRowStart,
+        ),
+      ).to.equal(null);
+    });
+
+    it('should not render a placeholder on the first day of the row its exclusive end starts', () => {
+      // A one-day placeholder on Saturday, January 13th: its end is the first instant of the row.
+      const saturdayState: EventCalendarState = {
+        ...state,
+        occurrencePlaceholder: {
+          type: 'creation',
+          surfaceType: 'day-grid',
+          start: Date.UTC(2024, 0, 13),
+          end: Date.UTC(2024, 0, 14),
+          resourceId: null,
+        },
+      };
+      const firstDay = processDay(new Date(rowStart), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+          saturdayState,
+          firstDay,
+          rowStart,
         ),
       ).to.equal(null);
     });
@@ -238,6 +261,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'internal-drag',
+          allDay: false,
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'day-grid',
@@ -345,6 +369,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'internal-drag',
+          allDay: false,
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'time-grid',

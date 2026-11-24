@@ -43,8 +43,8 @@ const visibleAxisDataSelector = createSelectorMemoized(
         ...entry,
         occurrences: entry.occurrences.filter((occurrence) => {
           const position = computeElementPositionInCollection({
-            start: occurrence.displayTimezone.start,
-            end: occurrence.displayTimezone.end,
+            start: occurrence.start,
+            end: occurrence.end,
             collection: config,
             durationMs: config.durationMs,
           });
@@ -92,8 +92,8 @@ export function addTimelinePositionsToOccurrences({
     timelinePosition:
       positionByOccurrenceKey?.get(occurrence.key) ??
       computeElementPositionInCollection({
-        start: occurrence.displayTimezone.start,
-        end: occurrence.displayTimezone.end,
+        start: occurrence.start,
+        end: occurrence.end,
         collection: config,
         durationMs: config.durationMs,
       }),

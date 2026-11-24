@@ -15,6 +15,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./agenda-view": "./src/agenda-view/index.ts",
+    "./base-temporal": "./src/base-temporal/index.ts",
     "./compact-day-view": "./src/compact-day-view/index.ts",
     "./compact-three-day-view": "./src/compact-three-day-view/index.ts",
     "./compact-week-view": "./src/compact-week-view/index.ts",

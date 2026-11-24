@@ -4,14 +4,13 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { BaseTemporal } from '../base-temporal';
 import {
   addDaysOnWallClock,
-  differenceInDays,
   getEndOfDayMs,
   getStartOfDayMs,
   toEpochMs,
   toLocalMs,
   toMsInDay,
+  toPlainDateTime,
   toPlainDate,
-  toWallClockIsoString,
 } from './timeZone';
 
 const HOUR = 3_600_000;
@@ -21,8 +20,7 @@ function epochMsOf(date: string, time: string, timezone: string) {
   const [hours, minutes] = time.split(':').map(Number);
   return new Date(
     toEpochMs(
-      BaseTemporal.PlainDate.from({ year, month, day }),
-      (hours * 60 + minutes) * 60_000,
+      BaseTemporal.PlainDateTime.from({ year, month, day, hour: hours, minute: minutes }),
       timezone,
     ),
   ).toISOString();
@@ -82,25 +80,19 @@ describe('timeZone', () => {
     });
   });
 
-  describe('toWallClockIsoString', () => {
-    it('should write the wall-clock time to the second, in the offset of the instant', () => {
+  describe('toPlainDateTime', () => {
+    it('should read the wall-clock time in the offset of the instant', () => {
       // 01:30:15.999Z is the second 02:30 of the night Paris falls back.
-      expect(toWallClockIsoString(Date.UTC(2026, 9, 25, 1, 30, 15, 999), 'Europe/Paris')).to.equal(
-        '2026-10-25T02:30:15',
-      );
+      expect(
+        toPlainDateTime(Date.UTC(2026, 9, 25, 1, 30, 15, 999), 'Europe/Paris').toString(),
+      ).to.equal('2026-10-25T02:30:15.999');
     });
 
-    it('should write each part of the time with two digits', () => {
-      expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 9, 5, 3), 'UTC')).to.equal(
-        '2025-01-15T09:05:03',
-      );
-    });
-
-    it('should write the wall-clock time in a timezone with a half-hour offset', () => {
+    it('should read the wall-clock time in a timezone with a half-hour offset', () => {
       // Asia/Kolkata is at +05:30, which moves the instant to the next day.
-      expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 18, 45, 10, 500), 'Asia/Kolkata')).to.equal(
-        '2025-01-16T00:15:10',
-      );
+      expect(
+        toPlainDateTime(Date.UTC(2025, 0, 15, 18, 45, 10, 500), 'Asia/Kolkata').toString(),
+      ).to.equal('2025-01-16T00:15:10.5');
     });
   });
 
@@ -142,12 +134,10 @@ describe('timeZone', () => {
       expect(epochMsOf('2026-01-01', '00:30', '-00:30')).to.equal('2026-01-01T01:00:00.000Z');
     });
 
-    it('should round-trip with toPlainDate and toMsInDay outside DST transitions', () => {
+    it('should round-trip with toPlainDateTime outside DST transitions', () => {
       const epochMs = Date.UTC(2025, 4, 20, 17, 45, 12, 345);
       for (const timezone of ['default', 'UTC', 'Europe/Paris', 'Asia/Kathmandu', 'Pacific/Apia']) {
-        expect(
-          toEpochMs(toPlainDate(epochMs, timezone), toMsInDay(epochMs, timezone), timezone),
-        ).to.equal(epochMs);
+        expect(toEpochMs(toPlainDateTime(epochMs, timezone), timezone)).to.equal(epochMs);
       }
     });
   });
@@ -198,29 +188,6 @@ describe('timeZone', () => {
       // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026.
       const secondOccurrence = Date.UTC(2026, 9, 25, 1, 30); // the second 02:30, CET
       expect(addDaysOnWallClock(secondOccurrence, 0, 'Europe/Paris')).to.equal(secondOccurrence);
-    });
-  });
-
-  describe('differenceInDays', () => {
-    const difference = (later: string, earlier: string, timezone: string) =>
-      differenceInDays(new Date(later).getTime(), new Date(earlier).getTime(), timezone);
-
-    it('should count the full days on the wall clock of the timezone', () => {
-      // 2 dates apart, but the last day isn't full.
-      expect(difference('2025-07-06T13:00:00Z', '2025-07-04T14:00:00Z', 'UTC')).to.equal(1);
-      expect(difference('2025-07-04T14:00:00Z', '2025-07-06T13:00:00Z', 'UTC')).to.equal(-1);
-      expect(difference('2025-07-04T14:00:00Z', '2025-07-04T14:00:00Z', 'UTC')).to.equal(0);
-      // 23:00 to 01:00 in New York is 03:00 to 05:00 in UTC.
-      expect(
-        difference('2025-07-06T05:00:00Z', '2025-07-04T03:00:00Z', 'America/New_York'),
-      ).to.equal(2);
-    });
-
-    it('should count a day shortened by a DST transition as a full day', () => {
-      // America/New_York springs forward on March 9th, 2025: noon to noon lasts 23 hours.
-      expect(
-        difference('2025-03-09T16:00:00Z', '2025-03-08T17:00:00Z', 'America/New_York'),
-      ).to.equal(1);
     });
   });
 });

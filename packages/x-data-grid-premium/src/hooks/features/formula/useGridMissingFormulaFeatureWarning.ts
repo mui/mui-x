@@ -19,6 +19,7 @@ export function useGridMissingFormulaFeatureWarning(
     }
     const usesFormulaProps =
       !!props.formulaA1Notation ||
+      !!props.formulaReferencePicking ||
       !!props.disableFormulaAutocomplete ||
       props.formulaFunctions !== undefined ||
       !!props.slotProps?.toolbar?.formulaBar ||
@@ -39,6 +40,7 @@ export function useGridMissingFormulaFeatureWarning(
   }, [
     hasFormulaFeature,
     props.formulaA1Notation,
+    props.formulaReferencePicking,
     props.disableFormulaAutocomplete,
     props.formulaFunctions,
     props.slotProps,
