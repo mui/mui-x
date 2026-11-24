@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+const MAX_OFFSET_PX = 1;
+
 test.describe('Demo source variants', () => {
   test.skip(!process.env.PLAYWRIGHT_TEST_BASE_URL, 'Set the migrated docs build URL explicitly.');
 
@@ -33,6 +35,35 @@ test.describe('Demo source variants', () => {
       'true',
     );
     await expect(demo.locator('pre code')).toContainText('export default function');
+  });
+
+  test('positions keyboard tooltips beside the focused chart item', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1100 });
+    await page.goto('/x/react-charts/accessibility/#keyboard-support');
+
+    const demo = page.locator('#KeyboardNavigation').locator('..');
+    const focus = demo.getByRole('button', { name: 'Focus chart', exact: true });
+
+    await focus.scrollIntoViewIfNeeded();
+    await focus.click();
+    await page.keyboard.press('ArrowDown');
+
+    const tooltip = page.getByRole('tooltip');
+    const mark = demo.locator('svg rect[fill="none"][stroke-width="2"]');
+
+    await expect(tooltip).toBeVisible();
+    await expect(mark).toHaveCount(1);
+    await expect(async () => {
+      const tooltipBox = await tooltip.boundingBox();
+      const markBox = await mark.boundingBox();
+
+      expect(tooltipBox).not.toBeNull();
+      expect(markBox).not.toBeNull();
+      expect(
+        Math.abs(tooltipBox!.x + tooltipBox!.width / 2 - markBox!.x - markBox!.width / 2),
+      ).toBeLessThan(MAX_OFFSET_PX);
+      expect(tooltipBox!.y + tooltipBox!.height).toBeLessThanOrEqual(markBox!.y);
+    }).toPass({ timeout: 15_000 });
   });
 
   test('hides the source toolbar below the small breakpoint', async ({ page }) => {
