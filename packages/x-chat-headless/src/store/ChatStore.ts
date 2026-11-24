@@ -41,13 +41,13 @@ function haveAuthorParametersChanged<Cursor>(
   ) {
     return true;
   }
-  if (prev.roleDisplayNames === next.roleDisplayNames) {
-    return false;
-  }
-  const prevNames = prev.roleDisplayNames ?? {};
-  const nextNames = next.roleDisplayNames ?? {};
-  const keys = new Set([...Object.keys(prevNames), ...Object.keys(nextNames)]) as Set<ChatRole>;
-  return [...keys].some((key) => prevNames[key] !== nextNames[key]);
+  const prevNames = prev.roleDisplayNames;
+  const nextNames = next.roleDisplayNames;
+  return (
+    prevNames?.user !== nextNames?.user ||
+    prevNames?.assistant !== nextNames?.assistant ||
+    prevNames?.system !== nextNames?.system
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -273,6 +273,9 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
 
   private dirtyControlledModels = new Set<ControlledModel>();
 
+  // Kept on the instance so restoring a state snapshot can't rewind it to a version rows already cached.
+  private authorParametersRevision = 0;
+
   /** Whether any controlled model has been internally mutated since the last parameter sync. */
   get hasDirtyControlledModels(): boolean {
     return this.dirtyControlledModels.size > 0;
@@ -363,7 +366,8 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     if (haveAuthorParametersChanged(this.parameters, parameters)) {
-      newState.authorParametersVersion = (this.state.authorParametersVersion ?? 0) + 1;
+      this.authorParametersRevision += 1;
+      newState.authorParametersVersion = this.authorParametersRevision;
     }
 
     this.parameters = parameters;

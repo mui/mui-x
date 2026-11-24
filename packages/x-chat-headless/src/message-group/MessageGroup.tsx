@@ -155,25 +155,24 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const nextMessage = useMessage(nextMessageId ?? '');
   const variant = useChatVariant();
   const density = useChatDensity();
-  const resolveGroupKey = React.useCallback(
-    (candidate: ChatMessage | null) => {
-      if (!candidate) {
-        return null;
-      }
+  // Plain function on purpose: a memoized callback would retain `store.parameters` (and its
+  // controlled `messages`) from this group's last render.
+  const resolveGroupKey = (candidate: ChatMessage | null) => {
+    if (!candidate) {
+      return null;
+    }
 
-      const resolvedMessage = getMessageWithResolvedAuthor(candidate, {
-        currentUser: store.parameters.currentUser,
-        members: store.parameters.members,
-        activeConversation: { participants },
-        getMessageAuthorId: store.parameters.getMessageAuthorId,
-        getMessageAuthorDisplayName: store.parameters.getMessageAuthorDisplayName,
-        getMessageAuthorAvatarUrl: store.parameters.getMessageAuthorAvatarUrl,
-      });
+    const resolvedMessage = getMessageWithResolvedAuthor(candidate, {
+      currentUser: store.parameters.currentUser,
+      members: store.parameters.members,
+      activeConversation: { participants },
+      getMessageAuthorId: store.parameters.getMessageAuthorId,
+      getMessageAuthorDisplayName: store.parameters.getMessageAuthorDisplayName,
+      getMessageAuthorAvatarUrl: store.parameters.getMessageAuthorAvatarUrl,
+    });
 
-      return groupKey(resolvedMessage ?? candidate);
-    },
-    [participants, groupKey, store.parameters],
-  );
+    return groupKey(resolvedMessage ?? candidate);
+  };
   const prevKey = resolveGroupKey(previousMessage);
   const currentKey = resolveGroupKey(message);
   const nextKey = resolveGroupKey(nextMessage);
