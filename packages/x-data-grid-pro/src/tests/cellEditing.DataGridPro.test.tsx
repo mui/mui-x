@@ -441,6 +441,41 @@ describe('<DataGridPro /> - Cell editing', () => {
         await act(() => promise); // Run all updates scheduled for when preProcessEditCellProps resolves
       });
 
+      it('should do nothing while an earlier validation is pending after a later one ends', async () => {
+        let resolveFirstValidation: () => void;
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => {
+          if (props.value !== 'BAD') {
+            return props;
+          }
+          return new Promise((resolve) => {
+            resolveFirstValidation = () => resolve({ ...props, error: true });
+          });
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' });
+        });
+        await act(() =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+
+        await act(async () => resolveFirstValidation!());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+      });
+
       it('should do nothing if props contain error=true', async () => {
         const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,

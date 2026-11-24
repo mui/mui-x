@@ -49,7 +49,8 @@ import type {
   GridRowEditStartParams,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
-import { getDefaultCellValue } from './utils';
+import { getDefaultCellValue, trackProcessingProps } from './utils';
+import type { GridProcessingPropsLookup } from './utils';
 import type { GridUpdateRowParams } from '../../../models/gridDataSource';
 
 export const useGridRowEditing = (
@@ -71,6 +72,7 @@ export const useGridRowEditing = (
   const rowModesModelRef = React.useRef(rowModesModel);
   const prevRowModesModel = React.useRef<GridRowModesModel>({});
   const prevRowValuesLookup = React.useRef<Record<GridRowId, GridValidRowModel>>({});
+  const processingPropsLookup = React.useRef<GridProcessingPropsLookup>({});
   const focusTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
 
@@ -515,6 +517,7 @@ export const useGridRowEditing = (
           const field = column.field;
           const value = apiRef.current.getCellValue(id, field);
           const newValue = deleteValue ? getDefaultCellValue(column) : (initialValue ?? value);
+          const endProcessingProps = trackProcessingProps(processingPropsLookup.current, id, field);
 
           Promise.resolve(
             column.preProcessEditCellProps!({
@@ -524,13 +527,14 @@ export const useGridRowEditing = (
               hasChanged: newValue !== value,
             }),
           ).then((processedProps) => {
+            const isProcessingProps = endProcessingProps();
             // Check if still in edit mode before updating
             if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
               const editingState = gridEditRowsStateSelector(apiRef);
               updateOrDeleteFieldState(id, field, {
                 ...processedProps,
                 value: editingState[id][field].value,
-                isProcessingProps: false,
+                isProcessingProps,
               });
             }
           });
@@ -562,6 +566,7 @@ export const useGridRowEditing = (
         updateOrDeleteRowState(id, null);
         updateRowInRowModesModel(id, null);
         delete prevRowValuesLookup.current[id];
+        delete processingPropsLookup.current[id];
       };
 
       if (ignoreModifications) {
@@ -699,6 +704,7 @@ export const useGridRowEditing = (
           updateOrDeleteFieldState(id, field, newProps);
 
           const { [field]: ignoredField, ...otherFieldsProps } = editingState[id];
+          const endProcessingProps = trackProcessingProps(processingPropsLookup.current, id, field);
 
           const promise = Promise.resolve(
             column.preProcessEditCellProps({
@@ -709,6 +715,7 @@ export const useGridRowEditing = (
               otherFieldsProps,
             }),
           ).then((processedProps) => {
+            const isProcessingProps = endProcessingProps();
             // Check again if the row is in edit mode because the user may have
             // discarded the changes while the props were being processed.
             if (apiRef.current.getRowMode(id) === GridRowModes.View) {
@@ -717,7 +724,7 @@ export const useGridRowEditing = (
             }
 
             editingState = gridEditRowsStateSelector(apiRef);
-            processedProps = { ...processedProps, isProcessingProps: false };
+            processedProps = { ...processedProps, isProcessingProps };
             // We don't reuse the value from the props pre-processing because when the
             // promise resolves it may be already outdated. The only exception to this rule
             // is when there's no pre-processing.
@@ -745,6 +752,11 @@ export const useGridRowEditing = (
 
           editingState = gridEditRowsStateSelector(apiRef);
           const { [thisField]: ignoredField, ...otherFieldsProps } = editingState[id];
+          const endProcessingProps = trackProcessingProps(
+            processingPropsLookup.current,
+            id,
+            thisField,
+          );
 
           const promise = Promise.resolve(
             fieldColumn.preProcessEditCellProps({
@@ -755,6 +767,7 @@ export const useGridRowEditing = (
               otherFieldsProps,
             }),
           ).then((processedProps) => {
+            const isProcessingProps = endProcessingProps();
             // Check again if the row is in edit mode because the user may have
             // discarded the changes while the props were being processed.
             if (apiRef.current.getRowMode(id) === GridRowModes.View) {
@@ -762,7 +775,7 @@ export const useGridRowEditing = (
               return;
             }
 
-            processedProps = { ...processedProps, isProcessingProps: false };
+            processedProps = { ...processedProps, isProcessingProps };
             updateOrDeleteFieldState(id, thisField, processedProps);
           });
 

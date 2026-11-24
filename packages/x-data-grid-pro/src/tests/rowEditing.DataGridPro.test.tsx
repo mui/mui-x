@@ -1333,6 +1333,46 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(spiedStopRowEditMode.mock.calls.length).to.equal(1);
         expect(spiedStopRowEditMode.mock.lastCall?.[0].ignoreModifications).to.equal(false);
       });
+
+      it('should not commit a value whose validation is pending when another field changes', async () => {
+        let resolveValidation: () => void;
+        const preProcessEditCellProps = ({ props, hasChanged }: GridPreProcessEditCellProps) => {
+          if (!hasChanged) {
+            return props;
+          }
+          return new Promise((resolve) => {
+            resolveValidation = () => resolve({ ...props, error: true });
+          });
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            column1Props={{ preProcessEditCellProps }}
+          />,
+        );
+        const cell = getCell(0, 2);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' });
+        });
+        await act(() => Promise.resolve());
+        // The change re-runs the pending validation of `currencyPair` with hasChanged=false
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'price1M', value: 12 });
+        });
+        await act(() => Promise.resolve());
+
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
+
+        await act(async () => resolveValidation!());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
+      });
     });
 
     describe('by pressing Tab', () => {
