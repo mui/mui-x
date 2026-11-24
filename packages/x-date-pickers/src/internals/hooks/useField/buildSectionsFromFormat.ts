@@ -57,7 +57,7 @@ const getEscapedPartsFromFormat = ({
   return escapedParts;
 };
 
-const getSectionPlaceholder = (
+export const getSectionPlaceholder = (
   adapter: MuiPickersAdapter,
   localeText: PickersLocaleText,
   sectionConfig: Pick<FieldSection, 'type' | 'contentType'>,

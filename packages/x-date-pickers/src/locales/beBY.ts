@@ -29,8 +29,8 @@ const beBYPickers: Partial<PickersLocaleText> = {
   nextMonth: 'Наступны месяц',
 
   // View navigation
-  openPreviousView: 'Aдкрыць папярэдні выгляд',
-  openNextView: 'Aдкрыць наступны выгляд',
+  openPreviousView: 'Адкрыць папярэдні выгляд',
+  openNextView: 'Адкрыць наступны выгляд',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'гадавы выгляд адкрыты, перайсці да каляндарнага выгляду'

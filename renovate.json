@@ -8,11 +8,9 @@
   "packageRules": [
     {
       "groupName": "D3",
-      "matchPackageNames": ["d3-*", "@types/d3-*"]
-    },
-    {
-      "groupName": "react-spring",
-      "matchPackageNames": ["@react-spring/**"]
+      "description": "Majors only. The D3 packages come from separate repositories, so no monorepo group keeps their majors together. Minor and patch updates join the npm non-major group.",
+      "matchPackageNames": ["d3-*", "@types/d3-*"],
+      "matchUpdateTypes": ["major"]
     },
     {
       "groupName": "Base UI",
@@ -34,16 +32,10 @@
       "allowedVersions": "< 3.0.0"
     },
     {
-      "groupName": "recast",
       "matchPackageNames": ["recast"],
       "allowedVersions": "< 0.23.10"
     },
     {
-      "groupName": "Tanstack query",
-      "matchPackageNames": ["@tanstack/*query*"]
-    },
-    {
-      "groupName": "fingerprintjs",
       "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
       "allowedVersions": "< 4.0.0"
     },
