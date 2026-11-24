@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { buttonBaseClasses } from '@mui/material/ButtonBase';
 import composeClasses from '@mui/utils/composeClasses';
 import type {
   BaseToolbarProps,
@@ -57,10 +58,14 @@ const DateTimeRangePickerToolbarRoot = styled('div', {
   slot: 'Root',
 })<{
   ownerState: PickerToolbarOwnerState;
-}>({
+}>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-});
+  ...(theme.focusVisible && {
+    [`& .${buttonBaseClasses.root}.${buttonBaseClasses.focusVisible}`]:
+      theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
+  }),
+}));
 
 const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',

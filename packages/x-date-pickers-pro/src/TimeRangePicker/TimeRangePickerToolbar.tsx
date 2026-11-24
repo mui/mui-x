@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { buttonBaseClasses } from '@mui/material/ButtonBase';
 import composeClasses from '@mui/utils/composeClasses';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import type {
@@ -79,6 +80,10 @@ const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
   [`& .${pickersToolbarClasses.title}`]: {
     paddingLeft: 12,
   },
+  ...(theme.focusVisible && {
+    [`& .${buttonBaseClasses.root}.${buttonBaseClasses.focusVisible}`]:
+      theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
+  }),
 }));
 
 const TimeRangePickerToolbarContainer = styled('div', {
