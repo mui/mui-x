@@ -158,10 +158,10 @@ const PickerDayRoot = styled(ButtonBase, {
         outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
         outlineOffset: -1,
         ...(theme.focusVisible && {
-          [`&.${buttonBaseClasses.focusVisible}`]: {
-            ...getTodayFocusVisible(theme),
-            boxShadow: `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
-          },
+          [`&.${buttonBaseClasses.focusVisible}`]: getTodayFocusVisible(
+            theme,
+            (theme.vars || theme).palette.text.secondary,
+          ),
         }),
       },
     },

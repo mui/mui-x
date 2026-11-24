@@ -18,10 +18,17 @@ function joinBoxShadows(...boxShadows: unknown[]) {
     .join(', ');
 }
 
-export function getTodayFocusVisible(theme: Theme): FocusVisibleStyle {
+export function getTodayFocusVisible(theme: Theme, markerColor: string): FocusVisibleStyle {
+  const marker = `inset 0 0 0 1px ${markerColor}`;
   const insetRing = theme.applyFocusVisible?.('inset');
   if (!insetRing) {
-    return theme.focusVisible || {};
+    if (!theme.focusVisible) {
+      return {};
+    }
+    return {
+      ...theme.focusVisible,
+      boxShadow: joinBoxShadows(marker, theme.focusVisible.boxShadow),
+    };
   }
   const { outlineOffset = 0 } = insetRing;
   return {
@@ -30,6 +37,7 @@ export function getTodayFocusVisible(theme: Theme): FocusVisibleStyle {
       typeof outlineOffset === 'number'
         ? outlineOffset - TODAY_MARKER_CLEARANCE
         : `calc(${outlineOffset} - ${TODAY_MARKER_CLEARANCE}px)`,
+    boxShadow: joinBoxShadows(marker, insetRing.boxShadow),
   };
 }
 

@@ -234,5 +234,22 @@ describe('<PickerDay />', () => {
       );
       expect(screen.getByRole('button')).to.have.style('outline-offset', '-4px');
     });
+
+    it.skipIf(isJSDOM)('joins the today marker with the box-shadow of the theme ring', async () => {
+      const { user } = renderDay(
+        createTheme({
+          focusVisible: { insetOverrides: { boxShadow: 'inset 0 0 0 3px rgb(10, 11, 12)' } },
+          palette: { text: { secondary: 'rgb(7, 8, 9)' } },
+        }),
+        { today: true },
+      );
+
+      await user.keyboard('{Tab}');
+
+      expect(screen.getByRole('button')).to.have.style(
+        'box-shadow',
+        'rgb(7, 8, 9) 0px 0px 0px 1px inset, rgb(10, 11, 12) 0px 0px 0px 3px inset',
+      );
+    });
   });
 });

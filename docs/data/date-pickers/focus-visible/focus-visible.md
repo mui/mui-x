@@ -39,7 +39,7 @@ Today's date is marked with a circle drawn with the CSS `outline` property.
 The focus ring also uses `outline`, and an element can only have one.
 
 So when today's date has focus, the circle is drawn with `box-shadow` instead, and you see both the ring and the circle.
-Because the circle takes over `box-shadow`, a `boxShadow` set in `theme.focusVisible` isn't applied to today's date.
+A `boxShadow` set in `theme.focusVisible` is drawn together with the circle.
 
 This only happens when the focus ring is turned on.
 Otherwise, today's date still uses `outline`, so your existing styles on the `today` class keep working.
