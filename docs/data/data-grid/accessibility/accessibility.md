@@ -206,6 +206,7 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 
 The keyboard extends the selection from the last row selected with <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd>, a click, or the arrow keys, and keeps the other selected rows.
 Pressing the arrow keys back towards that row reduces the selection.
+When the rows of the range move, for example with [keyboard reordering](#reordering), sorting, or filtering, the next <kbd class="key">Shift</kbd> shortcut starts a new range from the focused row.
 
 #### Cell selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 

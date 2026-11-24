@@ -49,7 +49,7 @@ import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridClasses } from '../../../constants/gridClasses';
-import { isEventForCellContent } from '../../../utils/domUtils';
+import { isEventForCellContent, isEventTargetCellContent } from '../../../utils/domUtils';
 import {
   areRowSelectionModelsEqual,
   isMultipleRowSelectionEnabled,
@@ -1104,8 +1104,11 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         return;
       }
 
-      // The keys belong to the content of the cell, for example, to type in a text field
-      if (isEventForCellContent(event)) {
+      // The keys belong to the content of the cell, for example, to type in a text field.
+      // The keyboard navigation, which runs before, prevents the default of the navigation keys.
+      if (
+        isNavigationKey(event.key) ? isEventTargetCellContent(event) : isEventForCellContent(event)
+      ) {
         return;
       }
 

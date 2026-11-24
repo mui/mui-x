@@ -57,6 +57,30 @@ describe('<DataGridPremium /> - Keyboard reorder', () => {
     expect(onCellSelectionModelChange).not.toHaveBeenCalled();
   });
 
+  it('should restart the Shift + arrow keys cell selection after moving the focused column', async () => {
+    const { user } = render(<Test cellSelection rowReordering={false} />);
+    await user.click(getCell(0, 0));
+    // The cell selection extends without moving the focus
+    await user.keyboard('{Shift>}[ArrowRight]{/Shift}');
+    expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+      0: { name: true, group: true },
+    });
+
+    // `name` moves after `group`, the focus stays on it
+    await user.keyboard('{Alt>}[ArrowRight]{/Alt}');
+    expect(apiRef.current!.getAllColumns().map((column) => column.field)).to.deep.equal([
+      'group',
+      'name',
+      'amount',
+    ]);
+
+    // The range restarts from the focused cell instead of extending the previous one
+    await user.keyboard('{Shift>}[ArrowRight]{/Shift}');
+    expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+      0: { name: true, amount: true },
+    });
+  });
+
   it('should not move rows with row grouping', async () => {
     const onRowOrderChange = vi.fn();
     render(

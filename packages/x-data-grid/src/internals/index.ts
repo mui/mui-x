@@ -244,6 +244,7 @@ export {
   getGridCellElement,
   getGridRowElement,
   isEventForCellContent,
+  isEventTargetCellContent,
   isEventTargetInPortal,
   isEventTargetTextEntryElement,
 } from '../utils/domUtils';
