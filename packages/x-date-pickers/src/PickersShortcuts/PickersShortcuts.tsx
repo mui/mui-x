@@ -49,10 +49,20 @@ export interface PickersShortcutsProps<
   TValue extends PickerValidValue,
 > extends ExportedPickersShortcutProps<TValue> {}
 
+const toCssLength = (value: string | number) => (typeof value === 'number' ? `${value}px` : value);
+
 const PickersShortcutsRoot = styled(List, {
   name: 'MuiPickersLayout',
   slot: 'Shortcuts',
-})({});
+})(({ theme }) => {
+  if (!theme.focusVisible) {
+    return {};
+  }
+  const { outlineWidth = 0, outlineOffset = 0 } = theme.focusVisible;
+  return {
+    scrollPaddingBlock: `calc(${toCssLength(outlineWidth)} + ${toCssLength(outlineOffset)})`,
+  };
+});
 
 /**
  * Demos:

@@ -55,7 +55,7 @@ const YearCalendarRoot = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'Root',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'yearsPerRow',
-})<{ ownerState: PickerOwnerState; yearsPerRow: 3 | 4 }>({
+})<{ ownerState: PickerOwnerState; yearsPerRow: 3 | 4 }>(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'space-evenly',
@@ -68,6 +68,9 @@ const YearCalendarRoot = styled('div', {
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
   position: 'relative',
+  ...(theme.focusVisible && {
+    '&:focus-visible': theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
+  }),
   variants: [
     {
       props: { yearsPerRow: 3 },
@@ -78,7 +81,7 @@ const YearCalendarRoot = styled('div', {
       style: { columnGap: 0, padding: '0 2px' },
     },
   ],
-});
+}));
 
 const YearCalendarButtonFiller = styled('div', {
   name: 'MuiYearCalendar',

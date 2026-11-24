@@ -335,6 +335,25 @@ describe('<YearCalendar />', () => {
     },
   );
 
+  it.skipIf(isJSDOM)(
+    'draws an inset ring on the scroll area when it takes focus with theme.focusVisible',
+    async () => {
+      const { user } = render(
+        <ThemeProvider theme={createTheme({ focusVisible: true })}>
+          <YearCalendar disabled />
+        </ThemeProvider>,
+      );
+      const root = document.querySelector<HTMLElement>('.MuiYearCalendar-root')!;
+      root.tabIndex = 0;
+
+      await user.keyboard('{Tab}');
+
+      expect(document.activeElement).to.equal(root);
+      expect(root).to.have.style('outline-style', 'solid');
+      expect(root).to.have.style('outline-offset', '-2px');
+    },
+  );
+
   it('should not format the years again when the value changes', () => {
     const formatCalls: string[] = [];
     class CountingAdapter extends AdapterClassToUse {
