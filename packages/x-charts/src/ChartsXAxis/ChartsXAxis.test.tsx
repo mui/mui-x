@@ -95,10 +95,11 @@ describe('<ChartsXAxis />', () => {
     const renderGroupedChart = (
       xAxis: Partial<XAxis<'band'>> = {},
       monthGroup: Partial<AxisGroup> = {},
+      width = 250,
     ) =>
       render(
         <BarChart
-          width={250}
+          width={width}
           height={150}
           series={[{ data: data.map(() => 1) }]}
           xAxis={[
@@ -116,33 +117,38 @@ describe('<ChartsXAxis />', () => {
         />,
       );
 
-    const getLabelRects = (container: HTMLElement, groupIndex: number) =>
+    const getLabels = (container: HTMLElement, groupIndex: number) =>
       Array.from(
         container.querySelectorAll(`[data-group-index="${groupIndex}"] .${axisClasses.tickLabel}`),
-        (label) => label.getBoundingClientRect(),
-      ).sort((a, b) => a.left - b.left);
+      ).sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left);
+    const getLabelRects = (container: HTMLElement, groupIndex: number) =>
+      getLabels(container, groupIndex).map((label) => label.getBoundingClientRect());
 
-    it('should hide overlapping labels per group level', () => {
+    it('should show the middle label of each parent group when every label does not fit', () => {
       const { container } = renderGroupedChart();
 
-      const monthRects = getLabelRects(container, 0);
-      expect(monthRects.length).to.be.greaterThan(0);
-      expect(monthRects.length).to.be.lessThan(data.length);
-      monthRects.slice(1).forEach((rect, index) => {
-        expect(rect.left).to.be.greaterThanOrEqual(monthRects[index].right);
-      });
-
+      expect(getLabels(container, 0).map((label) => label.textContent)).to.deep.equal([
+        'Jun',
+        'Jun',
+      ]);
       expect(getLabelRects(container, 1).length).to.equal(2);
     });
 
-    it('should measure each level with its own tickLabelStyle', () => {
-      const defaultCount = getLabelRects(renderGroupedChart().container, 0).length;
-      const largeCount = getLabelRects(
-        renderGroupedChart({}, { tickLabelStyle: { fontSize: 24 } }).container,
-        0,
-      ).length;
+    it('should show every label of a level when they fit', () => {
+      const { container } = renderGroupedChart({}, {}, 900);
 
-      expect(largeCount).to.be.lessThan(defaultCount);
+      const monthRects = getLabelRects(container, 0);
+      expect(monthRects.length).to.equal(data.length);
+      monthRects.slice(1).forEach((rect, index) => {
+        expect(rect.left).to.be.greaterThanOrEqual(monthRects[index].right);
+      });
+    });
+
+    it('should measure each level with its own tickLabelStyle', () => {
+      const { container } = renderGroupedChart({}, { tickLabelStyle: { fontSize: 80 } });
+
+      expect(getLabelRects(container, 0).length).to.equal(0);
+      expect(getLabelRects(container, 1).length).to.equal(2);
     });
 
     it('should show every label with tickLabelInterval: () => true', () => {

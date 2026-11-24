@@ -6,12 +6,14 @@ const tick = (
   groupIndex: number,
   offset: number,
   formattedValue?: string,
+  dataIndex?: number,
 ): GroupedTickItemType => ({
   groupIndex,
   offset,
   labelOffset: 0,
   formattedValue,
   value: formattedValue,
+  dataIndex,
 });
 
 const options = {
@@ -38,12 +40,12 @@ describe('getVisibleGroupedLabels', () => {
 
   it('should resolve overlap independently for each group level', () => {
     const ticks = [
-      tick(0, 0, 'a'),
-      tick(0, 10, 'b'),
-      tick(0, 20, 'c'),
-      tick(0, 30, 'd'),
-      tick(1, 5, 'X'),
-      tick(1, 25, 'Y'),
+      tick(0, 0, 'a', 0),
+      tick(0, 10, 'b', 1),
+      tick(0, 20, 'c', 2),
+      tick(0, 30, 'd', 3),
+      tick(1, 5, 'X', 0),
+      tick(1, 25, 'Y', 2),
     ];
 
     expect(visibleValues(ticks, getVisibleGroupedLabels(ticks, groups, options))).to.deep.equal([
@@ -52,6 +54,62 @@ describe('getVisibleGroupedLabels', () => {
       'X',
       'Y',
     ]);
+  });
+
+  it('should show every label of a level when they fit', () => {
+    const ticks = [
+      tick(0, 0, 'a', 0),
+      tick(0, 20, 'b', 1),
+      tick(0, 40, 'c', 2),
+      tick(1, 10, 'X', 0),
+    ];
+
+    expect(visibleValues(ticks, getVisibleGroupedLabels(ticks, groups, options))).to.deep.equal([
+      'a',
+      'b',
+      'c',
+      'X',
+    ]);
+  });
+
+  it('should show the middle label of each parent group when not every label fits', () => {
+    const ticks = [
+      tick(0, 0, 'a', 0),
+      tick(0, 10, 'b', 1),
+      tick(0, 20, 'c', 2),
+      tick(0, 30, 'd', 3),
+      tick(0, 40, 'e', 4),
+      tick(0, 50, 'f', 5),
+      tick(1, 10, 'X', 0),
+      tick(1, 40, 'Y', 3),
+    ];
+
+    expect(visibleValues(ticks, getVisibleGroupedLabels(ticks, groups, options))).to.deep.equal([
+      'b',
+      'e',
+      'X',
+      'Y',
+    ]);
+  });
+
+  it('should hide a level when its middle labels do not fit either', () => {
+    const ticks = [
+      tick(0, 0, 'a', 0),
+      tick(0, 10, 'b', 1),
+      tick(0, 20, 'c', 2),
+      tick(0, 30, 'd', 3),
+      tick(0, 40, 'e', 4),
+      tick(0, 50, 'f', 5),
+      tick(1, 10, 'X', 0),
+      tick(1, 40, 'Y', 3),
+    ];
+
+    expect(
+      visibleValues(
+        ticks,
+        getVisibleGroupedLabels(ticks, groups, { ...options, tickLabelMinGap: 40 }),
+      ),
+    ).to.deep.equal(['X']);
   });
 
   it('should ignore band boundary ticks', () => {

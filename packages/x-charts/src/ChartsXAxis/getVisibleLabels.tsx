@@ -80,26 +80,65 @@ export function getVisibleLabels<T extends TickItem>(
   );
 }
 
-/* Returns the visible tick labels of a grouped axis. Overlap is resolved per group level. */
+/**
+ * Returns the visible tick labels of a grouped axis. Overlap is resolved per group level.
+ * With `'auto'`, a level that has a parent level shows all its labels, or the middle label of each
+ * parent group, or none, whichever is the first to fit. The outermost level hides overlapping labels.
+ */
 export function getVisibleGroupedLabels(
   ticks: GroupedTickItemType[],
   groups: AxisGroup[],
-  { tickLabelStyle, ...options }: Parameters<typeof getVisibleLabels>[1],
+  { tickLabelStyle, tickLabelInterval, ...options }: Parameters<typeof getVisibleLabels>[1],
 ): Set<GroupedTickItemType> {
   const visibleLabels = new Set<GroupedTickItemType>();
+  const getLevelTicks = (groupIndex: number) =>
+    ticks.filter((tick) => tick.groupIndex === groupIndex && tick.formattedValue !== undefined);
 
   groups.forEach((group, groupIndex) => {
-    const groupTicks = ticks.filter(
-      (tick) => tick.groupIndex === groupIndex && tick.formattedValue !== undefined,
-    );
-
-    getVisibleLabels(groupTicks, {
+    const levelTicks = getLevelTicks(groupIndex);
+    const parentTicks = getLevelTicks(groupIndex + 1);
+    const levelOptions = {
       ...options,
+      tickLabelInterval,
       tickLabelStyle: { ...tickLabelStyle, ...group.tickLabelStyle },
-    }).forEach((tick) => visibleLabels.add(tick));
+    };
+
+    if (typeof tickLabelInterval === 'function' || parentTicks.length === 0) {
+      getVisibleLabels(levelTicks, levelOptions).forEach((tick) => visibleLabels.add(tick));
+      return;
+    }
+
+    const candidates = [levelTicks, getMiddleTicks(levelTicks, parentTicks)];
+    for (const candidate of candidates) {
+      const visible = getVisibleLabels(candidate, levelOptions);
+      const fits = candidate.every(
+        (tick) =>
+          visible.has(tick) ||
+          tick.formattedValue === '' ||
+          !options.isXInside(tick.offset + tick.labelOffset),
+      );
+
+      if (fits) {
+        visible.forEach((tick) => visibleLabels.add(tick));
+        return;
+      }
+    }
   });
 
   return visibleLabels;
+}
+
+/* Returns the middle tick of each parent group. */
+function getMiddleTicks(levelTicks: GroupedTickItemType[], parentTicks: GroupedTickItemType[]) {
+  return parentTicks.flatMap((parent, parentIndex) => {
+    const start = parent.dataIndex ?? 0;
+    const end = parentTicks[parentIndex + 1]?.dataIndex ?? Infinity;
+    const children = levelTicks.filter(
+      (tick) => (tick.dataIndex ?? 0) >= start && (tick.dataIndex ?? 0) < end,
+    );
+
+    return children.length > 0 ? [children[Math.floor((children.length - 1) / 2)]] : [];
+  });
 }
 
 function getTickLabelSize<T extends TickItem>(

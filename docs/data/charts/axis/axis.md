@@ -165,12 +165,17 @@ The demos below show the feature with:
 
 ### Tick label overlap
 
-On x-axes, overlapping tick labels are hidden per group level, the same way as on regular x-axes.
+On x-axes, tick labels that don't fit are hidden per group level.
+Each level shows all its labels if they fit.
+Otherwise, it shows the middle label of each group from the next level, for example the middle month of each quarter.
+If those don't fit either, the level's labels are hidden.
+The last level hides overlapping labels the same way as regular x-axes.
+
 To control which labels are shown, use [`tickLabelInterval`](/x/react-charts/axis-ticks/#filtering-tick-labels).
 The function runs per group level and receives the group name and the tick's index within its level.
 For example, `tickLabelInterval: () => true` shows every label.
 
-In the demo below, change the chart width to see month labels hide while quarters and years stay visible.
+In the demo below, change the chart width to see how month labels adapt while quarters and years stay visible.
 
 {{"demo": "GroupedAxesTickLabels.js"}}
 

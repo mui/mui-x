@@ -40,6 +40,7 @@ export default function GroupedAxesTickLabels() {
           ]}
           series={[{ data: values, label: 'Orders' }]}
           margin={{ left: 0 }}
+          hideLegend
         />
       </Box>
     </Box>
