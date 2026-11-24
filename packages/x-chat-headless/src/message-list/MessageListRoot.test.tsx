@@ -572,6 +572,95 @@ describe('MessageListRoot', () => {
     },
   );
 
+  it.skipIf(isJSDOM)(
+    'preserves the viewport anchor when history is prepended in the same frame the viewport shrinks',
+    async () => {
+      render(<ControlledMessageList />);
+      const log = screen.getByRole('log');
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
+
+      log.scrollTop = 40;
+      fireEvent.scroll(log);
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      });
+
+      // The prepend layout effect runs before the viewport ResizeObserver fires.
+      log.style.height = '120px';
+      fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
+
+      await waitFor(() => {
+        expect(log.scrollTop).toBe(120);
+      });
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'marks the list as at the bottom when the viewport grows into the bottom zone',
+    async () => {
+      render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} />);
+      const log = screen.getByRole('log');
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
+
+      log.scrollTop = 40;
+      fireEvent.scroll(log);
+      fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
+
+      await waitFor(() => {
+        expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
+      });
+
+      // 280px of content: a 235px viewport leaves the reader 5px from the bottom, without a scroll event.
+      log.style.height = '235px';
+
+      await waitFor(() => {
+        expect(screen.getByTestId('message-list-bottom-state')).to.have.text('true');
+      });
+      expect(screen.getByTestId('message-list-unseen-count')).to.have.text('0');
+    },
+  );
+
+  it.skipIf(isJSDOM)('keeps re-pinning on resize after the scroller element changes', async () => {
+    type ScrollerProps = React.HTMLAttributes<HTMLDivElement> & { ownerState?: unknown };
+    const ScrollerA = React.forwardRef<HTMLDivElement, ScrollerProps>(function ScrollerA(
+      { ownerState, ...props },
+      ref,
+    ) {
+      return <div ref={ref} {...props} />;
+    });
+    const ScrollerB = React.forwardRef<HTMLDivElement, ScrollerProps>(function ScrollerB(
+      { ownerState, ...props },
+      ref,
+    ) {
+      return <div ref={ref} {...props} />;
+    });
+    const view = render(<ControlledMessageList slots={{ messageListScroller: ScrollerA }} />);
+    view.setProps({ slots: { messageListScroller: ScrollerB } });
+    const log = screen.getByRole('log');
+
+    await waitFor(() => {
+      expect(log.scrollHeight).toBeGreaterThan(160);
+    });
+
+    log.scrollTop = log.scrollHeight;
+    fireEvent.scroll(log);
+    // Let the native scroll event flush so it measures the viewport before the resize.
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+    log.style.height = '120px';
+
+    await waitFor(() => {
+      expect(log.scrollHeight - log.clientHeight - log.scrollTop).to.be.at.most(1);
+    });
+  });
+
   it.skipIf(isJSDOM)('auto-scrolls on append when already near the bottom', async () => {
     render(<ControlledMessageList />);
     const log = screen.getByRole('log');

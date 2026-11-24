@@ -226,7 +226,7 @@ It renders nothing while no one is typing in the active conversation.
 
 Use `slots.typingIndicator` to replace the widget and `slotProps.typingIndicator` to pass props to it.
 Pass `slots={{ typingIndicator: null }}` to hide it.
-If you previously rendered `<ChatTypingIndicator />` as a `ChatBox` child, remove it, or pass `slots={{ typingIndicator: null }}` to keep your own placement.
+If you already render `<ChatTypingIndicator />` as a `ChatBox` child, `ChatBox` now shows two indicators: remove yours, or pass `slots={{ typingIndicator: null }}` to keep your own placement.
 
 Inbound display needs the adapter's `subscribe()` emitting `typing` events.
 The outbound auto-signal is opt-in and off by default via `features.typingSignal` (see [Sending typing state](#sending-typing-state)).

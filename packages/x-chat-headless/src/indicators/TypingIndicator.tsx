@@ -4,7 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useChatStatus } from '../hooks/useChatStatus';
-import type { ChatUser } from '../types/chat-entities';
+import type { ChatMessage, ChatUser } from '../types/chat-entities';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import type { TypingIndicatorOwnerState } from './indicators.types';
@@ -12,11 +12,11 @@ import type { TypingIndicatorOwnerState } from './indicators.types';
 function resolveTypingUser(
   userId: string,
   participants: ChatUser[] | undefined,
-  messageAuthors: ChatUser[],
+  messages: ChatMessage[],
 ) {
   return (
     participants?.find((participant) => participant.id === userId) ??
-    messageAuthors.find((author) => author.id === userId) ?? { id: userId }
+    messages.find((message) => message.author?.id === userId)?.author ?? { id: userId }
   );
 }
 
@@ -70,25 +70,12 @@ export const TypingIndicator = React.forwardRef(function TypingIndicator(
         : (conversations.find((candidate) => candidate.id === activeConversationId) ?? null),
     [activeConversationId, conversations],
   );
-  const messageAuthors = React.useMemo(() => {
-    if (typingUserIds.length === 0) {
-      return [];
-    }
-
-    return messages.reduce<ChatUser[]>((authors, message) => {
-      if (message.author && !authors.some((author) => author.id === message.author!.id)) {
-        authors.push(message.author);
-      }
-
-      return authors;
-    }, []);
-  }, [messages, typingUserIds]);
   const users = React.useMemo(
     () =>
       typingUserIds.map((userId) =>
-        resolveTypingUser(userId, conversation?.participants, messageAuthors),
+        resolveTypingUser(userId, conversation?.participants, messages),
       ),
-    [conversation?.participants, messageAuthors, typingUserIds],
+    [conversation?.participants, messages, typingUserIds],
   );
   const label = React.useMemo(
     () => (users.length === 0 ? '' : localeText.typingIndicatorLabel(users)),

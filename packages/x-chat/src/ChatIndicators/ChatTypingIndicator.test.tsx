@@ -87,19 +87,17 @@ describe('ChatTypingIndicator', () => {
     expect(document.querySelector('.MuiChatTypingIndicator-root')).to.have.class('custom-typing');
   });
 
-  it('renders a custom typingIndicator slot with its slotProps', async () => {
+  it('renders a custom typingIndicator slot with its slotProps', () => {
     function CustomTypingIndicator(props: { 'data-testid'?: string }) {
       return <div data-testid={props['data-testid']}>custom dots</div>;
     }
 
-    renderWithTypingUser({
+    renderChatBox({
       slots: { typingIndicator: CustomTypingIndicator },
       slotProps: { typingIndicator: { 'data-testid': 'custom-typing-indicator' } },
     });
 
-    await waitFor(() => {
-      expect(screen.getByTestId('custom-typing-indicator')).to.have.text('custom dots');
-    });
+    expect(screen.getByTestId('custom-typing-indicator')).to.have.text('custom dots');
   });
 
   it('hides the typing indicator when the typingIndicator slot is null', async () => {
