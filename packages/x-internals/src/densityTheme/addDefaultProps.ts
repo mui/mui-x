@@ -1,8 +1,7 @@
 import deepmerge from '@mui/utils/deepmerge';
 import type { ThemeComponentsLike } from './addRootOverride';
 
-// Copied from `@mui/material`'s unreleased `enhanceDensity`; see `addRootOverride`
-// for why it is typed structurally and when to replace it with a Material UI import.
+// Copied from `@mui/material`'s `enhanceDensity`, which keeps it private (9.6.0).
 type DefaultPropsOf<Components extends ThemeComponentsLike, Name extends keyof Components> =
   NonNullable<Components[Name]> extends { defaultProps?: infer Props | undefined }
     ? NonNullable<Props>

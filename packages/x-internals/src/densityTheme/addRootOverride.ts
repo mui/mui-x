@@ -1,8 +1,5 @@
-// Copied from `@mui/material`'s unreleased `enhanceDensity` (private helper there).
-// Typed structurally because `@mui/x-internals` has no `@mui/material` dependency:
-// the generics infer slot and prop types from whatever `components` object the
-// caller passes. If Material UI exports these helpers with the density release,
-// drop this module and import from there.
+// Copied from `@mui/material`'s `enhanceDensity`, which keeps it private (9.6.0).
+// Typed structurally because `@mui/x-internals` has no `@mui/material` dependency.
 export type ThemeComponentsLike = Record<string, any>;
 
 type StyleOverridesOf<Components extends ThemeComponentsLike, Name extends keyof Components> =
