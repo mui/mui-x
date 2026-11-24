@@ -5,13 +5,16 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
 import { styled, useThemeProps } from '@mui/material/styles';
-import * as materialStyles from '@mui/material/styles';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
-import { getTodayFocusVisible, usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
+import {
+  getSelectedFocusVisible,
+  getTodayFocusVisible,
+  usePickerDayOwnerState,
+} from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import type {
   DateRangePickerDayOwnerState,
@@ -138,8 +141,9 @@ const selectedDayStyles = (theme: Theme) => ({
   },
   ...(theme.focusVisible
     ? {
-        [`&.${buttonBaseClasses.focusVisible}`]: materialStyles.private_applyChildrenFocusVisible?.(
-          `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+        [`&.${buttonBaseClasses.focusVisible}`]: getSelectedFocusVisible(
+          theme,
+          (theme.vars || theme).palette.primary.contrastText,
         ),
       }
     : {

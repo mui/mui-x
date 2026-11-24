@@ -179,6 +179,44 @@ describe('<PickerDay />', () => {
       expect(screen.getByRole('button')).to.have.style('outline-color', 'rgb(4, 5, 6)');
     });
 
+    it.skipIf(isJSDOM)('widens the contrast band with the ring on a selected day', async () => {
+      const { user } = renderDay(
+        createTheme({
+          focusVisible: { outlineWidth: 4 },
+          palette: { primary: { main: '#1976d2', contrastText: 'rgb(1, 2, 3)' } },
+        }),
+        { selected: true },
+      );
+
+      await user.keyboard('{Tab}');
+
+      expect(screen.getByRole('button')).to.have.style('outline-offset', '-4px');
+      expect(screen.getByRole('button')).to.have.style(
+        'box-shadow',
+        'rgb(1, 2, 3) 0px 0px 0px 6px inset',
+      );
+    });
+
+    it.skipIf(isJSDOM)(
+      'keeps the contrast band when the theme ring has its own box-shadow',
+      async () => {
+        const { user } = renderDay(
+          createTheme({
+            focusVisible: { boxShadow: '0 0 0 1px rgb(7, 8, 9)' },
+            palette: { primary: { main: '#1976d2', contrastText: 'rgb(1, 2, 3)' } },
+          }),
+          { selected: true },
+        );
+
+        await user.keyboard('{Tab}');
+
+        expect(screen.getByRole('button')).to.have.style(
+          'box-shadow',
+          'rgb(1, 2, 3) 0px 0px 0px 4px inset, rgb(7, 8, 9) 0px 0px 0px 1px inset',
+        );
+      },
+    );
+
     it.skipIf(isJSDOM)('keeps the today marker when the theme ring has no box-shadow', async () => {
       const { user } = renderDay(
         createTheme({

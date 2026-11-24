@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
-import * as materialStyles from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
@@ -26,6 +25,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { getSelectedFocusVisible } from '../internals/utils/focusVisible';
 
 const useUtilityClasses = (classes: Partial<DigitalClockClasses> | undefined) => {
   const slots = {
@@ -90,8 +90,9 @@ export const DigitalClockItem = styled(MenuItem, {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
     ...(theme.focusVisible && {
-      '&.Mui-focusVisible': materialStyles.private_applyChildrenFocusVisible?.(
-        `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+      '&.Mui-focusVisible': getSelectedFocusVisible(
+        theme,
+        (theme.vars || theme).palette.primary.contrastText,
       ),
     }),
   },

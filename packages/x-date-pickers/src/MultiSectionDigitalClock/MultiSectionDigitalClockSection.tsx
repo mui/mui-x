@@ -2,7 +2,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import * as materialStyles from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -24,6 +23,7 @@ import { getFocusedListItemIndex } from '../internals/utils/utils';
 import type { FormProps } from '../internals/models/formProps';
 import type { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { getSelectedFocusVisible } from '../internals/utils/focusVisible';
 import type { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
@@ -118,8 +118,9 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
     ...(theme.focusVisible && {
-      '&.Mui-focusVisible': materialStyles.private_applyChildrenFocusVisible?.(
-        `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+      '&.Mui-focusVisible': getSelectedFocusVisible(
+        theme,
+        (theme.vars || theme).palette.primary.contrastText,
       ),
     }),
   },

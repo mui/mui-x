@@ -188,7 +188,7 @@ export {
 export { useReduceAnimations } from './hooks/useReduceAnimations';
 export { applyDefaultViewProps } from './utils/views';
 export { isElementInteractive } from './utils/isElementInteractive';
-export { getTodayFocusVisible } from './utils/todayFocusVisible';
+export { getTodayFocusVisible, getSelectedFocusVisible } from './utils/focusVisible';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {

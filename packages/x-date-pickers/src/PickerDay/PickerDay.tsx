@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { CSSInterpolation } from '@mui/material/styles';
 import { styled, useThemeProps } from '@mui/material/styles';
-import * as materialStyles from '@mui/material/styles';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
@@ -16,7 +15,7 @@ import { pickerDayClasses, getPickerDayUtilityClass } from './pickerDayClasses';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import type { PickerDayOwnerState, PickerDayProps } from './PickerDay.types';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
-import { getTodayFocusVisible } from '../internals/utils/todayFocusVisible';
+import { getSelectedFocusVisible, getTodayFocusVisible } from '../internals/utils/focusVisible';
 
 const useUtilityClasses = (
   ownerState: PickerDayOwnerState,
@@ -111,10 +110,10 @@ const PickerDayRoot = styled(ButtonBase, {
         },
         ...(theme.focusVisible
           ? {
-              [`&.${buttonBaseClasses.focusVisible}`]:
-                materialStyles.private_applyChildrenFocusVisible?.(
-                  `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
-                ),
+              [`&.${buttonBaseClasses.focusVisible}`]: getSelectedFocusVisible(
+                theme,
+                (theme.vars || theme).palette.primary.contrastText,
+              ),
             }
           : {
               '&:focus': {

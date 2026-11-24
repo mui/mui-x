@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import * as materialStyles from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -12,6 +11,7 @@ import type {
 } from './YearCalendar.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import type { PickerOwnerState } from '../models/pickers';
+import { getSelectedFocusVisible } from '../internals/utils/focusVisible';
 import type { YearCalendarClasses } from './yearCalendarClasses';
 import { getYearCalendarUtilityClass, yearCalendarClasses } from './yearCalendarClasses';
 
@@ -97,8 +97,9 @@ const DefaultYearButton = styled('button', {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
     ...(theme.focusVisible && {
-      '&:focus-visible': materialStyles.private_applyChildrenFocusVisible?.(
-        `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+      '&:focus-visible': getSelectedFocusVisible(
+        theme,
+        (theme.vars || theme).palette.primary.contrastText,
       ),
     }),
   },
