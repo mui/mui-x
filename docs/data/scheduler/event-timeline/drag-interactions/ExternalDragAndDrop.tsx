@@ -119,7 +119,8 @@ export default function ExternalDragAndDrop() {
         setPlaceholder({
           ...eventData,
           duration: Math.round(
-            (occurrence.end.timestamp - occurrence.start.timestamp) / 60_000,
+            (occurrence.end.epochMilliseconds - occurrence.start.epochMilliseconds) /
+              60_000,
           ),
         });
       },

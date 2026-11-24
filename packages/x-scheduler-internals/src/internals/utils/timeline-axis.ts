@@ -166,7 +166,7 @@ export function resolveRepeatedTimeFrom(epochMs: number, fromMs: number, timezon
  * Timestamps outside the visible window are clamped to their day's window edge; timestamps outside
  * the collection range produce out-of-range offsets (e.g. negative before the start).
  * `msInDay`, the wall-clock time of day in the timezone of the axis, can be provided when the
- * caller already knows it (e.g. from a `SchedulerProcessedDate`), skipping its computation.
+ * caller already knows it (e.g. from a `BaseTemporal.ZonedDateTime`), skipping its computation.
  */
 export function timestampToTimelineAxisOffsetMs(
   axis: TimelineAxis,

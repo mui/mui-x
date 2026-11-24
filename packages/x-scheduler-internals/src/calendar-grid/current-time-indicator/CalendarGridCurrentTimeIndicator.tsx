@@ -8,8 +8,10 @@ import { useElementPositionInCollection } from '../../internals/utils/useElement
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
-import { createProcessedDate } from '../../internals/utils/plain-date-utils/date';
-import { moveTimestampToPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
+import {
+  moveTimestampToPlainDate,
+  toZonedDateTime,
+} from '../../internals/utils/plain-date-utils/timeZone';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
   function CalendarGridCurrentTimeIndicator(
@@ -34,7 +36,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     // The time of day of now, on the wall clock of the day of the column.
     const nowForColumn = React.useMemo(
       () =>
-        createProcessedDate(
+        toZonedDateTime(
           moveTimestampToPlainDate(nowTimestamp, columnPlainDate, displayTimezone),
           displayTimezone,
         ),
@@ -48,7 +50,8 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       collection: columnAxis,
     });
 
-    const isOutOfRange = nowForColumn.timestamp < columnStart || nowForColumn.timestamp > columnEnd;
+    const isOutOfRange =
+      nowForColumn.epochMilliseconds < columnStart || nowForColumn.epochMilliseconds > columnEnd;
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

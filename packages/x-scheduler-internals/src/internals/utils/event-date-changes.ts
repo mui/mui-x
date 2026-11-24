@@ -134,6 +134,8 @@ function getAllDayRRule(
  * rule. An all-day event made timed moves to the display timezone, from 00:00 of its days when the
  * changes give no bounds, excludes its occurrences at its new time, and the date of its `until`
  * becomes the last instant of that date.
+ * `displayTimezone` is the parameter as given: with `"default"`, an event made timed keeps no
+ * `timezone`, and follows the timezone of the system like the other events.
  */
 export function stringifyEventDateChanges(
   changes: Pick<

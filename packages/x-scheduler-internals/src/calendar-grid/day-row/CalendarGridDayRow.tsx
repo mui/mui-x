@@ -10,7 +10,7 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { schedulerOtherSelectors } from '../../scheduler-selectors';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
 import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
-import type { SchedulerProcessedDay } from '../../models';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
 
 export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
   componentProps: CalendarGridDayRow.Props,
@@ -34,7 +34,7 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const cellsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
-  const dayNumbers = React.useMemo(() => days.map((day) => getDayNumber(day.plainDate)), [days]);
+  const dayNumbers = React.useMemo(() => days.map((day) => getDayNumber(day)), [days]);
 
   const contextValue: CalendarGridDayRowContext = React.useMemo(
     () => ({
@@ -85,7 +85,7 @@ export namespace CalendarGridDayRow {
      * A row can skip dates (hidden weekends, days a timezone skips), so its cells are not every date
      * between `start` and `end`.
      */
-    days: readonly Pick<SchedulerProcessedDay, 'plainDate'>[];
+    days: readonly BaseTemporal.PlainDate[];
     /**
      * The index of this row within its row type.
      * Used to uniquely identify the row for keyboard navigation when there are
