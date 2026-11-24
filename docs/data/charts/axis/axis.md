@@ -154,11 +154,6 @@ The `getValue()` function receives the axis data value and should return a group
 Each group name is used as-is, overriding any `valueFormatter` for the axis.
 Groups are displayed in the order they're defined in the `groups` array.
 
-On x-axes, overlapping tick labels are hidden per group level, the same way as on regular x-axes.
-To control which labels are shown, use [`tickLabelInterval`](/x/react-charts/axis-ticks/#filtering-tick-labels).
-The function runs per group level and receives the group name and the tick's index within its level.
-For example, `tickLabelInterval: () => true` shows every label.
-
 The demos below show the feature with:
 
 - The x-axis grouped by month, quarter, and year.
@@ -167,6 +162,17 @@ The demos below show the feature with:
 {{"demo": "GroupedAxes.js", "defaultCodeOpen": false}}
 
 {{"demo": "GroupedYAxes.js", "defaultCodeOpen": false}}
+
+### Tick label overlap
+
+On x-axes, overlapping tick labels are hidden per group level, the same way as on regular x-axes.
+To control which labels are shown, use [`tickLabelInterval`](/x/react-charts/axis-ticks/#filtering-tick-labels).
+The function runs per group level and receives the group name and the tick's index within its level.
+For example, `tickLabelInterval: () => true` shows every label.
+
+In the demo below, change the chart width to see month labels hide while quarters and years stay visible.
+
+{{"demo": "GroupedAxesTickLabels.js"}}
 
 ## Auto-sizing axes
 
