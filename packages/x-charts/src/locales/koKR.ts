@@ -48,8 +48,8 @@ export const koKRLocaleText: Partial<ChartsLocaleText> = {
   chartConfigurationStacked: '누적',
   chartConfigurationShowToolbar: '도구 모음 표시',
   chartConfigurationSkipAnimation: '애니메이션 건너뛰기',
-  chartConfigurationInnerRadius: '안쪽 반지름',
-  chartConfigurationOuterRadius: '바깥쪽 반지름',
+  chartConfigurationInnerRadius: '안쪽 반경',
+  chartConfigurationOuterRadius: '바깥쪽 반경',
   chartConfigurationColors: '색상',
   chartConfigurationHideLegend: '범례 숨기기',
   chartConfigurationShowMark: '표식 표시',
@@ -199,7 +199,7 @@ export const koKRLocaleText: Partial<ChartsLocaleText> = {
     targetLabel,
   }) {
     return [
-      sourceLabel && targetLabel ? `${sourceLabel} → ${targetLabel}` : (sourceLabel ?? targetLabel),
+      sourceLabel && targetLabel ? `${sourceLabel}에서 ${targetLabel}까지` : (sourceLabel ?? targetLabel),
       formattedValue,
     ]
       .filter(Boolean)
