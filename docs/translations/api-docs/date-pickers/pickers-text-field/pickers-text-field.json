@@ -4,7 +4,6 @@
     "areAllSectionsEmpty": {
       "description": "Is <code>true</code> if the current values equals the empty value. For a single item value, it means that <code>value === null</code> For a range value, it means that <code>value === [null, null]</code>"
     },
-    "className": { "description": "A CSS class name applied to the root element." },
     "color": {
       "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>."
     },
