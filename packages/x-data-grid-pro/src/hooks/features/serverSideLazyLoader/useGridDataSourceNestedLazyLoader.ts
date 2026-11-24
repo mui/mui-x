@@ -965,6 +965,11 @@ export const useGridDataSourceNestedLazyLoader = (
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
+        // The fetch aborted the children requests before failing, request them again.
+        // After a sort or filter the tree is outdated, so there is nothing to scan.
+        if (params.options.invalidate && !rowsStale.current) {
+          fetchVisibleSkeletonRows({ skipFallbackRevalidation: true });
+        }
         return;
       }
 
@@ -1024,7 +1029,8 @@ export const useGridDataSourceNestedLazyLoader = (
       // `addRootSkeletonRows`, but the viewport's first/last indices may be unchanged
       // (e.g. scrolled to top already) so `renderedRowsIntervalChange` does not fire.
       // Trigger a scan so root-level skeletons sitting in the viewport get fetched.
-      if (hasExpandedGroupToFetch || wasStale) {
+      // An invalidating fetch aborted the children requests, the scan requests them again.
+      if (hasExpandedGroupToFetch || wasStale || params.options.invalidate) {
         fetchVisibleSkeletonRows({ skipFallbackRevalidation: true });
       }
       startPolling();

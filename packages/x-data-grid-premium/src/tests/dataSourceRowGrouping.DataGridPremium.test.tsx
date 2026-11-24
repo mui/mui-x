@@ -798,6 +798,33 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
         expect(apiRef.current!.getRow('industry-software')).to.equal(null);
         expect(apiRef.current!.getRow('industry-banking')).to.equal(null);
       });
+
+      it('should request again the children aborted by an aggregation model change', async () => {
+        const waitForPendingChildrenRequests = () =>
+          waitFor(() => {
+            const pendingGroupKeys = deferredRequests.map((request) =>
+              JSON.stringify(request.params.groupKeys),
+            );
+            expect(pendingGroupKeys).to.include('["Technology"]');
+            expect(pendingGroupKeys).to.include('["Finance"]');
+          });
+
+        render(<TestConcurrentRequests aggregationFunctions={{ sum: {} }} />);
+
+        await waitForPendingChildrenRequests();
+        const abortedRequests = deferredRequests.splice(0);
+
+        await act(async () => apiRef.current!.setAggregationModel({ value: 'sum' }));
+        await waitForPendingChildrenRequests();
+
+        abortedRequests.forEach((request) => request.resolve());
+        deferredRequests.splice(0).forEach((request) => request.resolve());
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow('industry-software')).not.to.equal(null);
+          expect(apiRef.current!.getRow('industry-banking')).not.to.equal(null);
+        });
+      });
     });
   });
 });

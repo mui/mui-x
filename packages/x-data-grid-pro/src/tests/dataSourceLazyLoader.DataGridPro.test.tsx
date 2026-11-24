@@ -2280,6 +2280,48 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         expect(onDataSourceError.mock.calls.length).to.equal(0);
         expect(apiRef.current!.getRow('P1-0')).to.equal(null);
       });
+
+      [
+        { label: '`dataSource.fetchRows()`', failRefresh: false },
+        { label: 'a `dataSource.fetchRows()` that fails', failRefresh: true },
+      ].forEach(({ label, failRefresh }) => {
+        it(`should request again the children aborted by ${label}`, async () => {
+          const onDataSourceError = vi.fn();
+          let rootRequestCount = 0;
+          const onFetchRows = vi.fn();
+          onFetchRows.mockImplementation((params: GridGetRowsParams) => {
+            if (!isRootRequest(params)) {
+              return;
+            }
+            rootRequestCount += 1;
+            if (failRefresh && rootRequestCount > 1) {
+              throw new Error('Network error');
+            }
+          });
+          render(
+            <TestConcurrentRequests
+              onFetchRows={onFetchRows}
+              onDataSourceError={onDataSourceError}
+            />,
+          );
+
+          await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+          const abortedRequests = deferredRequests.splice(0);
+
+          await act(async () => apiRef.current!.dataSource.fetchRows());
+          expect(rootRequestCount).to.equal(2);
+          expect(onDataSourceError.mock.calls.length).to.equal(failRefresh ? 1 : 0);
+
+          abortedRequests.forEach((request) => request.resolve());
+          await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+          resolveDeferredRequests();
+
+          await waitFor(() => {
+            expect(apiRef.current!.getRow('P1-0')).not.to.equal(null);
+            expect(apiRef.current!.getRow('P2-0')).not.to.equal(null);
+          });
+        });
+      });
     });
   });
 

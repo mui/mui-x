@@ -163,7 +163,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
-          options: { skipCache, keepChildrenExpanded },
+          options: { skipCache, keepChildrenExpanded, invalidate },
         });
         rowsAreUpToDate.current = true;
         if (standardRowsUpdateStrategyActive) {
@@ -192,7 +192,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             response: getRowsResponse,
             fetchParams,
-            options: { skipCache, keepChildrenExpanded },
+            options: { skipCache, keepChildrenExpanded, invalidate },
           });
           rowsAreUpToDate.current = true;
         }
@@ -201,7 +201,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             error: originalError as Error,
             fetchParams,
-            options: { skipCache, keepChildrenExpanded },
+            options: { skipCache, keepChildrenExpanded, invalidate },
           });
           if (typeof onDataSourceErrorProp === 'function') {
             onDataSourceErrorProp(

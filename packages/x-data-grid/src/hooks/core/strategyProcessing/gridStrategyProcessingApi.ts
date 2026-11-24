@@ -29,6 +29,13 @@ export enum GridStrategyGroup {
 
 export type GridStrategyGroupValue = `${GridStrategyGroup}`;
 
+interface GridRootRowsUpdateOptions extends GridGetRowsOptions {
+  /**
+   * `true` when the fetch aborted the children requests that were in flight.
+   */
+  invalidate?: boolean;
+}
+
 export interface GridStrategyProcessingLookup {
   dataSourceRootRowsUpdate: {
     group: GridStrategyGroup.DataSource;
@@ -36,12 +43,12 @@ export interface GridStrategyProcessingLookup {
       | {
           response: GridGetRowsResponse;
           fetchParams: GridGetRowsParams;
-          options: GridGetRowsOptions;
+          options: GridRootRowsUpdateOptions;
         }
       | {
           error: Error;
           fetchParams: GridGetRowsParams;
-          options: GridGetRowsOptions;
+          options: GridRootRowsUpdateOptions;
         };
     value: void;
   };
