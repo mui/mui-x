@@ -1,11 +1,12 @@
-import type { Theme } from '@mui/material/styles';
+import type * as React from 'react';
+import type { CSSObject, Theme } from '@mui/material/styles';
 
 const TODAY_MARKER_CLEARANCE = 2;
 
-export function getTodayFocusVisible(theme: Theme) {
+export function getTodayFocusVisible(theme: Theme): CSSObject | React.CSSProperties {
   const insetRing = theme.applyFocusVisible?.('inset');
   if (!insetRing) {
-    return theme.focusVisible;
+    return theme.focusVisible || {};
   }
   const { outlineOffset = 0 } = insetRing;
   return {
