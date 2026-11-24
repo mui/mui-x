@@ -201,6 +201,27 @@ describe('<DateCalendar /> keyboard interactions', () => {
         expect(document.activeElement).toHaveAccessibleName('20');
       });
 
+      it('should keep the tab stop on the replacement day when availability changes while the grid has focus', async () => {
+        const { user, setProps } = render(
+          <DateCalendar
+            referenceDate={adapterToUse.date('2020-01-20')}
+            shouldDisableDate={(date) => adapterToUse.getDate(date) !== 20}
+          />,
+        );
+        await act(async () => screen.getByRole('gridcell', { name: '20' }).focus());
+
+        setProps({
+          shouldDisableDate: (date: PickerValidDate) => adapterToUse.getDate(date) === 20,
+        });
+        expect(screen.getByRole('gridcell', { name: '21' })).toHaveFocus();
+
+        setProps({ shouldDisableDate: () => false });
+        expect(screen.getByRole('gridcell', { name: '21' })).toHaveFocus();
+
+        await user.keyboard('{Shift>}{Tab}{/Shift}');
+        expect(screen.getByRole('button', { name: 'Next month' })).toHaveFocus();
+      });
+
       it('should call `onMonthChange` once when `onMonthChange` disables the day that gets focus', async () => {
         const onMonthChange = vi.fn();
         function CalendarWithAvailability() {
