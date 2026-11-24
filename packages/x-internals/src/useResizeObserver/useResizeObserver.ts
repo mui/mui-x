@@ -29,6 +29,7 @@ export function useResizeObserver(
       // See https://github.com/mui/mui-x/issues/8733
       // Keep production measurements in the same frame on React 18 and later.
       if (shouldDefer) {
+        cancelAnimationFrame(frameID);
         frameID = requestAnimationFrame(() => {
           fnRef.current(entries);
         });

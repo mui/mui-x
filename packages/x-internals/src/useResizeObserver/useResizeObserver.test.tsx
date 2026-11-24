@@ -45,23 +45,32 @@ describe('useResizeObserver', () => {
       useResizeObserver(ref, onResize);
       return <div ref={ref} />;
     }
-    render(<TestComponent />);
+    const { unmount } = render(<TestComponent />);
     deliver([], {} as ResizeObserver);
-    return onResize;
+    return { onResize, unmount };
   }
 
   it('should call the callback in the next frame on React 17', async () => {
-    const onResize = await mountInProduction(17);
+    const { onResize } = await mountInProduction(17);
     expect(onResize).not.toHaveBeenCalled();
 
     vi.advanceTimersToNextFrame();
     expect(onResize).toHaveBeenCalledTimes(1);
   });
 
+  it('should not call the callback after unmount when the observer delivers twice in a frame', async () => {
+    const { onResize, unmount } = await mountInProduction(17);
+    deliver([], {} as ResizeObserver);
+    unmount();
+
+    vi.advanceTimersToNextFrame();
+    expect(onResize).not.toHaveBeenCalled();
+  });
+
   it.each([18, 19])(
     'should call the callback inside the observer delivery on React %i',
     async (major) => {
-      const onResize = await mountInProduction(major);
+      const { onResize } = await mountInProduction(major);
       expect(onResize).toHaveBeenCalledTimes(1);
     },
   );
