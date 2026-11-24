@@ -599,6 +599,60 @@ describe('MessageListRoot', () => {
   );
 
   it.skipIf(isJSDOM)(
+    'preserves the viewport anchor when a row above grows in the same frame the viewport shrinks',
+    async () => {
+      render(<ControlledMessageList />);
+      const log = screen.getByRole('log');
+      // Isolate the hook's anchoring from the browser's native scroll anchoring.
+      log.style.overflowAnchor = 'none';
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
+
+      // m2 is at the top of the viewport, 40px away from the bottom.
+      log.scrollTop = 40;
+      fireEvent.scroll(log);
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      });
+
+      // Grows without a re-render (e.g. an image loading), so only the row ResizeObserver sees it.
+      screen.getByTestId('message-m1').style.height = '120px';
+      log.style.height = '120px';
+
+      await waitFor(() => {
+        expect(log.scrollTop).toBe(120);
+      });
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'stays pinned when history is prepended in the same frame the viewport shrinks',
+    async () => {
+      render(<ControlledMessageList />);
+      const log = screen.getByRole('log');
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
+
+      log.scrollTop = log.scrollHeight;
+      fireEvent.scroll(log);
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      });
+
+      log.style.height = '120px';
+      fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
+
+      await waitFor(() => {
+        expect(log.scrollHeight - log.clientHeight - log.scrollTop).to.be.at.most(1);
+      });
+    },
+  );
+
+  it.skipIf(isJSDOM)(
     'marks the list as at the bottom when the viewport grows into the bottom zone',
     async () => {
       render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} />);
@@ -627,21 +681,8 @@ describe('MessageListRoot', () => {
   );
 
   it.skipIf(isJSDOM)('keeps re-pinning on resize after the scroller element changes', async () => {
-    type ScrollerProps = React.HTMLAttributes<HTMLDivElement> & { ownerState?: unknown };
-    const ScrollerA = React.forwardRef<HTMLDivElement, ScrollerProps>(function ScrollerA(
-      { ownerState, ...props },
-      ref,
-    ) {
-      return <div ref={ref} {...props} />;
-    });
-    const ScrollerB = React.forwardRef<HTMLDivElement, ScrollerProps>(function ScrollerB(
-      { ownerState, ...props },
-      ref,
-    ) {
-      return <div ref={ref} {...props} />;
-    });
-    const view = render(<ControlledMessageList slots={{ messageListScroller: ScrollerA }} />);
-    view.setProps({ slots: { messageListScroller: ScrollerB } });
+    const view = render(<ControlledMessageList slots={{ messageListScroller: 'div' }} />);
+    view.setProps({ slots: { messageListScroller: 'section' } });
     const log = screen.getByRole('log');
 
     await waitFor(() => {

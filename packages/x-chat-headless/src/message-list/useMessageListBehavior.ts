@@ -5,8 +5,8 @@ import type { MessageListRootOwnerState } from './messageList.types';
 
 type ScrollAnchor = {
   id: string;
-  offsetFromBottom: number;
-  viewportHeight: number;
+  // Measured from the viewport top so a viewport resize (e.g. the typing indicator mounting) doesn't skew it.
+  rowBottomFromTop: number;
 };
 
 type ChangeKind = 'none' | 'append' | 'prepend' | 'other';
@@ -179,8 +179,7 @@ export function useMessageListBehavior(parameters: {
 
       return {
         id,
-        offsetFromBottom: containerRect.bottom - rect.bottom,
-        viewportHeight: containerRect.height,
+        rowBottomFromTop: rect.bottom - containerRect.top,
       };
     }
 
@@ -200,13 +199,10 @@ export function useMessageListBehavior(parameters: {
       return false;
     }
 
-    const containerRect = root.getBoundingClientRect();
-    const nextOffsetFromBottom = containerRect.bottom - element.getBoundingClientRect().bottom;
-    // A viewport resize since the capture (e.g. the typing indicator mounting) keeps the row's offset from the top.
-    const targetOffsetFromBottom =
-      anchor.offsetFromBottom + containerRect.height - anchor.viewportHeight;
+    const containerTop = root.getBoundingClientRect().top;
+    const nextRowBottomFromTop = element.getBoundingClientRect().bottom - containerTop;
 
-    root.scrollTop += targetOffsetFromBottom - nextOffsetFromBottom;
+    root.scrollTop += nextRowBottomFromTop - anchor.rowBottomFromTop;
 
     return true;
   }, []);
@@ -337,6 +333,10 @@ export function useMessageListBehavior(parameters: {
 
     if (changeKind === 'prepend' || changeKind === 'other') {
       restoreAnchor(anchorRef.current);
+      // The anchor keeps the reading position, but a viewport that shrank in the same frame would unpin the list.
+      if (changeKind === 'prepend' && autoScrollEnabled && isAtBottomRef.current) {
+        scrollToBottom();
+      }
     } else if (changeKind === 'append') {
       const appendedIds = itemIds.slice(previousItemIds.length);
       const lastAppendedMessage = appendedIds.length
@@ -384,6 +384,9 @@ export function useMessageListBehavior(parameters: {
       if (root.clientHeight !== previousHeight) {
         if (autoScrollEnabledRef.current && isAtBottomRef.current) {
           root.scrollTop = root.scrollHeight;
+        } else if (!isAtBottomRef.current) {
+          // Apply any pending row-resize restore before the anchor is replaced below.
+          restoreAnchor(anchorRef.current);
         }
         // The resize moved the viewport bottom, so refresh the bottom state and the anchor.
         if (updateIsAtBottom()) {
@@ -396,7 +399,7 @@ export function useMessageListBehavior(parameters: {
     observer.observe(root);
 
     return () => observer.disconnect();
-  }, [captureAnchor, rootElement, updateIsAtBottom, updateUnseenMessageCount]);
+  }, [captureAnchor, restoreAnchor, rootElement, updateIsAtBottom, updateUnseenMessageCount]);
 
   React.useEffect(() => {
     // Restore on (re)mount so the resize-driven auto-scroll keeps working after
