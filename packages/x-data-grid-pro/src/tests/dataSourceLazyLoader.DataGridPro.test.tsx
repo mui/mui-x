@@ -2323,12 +2323,75 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         });
       });
 
-      describe('concurrent root requests', () => {
-        // Revalidates the loaded root rows of the range, like a polling tick does
-        const revalidateRootRows = (lastRowIndex: number) => {
+      describe('children requests in flight', () => {
+        const getRequestedRanges = (fetchRowsMock: ReturnType<typeof vi.fn>, groupKeys: string) =>
+          fetchRowsMock.mock.calls
+            .map(([params]) => params as GridGetRowsParams)
+            .filter((params) => JSON.stringify(params.groupKeys) === groupKeys)
+            .map((params) => `${params.start}-${params.end}`);
+
+        it('should not request again a group whose children request is in flight', async () => {
+          const onFetchRows = vi.fn();
+          render(<TestConcurrentRequests onFetchRows={onFetchRows} />);
+
+          await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+          resolveDeferredRequests((params) => JSON.stringify(params.groupKeys) === '["P1"]');
+          await waitFor(() => expect(apiRef.current!.getRow('P1-0')).not.to.equal(null));
+
+          // Collapsing a sibling scans the viewport, where the skeleton rows of P2 still are
+          await act(async () => apiRef.current!.setRowChildrenExpansion('P1', false));
+
+          expect(getRequestedRanges(onFetchRows, '["P2"]')).to.deep.equal(['0-9']);
+
+          resolveDeferredRequests();
+          await waitFor(() => expect(apiRef.current!.getRow('P2-0')).not.to.equal(null));
+        });
+
+        it('should still request another range of a group whose children request is in flight', async () => {
+          const onFetchRows = vi.fn();
+          const treeRows = {
+            '[]': [{ id: 'P1', name: 'P1', childrenCount: 30 }],
+            '["P1"]': Array.from({ length: 30 }, (_, index) => ({
+              id: `P1-${index}`,
+              name: `P1-${index}`,
+              childrenCount: 0,
+            })),
+          };
+          render(
+            <TestConcurrentRequests
+              treeRows={treeRows}
+              onFetchRows={onFetchRows}
+              lazyLoadingRequestThrottleMs={0}
+            />,
+          );
+
+          await waitForPendingChildrenRequests(['["P1"]']);
+          expect(getRequestedRanges(onFetchRows, '["P1"]')).not.to.include('20-29');
+
+          // Rows 22+ are the children 21+ of P1
           act(() => {
             apiRef.current!.publishEvent('renderedRowsIntervalChange', {
-              firstRowIndex: 0,
+              firstRowIndex: 22,
+              lastRowIndex: 26,
+              firstColumnIndex: 0,
+              lastColumnIndex: 0,
+            });
+          });
+
+          await waitFor(() => {
+            expect(getRequestedRanges(onFetchRows, '["P1"]')).to.include('20-29');
+          });
+          resolveDeferredRequests();
+          await waitFor(() => expect(apiRef.current!.getRow('P1-25')).not.to.equal(null));
+        });
+      });
+
+      describe('concurrent root requests', () => {
+        // Loaded rows in the range are revalidated, like a polling tick does. Skeleton rows are requested.
+        const revalidateRootRows = (lastRowIndex: number, firstRowIndex = 0) => {
+          act(() => {
+            apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+              firstRowIndex,
               lastRowIndex,
               firstColumnIndex: 0,
               lastColumnIndex: 0,
@@ -2372,35 +2435,35 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           expect(apiRef.current!.getRow('R9')).not.to.equal(null);
         });
 
-        it('should keep the latest response when the same root page is revalidated twice and resolves out of order', async () => {
-          let deferRootRequests = false;
+        it('should not request again a root page whose request is in flight', async () => {
+          const onFetchRows = vi.fn();
           render(
             <TestConcurrentRequests
-              deferRequest={() => deferRootRequests}
+              treeRows={threePagesTreeRows}
+              deferRequest={(params) => isRootRequest(params) && (params.start as number) > 0}
+              onFetchRows={onFetchRows}
               defaultGroupingExpansionDepth={0}
               lazyLoadingRequestThrottleMs={0}
             />,
           );
-          await waitFor(() => expect(apiRef.current!.getRow('P1')).not.to.equal(null));
-          const initialValue = apiRef.current!.getRow('P1').value;
+          const countSecondPageRequests = () =>
+            onFetchRows.mock.calls.filter(([params]) => params.start === 10).length;
+          await waitFor(() => expect(countSecondPageRequests()).to.equal(1));
 
           vi.useFakeTimers();
           onTestFinished(() => {
             vi.useRealTimers();
           });
-          deferRootRequests = true;
-          // Two ranges of rendered rows, both within the first page
-          revalidateRootRows(2);
-          revalidateRootRows(1);
-          expect(deferredRequests).to.have.length(2);
-          const [olderRequest, newerRequest] = deferredRequests.splice(0);
+          // The rendered rows now end in the skeleton rows of the page that is loading
+          revalidateRootRows(15);
+          expect(countSecondPageRequests()).to.equal(1);
 
-          await settleRequests([newerRequest]);
-          const latestValue = apiRef.current!.getRow('P1').value;
-          expect(latestValue).to.be.greaterThan(initialValue);
+          await settleRequests(deferredRequests.splice(0));
+          expect(apiRef.current!.getRow('R9')).not.to.equal(null);
 
-          await settleRequests([olderRequest]);
-          expect(apiRef.current!.getRow('P1').value).to.equal(latestValue);
+          // The page can be requested again once its request has settled
+          revalidateRootRows(16, 12);
+          expect(countSecondPageRequests()).to.equal(2);
         });
       });
     });

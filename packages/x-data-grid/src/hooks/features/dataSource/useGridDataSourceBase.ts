@@ -94,9 +94,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
-  // The latest incremental root request of each row range. Those requests load or revalidate
-  // one range each, so they are only replaced by a newer request for the same range.
-  const lastIncrementalRequestIds = React.useRef(new Map<string, number>());
+  // The row ranges that an incremental root request is loading. Those requests load or
+  // revalidate one range each, so they only make another request for the same range redundant.
+  const inFlightIncrementalRanges = React.useRef(new Set<string>());
   // `false` while a request is in flight, and for any request that errors or is discarded as
   // stale. Lets the mount effect tell "rows are already displayed" from "the fetch never landed".
   const rowsAreUpToDate = React.useRef(false);
@@ -155,22 +155,19 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       // Registering the request before the cache lookup makes a cache hit replace the requests
       // still in flight, so they don't override the cached data we're about to apply.
       const rangeKey = `${fetchParams.start}-${fetchParams.end}`;
-      let incrementalRequestId: number | undefined;
       if (invalidate) {
         options.clearDataSourceState?.();
         // Replaces every root request in flight.
         lastRequestId.current += 1;
-        lastIncrementalRequestIds.current.clear();
-      } else {
-        // Replaces the requests in flight for the same range only. A cached revalidation of the
-        // rows on screen must not discard the page that is loading further down.
-        incrementalRequestId = (lastIncrementalRequestIds.current.get(rangeKey) ?? 0) + 1;
-        lastIncrementalRequestIds.current.set(rangeKey, incrementalRequestId);
+        inFlightIncrementalRanges.current.clear();
+      } else if (inFlightIncrementalRanges.current.has(rangeKey)) {
+        // The response in flight brings these rows.
+        return;
       }
+      // An incremental request replaces nothing. A cached revalidation of the rows on screen
+      // must not discard the page that is loading further down.
       const requestId = lastRequestId.current;
-      const isLatestRequest = () =>
-        lastRequestId.current === requestId &&
-        (invalidate || lastIncrementalRequestIds.current.get(rangeKey) === incrementalRequestId);
+      const isLatestRequest = () => lastRequestId.current === requestId;
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
@@ -195,6 +192,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       rowsAreUpToDate.current = false;
       pendingRequestCount.current += 1;
+      if (!invalidate) {
+        inFlightIncrementalRanges.current.add(rangeKey);
+      }
 
       try {
         const getRowsResponse = await getRows(fetchParams);
@@ -237,6 +237,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         }
       } finally {
         pendingRequestCount.current -= 1;
+        // A replaced request leaves the ranges alone, they belong to the requests sent after it.
+        if (!invalidate && isLatestRequest()) {
+          inFlightIncrementalRanges.current.delete(rangeKey);
+        }
         if (standardRowsUpdateStrategyActive && isLatestRequest()) {
           apiRef.current.setLoading(false);
         }
@@ -508,6 +512,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     const ignoreInFlightRequest = () => {
       if (!rootElement?.isConnected) {
         lastRequestId.current += 1;
+        inFlightIncrementalRanges.current.clear();
       }
     };
 

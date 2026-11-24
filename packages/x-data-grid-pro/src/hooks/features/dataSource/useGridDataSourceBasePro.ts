@@ -167,18 +167,18 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         {},
       ) as Partial<GridGetRowsParamsPro & { groupFields: string[] }>;
       if (!props.treeData && (pipedParams.groupFields?.length ?? 0) === 0) {
-        nestedDataManager.clearPendingRequest(id);
+        nestedDataManager.clearPendingRequest(id, argParams);
         return;
       }
       const getRows = props.dataSource?.getRows;
       if (!getRows) {
-        nestedDataManager.clearPendingRequest(id);
+        nestedDataManager.clearPendingRequest(id, argParams);
         return;
       }
 
       const rowNode = apiRef.current.getRowNode<GridDataSourceGroupNode>(id);
       if (!rowNode) {
-        nestedDataManager.clearPendingRequest(id);
+        nestedDataManager.clearPendingRequest(id, argParams);
         return;
       }
 
@@ -196,7 +196,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         : CacheChunkManager.mergeResponses(responses as GridGetRowsResponsePro[]);
 
       if (cachedData !== undefined) {
-        nestedDataManager.setRequestSettled(id);
+        nestedDataManager.setRequestSettled(id, argParams);
         apiRef.current.applyStrategyProcessor('dataSourceNestedRowsUpdate', {
           parentId: id,
           path: rowNode.path,
@@ -223,10 +223,10 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         }
         // The row was removed, or a root refresh turned it into a leaf
         if (gridRowNodeSelector(apiRef, id)?.type !== 'group') {
-          nestedDataManager.clearPendingRequest(id);
+          nestedDataManager.clearPendingRequest(id, argParams);
           return;
         }
-        nestedDataManager.setRequestSettled(id);
+        nestedDataManager.setRequestSettled(id, argParams);
 
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
         cacheResponses.forEach((response, key) => {
@@ -243,6 +243,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         if (isAborted()) {
           return;
         }
+        nestedDataManager.setRequestSettled(id, argParams);
         const childrenFetchError = error as Error;
         apiRef.current.dataSource.setChildrenFetchError(id, childrenFetchError);
         apiRef.current.applyStrategyProcessor('dataSourceNestedRowsUpdate', {
@@ -269,9 +270,10 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           );
         }
       } finally {
+        // The request is settled above, once: a second release here could free the key of a
+        // request that the response handler queued for the same range.
         if (!isAborted()) {
           apiRef.current.dataSource.setChildrenLoading(id, false);
-          nestedDataManager.setRequestSettled(id);
         }
       }
     },
