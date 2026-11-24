@@ -10,6 +10,7 @@ import type {
   MonthButtonOwnerState,
 } from './MonthCalendar.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { getSelectedFocusVisible } from '../internals/utils/focusVisible';
 import type { MonthCalendarClasses } from './monthCalendarClasses';
 import { getMonthCalendarUtilityClass, monthCalendarClasses } from './monthCalendarClasses';
 
@@ -75,7 +76,7 @@ const DefaultMonthButton = styled('button', {
   ...(theme.focusVisible && {
     '&:focus-visible': {
       backgroundColor: 'transparent',
-      ...theme.focusVisible,
+      ...(theme.applyFocusVisible?.('inset') ?? theme.focusVisible),
     },
   }),
   '&:hover': {
@@ -94,9 +95,21 @@ const DefaultMonthButton = styled('button', {
   [`&.${monthCalendarClasses.selected}`]: {
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
-    '&:focus, &:hover': {
+    '&:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible
+      ? {
+          '&:focus-visible': getSelectedFocusVisible(
+            theme,
+            (theme.vars || theme).palette.primary.contrastText,
+          ),
+        }
+      : {
+          '&:focus': {
+            backgroundColor: (theme.vars || theme).palette.primary.dark,
+          },
+        }),
   },
 }));
 

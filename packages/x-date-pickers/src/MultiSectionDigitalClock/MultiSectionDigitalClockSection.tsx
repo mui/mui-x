@@ -114,15 +114,21 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   '&.Mui-selected': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
     color: (theme.vars || theme).palette.primary.contrastText,
-    '&:focus-visible, &:hover': {
+    '&:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
-    ...(theme.focusVisible && {
-      '&.Mui-focusVisible': getSelectedFocusVisible(
-        theme,
-        (theme.vars || theme).palette.primary.contrastText,
-      ),
-    }),
+    ...(theme.focusVisible
+      ? {
+          '&.Mui-focusVisible': getSelectedFocusVisible(
+            theme,
+            (theme.vars || theme).palette.primary.contrastText,
+          ),
+        }
+      : {
+          '&:focus-visible': {
+            backgroundColor: (theme.vars || theme).palette.primary.dark,
+          },
+        }),
   },
   ...(!theme.focusVisible && {
     '&.Mui-focusVisible': {

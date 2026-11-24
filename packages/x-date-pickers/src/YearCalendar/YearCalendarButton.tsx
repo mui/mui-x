@@ -93,15 +93,21 @@ const DefaultYearButton = styled('button', {
   [`&.${yearCalendarClasses.selected}`]: {
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
-    '&:focus, &:hover': {
+    '&:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
-    ...(theme.focusVisible && {
-      '&:focus-visible': getSelectedFocusVisible(
-        theme,
-        (theme.vars || theme).palette.primary.contrastText,
-      ),
-    }),
+    ...(theme.focusVisible
+      ? {
+          '&:focus-visible': getSelectedFocusVisible(
+            theme,
+            (theme.vars || theme).palette.primary.contrastText,
+          ),
+        }
+      : {
+          '&:focus': {
+            backgroundColor: (theme.vars || theme).palette.primary.dark,
+          },
+        }),
   },
 }));
 

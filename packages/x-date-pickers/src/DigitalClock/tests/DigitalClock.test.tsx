@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import {
   adapterToUse,
@@ -228,4 +229,27 @@ describe('<DigitalClock />', () => {
       expect(screen.getByRole('listbox').parentElement!.scrollTop).to.be.greaterThan(0);
     });
   });
+
+  it.skipIf(isJSDOM)(
+    'keeps the selected color under the focus ring with theme.focusVisible',
+    async () => {
+      const { user } = render(
+        <ThemeProvider
+          theme={createTheme({
+            focusVisible: true,
+            palette: { primary: { main: '#1976d2', contrastText: 'rgb(1, 2, 3)' } },
+          })}
+        >
+          <DigitalClock defaultValue={adapterToUse.date('2019-02-02T08:30:00')} />
+        </ThemeProvider>,
+      );
+
+      await user.keyboard('{Tab}');
+
+      const selectedOption = screen.getByRole('option', { selected: true });
+      expect(document.activeElement).to.equal(selectedOption);
+      expect(selectedOption).to.have.style('background-color', 'rgb(25, 118, 210)');
+      expect(selectedOption).to.have.style('box-shadow', 'rgb(1, 2, 3) 0px 0px 0px 4px inset');
+    },
+  );
 });
