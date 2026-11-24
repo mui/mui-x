@@ -97,6 +97,8 @@ export function useMessageListBehavior(parameters: {
   const topReachedRef = React.useRef(false);
   const topLoadInFlightRef = React.useRef(false);
   const resizeFrameRef = React.useRef(0);
+  // Last viewport height seen by the viewport ResizeObserver.
+  const viewportHeightRef = React.useRef<number | null>(null);
   const isMountedRef = React.useRef(true);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
@@ -333,8 +335,17 @@ export function useMessageListBehavior(parameters: {
 
     if (changeKind === 'prepend' || changeKind === 'other') {
       restoreAnchor(anchorRef.current);
-      // The anchor keeps the reading position, but a viewport that shrank in the same frame would unpin the list.
-      if (changeKind === 'prepend' && autoScrollEnabled && isAtBottomRef.current) {
+      // The viewport shrank in the same frame and its observer hasn't re-pinned yet: re-pin here.
+      const viewportHeight = viewportHeightRef.current;
+      const viewportShrank =
+        viewportHeight != null &&
+        (rootRef.current?.clientHeight ?? viewportHeight) < viewportHeight;
+      if (
+        changeKind === 'prepend' &&
+        viewportShrank &&
+        autoScrollEnabled &&
+        isAtBottomRef.current
+      ) {
         scrollToBottom();
       }
     } else if (changeKind === 'append') {
@@ -379,9 +390,13 @@ export function useMessageListBehavior(parameters: {
 
     // A viewport resize (e.g. a widget mounting above the composer) fires no scroll
     // event, so re-pin to the bottom here or the newest message ends up clipped.
-    let previousHeight = root.clientHeight;
+    viewportHeightRef.current = root.clientHeight;
     const observer = new globalThis.ResizeObserver(() => {
-      if (root.clientHeight !== previousHeight) {
+      // Hidden (e.g. a `display: none` ancestor): keep the last visible state until it shows again.
+      if (root.clientHeight === 0) {
+        return;
+      }
+      if (root.clientHeight !== viewportHeightRef.current) {
         if (autoScrollEnabledRef.current && isAtBottomRef.current) {
           root.scrollTop = root.scrollHeight;
         } else if (!isAtBottomRef.current) {
@@ -394,7 +409,7 @@ export function useMessageListBehavior(parameters: {
         }
         anchorRef.current = captureAnchor(itemIdsRef.current);
       }
-      previousHeight = root.clientHeight;
+      viewportHeightRef.current = root.clientHeight;
     });
     observer.observe(root);
 

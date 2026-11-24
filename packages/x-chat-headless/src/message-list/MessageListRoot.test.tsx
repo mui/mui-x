@@ -11,6 +11,12 @@ import { useMessageListContext } from './internals/MessageListContext';
 const { render } = createRenderer();
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+function waitForTwoFrames() {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+}
+
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
@@ -549,20 +555,15 @@ describe('MessageListRoot', () => {
         expect(log.scrollHeight).toBeGreaterThan(160);
       });
 
-      const nextFrame = () =>
-        new Promise((resolve) => {
-          requestAnimationFrame(() => requestAnimationFrame(resolve));
-        });
-
       // Scrolled up: 240px of content in a 160px viewport, 40px away from the bottom.
       log.scrollTop = 40;
       fireEvent.scroll(log);
       // Let the native scroll event flush so it can't re-capture the anchor after the resize.
-      await nextFrame();
+      await waitForTwoFrames();
 
       // Simulates a widget (e.g. the typing indicator) mounting below the list.
       log.style.height = '120px';
-      await nextFrame();
+      await waitForTwoFrames();
 
       fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
 
@@ -584,9 +585,7 @@ describe('MessageListRoot', () => {
 
       log.scrollTop = 40;
       fireEvent.scroll(log);
-      await new Promise((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(resolve));
-      });
+      await waitForTwoFrames();
 
       // The prepend layout effect runs before the viewport ResizeObserver fires.
       log.style.height = '120px';
@@ -613,13 +612,34 @@ describe('MessageListRoot', () => {
       // m2 is at the top of the viewport, 40px away from the bottom.
       log.scrollTop = 40;
       fireEvent.scroll(log);
-      await new Promise((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(resolve));
-      });
+      await waitForTwoFrames();
 
       // Grows without a re-render (e.g. an image loading), so only the row ResizeObserver sees it.
       screen.getByTestId('message-m1').style.height = '120px';
       log.style.height = '120px';
+
+      await waitFor(() => {
+        expect(log.scrollTop).toBe(120);
+      });
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'preserves the viewport anchor on prepend inside the bottom buffer when the viewport keeps its size',
+    async () => {
+      render(<ControlledMessageList autoScroll={{ buffer: 150 }} />);
+      const log = screen.getByRole('log');
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
+
+      // 40px from the bottom, inside the 150px buffer.
+      log.scrollTop = 40;
+      fireEvent.scroll(log);
+      await waitForTwoFrames();
+
+      fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
 
       await waitFor(() => {
         expect(log.scrollTop).toBe(120);
@@ -639,9 +659,7 @@ describe('MessageListRoot', () => {
 
       log.scrollTop = log.scrollHeight;
       fireEvent.scroll(log);
-      await new Promise((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(resolve));
-      });
+      await waitForTwoFrames();
 
       log.style.height = '120px';
       fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
@@ -680,6 +698,37 @@ describe('MessageListRoot', () => {
     },
   );
 
+  it.skipIf(isJSDOM)(
+    'keeps the scroll position and unseen count while the list is hidden and shown again',
+    async () => {
+      render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} />);
+      const log = screen.getByRole('log');
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
+
+      log.scrollTop = 40;
+      fireEvent.scroll(log);
+      fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
+
+      await waitFor(() => {
+        expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
+      });
+      await waitForTwoFrames();
+
+      log.parentElement!.style.display = 'none';
+      await waitForTwoFrames();
+      await waitForTwoFrames();
+      log.parentElement!.style.display = '';
+      await waitForTwoFrames();
+      await waitForTwoFrames();
+
+      expect(log.scrollTop).toBe(40);
+      expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
+    },
+  );
+
   it.skipIf(isJSDOM)('keeps re-pinning on resize after the scroller element changes', async () => {
     const view = render(<ControlledMessageList slots={{ messageListScroller: 'div' }} />);
     view.setProps({ slots: { messageListScroller: 'section' } });
@@ -692,9 +741,7 @@ describe('MessageListRoot', () => {
     log.scrollTop = log.scrollHeight;
     fireEvent.scroll(log);
     // Let the native scroll event flush so it measures the viewport before the resize.
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => requestAnimationFrame(resolve));
-    });
+    await waitForTwoFrames();
     log.style.height = '120px';
 
     await waitFor(() => {
