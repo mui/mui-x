@@ -653,6 +653,14 @@ describe('createSendMessageActions', () => {
       ];
     }
 
+    function makeTwoTurnThread(): ChatMessage[] {
+      return [
+        ...makeThread(),
+        { id: 'u2', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Again' }] },
+        { id: 'a2', role: 'assistant', status: 'sent', parts: [{ type: 'text', text: 'Second' }] },
+      ];
+    }
+
     it('removes the old assistant run and streams a new reply via adapter.regenerate', async () => {
       const store = new ChatStore({ initialMessages: makeThread() });
       store.setActiveConversation('c1');
@@ -968,16 +976,7 @@ describe('createSendMessageActions', () => {
 
     it('restores the removed assistant run at its original position when regenerating a middle turn rejects', async () => {
       const store = new ChatStore({
-        initialMessages: [
-          ...makeThread(),
-          { id: 'u2', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Again' }] },
-          {
-            id: 'a2',
-            role: 'assistant',
-            status: 'sent',
-            parts: [{ type: 'text', text: 'Second' }],
-          },
-        ],
+        initialMessages: makeTwoTurnThread(),
       });
       const adapter = createAdapter({
         regenerate: vi.fn().mockRejectedValue(new Error('Regen failed')),
@@ -998,16 +997,7 @@ describe('createSendMessageActions', () => {
 
     it('keeps messages prepended or appended while pending in place when regenerating rejects', async () => {
       const store = new ChatStore({
-        initialMessages: [
-          ...makeThread(),
-          { id: 'u2', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Again' }] },
-          {
-            id: 'a2',
-            role: 'assistant',
-            status: 'sent',
-            parts: [{ type: 'text', text: 'Second' }],
-          },
-        ],
+        initialMessages: makeTwoTurnThread(),
       });
       const adapter = createAdapter({
         regenerate: vi.fn().mockImplementation(async () => {
@@ -1124,6 +1114,79 @@ describe('createSendMessageActions', () => {
 
       expect(store.state.messageIds).toEqual(['v1']);
       expect(store.state.isStreaming).toBe(false);
+      expect(setRuntimeError).toHaveBeenCalledWith(
+        expect.objectContaining({ code: 'REGENERATE_ERROR' }),
+      );
+    });
+
+    it('moves a reply re-added while pending back to its original position when regenerating rejects', async () => {
+      const store = new ChatStore({ initialMessages: makeTwoTurnThread() });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          store.addMessage({
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Edited' }],
+          });
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messageIds).toEqual(['u1', 'a1', 'u2', 'a2']);
+      expect(store.state.messagesById.a1.parts).toEqual([{ type: 'text', text: 'Edited' }]);
+    });
+
+    it('restores a mapped reply that precedes its anchor when regenerating rejects', async () => {
+      const [u1, a1] = makeThread();
+      const store = new ChatStore({ initialMessages: [a1, u1] });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockRejectedValue(new Error('Regen failed')),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      await regenerate('u1');
+
+      expect(store.state.messageIds).toEqual(['a1', 'u1']);
+    });
+
+    it('does not write messages when a rejected regenerate had nothing to restore', async () => {
+      const [u1] = makeThread();
+      const store = new ChatStore({ initialMessages: [u1] });
+      const setRuntimeError = vi.fn();
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockRejectedValue(new Error('Regen failed')),
+      });
+      const messageIdsBefore = store.state.messageIds;
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('u1');
+
+      expect(store.state.messageIds).toBe(messageIdsBefore);
       expect(setRuntimeError).toHaveBeenCalledWith(
         expect.objectContaining({ code: 'REGENERATE_ERROR' }),
       );

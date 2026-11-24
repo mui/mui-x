@@ -455,30 +455,42 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      // Pre-stream rejection: restore each removed message right after its original
-      // predecessor, so messages added meanwhile keep their places.
-      const nextIds = [...store.state.messageIds];
-      const presentIds = new Set(nextIds);
+      // Pre-stream rejection: put each removed message back after its nearest surviving
+      // original predecessor (or before the first survivor), keeping changes made meanwhile.
       const removedById = new Map(removedMessages.map((message) => [message.id, message]));
-      originalMessageIds.forEach((id, index) => {
-        if (!removedById.has(id) || store.state.messagesById[id]) {
-          return;
-        }
-        let predecessorIndex = index - 1;
-        while (predecessorIndex >= 0 && !presentIds.has(originalMessageIds[predecessorIndex])) {
-          predecessorIndex -= 1;
-        }
-        if (predecessorIndex < 0) {
-          return;
-        }
-        nextIds.splice(nextIds.indexOf(originalMessageIds[predecessorIndex]) + 1, 0, id);
-        presentIds.add(id);
-      });
-      store.setMessages(
-        nextIds
-          .map((id) => store.state.messagesById[id] ?? removedById.get(id))
-          .filter((message): message is ChatMessage => message != null),
+      const liveMessages = getMessages(storeUnknown).filter(
+        (message) => !removedById.has(message.id),
       );
+      const liveIds = new Set(liveMessages.map((message) => message.id));
+      const restoredAfter = new Map<string | undefined, ChatMessage[]>();
+      let previousLiveId: string | undefined;
+      let firstLiveId: string | undefined;
+      for (const id of originalMessageIds) {
+        const removedMessage = removedById.get(id);
+        if (removedMessage) {
+          const group = restoredAfter.get(previousLiveId) ?? [];
+          group.push(store.state.messagesById[id] ?? removedMessage);
+          restoredAfter.set(previousLiveId, group);
+        } else if (liveIds.has(id)) {
+          previousLiveId = id;
+          firstLiveId ??= id;
+        }
+      }
+      // No original message survived (e.g. the thread was replaced): leave it untouched.
+      if (firstLiveId !== undefined) {
+        const nextMessages = liveMessages.flatMap((message) => [
+          ...(message.id === firstLiveId ? (restoredAfter.get(undefined) ?? []) : []),
+          message,
+          ...(restoredAfter.get(message.id) ?? []),
+        ]);
+        const currentIds = store.state.messageIds;
+        if (
+          nextMessages.length !== currentIds.length ||
+          nextMessages.some((message, index) => message.id !== currentIds[index])
+        ) {
+          store.setMessages(nextMessages);
+        }
+      }
 
       store.setStreaming(false);
       setRuntimeError(
