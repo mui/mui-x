@@ -14,7 +14,6 @@
     },
     "centerRipple": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "className": { "type": { "name": "string" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disableRipple": { "type": { "name": "bool" }, "default": "false" },
