@@ -108,13 +108,13 @@ const ClockWrapper = styled('div', {
   name: 'MuiClock',
   slot: 'Wrapper',
 })(({ theme }) => ({
-  width: '100%',
-  height: '100%',
-  borderRadius: '50%',
   '&:focus': {
     outline: 'none',
   },
   ...(theme.focusVisible && {
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
     '&:focus-visible': theme.focusVisible,
   }),
 }));
