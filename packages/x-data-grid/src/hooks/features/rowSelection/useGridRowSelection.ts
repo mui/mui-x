@@ -38,8 +38,9 @@ import {
   gridQuickFilterValuesSelector,
 } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
-import { GridCellModes } from '../../../models/gridEditRowModel';
+import { GridCellModes, GridRowModes } from '../../../models/gridEditRowModel';
 import {
+  isClearSelectionShortcut,
   isKeyboardEvent,
   isNavigationKey,
   isSelectAllShortcut,
@@ -1105,6 +1106,27 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
 
       // The keys belong to the content of the cell, for example, to type in a text field
       if (isEventForCellContent(event)) {
+        return;
+      }
+
+      if (isClearSelectionShortcut(event)) {
+        // In the row editing, Escape stops the editing of the row
+        if (apiRef.current.getRowMode(params.id) === GridRowModes.Edit) {
+          return;
+        }
+        const model = gridRowSelectionStateSelector(apiRef);
+        if (model.type === 'include' && model.ids.size === 0) {
+          // Nothing to clear, Escape keeps its default behavior, for example, to close a dialog
+          return;
+        }
+        event.preventDefault();
+        // Only the next Escape closes a parent dialog
+        event.stopPropagation();
+        keyboardRange.current = null;
+        apiRef.current.setRowSelectionModel(
+          { type: 'include', ids: new Set() },
+          'multipleRowsSelection',
+        );
         return;
       }
 

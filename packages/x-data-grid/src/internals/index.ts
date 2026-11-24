@@ -247,6 +247,7 @@ export {
   isPasteShortcut,
   isCopyShortcut,
   isSelectAllShortcut,
+  isClearSelectionShortcut,
   isUndoShortcut,
   isRedoShortcut,
   isFillDownShortcut,

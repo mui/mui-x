@@ -243,12 +243,14 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   // - https://github.com/mui/mui-x/issues/20143
   useGridSelector(apiRef, () => apiRef.current.isCellEditable(cellParams));
 
-  const isSelected = useGridSelector(apiRef, () =>
-    apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
+  // `undefined` when the cell cannot be selected
+  const selectedState = useGridSelector(apiRef, () =>
+    apiRef.current.unstable_applyPipeProcessors('isCellSelected', undefined, {
       id: rowId,
       field,
     }),
   );
+  const isSelected = !!selectedState;
 
   const store = apiRef.current.virtualizer.store;
   const hiddenCells = useStore(store, Rowspan.selectors.hiddenCells);
@@ -720,6 +722,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       aria-colindex={colIndex + 1}
       aria-colspan={colSpan}
       aria-rowspan={rowSpan}
+      aria-selected={selectedState}
       style={style}
       title={title}
       tabIndex={isEditorPreMounted ? -1 : tabIndex}

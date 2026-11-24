@@ -7,6 +7,7 @@
 Single row selection comes enabled by default for the MIT Data Grid component.
 You can select a row by clicking it, or using the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection).
 To unselect a row, click on it again.
+To unselect all rows, press <kbd class="key">Esc</kbd> while a cell is in focus.
 
 {{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
 

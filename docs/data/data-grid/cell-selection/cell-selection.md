@@ -27,11 +27,15 @@ To select a range of cells, users can:
 - Click on a cell, then hold <kbd class="key">Shift</kbd> and click on another cell. If a third cell is clicked then the selection will restart from the last clicked cell.
 - Use the arrow keys to focus on a cell, then hold <kbd class="key">Shift</kbd> and press the arrow keys to extend the selection.
   <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Home</kbd></kbd> and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">End</kbd></kbd> extend it to the first or last cell of the row, and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Page Up</kbd></kbd> and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Page Down</kbd></kbd> by one scrollable page.
+  When all the cells of the focused row are selected, <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up</kbd></kbd> and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Down</kbd></kbd> extend the selection by whole rows.
 
 To select all cells, press <kbd><kbd class="key">Cmd</kbd>+<kbd class="key">A</kbd></kbd> (or <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> on Windows) while a cell is in focus.
 The shortcut selects the cells of all rows on the current page.
 Utility columns, such as the checkbox selection column, are not included.
 When both cell selection and row selection are enabled, this shortcut selects cells instead of rows.
+
+To deselect all cells, press <kbd class="key">Esc</kbd> while a cell is in focus.
+When row selection is enabled, the selected rows are deselected too.
 
 Try out the various actions to select cells in the demo below—you can toggle [row selection](/x/react-data-grid/row-selection/) on and off to see how these two selection features can work in parallel.
 
@@ -47,7 +51,9 @@ To act on the rows only, also hold <kbd class="key">Cmd</kbd> (or <kbd class="ke
   With <kbd class="key">Page Up</kbd>, <kbd class="key">Page Down</kbd>, <kbd class="key">Home</kbd>, and <kbd class="key">End</kbd>, they extend by one scrollable page, or to the first or last row.
 
 The selected cells are kept when rows are selected.
-When row selection is disabled, these shortcuts select all the cells of the rows.
+
+When row selection is disabled, these shortcuts select all the cells of the rows instead.
+<kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> then also selects all the cells of the focused row, or of all the rows in the selected range.
 
 See the [accessibility](/x/react-data-grid/accessibility/#selection) page for the full list of keyboard shortcuts.
 

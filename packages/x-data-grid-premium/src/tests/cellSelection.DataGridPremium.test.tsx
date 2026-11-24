@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
 import type { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid, microtasks } from 'test/utils/helperFn';
 import { createRenderer, act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
@@ -570,6 +571,47 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
   });
 
+  describe('accessibility', () => {
+    it('should add aria-selected to the cells that can be selected', async () => {
+      const { user } = render(<TestDataGridSelection rowSelection checkboxSelection />);
+      await user.click(getCell(1, 1));
+
+      expect(getCell(1, 1)).to.have.attribute('aria-selected', 'true');
+      expect(getCell(1, 2)).to.have.attribute('aria-selected', 'false');
+      expect(getCell(0, 1)).to.have.attribute('aria-selected', 'false');
+      // The checkbox column
+      expect(getCell(1, 0)).not.to.have.attribute('aria-selected');
+    });
+
+    it('should not add aria-selected to the cells of the pinned rows', () => {
+      const data = getBasicGridData(3, 2);
+      render(
+        <TestDataGridSelection
+          rows={data.rows.slice(1)}
+          columns={data.columns}
+          pinnedRows={{ top: [data.rows[0]] }}
+        />,
+      );
+      expect(getCell(0, 0)).not.to.have.attribute('aria-selected');
+      expect(getCell(1, 0)).to.have.attribute('aria-selected', 'false');
+    });
+
+    it('should not add aria-selected to the cells when the cell selection is disabled', () => {
+      render(<TestDataGridSelection rowSelection cellSelection={false} />);
+      expect(getCell(0, 0)).not.to.have.attribute('aria-selected');
+    });
+
+    it('should set aria-multiselectable on the grid when the cell selection is enabled', () => {
+      const { setProps } = render(
+        <TestDataGridSelection rowSelection disableMultipleRowSelection />,
+      );
+      expect(screen.getByRole('grid')).to.have.attribute('aria-multiselectable', 'true');
+
+      setProps({ cellSelection: false });
+      expect(screen.getByRole('grid')).to.have.attribute('aria-multiselectable', 'false');
+    });
+  });
+
   describe('keyboard shortcuts', () => {
     const getSelectedRowIds = () =>
       Array.from(apiRef.current!.getSelectedRows().keys()).sort((a, b) => Number(a) - Number(b));
@@ -650,13 +692,92 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
 
     describe('Shift + Space', () => {
-      it('should select the focused cell', async () => {
+      const allFields = { id: true, currencyPair: true, price1M: true };
+
+      it('should select all the cells of the row when the row selection is disabled', async () => {
         const { user } = render(<TestDataGridSelection />);
         await focusCell(1, 1);
         await user.keyboard('{Shift>}[Space]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({ 1: allFields });
+        expect(getCell(1, 1)).toHaveFocus();
+
+        // The same as Ctrl/Cmd + Shift + Space
+        await act(() => apiRef.current!.setCellSelectionModel({}));
+        await user.keyboard('{Control>}{Shift>}[Space]{/Shift}{/Control}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({ 1: allFields });
+      });
+
+      it('should select all the cells of the rows of the range', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[ArrowDown][ArrowDown][Space]{/Shift}');
         expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
-          1: { currencyPair: true },
+          1: allFields,
+          2: allFields,
+          3: allFields,
         });
+        expect(getCell(1, 1)).toHaveFocus();
+      });
+
+      it('should keep extending whole rows with Shift + ArrowUp / ArrowDown', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[Space][ArrowDown]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: allFields,
+          2: allFields,
+        });
+
+        // The range crosses the focused row
+        await user.keyboard('{Shift>}[ArrowUp][ArrowUp]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: allFields,
+          1: allFields,
+        });
+        expect(getCell(1, 1)).toHaveFocus();
+      });
+
+      it('should mark the last cell of the row where the range ends', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.click(getCell(1, 0));
+        await user.keyboard('{Shift>}[Space]{/Shift}');
+        expect(getCell(1, 2)).to.have.class(gridClasses['cell--rangeEnd']);
+        expect(document.querySelectorAll(`.${gridClasses['cell--rangeEnd']}`)).to.have.length(1);
+
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeEnd']);
+        expect(document.querySelectorAll(`.${gridClasses['cell--rangeEnd']}`)).to.have.length(1);
+
+        // Back to a range of cells
+        await user.keyboard('{Shift>}[ArrowRight]{/Shift}');
+        expect(getCell(2, 1)).to.have.class(gridClasses['cell--rangeEnd']);
+        expect(document.querySelectorAll(`.${gridClasses['cell--rangeEnd']}`)).to.have.length(1);
+      });
+
+      it('should select a range of cells with Shift + ArrowLeft / ArrowRight after selecting whole rows', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[Space][ArrowRight]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true, price1M: true },
+        });
+      });
+
+      it('should extend whole rows when all the cells of the focused row are selected', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.click(getCell(1, 0));
+        await user.keyboard('{Shift>}[End][ArrowDown]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: allFields,
+          2: allFields,
+        });
+      });
+
+      it('should skip the cells that cannot be selected', async () => {
+        const { user } = render(<TestDataGridSelection rowReordering />);
+        await focusCell(1, 2);
+        await user.keyboard('{Shift>}[Space]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({ 1: allFields });
       });
 
       it('should select the focused cell and toggle the row when the row selection is enabled', async () => {
@@ -819,6 +940,80 @@ describe('<DataGridPremium /> - Cell selection', () => {
           0: { currencyPair: true },
         });
         expect(getCell(0, 1)).toHaveFocus();
+      });
+    });
+
+    describe('Escape', () => {
+      it('should clear the selected rows and cells', async () => {
+        const { user } = render(<TestDataGridSelection rowSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        await user.keyboard('{Control>}{Shift>}[ArrowDown]{/Shift}{/Control}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true },
+          2: { currencyPair: true },
+        });
+
+        await user.keyboard('[Escape]');
+        expect(getSelectedRowIds()).to.deep.equal([]);
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({});
+        expect(getCell(2, 1)).toHaveFocus();
+      });
+
+      it('should restart the range from the focused cell', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[ArrowDown][ArrowRight]{/Shift}');
+        await user.keyboard('[Escape]');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({});
+
+        await user.keyboard('{Shift>}[ArrowUp]{/Shift}');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          0: { currencyPair: true },
+          1: { currencyPair: true },
+        });
+      });
+
+      it('should close a parent dialog only when nothing is selected', async () => {
+        const onClose = vi.fn();
+        const { user } = render(
+          <Dialog open onClose={onClose}>
+            <TestDataGridSelection />
+          </Dialog>,
+        );
+        await user.click(getCell(1, 1));
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({
+          1: { currencyPair: true },
+        });
+
+        await user.keyboard('[Escape]');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal({});
+        expect(onClose.mock.calls.length).to.equal(0);
+
+        await user.keyboard('[Escape]');
+        expect(onClose.mock.calls.length).to.equal(1);
+      });
+
+      it('should stop the editing and keep the selected cells', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            columns={[{ field: 'id' }, { field: 'name', editable: true }]}
+            rows={[
+              { id: 0, name: 'Alice' },
+              { id: 1, name: 'Bob' },
+            ]}
+          />,
+        );
+        await user.click(getCell(0, 1));
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        const cellSelectionModel = { 0: { name: true }, 1: { name: true } };
+        await user.keyboard('[Enter]');
+        expect(apiRef.current!.getCellMode(0, 'name')).to.equal('edit');
+
+        await user.keyboard('[Escape]');
+        expect(apiRef.current!.getCellMode(0, 'name')).to.equal('view');
+        expect(apiRef.current!.getCellSelectionModel()).to.deep.equal(cellSelectionModel);
       });
     });
 

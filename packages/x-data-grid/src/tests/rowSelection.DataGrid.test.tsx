@@ -816,6 +816,124 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
+    describe('Escape', () => {
+      it('should clear the selected rows', async () => {
+        const { user } = render(<TestDataGridSelection checkboxSelection />);
+        await user.click(getCell(1, 1));
+        await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+
+        await user.keyboard('[Escape]');
+        expect(getSelectedRowIds()).to.deep.equal([]);
+        expect(getActiveCell()).to.equal('2-1');
+
+        // The range restarts from the focused row
+        await user.keyboard('{Shift>}[ArrowUp]{/Shift}');
+        expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+      });
+
+      it('should clear the rows selected with the header checkbox', async () => {
+        const onRowSelectionModelChange = vi.fn();
+        const { user } = render(
+          <TestDataGridSelection
+            checkboxSelection
+            onRowSelectionModelChange={onRowSelectionModelChange}
+          />,
+        );
+        fireEvent.click(screen.getByRole('checkbox', { name: /select all rows/i }));
+        expect(onRowSelectionModelChange.mock.lastCall![0].type).to.equal('exclude');
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+
+        await act(() => getCell(1, 1).focus());
+        await user.keyboard('[Escape]');
+        expect(getSelectedRowIds()).to.deep.equal([]);
+        expect(onRowSelectionModelChange.mock.lastCall![0]).to.deep.equal(includeRowSelection([]));
+      });
+
+      it('should let the key reach the parent only when no row is selected', async () => {
+        const handleKeyDown = vi.fn();
+        const { user } = render(
+          <div onKeyDown={handleKeyDown}>
+            <TestDataGridSelection checkboxSelection />
+          </div>,
+        );
+        await user.click(getCell(1, 1));
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+
+        await user.keyboard('[Escape]');
+        expect(getSelectedRowIds()).to.deep.equal([]);
+        expect(handleKeyDown.mock.calls.filter(([event]) => event.key === 'Escape')).to.have.length(
+          0,
+        );
+
+        await user.keyboard('[Escape]');
+        expect(handleKeyDown.mock.calls.filter(([event]) => event.key === 'Escape')).to.have.length(
+          1,
+        );
+      });
+
+      [GridEditModes.Cell, GridEditModes.Row].forEach((editMode) => {
+        it(`should stop the editing and keep the selected rows when editMode="${editMode}"`, async () => {
+          const { user } = render(
+            <TestDataGridSelection
+              checkboxSelection
+              editMode={editMode}
+              columns={[{ field: 'id' }, { field: 'name', editable: true }]}
+              rows={[
+                { id: 0, name: 'Alice' },
+                { id: 1, name: 'Bob' },
+              ]}
+            />,
+          );
+          await user.click(getCell(0, 2));
+          expect(getSelectedRowIds()).to.deep.equal([0]);
+          await user.keyboard('[Enter]');
+          expect(getCell(0, 2)).to.have.class(gridClasses['cell--editing']);
+
+          await user.keyboard('[Escape]');
+          expect(getCell(0, 2)).not.to.have.class(gridClasses['cell--editing']);
+          expect(getSelectedRowIds()).to.deep.equal([0]);
+        });
+      });
+
+      it('should keep the selected rows when pressing Escape on a cell that is not editable in a row being edited', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            checkboxSelection
+            editMode="row"
+            columns={[{ field: 'id' }, { field: 'name', editable: true }]}
+            rows={[
+              { id: 0, name: 'Alice' },
+              { id: 1, name: 'Bob' },
+            ]}
+          />,
+        );
+        await user.click(getCell(0, 2));
+        await user.keyboard('[Enter]');
+        expect(getRow(0)).to.have.class(gridClasses['row--editing']);
+        await act(() => getCell(0, 1).focus());
+
+        await user.keyboard('[Escape]');
+        expect(getSelectedRowIds()).to.deep.equal([0]);
+      });
+
+      it('should keep the selected rows when the focus is on an element inside of the cell', async () => {
+        const { user } = render(
+          <TestDataGridSelection
+            checkboxSelection
+            columns={[{ field: 'id' }, { field: 'input', renderCell: () => <input /> }]}
+            rows={[{ id: 0 }, { id: 1 }]}
+          />,
+        );
+        await user.click(getCell(0, 1));
+        expect(getSelectedRowIds()).to.deep.equal([0]);
+        await act(() => getCell(0, 2).querySelector('input')!.focus());
+
+        await user.keyboard('[Escape]');
+        expect(getSelectedRowIds()).to.deep.equal([0]);
+      });
+    });
+
     describe('range selection with Shift + navigation keys', () => {
       // Small rows so that all the rows are rendered in the browser, `getSelectedRowIds` reads the DOM
       const rangeData = { ...getBasicGridData(6, 2), rowHeight: 30, hideFooter: true };
@@ -1534,6 +1652,8 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(getCell(0, 0));
       expect(getRow(0).getAttribute('aria-selected')).to.equal('true');
       expect(getRow(1).getAttribute('aria-selected')).to.equal('false');
+      // Only the Premium plan has the cell selection
+      expect(getCell(0, 0).getAttribute('aria-selected')).to.equal(null);
     });
 
     it('should not add aria-selected attributes if the row selection is disabled', async () => {

@@ -17,6 +17,7 @@ import {
   isFillRightShortcut,
   isNavigationKey,
   isSelectAllShortcut,
+  isClearSelectionShortcut,
   serializeCellValue,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
@@ -34,6 +35,7 @@ import {
   gridSortedRowIdsSelector,
   gridDimensionsSelector,
   GridCellModes,
+  GridRowModes,
 } from '@mui/x-data-grid-pro';
 import type {
   GridEventListener,
@@ -75,6 +77,9 @@ function isSameCell(a: GridCellCoordinates, b: GridCellCoordinates) {
 }
 
 const ROW_RANGE_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ']);
+
+// With Shift, Home and End extend the cell range in the row, so they are not part of this list
+const VERTICAL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown']);
 
 /**
  * Ctrl/Cmd + Shift + vertical navigation keys or Space act on whole rows.
@@ -216,6 +221,9 @@ export const useGridCellSelection = (
   const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const isRtl = useRtl();
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates>(null);
+  // The value of `cellWithVirtualFocus` when it ends a range of whole rows.
+  // Any other range end replaces the object, so comparing the references tells if the range is still of whole rows.
+  const wholeRowsRangeEnd = React.useRef<GridCellCoordinates>(null);
   const lastMouseDownCell = React.useRef<GridCellCoordinates>(null);
   const lastDrag = React.useRef<{ start: GridCellCoordinates; end: GridCellCoordinates }>(null);
   // The ends of the range the last time it was extended.
@@ -702,6 +710,42 @@ export const useGridCellSelection = (
     apiRef.current.setCellSelectionModel(newModel);
   });
 
+  const clearCellSelection = useEventCallback<
+    [GridEventLookup['cellKeyDown']['params'], MuiEvent<GridEventLookup['cellKeyDown']['event']>],
+    void
+  >((params, event) => {
+    // Get the most recent cell mode because it may have been changed by another listener.
+    // While editing, Escape stops the editing.
+    if (
+      apiRef.current.getCellMode(params.id, params.field) === GridCellModes.Edit ||
+      apiRef.current.getRowMode(params.id) === GridRowModes.Edit
+    ) {
+      return;
+    }
+
+    // The key belongs to the content of the cell, for example, to close a popup
+    if (isEventForCellContent(event)) {
+      return;
+    }
+
+    const model = apiRef.current.getCellSelectionModel();
+    const hasSelectedCells = Object.values(model).some((fields) =>
+      Object.values(fields).some(Boolean),
+    );
+    // The range restarts from the focused cell, even if no cell is selected
+    cellWithVirtualFocus.current = { id: params.id, field: params.field };
+    rangeEnds.current = null;
+    if (!hasSelectedCells) {
+      // Nothing to clear, Escape keeps its default behavior, for example, to close a dialog
+      return;
+    }
+
+    event.preventDefault();
+    // Only the next Escape closes a parent dialog
+    event.stopPropagation();
+    apiRef.current.setCellSelectionModel({});
+  });
+
   const canSelectCellWithSpace = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       if (event.key !== ' ' || event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
@@ -738,7 +782,7 @@ export const useGridCellSelection = (
       const pageSize = apiRef.current.getViewportPageSize();
       const isRowIndexSelectable = (index: number) => isSelectableRow(visibleRows.rows[index].id);
       let endRowIndex: number | null;
-      let endField = otherCell.field;
+      const endField = otherCell.field;
 
       switch (event.key) {
         case 'ArrowDown':
@@ -775,9 +819,8 @@ export const useGridCellSelection = (
           endRowIndex = findSelectableIndex(lastRowIndex, -1, rowCount, isRowIndexSelectable);
           break;
         default:
-          // Space selects the row of the focused cell
-          endRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
-          endField = params.field;
+          // Space selects the rows of the range, up to the cell with the virtual focus
+          endRowIndex = currentRowIndex;
       }
 
       if (endRowIndex === null || visibleColumns.length === 0) {
@@ -786,6 +829,7 @@ export const useGridCellSelection = (
 
       const endRowId = visibleRows.rows[endRowIndex].id;
       cellWithVirtualFocus.current = { id: endRowId, field: endField };
+      wholeRowsRangeEnd.current = cellWithVirtualFocus.current;
 
       apiRef.current.scrollToIndexes({
         rowIndex: getRowIndexRelativeToAllRows(apiRef, endRowId),
@@ -800,12 +844,51 @@ export const useGridCellSelection = (
     },
   );
 
+  // `true` when all the selectable cells of the row are selected
+  const isWholeRowSelected = useEventCallback((id: GridRowId) => {
+    const rowModel = apiRef.current.getCellSelectionModel()[id];
+    if (!rowModel) {
+      return false;
+    }
+    let hasSelectableField = false;
+    for (const column of apiRef.current.getVisibleColumns()) {
+      if (isSelectableField(column.field)) {
+        if (!rowModel[column.field]) {
+          return false;
+        }
+        hasSelectableField = true;
+      }
+    }
+    return hasSelectableField;
+  });
+
+  /**
+   * `true` when Shift + the key selects all the cells of the rows, instead of a range of cells:
+   * - With Ctrl/Cmd, see `isRowRangeShortcut`.
+   * - Space without the row selection, the same as Excel.
+   * - Vertical keys when the whole focused row is selected, so a range of whole rows keeps extending as whole rows.
+   */
+  const isWholeRowsShortcut = (id: GridRowId, event: React.KeyboardEvent) => {
+    if (isRowRangeShortcut(event)) {
+      return true;
+    }
+    if (event.key === ' ') {
+      return !props.rowSelection;
+    }
+    return VERTICAL_KEYS.has(event.key) && isWholeRowSelected(id);
+  };
+
   const handleCellKeyDown = useEventCallback<
     [GridEventLookup['cellKeyDown']['params'], MuiEvent<GridEventLookup['cellKeyDown']['event']>],
     void
   >((params, event) => {
     if (isSelectAllShortcut(event)) {
       selectAllCells(params, event);
+      return;
+    }
+
+    if (isClearSelectionShortcut(event)) {
+      clearCellSelection(params, event);
       return;
     }
 
@@ -865,7 +948,7 @@ export const useGridCellSelection = (
       return;
     }
 
-    if (isRowRangeShortcut(event)) {
+    if (isWholeRowsShortcut(params.id, event)) {
       selectCellsOfRows(params, event, otherCell);
       return;
     }
@@ -1912,9 +1995,22 @@ export const useGridCellSelection = (
 
   const checkIfCellIsSelected = React.useCallback<GridPipeProcessor<'isCellSelected'>>(
     (isSelected, { id, field }) => {
+      if (!props.cellSelection) {
+        return isSelected;
+      }
+      const rowNode = gridRowNodeSelector(apiRef, id);
+      if (
+        !rowNode ||
+        rowNode.type === 'pinnedRow' ||
+        !isSelectableRow(id) ||
+        !isSelectableField(field)
+      ) {
+        // The cell can still be in the model, for example, with `setCellSelectionModel()`
+        return apiRef.current.isCellSelected(id, field) || isSelected;
+      }
       return apiRef.current.isCellSelected(id, field);
     },
-    [apiRef],
+    [apiRef, props.cellSelection, isSelectableField, isSelectableRow],
   );
 
   const addClassesToCells = React.useCallback<GridPipeProcessor<'cellClassName'>>(
@@ -1998,9 +2094,22 @@ export const useGridCellSelection = (
       // The focused cell is the anchor, there is nothing to mark when they are the same.
       const extendedCell = cellWithVirtualFocus.current;
       const focusedCell = gridFocusCellSelector(apiRef);
+      let rangeEndField = extendedCell?.field;
+      if (extendedCell?.id === id && extendedCell === wholeRowsRangeEnd.current) {
+        // A range of whole rows ends on the last cell of the row
+        const lastColumnIndex = findSelectableIndex(
+          visibleColumns.length - 1,
+          -1,
+          visibleColumns.length,
+          (index) => isSelectableField(visibleColumns[index].field),
+        );
+        if (lastColumnIndex !== null) {
+          rangeEndField = visibleColumns[lastColumnIndex].field;
+        }
+      }
       if (
         extendedCell?.id === id &&
-        extendedCell.field === field &&
+        rangeEndField === field &&
         focusedCell &&
         (focusedCell.id !== id || focusedCell.field !== field)
       ) {
@@ -2025,7 +2134,7 @@ export const useGridCellSelection = (
 
       return newClasses;
     },
-    [apiRef, props.cellSelectionFillHandle],
+    [apiRef, isSelectableField, props.cellSelectionFillHandle],
   );
 
   const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
