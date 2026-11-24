@@ -34,17 +34,16 @@ The following steps must be proposed as a pull request.
 
 ```bash
 pnpm release:changelog
-   --githubToken   YOUR_GITHUB_TOKEN (needs "public_repo" permission)
-   --lastRelease   The release to compare against (default: the last one)
-   --release       The branch to release (default: master)
-   --nextVersion   Expected version of the next release (if not provided, __VERSION__ placeholders must be updated manually)
+   --lastRelease   The release to compare against (default: the last tag reachable from HEAD)
+   --release       The ref to release (default: the local HEAD, which must be pushed)
+   --nextVersion   Expected version of the next release (default: the version in the root package.json)
 ```
 
 > :warning: the script will add a separator string in form of a comment like this right after the highlights:
 > `<!--/ DO_NOT_REMOVE /-->`
 > This string needs to stay where it gets inserted for the automated discord announcement to work.
 
-You can also provide the GitHub token by setting `process.env.GITHUB_TOKEN` variable.
+The layout lives in `scripts/changelog.config.mjs`.
 
 In case of a problem, another method to generate the changelog is available at the end of this page.
 

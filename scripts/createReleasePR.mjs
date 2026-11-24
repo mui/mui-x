@@ -37,7 +37,7 @@ import {
   generateChangelog as generateReleaseEntry,
   findLatestTaggedVersion,
 } from '@mui/internal-code-infra/changelog';
-import changelogConfig from './changelog.config.mjs';
+import changelog from './changelog.config.mjs';
 import pck from '../package.json' with { type: 'json' };
 
 const packageVersion = pck.version;
@@ -617,7 +617,7 @@ async function generateChangelog(newVersion, lastVersion, releaseBranch = 'maste
     console.log(`Last version: ${lastVersion}`);
 
     const entry = await generateReleaseEntry({
-      config: changelogConfig,
+      ...changelog,
       org: ORG,
       repo: REPO,
       octokit: octokit ?? undefined,
@@ -625,6 +625,7 @@ async function generateChangelog(newVersion, lastVersion, releaseBranch = 'maste
       lastRelease: `v${lastVersion}`,
       release: releaseBranch,
     });
+
     return entry.markdown;
   } catch (error) {
     console.error('Error generating changelog:', error);
