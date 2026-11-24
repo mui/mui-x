@@ -11,7 +11,7 @@ const events: SchedulerEvent[] = [
     allDay: true,
     title: 'Order 1042',
     resource: 'line-1',
-    href: '#order-1042',
+    href: '#link',
   },
   {
     id: 'order-1043',
@@ -20,7 +20,7 @@ const events: SchedulerEvent[] = [
     allDay: true,
     title: 'Order 1043',
     resource: 'line-2',
-    href: '#order-1043',
+    href: '#link',
   },
   {
     id: 'order-1044',
@@ -29,7 +29,7 @@ const events: SchedulerEvent[] = [
     allDay: true,
     title: 'Order 1044',
     resource: 'line-1',
-    href: '#order-1044',
+    href: '#link',
   },
 ];
 

@@ -9,28 +9,28 @@ const events: SchedulerEvent[] = [
     start: '2025-07-01T09:00:00',
     end: '2025-07-01T10:30:00',
     title: 'Order 1042',
-    href: '#order-1042',
+    href: '#link',
   },
   {
     id: 'order-1043',
     start: '2025-07-01T13:00:00',
     end: '2025-07-01T14:00:00',
     title: 'Order 1043',
-    href: '#order-1043',
+    href: '#link',
   },
   {
     id: 'order-1044',
     start: '2025-07-02T11:00:00',
     end: '2025-07-02T12:30:00',
     title: 'Order 1044',
-    href: '#order-1044',
+    href: '#link',
   },
   {
     id: 'order-1045',
     start: '2025-07-03T10:00:00',
     end: '2025-07-03T11:00:00',
     title: 'Order 1045',
-    href: '#order-1045',
+    href: '#link',
   },
 ];
 
