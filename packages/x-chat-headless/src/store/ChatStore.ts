@@ -363,7 +363,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     if (haveAuthorParametersChanged(this.parameters, parameters)) {
-      newState.authorParametersVersion = this.state.authorParametersVersion + 1;
+      newState.authorParametersVersion = (this.state.authorParametersVersion ?? 0) + 1;
     }
 
     this.parameters = parameters;

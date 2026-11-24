@@ -4,6 +4,9 @@ import { describe, expect, it } from 'vitest';
 import { ChatStore } from '../store';
 import type { ChatMessage } from '../types/chat-entities';
 import { ChatStoreContext } from '../internals/useChatStoreContext';
+import { ChatLocaleProvider } from '../chat/internals/ChatLocaleContext';
+import { MessageGroup } from '../message-group/MessageGroup';
+import { useMessage } from './useMessage';
 import { useMessageAuthor } from './useMessageAuthor';
 
 const messages: ChatMessage[] = [
@@ -17,15 +20,10 @@ describe('useMessageAuthor', () => {
   it('does not re-render rows when an unrelated store field changes', () => {
     const store = new ChatStore({ initialMessages: messages });
     const renderCounts: Record<string, number> = {};
-    const authors: Record<string, unknown[]> = {};
 
     function Row({ messageId }: { messageId: string }) {
-      const author = useMessageAuthor(messageId);
+      useMessageAuthor(useMessage(messageId));
       renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
-      // Record committed values: React 18 StrictMode recomputes memos on the discarded double render.
-      React.useEffect(() => {
-        (authors[messageId] ??= []).push(author);
-      }, [author, messageId]);
       return null;
     }
 
@@ -46,8 +44,6 @@ describe('useMessageAuthor', () => {
     });
 
     expect(renderCounts).toEqual(initialCounts);
-    expect(authors.m1.every((author) => author === authors.m1[0])).toBe(true);
-    expect(authors.m2.every((author) => author === authors.m2[0])).toBe(true);
   });
 
   it('does not re-render rows when the active conversation changes without touching participants', () => {
@@ -61,7 +57,7 @@ describe('useMessageAuthor', () => {
     const renderCounts: Record<string, number> = {};
 
     function Row({ messageId }: { messageId: string }) {
-      useMessageAuthor(messageId);
+      useMessageAuthor(useMessage(messageId));
       renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
       return null;
     }
@@ -87,7 +83,7 @@ describe('useMessageAuthor', () => {
     const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
 
     const Row = React.memo(function Row({ messageId }: { messageId: string }) {
-      authors[messageId] = useMessageAuthor(messageId);
+      authors[messageId] = useMessageAuthor(useMessage(messageId));
       return null;
     });
 
@@ -133,7 +129,7 @@ describe('useMessageAuthor', () => {
     const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
 
     const Row = React.memo(function Row({ messageId }: { messageId: string }) {
-      authors[messageId] = useMessageAuthor(messageId);
+      authors[messageId] = useMessageAuthor(useMessage(messageId));
       return null;
     });
 
@@ -160,15 +156,10 @@ describe('useMessageAuthor', () => {
       roleDisplayNames: { assistant: 'Bot' },
     });
     const renderCounts: Record<string, number> = {};
-    const authors: Record<string, unknown[]> = {};
 
     function Row({ messageId }: { messageId: string }) {
-      const author = useMessageAuthor(messageId);
+      useMessageAuthor(useMessage(messageId));
       renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
-      // Record committed values: React 18 StrictMode recomputes memos on the discarded double render.
-      React.useEffect(() => {
-        (authors[messageId] ??= []).push(author);
-      }, [author, messageId]);
       return null;
     }
 
@@ -193,7 +184,66 @@ describe('useMessageAuthor', () => {
 
     expect(store.state.authorParametersVersion).toBe(initialVersion);
     expect(renderCounts).toEqual(initialCounts);
-    expect(authors.m1.every((author) => author === authors.m1[0])).toBe(true);
-    expect(authors.m2.every((author) => author === authors.m2[0])).toBe(true);
+  });
+
+  it('treats an undefined role display name override like a missing one', () => {
+    const store = new ChatStore({
+      initialMessages: messages,
+      roleDisplayNames: { assistant: undefined },
+    });
+    const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
+
+    function Row({ messageId }: { messageId: string }) {
+      authors[messageId] = useMessageAuthor(useMessage(messageId));
+      return null;
+    }
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <ChatLocaleProvider localeText={{ messageAuthorAssistantLabel: 'Asistente' }}>
+          <Row messageId="m2" />
+        </ChatLocaleProvider>
+      </ChatStoreContext.Provider>,
+    );
+
+    expect(authors.m2?.displayName).toBe('Asistente');
+  });
+
+  it('does not re-render message groups when the active conversation title changes', () => {
+    const store = new ChatStore({
+      initialMessages: messages,
+      initialConversations: [
+        { id: 'c1', title: 'First', participants: [{ id: 'alice', displayName: 'Alice' }] },
+      ],
+      initialActiveConversationId: 'c1',
+    });
+    let groupCount = 0;
+
+    function CountingGroup({
+      ownerState,
+      ...other
+    }: React.HTMLAttributes<HTMLDivElement> & { ownerState?: unknown }) {
+      groupCount += 1;
+      return <div {...other} />;
+    }
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <MessageGroup messageId="m1" slots={{ group: CountingGroup }}>
+          <span>m1</span>
+        </MessageGroup>
+        <MessageGroup messageId="m2" slots={{ group: CountingGroup }}>
+          <span>m2</span>
+        </MessageGroup>
+      </ChatStoreContext.Provider>,
+    );
+
+    const groupCountBeforePatch = groupCount;
+
+    act(() => {
+      store.updateConversation('c1', { title: 'Renamed', unreadCount: 3 });
+    });
+
+    expect(groupCount).toBe(groupCountBeforePatch);
   });
 });

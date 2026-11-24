@@ -3,68 +3,51 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { resolveMessageAuthor } from '../internals/messageAuthor';
-import type { ResolveMessageAuthorParameters } from '../internals/messageAuthor';
 import { chatSelectors } from '../selectors';
+import type { ChatMessage } from '../types/chat-entities';
 import type { ChatInternalState } from '../types/chat-state';
 import { useChatStore } from './useChatStore';
 
 // Rows only need participants, so conversation patches like read state or title don't re-render them.
-const selectActiveParticipants = (state: ChatInternalState) =>
+export const selectActiveParticipants = (state: ChatInternalState) =>
   chatSelectors.activeConversation(state)?.participants;
 
 const selectAuthorParametersVersion = (state: ChatInternalState<unknown>) =>
   state.authorParametersVersion;
 
-export function useMessageAuthor(messageId: string) {
+// Callers pass the message they already subscribe to with `useMessage`.
+export function useMessageAuthor(message: ChatMessage | null) {
   const store = useChatStore();
   const localeText = useChatLocaleText();
-  const message = useStore(store, chatSelectors.message, messageId);
   const participants = useStore(store, selectActiveParticipants);
   // `store.parameters` is not reactive; this version changes when author parameters do.
   const authorParametersVersion = useStore(store, selectAuthorParametersVersion);
 
-  // Pick only the author fields: spreading `store.parameters` would retain the
-  // controlled `messages` array of the render that last built this memo.
-  const authorParameters = React.useMemo<ResolveMessageAuthorParameters>(
+  // Read `store.parameters` inside the memo so rows cache only the resolved author,
+  // not the parameter arrays of the render that built it.
+  return React.useMemo(
     () => {
-      const {
-        currentUser,
-        members,
-        getMessageAuthorId,
-        getMessageAuthorDisplayName,
-        getMessageAuthorAvatarUrl,
-        roleDisplayNames,
-      } = store.parameters;
-      return {
-        currentUser,
-        members,
-        getMessageAuthorId,
-        getMessageAuthorDisplayName,
-        getMessageAuthorAvatarUrl,
+      const { roleDisplayNames } = store.parameters;
+      return resolveMessageAuthor(message, {
+        ...store.parameters,
+        activeConversation: { participants },
+        // `??` per role, so an explicit `undefined` override falls back to the locale like a missing key.
         roleDisplayNames: {
-          user: localeText.messageAuthorUserLabel,
-          assistant: localeText.messageAuthorAssistantLabel,
-          system: localeText.messageAuthorSystemLabel,
-          ...roleDisplayNames,
+          user: roleDisplayNames?.user ?? localeText.messageAuthorUserLabel,
+          assistant: roleDisplayNames?.assistant ?? localeText.messageAuthorAssistantLabel,
+          system: roleDisplayNames?.system ?? localeText.messageAuthorSystemLabel,
         },
-      };
+      });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
+      message,
+      participants,
       store,
       authorParametersVersion,
       localeText.messageAuthorUserLabel,
       localeText.messageAuthorAssistantLabel,
       localeText.messageAuthorSystemLabel,
     ],
-  );
-
-  return React.useMemo(
-    () =>
-      resolveMessageAuthor(message ?? null, {
-        ...authorParameters,
-        activeConversation: { participants },
-      }),
-    [message, participants, authorParameters],
   );
 }
