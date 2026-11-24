@@ -323,6 +323,7 @@ export default defineConfig(
     //   except the ISO-only `getCalendar()`, which `x-scheduler/src/base-temporal` tests.
     // - In the errors, replace the prefix with "MUI X Scheduler", and drop the "See …" link that
     //   ends some of them.
+    // - Comments never name the package of the Base UI version: say "the Base UI version" instead.
     // - The Scheduler only uses the ISO calendar, so the copy strips the support of the other
     //   calendars: in `calendar.ts`, the code from `const registry` to `type MonthCodesSource`
     //   (the Gregorian calendar, `registerCalendar()` and the lookup of the calendars) becomes the
