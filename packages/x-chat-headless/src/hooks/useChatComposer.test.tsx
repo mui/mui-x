@@ -440,6 +440,102 @@ describe('useChatComposer', () => {
     }
   });
 
+  it('does not overwrite a newer draft when a send is rejected during an async onFinish', async () => {
+    let resolveOnFinish!: () => void;
+    const onFinish = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveOnFinish = resolve;
+        }),
+    );
+    let store!: ReturnType<typeof useChatStore>;
+    let replaceOnClear = false;
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createStream([{ type: 'finish' }])),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      onFinish,
+      initialActiveConversationId: 'c1',
+      onComposerValueChange: (value) => {
+        if (replaceOnClear && value === '') {
+          replaceOnClear = false;
+          store.setComposerValue('Replacement');
+        }
+      },
+    });
+    const { result } = renderHook(
+      () => {
+        store = useChatStore();
+        return useChatComposer();
+      },
+      { wrapper: Wrapper },
+    );
+
+    act(() => {
+      result.current.setValue('First');
+    });
+
+    let firstSubmit!: Promise<void>;
+    act(() => {
+      firstSubmit = result.current.submit();
+    });
+
+    await waitFor(() => {
+      expect(onFinish).toHaveBeenCalledTimes(1);
+    });
+
+    act(() => {
+      result.current.setValue('Second');
+    });
+    replaceOnClear = true;
+
+    await act(async () => {
+      await result.current.submit();
+    });
+
+    expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+    expect(result.current.value).toBe('Replacement');
+
+    await act(async () => {
+      resolveOnFinish();
+      await firstSubmit;
+    });
+  });
+
+  it('clears the draft when the adapter replaces the message id while sending', async () => {
+    let emit!: Parameters<NonNullable<ChatAdapter['subscribe']>>[0]['onEvent'];
+    const adapter = createAdapter({
+      subscribe: ({ onEvent }) => {
+        emit = onEvent;
+        return () => {};
+      },
+      sendMessage: vi.fn(async ({ message }) => {
+        // Swap the optimistic message for the server one before the first await.
+        emit({ type: 'message-removed', messageId: message.id });
+        emit({ type: 'message-added', message: { ...message, id: 'server-id', status: 'sent' } });
+        return createStream([{ type: 'finish' }]);
+      }),
+    });
+    const { Wrapper } = createProviderWrapper({ adapter, initialActiveConversationId: 'c1' });
+    const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(emit).not.toBe(undefined);
+    });
+
+    act(() => {
+      result.current.setValue('Submit this once');
+    });
+
+    await act(async () => {
+      await result.current.submit();
+    });
+
+    expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+    expect(result.current.value).toBe('');
+  });
+
   it('does not submit empty drafts', async () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async () => createStream()),

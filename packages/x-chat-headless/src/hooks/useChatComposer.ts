@@ -262,10 +262,17 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       author: store.currentUser,
     });
 
-    // Accepted sends add the message synchronously, so check before yielding.
-    if (!store.state.messagesById[messageId]) {
-      restoreDraft();
-      // URLs created at submit time are never cleaned up by the store, since the message never entered it.
+    // Accepted sends add the message and start streaming synchronously, so check before yielding.
+    // Either signal is enough: the adapter may already have replaced the message or ended the stream.
+    // Restore only into an empty composer, so a newer draft is never overwritten.
+    const isComposerEmpty = () =>
+      store.state.composerValue === '' && store.state.composerAttachments.length === 0;
+
+    if (!store.state.messagesById[messageId] && !store.state.isStreaming) {
+      if (isComposerEmpty()) {
+        restoreDraft();
+      }
+      // URLs the composer did not reclaim are never cleaned up by the store, since the message never entered it.
       for (const url of messageOwnedPreviewUrlsRef.current.get(messageId)?.values() ?? []) {
         revokeAttachmentPreviewUrl(url);
       }
@@ -276,16 +283,8 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
 
     await sendPromise;
 
-    // If the send errored, restore the draft so the user can retry —
-    // but only when the composer is still empty (the user hasn't started
-    // typing a new message while the send was in flight).
-    const messageStatus = store.state.messagesById[messageId]?.status;
-
-    if (
-      messageStatus === 'error' &&
-      store.state.composerValue === '' &&
-      store.state.composerAttachments.length === 0
-    ) {
+    // If the send errored, restore the draft so the user can retry.
+    if (store.state.messagesById[messageId]?.status === 'error' && isComposerEmpty()) {
       restoreDraft();
     }
   }, [actions, store]);
