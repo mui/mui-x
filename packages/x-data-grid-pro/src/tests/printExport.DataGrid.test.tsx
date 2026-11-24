@@ -1,9 +1,17 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridPrintExportMenuItem,
+  gridClasses,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
+import MenuList from '@mui/material/MenuList';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
+import { setupPrintFont } from 'test/utils/printFont';
 
 describe('<DataGridPro /> - Print export', () => {
   const { render } = createRenderer();
@@ -188,6 +196,416 @@ describe('<DataGridPro /> - Print export', () => {
         currencyPair: true,
         id: true,
       });
+    });
+  });
+
+  describe('print height', () => {
+    it.skipIf(isJSDOM).each([
+      { height: 1200, rowCount: 3 },
+      { height: 300, rowCount: 30 },
+    ])('fits $rowCount exported rows when height={$height}', async ({ height, rowCount }) => {
+      const { setProps } = render(
+        <Test {...getBasicGridData(rowCount, 2)} height={height} rowHeight={40} />,
+      );
+
+      const printLayouts: { height: number; footerGap: number; rowCount: number }[] = [];
+      const removeChild = document.body.removeChild.bind(document.body);
+      const removeChildSpy = vi
+        .spyOn(document.body, 'removeChild')
+        .mockImplementation(<T extends Node>(child: T): T => {
+          if (child instanceof HTMLIFrameElement) {
+            const printRoot = child.contentDocument!.querySelector<HTMLElement>(
+              `.${gridClasses.root}`,
+            )!;
+            const rows = printRoot.querySelectorAll<HTMLElement>(`.${gridClasses.row}`);
+            const lastRow = rows[rows.length - 1].getBoundingClientRect();
+            const footer = printRoot
+              .querySelector<HTMLElement>(`.${gridClasses.footerContainer}`)!
+              .getBoundingClientRect();
+            printLayouts.push({
+              height: printRoot.getBoundingClientRect().height,
+              footerGap: footer.top - lastRow.bottom,
+              rowCount: rows.length,
+            });
+          }
+          return removeChild(child);
+        });
+      onTestFinished(() => removeChildSpy.mockRestore());
+
+      async function exportGrid() {
+        let printPromise!: Promise<void>;
+        // Flush the virtualization update before the async export clones the grid in React 18.
+        act(() => {
+          printPromise = apiRef.current!.exportDataAsPrint();
+        });
+        await act(() => printPromise);
+      }
+
+      await exportGrid();
+
+      setProps({ height: undefined });
+      await exportGrid();
+
+      // The height prop must not change the exported content height or footer position.
+      expect(printLayouts.map((layout) => layout.rowCount)).to.deep.equal([rowCount, rowCount]);
+      expect(printLayouts[0]).to.deep.equal(printLayouts[1]);
+    });
+  });
+
+  it.skipIf(isJSDOM).each(['loaded', 'error'] as const)(
+    'waits for a delayed font to settle as %s before finishing the print export',
+    async (fontStatus) => {
+      const font = await setupPrintFont();
+      const onColumnVisibilityModelChange = vi.fn();
+      render(
+        <Test
+          initialState={{ columns: { columnVisibilityModel: { currencyPair: true, id: false } } }}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      let printWindow: HTMLIFrameElement | undefined;
+      let fontStatuses: FontFaceLoadStatus[] | undefined;
+      const appendChild = document.body.appendChild.bind(document.body);
+      const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation((child) => {
+        if (child instanceof HTMLIFrameElement) {
+          printWindow = child;
+        }
+        return appendChild(child);
+      });
+      const removeChild = document.body.removeChild.bind(document.body);
+      // Test mode skips print() and removes the iframe when the export pipeline finishes.
+      const removeChildSpy = vi.spyOn(document.body, 'removeChild').mockImplementation((child) => {
+        if (child === printWindow) {
+          fontStatuses = Array.from(printWindow.contentDocument!.fonts, (face) => face.status);
+        }
+        return removeChild(child);
+      });
+      onTestFinished(() => {
+        appendChildSpy.mockRestore();
+        removeChildSpy.mockRestore();
+      });
+
+      let exportPromise!: Promise<void>;
+      let exportFinished = false;
+      act(() => {
+        exportPromise = apiRef.current!.exportDataAsPrint({
+          copyStyles: false,
+          pageStyle: font.css,
+          fields: ['id'],
+        });
+        exportPromise.then(() => {
+          exportFinished = true;
+        });
+      });
+
+      try {
+        await act(async () => {
+          await expect.poll(() => printWindow?.contentDocument?.fonts.status).to.equal('loading');
+          expect(exportFinished).to.equal(false);
+          expect(printWindow!.isConnected).to.equal(true);
+          expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(1);
+
+          await font.resolve(fontStatus);
+          await exportPromise;
+        });
+
+        expect(fontStatuses).to.deep.equal([fontStatus]);
+        expect(exportFinished).to.equal(true);
+        expect(printWindow!.isConnected).to.equal(false);
+        expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(2);
+        expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+          currencyPair: true,
+          id: false,
+        });
+      } finally {
+        await act(async () => {
+          await font.resolve('error');
+          await exportPromise;
+        });
+      }
+    },
+  );
+
+  it.skipIf(isJSDOM)('restores the grid when the font stalls for 3 seconds', async () => {
+    const font = await setupPrintFont();
+    const onColumnVisibilityModelChange = vi.fn();
+    render(
+      <Test
+        initialState={{ columns: { columnVisibilityModel: { currencyPair: true, id: false } } }}
+        onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+      />,
+    );
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    onTestFinished(() => {
+      vi.useRealTimers();
+    });
+
+    let printWindow: HTMLIFrameElement | undefined;
+    const appendChild = document.body.appendChild.bind(document.body);
+    const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation((child) => {
+      if (child instanceof HTMLIFrameElement) {
+        printWindow = child;
+      }
+      return appendChild(child);
+    });
+    onTestFinished(() => {
+      appendChildSpy.mockRestore();
+    });
+
+    let exportPromise!: Promise<void>;
+    let exportFinished = false;
+    act(() => {
+      exportPromise = apiRef.current!.exportDataAsPrint({
+        copyStyles: false,
+        pageStyle: font.css,
+        fields: ['id'],
+      });
+      exportPromise.then(() => {
+        exportFinished = true;
+      });
+    });
+
+    try {
+      await act(async () => {
+        await expect.poll(() => printWindow?.contentDocument?.fonts.status).to.equal('loading');
+        // `expect.poll` also moves fake timers, so check well before the 3 s mark.
+        await vi.advanceTimersByTimeAsync(2000);
+        expect(exportFinished).to.equal(false);
+
+        await vi.advanceTimersByTimeAsync(1000);
+        await exportPromise;
+      });
+
+      expect(printWindow!.isConnected).to.equal(false);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+    } finally {
+      await act(async () => {
+        await font.resolve('error');
+        await exportPromise;
+      });
+    }
+  });
+
+  describe('stylesheets that fail to load', () => {
+    function addMissingStylesheet() {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/missing-stylesheet.css';
+      document.head.appendChild(link);
+      onTestFinished(() => link.remove());
+    }
+
+    /* Browsers fire `error` for the missing stylesheet on their own, JSDOM doesn't load resources. */
+    async function failStylesheetLoad() {
+      if (!isJSDOM) {
+        return;
+      }
+
+      let link: HTMLLinkElement | null | undefined;
+      while (!link) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+        link = document.querySelector('iframe')?.contentDocument?.head.querySelector('link');
+      }
+      link.dispatchEvent(new Event('error'));
+    }
+
+    async function waitUntil(condition: () => boolean) {
+      while (!condition()) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      }
+    }
+
+    const initialState = {
+      columns: { columnVisibilityModel: { currencyPair: true, id: false } },
+    };
+
+    async function printAndWaitForTheResult(
+      onStylesheetError: ReturnType<typeof vi.fn>,
+      clickPrint: () => void,
+    ) {
+      const iframeCount = document.querySelectorAll('iframe').length;
+
+      await act(async () => {
+        clickPrint();
+        await failStylesheetLoad();
+        await waitUntil(
+          () =>
+            onStylesheetError.mock.calls.length > 0 &&
+            document.querySelectorAll('iframe').length === iframeCount,
+        );
+        /* Let the trigger's `catch` run. */
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      });
+    }
+
+    it('logs the error when the print is stopped from the default toolbar', async () => {
+      addMissingStylesheet();
+      const onStylesheetError = vi.fn(() => {
+        throw new Error('Stop the print');
+      });
+
+      render(<Test showToolbar slotProps={{ toolbar: { printOptions: { onStylesheetError } } }} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      const printItem = screen.getByRole('menuitem', { name: 'Print' });
+
+      await expect(() =>
+        printAndWaitForTheResult(onStylesheetError, () => {
+          fireEvent.click(printItem);
+        }),
+      ).toErrorDev('MUI X Data Grid: Error exporting the grid as print:');
+    });
+
+    it('logs the error when the print is stopped from `GridPrintExportMenuItem`', async () => {
+      addMissingStylesheet();
+      const onStylesheetError = vi.fn(() => {
+        throw new Error('Stop the print');
+      });
+
+      function PrintToolbar() {
+        return (
+          <MenuList>
+            <GridPrintExportMenuItem options={{ onStylesheetError }} />
+          </MenuList>
+        );
+      }
+
+      render(<Test showToolbar slots={{ toolbar: PrintToolbar }} />);
+      const printItem = screen.getByRole('menuitem', { name: 'Print' });
+
+      await expect(() =>
+        printAndWaitForTheResult(onStylesheetError, () => {
+          fireEvent.click(printItem);
+        }),
+      ).toErrorDev('MUI X Data Grid: Error exporting the grid as print:');
+    });
+
+    it('rejects, restores the grid, and removes the print window when `onStylesheetError` throws', async () => {
+      addMissingStylesheet();
+      const onColumnVisibilityModelChange = vi.fn();
+      const error = new Error('Stop the print');
+
+      render(
+        <Test
+          initialState={initialState}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      const iframeCount = document.querySelectorAll('iframe').length;
+
+      await act(async () => {
+        const printPromise = apiRef.current!.exportDataAsPrint({
+          fields: ['id'],
+          onStylesheetError: () => {
+            throw error;
+          },
+        });
+        await failStylesheetLoad();
+        await expect(printPromise).rejects.toBe(error);
+      });
+
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+      expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+    });
+
+    it('resolves and restores the grid when `onStylesheetError` returns', async () => {
+      addMissingStylesheet();
+      const onColumnVisibilityModelChange = vi.fn();
+      const onStylesheetError = vi.fn();
+
+      render(
+        <Test
+          initialState={initialState}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      const iframeCount = document.querySelectorAll('iframe').length;
+
+      await act(async () => {
+        const printPromise = apiRef.current!.exportDataAsPrint({
+          fields: ['id'],
+          onStylesheetError,
+        });
+        await failStylesheetLoad();
+        await printPromise;
+      });
+
+      expect(onStylesheetError.mock.calls.length).to.equal(1);
+      expect(onStylesheetError.mock.calls[0][0].getAttribute('href')).to.equal(
+        '/missing-stylesheet.css',
+      );
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+      expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+    });
+
+    it('resolves and restores the grid when `onStylesheetError` returns `false`', async () => {
+      addMissingStylesheet();
+      const onColumnVisibilityModelChange = vi.fn();
+      const onStylesheetError = vi.fn(() => false);
+
+      render(
+        <Test
+          initialState={initialState}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      const iframeCount = document.querySelectorAll('iframe').length;
+
+      await act(async () => {
+        const printPromise = apiRef.current!.exportDataAsPrint({
+          fields: ['id'],
+          onStylesheetError,
+        });
+        await failStylesheetLoad();
+        await printPromise;
+      });
+
+      expect(onStylesheetError.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+      expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+    });
+
+    it('does not log when the print is cancelled from the default toolbar', async () => {
+      addMissingStylesheet();
+      const onStylesheetError = vi.fn(() => false);
+
+      render(<Test showToolbar slotProps={{ toolbar: { printOptions: { onStylesheetError } } }} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      const printItem = screen.getByRole('menuitem', { name: 'Print' });
+
+      /* Any `console.error` fails the test. */
+      await printAndWaitForTheResult(onStylesheetError, () => {
+        fireEvent.click(printItem);
+      });
+
+      expect(onStylesheetError.mock.calls.length).to.equal(1);
     });
   });
 });

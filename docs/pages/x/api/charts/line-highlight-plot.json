@@ -14,7 +14,14 @@
     "import { LineHighlightPlot } from '@mui/x-charts-pro';",
     "import { LineHighlightPlot } from '@mui/x-charts-premium';"
   ],
-  "slots": [{ "name": "lineHighlight", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "lineHighlight",
+      "description": "The component that renders the line highlight.",
+      "default": "LineHighlightElement",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiLineHighlightPlot",
   "filename": "/packages/x-charts/src/LineChart/LineHighlightPlot.tsx",

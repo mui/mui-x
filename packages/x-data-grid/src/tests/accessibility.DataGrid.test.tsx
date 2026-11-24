@@ -1,6 +1,6 @@
-import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGrid, gridClasses, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, useGridApiRef, GridPreferencePanelsValue } from '@mui/x-data-grid';
 import type { GridApi } from '@mui/x-data-grid';
 import {
   getCell,
@@ -8,6 +8,7 @@ import {
   openLongTextEditPopup,
   openLongTextViewPopup,
 } from 'test/utils/helperFn';
+import { useGridPrivateApiContext } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 
@@ -180,6 +181,69 @@ describe('<DataGrid /> - Accessibility', () => {
     );
   });
 
+  describe('popups', () => {
+    it('should not use role="tooltip" on the column menu popper', async () => {
+      const { user } = render(<DataGrid {...baselineProps} />);
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+
+      expect(screen.getByRole('menu')).not.to.equal(null);
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+    });
+
+    it('should use role="dialog" on the columns panel labelled by its trigger', async () => {
+      const { user } = render(<DataGrid {...baselineProps} showToolbar />);
+
+      const button = screen.getByRole('button', { name: 'Columns' });
+      expect(button).to.have.attribute('aria-haspopup', 'dialog');
+
+      await user.click(button);
+
+      const dialog = screen.getByRole('dialog');
+      expect(button).to.have.attribute('aria-controls', dialog.id);
+      expect(dialog).to.have.attribute('aria-labelledby', button.id);
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+    });
+
+    it('should use role="dialog" on the filter panel labelled by its trigger', async () => {
+      const { user } = render(<DataGrid {...baselineProps} showToolbar />);
+
+      const button = screen.getByRole('button', { name: 'Filters' });
+      expect(button).to.have.attribute('aria-haspopup', 'dialog');
+
+      await user.click(button);
+
+      const dialog = screen.getByRole('dialog');
+      expect(button).to.have.attribute('aria-controls', dialog.id);
+      expect(dialog).to.have.attribute('aria-labelledby', button.id);
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+    });
+
+    it('should fall back to an aria-label on the filter panel opened from the column menu', async () => {
+      const { user } = render(<DataGrid {...baselineProps} />);
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+      await user.click(screen.getByRole('menuitem', { name: 'Filter' }));
+
+      const dialog = screen.getByRole('dialog', { name: 'Show filters' });
+      expect(dialog).not.to.have.attribute('aria-labelledby');
+    });
+
+    it('should fall back to an aria-label on the columns panel opened programmatically', async () => {
+      let apiRef: RefObject<GridApi | null>;
+      function Test() {
+        apiRef = useGridApiRef();
+        return <DataGrid {...baselineProps} apiRef={apiRef} />;
+      }
+      render(<Test />);
+
+      await act(async () => apiRef.current?.showPreferences(GridPreferencePanelsValue.columns));
+
+      const dialog = screen.getByRole('dialog', { name: 'Select columns' });
+      expect(dialog).not.to.have.attribute('aria-labelledby');
+    });
+  });
+
   describe('column type: longText', () => {
     const longTextProps = {
       rows: [{ id: 0, bio: 'Long text content' }],
@@ -239,6 +303,57 @@ describe('<DataGrid /> - Accessibility', () => {
       ) as HTMLButtonElement;
       expect(expandButton).to.have.attribute('aria-expanded', 'true');
       expect(expandButton).to.have.attribute('aria-controls');
+    });
+  });
+
+  describe('live region', () => {
+    let privateApi: ReturnType<typeof useGridPrivateApiContext>;
+
+    function Footer() {
+      privateApi = useGridPrivateApiContext();
+      return null;
+    }
+
+    const getLiveRegions = () => screen.queryAllByRole('status');
+
+    it('should render one empty live region per grid', () => {
+      render(<DataGrid {...baselineProps} />);
+      const regions = getLiveRegions();
+      expect(regions).to.have.length(1);
+      expect(regions[0]).to.have.attribute('aria-live', 'polite');
+      expect(regions[0]).to.have.attribute('aria-atomic', 'true');
+      expect(regions[0]).to.have.text('');
+    });
+
+    it('should render one live region for each grid', () => {
+      render(
+        <div>
+          <DataGrid {...baselineProps} />
+          <DataGrid {...baselineProps} />
+        </div>,
+      );
+      expect(getLiveRegions()).to.have.length(2);
+    });
+
+    it('should render the live region outside of the virtual scroller', () => {
+      render(<DataGrid {...baselineProps} />);
+      const scroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      expect(scroller.contains(getLiveRegions()[0])).to.equal(false);
+    });
+
+    it('should show the announced message', () => {
+      render(<DataGrid {...baselineProps} slots={{ footer: Footer }} />);
+      act(() => privateApi.current.announce('Row moved.'));
+      expect(getLiveRegions()[0]).to.have.text('Row moved.');
+    });
+
+    it('should replace the message node when the same message is announced again', () => {
+      render(<DataGrid {...baselineProps} slots={{ footer: Footer }} />);
+      act(() => privateApi.current.announce('Row moved.'));
+      const firstNode = getLiveRegions()[0].firstChild;
+      act(() => privateApi.current.announce('Row moved.'));
+      expect(getLiveRegions()[0]).to.have.text('Row moved.');
+      expect(getLiveRegions()[0].firstChild).not.to.equal(firstNode);
     });
   });
 });

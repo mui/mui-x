@@ -16,12 +16,12 @@ export type ApiKeyJwtClientOptions = {
 };
 
 export class ApiKeyJwtClientError extends Error {
-  public readonly code:
+  declare public readonly code:
     'missing_api_key' | 'api_key_invalid' | 'api_key_forbidden' | 'token_exchange_failed';
 
-  public readonly status?: number;
+  declare public readonly status?: number;
 
-  public readonly cause?: unknown;
+  declare public readonly cause?: unknown;
 
   public constructor(
     code: ApiKeyJwtClientError['code'],
@@ -43,13 +43,13 @@ type TokenExchangeResponse = {
 
 /** API-key -> JWT exchange client. In-memory cache, 30s refresh window, concurrent-call dedup. */
 export class ApiKeyJwtClient {
-  private readonly muiBackendBaseUrl: string;
+  declare private readonly muiBackendBaseUrl: string;
 
-  private readonly apiKeyOverride: string | undefined;
+  declare private readonly apiKeyOverride: string | undefined;
 
-  private readonly refreshThresholdMs: number;
+  declare private readonly refreshThresholdMs: number;
 
-  private readonly fetcher: typeof fetch;
+  declare private readonly fetcher: typeof fetch;
 
   private cachedToken: string | null = null;
 

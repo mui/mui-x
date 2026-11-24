@@ -1,12 +1,15 @@
+'use client';
+import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { useGridSelector } from '../../utils/useGridSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
-import { gridRowCountSelector } from './gridRowsSelector';
+import { gridRowCountSelector, gridRowTreeSelector } from './gridRowsSelector';
 import { gridRowHeightSelector } from '../dimensions/gridDimensionsSelectors';
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state, props, apiRef) => {
@@ -81,4 +84,16 @@ export const useGridRowsMeta = (
 
   useGridApiMethod(apiRef, rowsMetaApi, 'public');
   useGridApiMethod(apiRef, rowsMetaPrivateApi, 'private');
+
+  // The virtualizer caches the heights by row id and only knows the rows of the current page,
+  // so it cannot tell when a row is gone. Without this, the cache keeps an entry for every row id it has ever seen.
+  const rowTree = useGridSelector(apiRef, gridRowTreeSelector);
+  React.useEffect(() => {
+    const { rowHeights } = apiRef.current.virtualizer.store.state;
+    for (const rowId of rowHeights.keys()) {
+      if (!rowTree[rowId]) {
+        rowHeights.delete(rowId);
+      }
+    }
+  }, [apiRef, rowTree]);
 };

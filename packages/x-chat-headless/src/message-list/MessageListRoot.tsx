@@ -37,26 +37,69 @@ export interface MessageListRootHandle {
 }
 
 export interface MessageListRootSlots {
+  /**
+   * The component that renders the message list.
+   * @default ScrollRoot (Base UI ScrollArea.Root wrapper); a styled 'div' in `ChatMessageList`
+   */
   messageList: React.ElementType;
+  /**
+   * The component that renders the message list scroller.
+   * @default ScrollViewport (Base UI ScrollArea.Viewport wrapper), or 'div' when `slots.messageList` is set; a styled 'div' in `ChatMessageList`
+   */
   messageListScroller: React.ElementType;
+  /**
+   * The component that renders the message list content.
+   * @default 'div'
+   */
   messageListContent: React.ElementType;
+  /**
+   * The component that renders the message list overlay.
+   * @default 'div'
+   */
   messageListOverlay: React.ElementType;
+  /**
+   * The component that renders the message list scrollbar.
+   * @default ScrollScrollbar (Base UI ScrollArea.Scrollbar wrapper); not rendered when `slots.messageList` is set, as in `ChatMessageList`
+   */
   messageListScrollbar: React.ElementType;
+  /**
+   * The component that renders the message list scrollbar thumb.
+   * @default ScrollThumb (Base UI ScrollArea.Thumb wrapper); not rendered when `slots.messageList` is set, as in `ChatMessageList`
+   */
   messageListScrollbarThumb: React.ElementType;
   /**
    * The visually-hidden `role="status"` element announcing streaming
    * transitions ("Assistant is responding" / "Response complete") to screen
    * readers. Pass `null`-rendering component to silence the announcements.
+   * @default 'div'
    */
   messageListStatus: React.ElementType;
 }
 
 export interface MessageListRootSlotProps {
+  /**
+   * The props used for the message list slot.
+   */
   messageList?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list scroller slot.
+   */
   messageListScroller?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list content slot.
+   */
   messageListContent?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list overlay slot.
+   */
   messageListOverlay?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list scrollbar slot.
+   */
   messageListScrollbar?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list scrollbar thumb slot.
+   */
   messageListScrollbarThumb?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
   messageListStatus?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
@@ -74,6 +117,9 @@ export interface MessageListRootProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
+  /**
+   * The ids of the messages to render, in order.
+   */
   items?: string[];
   /**
    * Floating layer rendered above the message list, anchored to its bottom edge; pointer-transparent.
@@ -81,7 +127,18 @@ export interface MessageListRootProps extends Omit<
    */
   overlay?: React.ReactNode;
   renderItem(params: { id: string; index: number }): React.ReactNode;
+  /**
+   * Returns the React key of a row.
+   * @param {string} id The id of the message.
+   * @param {number} index The index of the row.
+   * @returns {React.Key} The key of the row.
+   * @default (id) => id
+   */
   getItemKey?: (id: string, index: number) => React.Key;
+  /**
+   * The estimated height of a row in pixels, used until the row is measured.
+   * @default 84
+   */
   estimatedItemSize?: number;
   /**
    * Callback fired when the viewport enters the top zone of the list — within
@@ -127,7 +184,15 @@ export interface MessageListRootProps extends Omit<
    * @default true
    */
   enableRovingFocus?: boolean;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageListRootSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageListRootSlotProps;
 }
 
@@ -139,9 +204,23 @@ interface MessageListViewProps {
   itemIds: string[];
   overlay: React.ReactNode;
   renderItem: MessageListRootProps['renderItem'];
+  /**
+   * Returns the React key of a row.
+   * @param {string} id The id of the message.
+   * @param {number} index The index of the row.
+   * @returns {React.Key} The key of the row.
+   */
   getItemKey: NonNullable<MessageListRootProps['getItemKey']>;
   statusAnnouncement: string;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: Partial<MessageListRootSlots> | undefined;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: MessageListRootSlotProps | undefined;
   other: Omit<
     MessageListRootProps,
@@ -159,6 +238,9 @@ interface MessageListViewProps {
 
 interface MessageListRenderedRowProps {
   id: string;
+  /**
+   * The index of the row.
+   */
   index: number;
   renderItem: MessageListRootProps['renderItem'];
   registerRowElement(id: string, element: HTMLDivElement | null): void;
@@ -448,7 +530,9 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
   // itself additionally carries `aria-busy` (see MessageRoot).
   const localeText = useChatLocaleText();
   const [statusAnnouncement, setStatusAnnouncement] = React.useState('');
-  const prevIsStreamingRef = React.useRef(isStreaming);
+  // Start from "not streaming" so a list that mounts mid-response (e.g. after an
+  // empty state is swapped out) still announces the start of that response.
+  const prevIsStreamingRef = React.useRef(false);
   React.useEffect(() => {
     if (prevIsStreamingRef.current === isStreaming) {
       return;

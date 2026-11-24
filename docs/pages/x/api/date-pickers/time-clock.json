@@ -55,6 +55,7 @@
         "returned": "boolean"
       }
     },
+    "showViewSwitcher": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

@@ -6,7 +6,13 @@
     },
     "message": {
       "description": "The message this bar belongs to. Injected by <code>ChatMessage</code> (from its existing <code>useMessage</code> subscription); pass explicitly in standalone usage."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": { "actions": "The component that renders the actions." }
 }

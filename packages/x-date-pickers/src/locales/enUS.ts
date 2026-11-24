@@ -41,9 +41,9 @@ const enUSPickers: PickersLocaleText = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Select ${view}. ${!formattedTime ? 'No time selected' : `Selected time is ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} hours`,
-  minutesClockNumberText: (minutes) => `${minutes} minutes`,
-  secondsClockNumberText: (seconds) => `${seconds} seconds`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'hour' : 'hours'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'minute' : 'minutes'}`,
+  secondsClockNumberText: (seconds) => `${seconds} ${Number(seconds) === 1 ? 'second' : 'seconds'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Select ${view}`,

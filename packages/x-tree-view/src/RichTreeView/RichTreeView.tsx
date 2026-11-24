@@ -75,11 +75,13 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
-      warnOnce([
-        'MUI X: The Rich Tree View component does not support JSX children.',
-        'If you want to add items, you need to use the `items` prop.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/.',
-      ]);
+      warnOnce(
+        [
+          'MUI X: The Rich Tree View component does not support JSX children.',
+          'If you want to add items, you need to use the `items` prop.',
+          'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/.',
+        ].join('\n'),
+      );
     }
   }
 
@@ -292,6 +294,9 @@ RichTreeView.propTypes /* remove-proptypes */ = {
    * @default null
    */
   itemHeight: PropTypes.number,
+  /**
+   * The items to render in the Tree View.
+   */
   items: PropTypes.array.isRequired,
   /**
    * If `true`, a loading UI is displayed instead of the tree items.

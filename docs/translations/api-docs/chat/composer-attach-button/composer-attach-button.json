@@ -2,5 +2,8 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "attachButton": "", "attachInput": "" }
+  "slotDescriptions": {
+    "attachButton": "The component that renders the attach button.",
+    "attachInput": "The component that renders the attach input."
+  }
 }

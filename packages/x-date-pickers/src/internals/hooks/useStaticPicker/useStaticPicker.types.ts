@@ -25,7 +25,8 @@ export interface StaticOnlyPickerProps {
   /**
    * Callback fired when component requests to be closed.
    * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
-   * @deprecated Please avoid using as it will be removed in next major version.
+   * @deprecated Use `onCancel` or `onAccept` instead, depending on the action you want to react to.
+   * This callback will be removed in the next major version.
    */
   onClose?: () => void;
 }
@@ -51,10 +52,7 @@ export interface UseStaticPickerProps<
 export interface UseStaticPickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
-> extends Pick<
-  UsePickerParameters<PickerValue, TView, TExternalProps>,
-  'valueManager' | 'valueType' | 'validator' | 'ref'
-> {
+> extends Pick<UsePickerParameters<PickerValue, TView, TExternalProps>, 'manager' | 'ref'> {
   props: TExternalProps;
   /**
    * Steps available for the picker.

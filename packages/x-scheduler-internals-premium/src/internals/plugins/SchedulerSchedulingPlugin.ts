@@ -8,23 +8,60 @@ import type {
   UpdateEventsParameters,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
+import { datesNotWritableReason } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventUpdatedProperties,
+} from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerAddDependencyResult,
   SchedulerDependency,
+  SchedulerDependencyCascadeRejection,
   SchedulerDependencyCreationProperties,
   SchedulerDependencyId,
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
+  SchedulerDependencyUpdatedProperties,
   SchedulerLazyLoadingParameters,
+  SchedulerUpdateDependencyResult,
 } from '../../models';
+import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
+import { computeAutoSchedulingCascade, getDependencyViolation } from '../utils/auto-scheduling';
 import {
+  buildDependenciesState,
   classifyDependencyEvent,
+  findDuplicateDependency,
+  getActiveDependencies,
+  groupByEventId,
   groupRetainedDependenciesBySource,
-  isDependencyReadOnly,
+  isDependencyActive,
+  getDependencyLagIssue,
+  isDependencyType,
 } from '../utils/dependency-utils';
+import type { SchedulerDependencyLagIssue } from '../utils/dependency-utils';
+
+const DEPENDENCY_LAG_WARNINGS: Record<
+  SchedulerDependencyLagIssue,
+  (dependency: SchedulerDependency) => string[]
+> = {
+  negative: (dependency) => [
+    `MUI X Scheduler: The dependency "${String(dependency.id)}" has a negative lag (${String(dependency.lag)}).`,
+    'Lead (negative lag) is not supported yet, so the lag is ignored.',
+    'Use a positive whole number, or remove the lag.',
+  ],
+  notAWholeNumber: (dependency) => [
+    `MUI X Scheduler: The dependency "${String(dependency.id)}" has a lag that is not a whole number (${String(dependency.lag)}).`,
+    'A fractional lag cannot be expressed in its unit, so it is ignored.',
+    'Round it, or express it in a smaller `lagUnit`.',
+  ],
+  unknownUnit: (dependency) => [
+    `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown lag unit "${String(dependency.lagUnit)}".`,
+    'The lag cannot be applied, so it is ignored.',
+    'Use one of "minute", "hour", "day" or "week".',
+  ],
+};
 
 /**
  * Plugin that provides event-scheduling support (dependencies).
@@ -38,12 +75,22 @@ export class SchedulerSchedulingPlugin<
     SchedulerDependenciesParameters &
     SchedulerLazyLoadingParameters<TEvent>,
 > implements SchedulerSchedulingPluginInterface {
-  protected store: SchedulerStore<TEvent, any, State, Parameters>;
+  declare protected store: SchedulerStore<TEvent, any, State, Parameters>;
 
   protected readonly disposables = new DisposableStack();
 
-  public constructor(store: SchedulerStore<TEvent, any, State, Parameters>) {
+  declare private readonly applyCascade: (updated: SchedulerEventUpdatedProperties[]) => void;
+
+  /**
+   * @param applyCascade Applies event updates through the store's `updateEvents`, without
+   * running `handleEventsUpdate` on them: they are already the engine's output.
+   */
+  public constructor(
+    store: SchedulerStore<TEvent, any, State, Parameters>,
+    applyCascade: (updated: SchedulerEventUpdatedProperties[]) => void,
+  ) {
     this.store = store;
+    this.applyCascade = applyCascade;
 
     if (process.env.NODE_ENV !== 'production') {
       this.warnOnInvalidDependencies();
@@ -69,11 +116,13 @@ export class SchedulerSchedulingPlugin<
   private updateDependencies(newDependencies: SchedulerDependency[]) {
     if (process.env.NODE_ENV !== 'production') {
       if (!this.store.parameters.onDependenciesChange) {
-        warnOnce([
-          'MUI X Scheduler: A dependency update was ignored because no `onDependenciesChange` handler is provided.',
-          'The `dependencies` prop is fully controlled, so without it the changes are lost and the UI does not update.',
-          'Pass an `onDependenciesChange` handler that updates the `dependencies` prop.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: A dependency update was ignored because no `onDependenciesChange` handler is provided.',
+            'The `dependencies` prop is fully controlled, so without it the changes are lost and the UI does not update.',
+            'Pass an `onDependenciesChange` handler that updates the `dependencies` prop.',
+          ].join('\n'),
+        );
       }
     }
 
@@ -85,7 +134,7 @@ export class SchedulerSchedulingPlugin<
    * Emits `onDependenciesChange` with `remaining` only if it actually dropped entries from
    * `current`, so unaffected updates don't trigger a no-op emission.
    */
-  private updateDependenciesIfChanged(
+  private commitDependenciesIfChanged(
     current: readonly SchedulerDependency[],
     remaining: SchedulerDependency[],
   ) {
@@ -95,30 +144,95 @@ export class SchedulerSchedulingPlugin<
   }
 
   /**
-   * Removes the dependencies referencing deleted events, in the same update.
+   * Computes the dependency cleanup for the deleted events and the auto-scheduling cascade for
+   * the updated ones, all in the same update. A batch whose cascade would need to move a
+   * read-only event, or to change a date `eventModelStructure` can't write back, is vetoed
+   * instead: nothing is applied, and the rejection is returned for the caller to surface.
    *
-   * With a `dataSource`, event deletions are persisted asynchronously after this hook has
-   * already emitted `onDependenciesChange`. If that persistence fails, the event survives but
-   * its dependencies were already removed — a known v1 limitation, there is no rollback.
+   * Neither is applied here: `updateEvents` can still refuse the merged batch afterward for a
+   * reason of its own (e.g. the caller's own move of a date `eventModelStructure` can't write
+   * back), so the dependency cleanup is returned as `commit`, called only once the caller has
+   * confirmed the batch goes ahead — a vetoed batch must not have emitted it.
+   *
+   * With a `dataSource`, event deletions are persisted asynchronously after `commit` has already
+   * emitted `onDependenciesChange`. If that persistence fails, the event survives but its
+   * dependencies were already removed — a known v1 limitation, there is no rollback.
    */
   public handleEventsUpdate = (parameters: UpdateEventsParameters) => {
-    const { deleted } = parameters;
-    if (!deleted || deleted.length === 0) {
-      return;
+    const { deleted, updated } = parameters;
+    const deletedSet = new Set(deleted);
+
+    let cascaded: SchedulerEventUpdatedProperties[] = [];
+    if (updated && updated.length > 0 && this.store.state.dependencyModelList.length > 0) {
+      const result = computeAutoSchedulingCascade({
+        processedEventLookup: this.store.state.processedEventLookup,
+        activeDependenciesBySource: eventTimelinePremiumDependencySelectors.activeModelListBySource(
+          this.store.state,
+        ),
+        activeDependenciesByTarget: eventTimelinePremiumDependencySelectors.activeModelListByTarget(
+          this.store.state,
+        ),
+        isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
+        updated,
+        deleted: deletedSet,
+        displayTimezone: this.store.getDisplayTimezoneParameter(),
+      });
+      if (result.blocked.length > 0) {
+        const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
+        return {
+          rejected: true as const,
+          rejection: {
+            code: 'readOnlyEventMovedError' as const,
+            params: { title: blockedEvent.title },
+          },
+        };
+      }
+      // The cascade only reports the bound it moves, so a single unwritable bound isn't a move
+      // `updateEvents` refuses: it would strip it like a caller's own resize and apply the rest
+      // of the batch with the dependency broken.
+      // A caller's own move (both bounds) is left to `updateEvents`, which refuses the whole
+      // batch for it anyway: vetoing here would blame whichever event the cascade clamped (the
+      // moved event itself, or a successor it pushes), depending only on where the move lands.
+      const isCallerMoveRefused =
+        !schedulerEventSelectors.canWriteEventDates(this.store.state) &&
+        updated.some((entry) => 'start' in entry && 'end' in entry);
+      const unwritableEventId = isCallerMoveRefused
+        ? undefined
+        : this.findUnwritableCascadedEventId(result.updated);
+      if (unwritableEventId !== undefined) {
+        const unwritableEvent = this.store.state.processedEventLookup.get(unwritableEventId)!;
+        return {
+          rejected: true as const,
+          rejection: {
+            code: 'unwritableEventMovedError' as const,
+            params: { title: unwritableEvent.title },
+          },
+        };
+      }
+      cascaded = result.updated;
     }
 
-    const deletedSet = new Set(deleted);
-    const current = this.store.state.dependencyModelList;
-    const remaining = current.filter(
-      (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
-    );
-    this.updateDependenciesIfChanged(current, remaining);
+    let commit: (() => void) | undefined;
+    if (deletedSet.size > 0) {
+      const current = this.store.state.dependencyModelList;
+      const remaining = current.filter(
+        (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
+      );
+      commit = () => this.commitDependenciesIfChanged(current, remaining);
+    }
+
+    if (cascaded.length === 0 && !commit) {
+      return undefined;
+    }
+    return { updated: cascaded.length > 0 ? cascaded : undefined, commit };
   };
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown, recurring or read-only event,
-   * duplicating an existing dependency, or closing a cycle.
+   * Rejects every dependency while the scheduler is read-only, and dependencies
+   * referencing an unknown or recurring event, duplicating an existing dependency, closing
+   * a cycle, needing a read-only event to move, or changing a date `eventModelStructure`
+   * can't write back.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other.
    * Implementation of the store's `addDependency()` — call it through the store.
@@ -126,42 +240,164 @@ export class SchedulerSchedulingPlugin<
   public addDependency = (
     properties: SchedulerDependencyCreationProperties,
   ): SchedulerAddDependencyResult => {
+    if (eventTimelinePremiumDependencySelectors.isReadOnly(this.store.state)) {
+      return { status: 'rejected', reason: 'readOnly' };
+    }
     const { processedEventLookup } = this.store.state;
     for (const eventId of [properties.source, properties.target]) {
       const status = classifyDependencyEvent(processedEventLookup, eventId);
       if (status !== 'ok') {
         return { status: 'rejected', reason: status, eventId };
       }
-      if (schedulerEventSelectors.isReadOnly(this.store.state, eventId)) {
-        return { status: 'rejected', reason: 'readOnlyEvent', eventId };
-      }
     }
-
-    // Grouped from the lookup, not the raw list: with duplicate ids only the last
-    // entry per id exists for the feature, so a shadowed edge must not reject an add.
-    const dependenciesBySource = groupRetainedDependenciesBySource(
-      this.store.state.dependencyModelLookup,
-    );
 
     // Duplicate before cycle: on data that already contains a cycle, re-adding an
     // existing pair must report the duplicate (and select its arrow), not the cycle.
-    // Only `source`/`target` define identity while the type union has a single member;
-    // TODO(#22853): include `type` in the identity when the type union widens.
-    const duplicate = dependenciesBySource
-      .get(properties.source)
-      ?.find((dependency) => dependency.target === properties.target);
+    const duplicate = findDuplicateDependency(this.store.state.dependencyModelLookup, properties);
     if (duplicate) {
       return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
     }
 
+    // Grouped from the lookup, not the raw list: with duplicate ids only the last
+    // entry per id exists for the feature, so a shadowed edge must not close a cycle.
+    const dependenciesBySource = groupRetainedDependenciesBySource(
+      this.store.state.dependencyModelLookup,
+    );
     if (this.isCreatingCycle(dependenciesBySource, properties.source, properties.target)) {
       return { status: 'rejected', reason: 'cyclicDependency' };
     }
 
     const dependency: SchedulerDependency = { ...properties, id: generateId('dependency') };
-    this.updateDependencies([...this.store.state.dependencyModelList, dependency]);
-    return { status: 'added', id: dependency.id };
+    const rejection = this.commitDependencyChange(
+      [...this.store.state.dependencyModelList, dependency],
+      dependency,
+    );
+    return rejection ?? { status: 'added', id: dependency.id };
   };
+
+  /**
+   * Changes the type or lag of a dependency. Events only move when the change makes it
+   * stricter: its target has to move further than before.
+   * Implementation of the store's `updateDependency()` — call it through the store.
+   */
+  public updateDependency = (
+    dependencyId: SchedulerDependencyId,
+    changes: SchedulerDependencyUpdatedProperties,
+  ): SchedulerUpdateDependencyResult => {
+    const { dependencyModelLookup, dependencyModelList } = this.store.state;
+    const dependency = dependencyModelLookup.get(dependencyId);
+    if (dependency === undefined) {
+      return { status: 'rejected', reason: 'unknownDependency' };
+    }
+    if (eventTimelinePremiumDependencySelectors.isReadOnly(this.store.state)) {
+      return { status: 'rejected', reason: 'readOnly' };
+    }
+
+    const updated: SchedulerDependency = { ...dependency, ...changes };
+    // A dependency always has a type: an explicit `undefined` keeps the current one.
+    if (changes.type === undefined) {
+      updated.type = dependency.type;
+    }
+    for (const key of ['lag', 'lagUnit'] as const) {
+      if (key in changes && changes[key] === undefined) {
+        delete updated[key];
+      }
+    }
+    if (
+      updated.type === dependency.type &&
+      updated.lag === dependency.lag &&
+      updated.lagUnit === dependency.lagUnit
+    ) {
+      return { status: 'updated' };
+    }
+
+    if (updated.type !== dependency.type) {
+      const duplicate = findDuplicateDependency(dependencyModelLookup, updated, dependencyId);
+      if (duplicate) {
+        return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
+      }
+    }
+
+    // Relaxing a dependency the dates already break moves nothing, so it is never blocked.
+    const { processedEventLookup, displayTimezone } = this.store.state;
+    const isStricter =
+      getDependencyViolation(processedEventLookup, updated, displayTimezone) >
+      getDependencyViolation(processedEventLookup, dependency, displayTimezone);
+    const rejection = this.commitDependencyChange(
+      dependencyModelList.map((entry) => (entry.id === dependencyId ? updated : entry)),
+      isStricter ? updated : null,
+    );
+    return rejection ?? { status: 'updated' };
+  };
+
+  /**
+   * Emits `nextList` and moves the events `enforced` needs, with a single engine run:
+   * going through the `updateEvents` cascade would also clamp them by other dependencies.
+   * Emits nothing if a read-only event would have to move, or a date `eventModelStructure`
+   * can't write back would have to change: `updateEvents` would refuse or strip it after
+   * `onDependenciesChange` went out, leaving the new dependency broken.
+   * `onDependenciesChange` is emitted before `onEventsChange`, as two separate changes.
+   */
+  private commitDependencyChange(
+    nextList: SchedulerDependency[],
+    enforced: SchedulerDependency | null,
+  ): SchedulerDependencyCascadeRejection | null {
+    const { processedEventLookup } = this.store.state;
+    const activeDependencies = getActiveDependencies(
+      buildDependenciesState(nextList).dependencyModelLookup,
+      processedEventLookup,
+    );
+    const result = computeAutoSchedulingCascade({
+      processedEventLookup,
+      activeDependenciesBySource: groupByEventId(activeDependencies, 'source'),
+      activeDependenciesByTarget: groupByEventId(activeDependencies, 'target'),
+      isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
+      updated: [],
+      deleted: new Set(),
+      enforcedDependencies:
+        enforced !== null && isDependencyActive(processedEventLookup, enforced) ? [enforced] : [],
+      displayTimezone: this.store.getDisplayTimezoneParameter(),
+    });
+    if (result.blocked.length > 0) {
+      return { status: 'rejected', reason: 'cascadeBlocked', eventId: result.blocked[0] };
+    }
+    const unwritableEventId = this.findUnwritableCascadedEventId(result.updated);
+    if (unwritableEventId !== undefined) {
+      return { status: 'rejected', reason: 'datesNotWritable', eventId: unwritableEventId };
+    }
+
+    this.updateDependencies(nextList);
+    if (result.updated.length > 0) {
+      this.applyCascade(result.updated);
+    }
+    return null;
+  }
+
+  /**
+   * The id of the first cascaded event carrying a date `eventModelStructure` can't write back,
+   * warning about the missing setter in dev. Shared by both paths applying a cascade: the one
+   * merged into an `updateEvents` batch, and the one `commitDependencyChange` applies directly.
+   */
+  private findUnwritableCascadedEventId(
+    cascaded: readonly SchedulerEventUpdatedProperties[],
+  ): SchedulerEventId | undefined {
+    const { state } = this.store;
+    const unwritableDates = schedulerEventSelectors.unwritableDates(state);
+    const unwritable = cascaded.find((entry) =>
+      unwritableDates.some((property) => property in entry),
+    );
+    if (process.env.NODE_ENV !== 'production') {
+      if (unwritable) {
+        warnOnce(
+          [
+            'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.',
+            datesNotWritableReason(state),
+          ].join('\n'),
+        );
+      }
+    }
+    return unwritable?.id;
+  }
 
   /**
    * Whether adding `source → target` would close a cycle: `target` already reaches
@@ -193,19 +429,22 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Deletes a dependency, returning whether it was deleted. Refused (`false`) for an
-   * unknown id and when either endpoint event is read-only, so the store stays safe
+   * unknown id and while the scheduler is read-only, so the store stays safe
    * regardless of which affordance calls it and the callers pairing the deletion with
    * a side effect (clearing the selection) never act on a no-op.
    * Implementation of the store's `deleteDependency()` — call it through the store.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean => {
     const dependency = this.store.state.dependencyModelLookup.get(dependencyId);
-    if (dependency === undefined || isDependencyReadOnly(this.store.state, dependency)) {
+    if (
+      dependency === undefined ||
+      eventTimelinePremiumDependencySelectors.isReadOnly(this.store.state)
+    ) {
       return false;
     }
     const current = this.store.state.dependencyModelList;
     const remaining = current.filter((entry) => entry.id !== dependencyId);
-    this.updateDependenciesIfChanged(current, remaining);
+    this.commitDependenciesIfChanged(current, remaining);
     return true;
   };
 
@@ -215,20 +454,36 @@ export class SchedulerSchedulingPlugin<
     const hasDataSource = this.store.parameters.dataSource != null;
 
     for (const dependency of dependencyModelList) {
+      if (!isDependencyType(dependency.type)) {
+        warnOnce(
+          [
+            `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown type "${String(dependency.type)}".`,
+            'It is kept in the data but ignored by the timeline.',
+          ].join('\n'),
+        );
+      }
+      const lagIssue = getDependencyLagIssue(dependency);
+      if (lagIssue !== null) {
+        warnOnce(DEPENDENCY_LAG_WARNINGS[lagIssue](dependency).join('\n'));
+      }
       for (const eventId of [dependency.source, dependency.target]) {
         const status = classifyDependencyEvent(processedEventLookup, eventId);
         if (status === 'unknownEvent') {
           if (!hasDataSource) {
-            warnOnce([
-              `MUI X Scheduler: The dependency "${String(dependency.id)}" references the unknown event "${String(eventId)}".`,
-              'It is kept in the data but ignored by the timeline.',
-            ]);
+            warnOnce(
+              [
+                `MUI X Scheduler: The dependency "${String(dependency.id)}" references the unknown event "${String(eventId)}".`,
+                'It is kept in the data but ignored by the timeline.',
+              ].join('\n'),
+            );
           }
         } else if (status === 'recurringEvent') {
-          warnOnce([
-            `MUI X Scheduler: The dependency "${String(dependency.id)}" references the recurring event "${String(eventId)}".`,
-            'Dependencies on recurring events are not supported, so it is ignored by the timeline.',
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: The dependency "${String(dependency.id)}" references the recurring event "${String(eventId)}".`,
+              'Dependencies on recurring events are not supported, so it is ignored by the timeline.',
+            ].join('\n'),
+          );
         }
       }
     }

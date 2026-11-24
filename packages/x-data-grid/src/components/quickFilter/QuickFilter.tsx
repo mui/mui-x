@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import debounce from '@mui/utils/debounce';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import useId from '@mui/utils/useId';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
@@ -159,14 +160,17 @@ function QuickFilter(props: QuickFilterProps) {
     }
   }, [expandedValue]);
 
+  // Identity-stable, so that a re-render with a new `parser` does not recreate the debounced
+  // function below and clear a pending commit. See https://github.com/mui/mui-x/issues/23572.
+  const commitQuickFilterValue = useEventCallback((newValue: string) => {
+    const newQuickFilterValues = parser(newValue);
+    prevQuickFilterValuesRef.current = newQuickFilterValues;
+    apiRef.current.setQuickFilterValues(newQuickFilterValues);
+  });
+
   const setQuickFilterValueDebounced = React.useMemo(
-    () =>
-      debounce((newValue: string) => {
-        const newQuickFilterValues = parser(newValue);
-        prevQuickFilterValuesRef.current = newQuickFilterValues;
-        apiRef.current.setQuickFilterValues(newQuickFilterValues);
-      }, debounceMs),
-    [apiRef, debounceMs, parser],
+    () => debounce(commitQuickFilterValue, debounceMs),
+    [commitQuickFilterValue, debounceMs],
   );
   React.useEffect(() => setQuickFilterValueDebounced.clear, [setQuickFilterValueDebounced]);
 

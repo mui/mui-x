@@ -18,7 +18,8 @@
         "describedArgs": ["input"],
         "returned": "Array<any>"
       }
-    }
+    },
+    "slotProps": { "type": { "name": "object" } }
   },
   "name": "GridToolbarQuickFilter",
   "imports": [

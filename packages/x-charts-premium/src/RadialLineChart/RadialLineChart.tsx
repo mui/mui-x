@@ -137,10 +137,11 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
     legendProps,
     children,
   } = useRadialLineChartProps(props);
+  const { apiRef, ...containerProps } = chartsContainerProps;
   const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
     'radialLine',
     RadialLineChartPluginSignatures
-  >(chartsContainerProps);
+  >(containerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
@@ -148,6 +149,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
   return (
     <ChartsRadialDataProviderPremium<'radialLine', RadialLineChartPluginSignatures>
       {...chartsDataProviderProps}
+      apiRef={apiRef}
       seriesConfig={seriesConfig}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
@@ -179,6 +181,9 @@ RadialLineChart.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that exposes the chart API methods.
+   */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
@@ -426,6 +431,10 @@ RadialLineChart.propTypes /* remove-proptypes */ = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * The color mode passed to `colors` when it is a function.
+   * Defaults to the mode of the Material UI theme.
+   */
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The tooltip item.

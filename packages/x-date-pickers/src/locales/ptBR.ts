@@ -47,9 +47,10 @@ const ptBRPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Selecione ${timeViews[view]}. ${!formattedTime ? 'Hora não selecionada' : `Selecionado a hora ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} horas`,
-  minutesClockNumberText: (minutes) => `${minutes} minutos`,
-  secondsClockNumberText: (seconds) => `${seconds} segundos`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'hora' : 'horas'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'minuto' : 'minutos'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'segundo' : 'segundos'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Selecione ${timeViews[view]}`,

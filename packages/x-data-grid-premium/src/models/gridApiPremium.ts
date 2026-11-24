@@ -11,7 +11,10 @@ import type {
   GridColumnReorderApi,
   GridRowProApi,
 } from '@mui/x-data-grid-pro';
-import type { GridRowReorderPrivateApi } from '@mui/x-data-grid-pro/internals';
+import type {
+  GridKeyboardReorderPrivateApi,
+  GridRowReorderPrivateApi,
+} from '@mui/x-data-grid-pro/internals';
 import type { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
 import type { GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSelectionInterfaces';
@@ -33,6 +36,10 @@ import type {
   GridChartsIntegrationPrivateApi,
 } from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 import type { GridHistoryApi } from '../hooks/features/history/gridHistoryInterfaces';
+import type {
+  GridComputedColumnsApi,
+  GridComputedColumnsPrivateApi,
+} from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
 
 /**
  * The api of Data Grid Premium.
@@ -55,6 +62,7 @@ export interface GridApiPremium
     GridSidebarApi,
     GridChartsIntegrationApi,
     GridHistoryApi,
+    GridComputedColumnsApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}
@@ -68,8 +76,11 @@ export interface GridPrivateApiPremium
     // The formula feature is injectable — its private API methods only exist
     // when the feature is provided through `featureDependencies`.
     Partial<GridFormulaPrivateApi>,
+    // Registered by the formula feature as well: validation needs the engine.
+    Partial<GridComputedColumnsPrivateApi>,
     GridDetailPanelPrivateApi,
     GridRowReorderPrivateApi,
+    GridKeyboardReorderPrivateApi,
     GridPivotingPrivateApi,
     GridChartsIntegrationPrivateApi {}
 

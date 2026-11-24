@@ -1,4 +1,4 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { addMinutes, createDate, endOfDay, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import { getOccurrencesFromEvents } from '@mui/x-scheduler-internals/internals';
@@ -9,18 +9,18 @@ import {
   computeOccurrencesFirstIndexLookup,
   useEventOccurrencesWithTimelinePosition,
 } from './useEventOccurrencesWithTimelinePosition';
+import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
-  const collectionStart = adapter.date('2024-01-15', 'default');
-  const collectionEnd = adapter.endOfDay(adapter.date('2024-01-15', 'default'));
+  const collectionStart = createDate('2024-01-15');
+  const collectionEnd = endOfDay(createDate('2024-01-15'));
 
   function testHook(events: SchedulerProcessedEvent[], maxSpan: number) {
     const { result } = renderHook(() => {
       const occurrences = getOccurrencesFromEvents({
-        adapter,
-        start: collectionStart,
-        end: collectionEnd,
-        events,
+        start: collectionStart.getTime(),
+        end: collectionEnd.getTime(),
+        eventRangeIndex: createEventRangeIndex(events, false),
         displayTimezone: 'default',
         visibleResources: {},
         recurringEventsPlugin: null,
@@ -232,10 +232,9 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const result = testHook(events, 1);
 
       const occurrences = getOccurrencesFromEvents({
-        adapter,
-        start: collectionStart,
-        end: collectionEnd,
-        events,
+        start: collectionStart.getTime(),
+        end: collectionEnd.getTime(),
+        eventRangeIndex: createEventRangeIndex(events, false),
         displayTimezone: 'default',
         visibleResources: {},
         recurringEventsPlugin: null,
@@ -290,7 +289,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
         const startMinutes = Math.floor(random() * 12) * 30;
         const durationMinutes = Math.floor(random() * 9) * 15;
-        const start = adapter.addMinutes(collectionStart, startMinutes).toISOString();
+        const start = addMinutes(collectionStart, startMinutes).toISOString();
         return EventBuilder.new()
           .id(`${iteration}-${index}`)
           .singleDay(start, durationMinutes)
@@ -337,10 +336,7 @@ function computeLayoutQuadratically(
     const usedIndexes = new Set<number>();
     for (let previousIndex = 0; previousIndex < index; previousIndex += 1) {
       const previousOccurrence = sortedOccurrences[previousIndex];
-      if (
-        previousOccurrence.displayTimezone.end.timestamp >
-        occurrence.displayTimezone.start.timestamp
-      ) {
+      if (previousOccurrence.end.epochMilliseconds > occurrence.start.epochMilliseconds) {
         usedIndexes.add(firstIndexLookup[previousOccurrence.key]);
       }
     }
@@ -360,11 +356,9 @@ function computeLayoutQuadratically(
         sortedOccurrences
           .filter((otherOccurrence, otherIndex) =>
             otherIndex < index
-              ? otherOccurrence.displayTimezone.end.timestamp >
-                occurrence.displayTimezone.start.timestamp
+              ? otherOccurrence.end.epochMilliseconds > occurrence.start.epochMilliseconds
               : otherIndex > index &&
-                otherOccurrence.displayTimezone.start.timestamp <
-                  occurrence.displayTimezone.end.timestamp,
+                otherOccurrence.start.epochMilliseconds < occurrence.end.epochMilliseconds,
           )
           .map((otherOccurrence) => firstIndexLookup[otherOccurrence.key]),
       );

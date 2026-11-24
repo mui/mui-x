@@ -19,6 +19,9 @@ export interface ChartsSvgLayerProps extends Omit<
   'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
 > {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
 }
@@ -84,6 +87,9 @@ ChartsSvgLayer.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   className: PropTypes.string,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

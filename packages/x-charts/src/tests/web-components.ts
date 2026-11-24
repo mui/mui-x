@@ -28,7 +28,7 @@ export function reactToWebComponent<Props extends { container?: HTMLElement }, C
 
     [propsSymbol]: Props = {} as Props;
 
-    container: HTMLElement;
+    declare container: HTMLElement;
 
     constructor() {
       super();

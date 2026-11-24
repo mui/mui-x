@@ -33,6 +33,8 @@ export const CompactWeekView = React.memo(
         days={days}
         startTime={config?.startTime}
         endTime={config?.endTime}
+        initialScrollTime={config?.initialScrollTime}
+        timeGridEvents={config?.timeGridEvents}
         hourRangeSource="viewConfig.week"
         {...props}
       />

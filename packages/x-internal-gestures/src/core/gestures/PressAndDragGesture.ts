@@ -16,12 +16,14 @@
  */
 
 import type { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
-import { GestureState } from '../Gesture';
+import type { GestureState } from '../Gesture';
 import type { KeyboardManager } from '../KeyboardManager';
-import { PointerGesture, type PointerGestureOptions } from '../PointerGesture';
-import { type PointerManager } from '../PointerManager';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerGestureOptions } from '../PointerGesture';
+import type { PointerManager } from '../PointerManager';
 import { createEventName, preventDefault } from '../utils';
-import { PanGesture, type PanEvent, type PanGestureEventData } from './PanGesture';
+import { PanGesture } from './PanGesture';
+import type { PanEvent, PanGestureEventData } from './PanGesture';
 import { PressGesture } from './PressGesture';
 
 /**
@@ -106,44 +108,47 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
     dragTimeoutId: null,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare public readonly isSinglePhase: false;
 
-  protected readonly eventType!: PressAndDragEvent;
+  declare public readonly eventType: PressAndDragEvent;
 
-  protected readonly optionsType!: PressAndDragGestureOptions<GestureName>;
+  declare protected readonly optionsType: PressAndDragGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: Omit<Partial<typeof this.state>, 'phase' | 'dragTimeoutId'>;
+  declare public readonly mutableStateType: Omit<
+    Partial<typeof this.state>,
+    'phase' | 'dragTimeoutId'
+  >;
 
   /**
    * Duration required for press recognition
    */
-  private pressDuration: number;
+  declare private pressDuration: number;
 
   /**
    * Maximum distance a pointer can move during press for it to still be considered a press
    */
-  private pressMaxDistance: number;
+  declare private pressMaxDistance: number;
 
   /**
    * Maximum time between press completion and drag start
    */
-  private dragTimeout: number;
+  declare private dragTimeout: number;
 
   /**
    * Movement threshold for drag activation
    */
-  private dragThreshold: number;
+  declare private dragThreshold: number;
 
   /**
    * Allowed directions for the drag gesture
    */
-  private dragDirection: Array<'up' | 'down' | 'left' | 'right'>;
+  declare private dragDirection: Array<'up' | 'down' | 'left' | 'right'>;
 
-  private pressGesture: PressGesture<GestureName>;
+  declare private pressGesture: PressGesture<GestureName>;
 
-  private panGesture: PanGesture<GestureName>;
+  declare private panGesture: PanGesture<GestureName>;
 
   constructor(options: PressAndDragGestureOptions<GestureName>) {
     super(options);

@@ -3,7 +3,8 @@ import * as React from 'react';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
-import { useAdapterContext } from '../../use-adapter-context';
+import { useDirection } from '@base-ui/react/direction-provider';
+import { toEpochMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
@@ -31,7 +32,6 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     ...elementProps
   } = componentProps;
 
-  const adapter = useAdapterContext();
   const {
     id: rootId,
     focusedCell,
@@ -39,6 +39,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     rowTypes,
     rowsPerType,
   } = useCalendarGridRootContext();
+  const isRtl = useDirection() === 'rtl';
   const { rowIndex } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
@@ -51,13 +52,16 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     focusedCell?.rowIndex === rowIndex &&
     focusedCell?.columnIndex === index;
 
-  const getPlaceholderFields = () => ({
-    surfaceType: 'day-grid' as const,
-    start: adapter.startOfDay(value),
-    end: adapter.endOfDay(value),
-    lockSurfaceType,
-    resourceId: null,
-  });
+  const getPlaceholderFields = ({ timezone }: { timezone: string }) => {
+    // One all-day day, ending at the start of the next one.
+    return {
+      surfaceType: 'day-grid' as const,
+      start: toEpochMs(value, timezone),
+      end: toEpochMs(value.add({ days: 1 }), timezone),
+      lockSurfaceType,
+      resourceId: null,
+    };
+  };
 
   const eventCreationProps = useEventCreation(getPlaceholderFields);
   const triggerKeyboardCreation = useKeyboardEventCreation(getPlaceholderFields);
@@ -74,6 +78,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
       columnCount: cellsRefs.current.length,
       rowTypes,
       rowsPerType,
+      isRtl,
     });
     if (target) {
       event.preventDefault();
@@ -95,13 +100,12 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   const contextValue: CalendarGridDayCellContext = React.useMemo(
     () => ({
-      index,
       hasFocus,
     }),
-    [index, hasFocus],
+    [hasFocus],
   );
 
-  // Associate this cell with its column header, matching the pattern used by DayEvent and TimeEvent.
+  // Associate this cell with its column header.
   // Any additional aria-labelledby passed by the styled layer (e.g., an "All day" row header) is appended.
   const { 'aria-labelledby': elementAriaLabelledBy, ...restElementProps } = elementProps;
   const ariaLabelledBy = [columnHeaderId, elementAriaLabelledBy].filter(Boolean).join(' ');

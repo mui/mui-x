@@ -4,13 +4,15 @@ import {
   ChatProvider,
   ChatVariantProvider,
   useChatStore,
-  type ChatAdapter,
-  type ChatConversation,
-  type ChatDensity,
-  type ChatErrorCode,
-  type ChatMessage,
-  type ChatUser,
-  type ChatVariant,
+} from '@mui/x-chat/headless';
+import type {
+  ChatAdapter,
+  ChatConversation,
+  ChatDensity,
+  ChatErrorCode,
+  ChatMessage,
+  ChatUser,
+  ChatVariant,
 } from '@mui/x-chat/headless';
 import { demoMembers, users } from './data';
 

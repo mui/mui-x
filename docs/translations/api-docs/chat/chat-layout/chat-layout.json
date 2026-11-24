@@ -2,5 +2,9 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "conversationsPane": "", "root": "", "threadPane": "" }
+  "slotDescriptions": {
+    "conversationsPane": "The component that renders the conversations pane.",
+    "root": "The component that renders the root.",
+    "threadPane": "The component that renders the thread pane."
+  }
 }

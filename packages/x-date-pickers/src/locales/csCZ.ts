@@ -10,6 +10,17 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Odpoledne',
 };
 
+// Czech has 3 count-based forms: 1, 2-4, and 0 or 5+
+function getPluralSuffix(count: number, one: string, few: string, many: string) {
+  if (count === 1) {
+    return one;
+  }
+  if (count > 1 && count < 5) {
+    return few;
+  }
+  return many;
+}
+
 const csCZPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Předchozí měsíc',
@@ -43,14 +54,17 @@ const csCZPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Vyberte datum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
   dateRangePickerToolbarTitle: 'Vyberte rozmezí dat',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Vyberte časové rozmezí',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `${timeViews[view] ?? view} vybrány. ${!formattedTime ? 'Není vybrán čas' : `Vybraný čas je ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} hodin`,
-  minutesClockNumberText: (minutes) => `${minutes} minut`,
-  secondsClockNumberText: (seconds) => `${seconds} sekund`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${getPluralSuffix(Number(hours), 'hodina', 'hodiny', 'hodin')}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${getPluralSuffix(Number(minutes), 'minuta', 'minuty', 'minut')}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${getPluralSuffix(Number(seconds), 'sekunda', 'sekundy', 'sekund')}`,
 
   // Digital clock labels
   selectViewText: (view) => `Vyberte ${timeViews[view]}`,
@@ -66,7 +80,8 @@ const csCZPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Vyberte datum, vybrané datum je ${formattedDate}` : 'Vyberte datum',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Vyberte čas, vybraný čas je ${formattedTime}` : 'Vyberte čas',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange ? `Vyberte rozmezí, vybrané rozmezí je ${formattedRange}` : 'Vyberte rozmezí',
   fieldClearLabel: 'Vymazat',
 
   // Table labels

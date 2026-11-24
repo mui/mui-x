@@ -6,10 +6,16 @@ import {
   getCell,
   raf,
 } from 'test/utils/helperFn';
-import { useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import {
+  useGridApiRef,
+  DataGridPro,
+  gridClasses,
+  gridColumnFieldsSelector,
+} from '@mui/x-data-grid-pro';
 import type { GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { vi, describe, it, expect } from 'vitest';
+import { getColumnReorderTargetIndex } from '../hooks/features/columnReorder/columnReorderUtils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -98,6 +104,83 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
   });
 
+  describe('setColumnIndex with hidden columns', () => {
+    let apiRef: RefObject<GridApi | null> = { current: null };
+    const rows = [{ id: 0, hidden: 0, a: 1, b: 2, c: 3 }];
+    const columns = [{ field: 'hidden' }, { field: 'a' }, { field: 'b' }, { field: 'c' }];
+
+    function Test() {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            initialState={{ columns: { columnVisibilityModel: { hidden: false } } }}
+          />
+        </div>
+      );
+    }
+
+    it('should count all columns with `useVisibleColumns: false`', async () => {
+      render(<Test />);
+      const handleColumnIndexChange = vi.fn();
+      apiRef.current?.subscribeEvent('columnIndexChange', handleColumnIndexChange);
+      await act(() => apiRef.current?.setColumnIndex('c', 2, false));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['a', 'c', 'b']);
+      expect(apiRef.current?.getColumnIndex('c', false)).to.equal(2);
+      expect(handleColumnIndexChange.mock.calls[0][0]).to.deep.include({
+        targetIndex: 2,
+        oldIndex: 3,
+      });
+    });
+
+    it('should count the visible columns with `useVisibleColumns: true`', async () => {
+      render(<Test />);
+      await act(() => apiRef.current?.setColumnIndex('c', 1, true));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['a', 'c', 'b']);
+      expect(apiRef.current?.getColumnIndex('c')).to.equal(1);
+
+      await act(() => apiRef.current?.setColumnIndex('a', 2, true));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['c', 'b', 'a']);
+      expect(apiRef.current?.getColumnIndex('a')).to.equal(2);
+    });
+
+    it('should warn that the default changes in v10 when `useVisibleColumns` is omitted', async () => {
+      render(<Test />);
+      await expect(() => act(() => apiRef.current?.setColumnIndex('c', 2))).toWarnDev([
+        'MUI X: The default value of `useVisibleColumns` in `setColumnIndex()` will change',
+      ]);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['a', 'c', 'b']);
+    });
+
+    it('should not move the column when `useVisibleColumns: true` targets its current index', async () => {
+      function TestMiddleHidden() {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              apiRef={apiRef}
+              rows={[{ id: 0, a: 1, hidden: 0, b: 2 }]}
+              columns={[{ field: 'a' }, { field: 'hidden' }, { field: 'b' }]}
+              initialState={{ columns: { columnVisibilityModel: { hidden: false } } }}
+            />
+          </div>
+        );
+      }
+
+      render(<TestMiddleHidden />);
+      const handleColumnIndexChange = vi.fn();
+      apiRef.current?.subscribeEvent('columnIndexChange', handleColumnIndexChange);
+      await act(() => apiRef.current?.setColumnIndex('b', 1, true));
+      expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['a', 'hidden', 'b']);
+      expect(handleColumnIndexChange.mock.calls.length).to.equal(0);
+    });
+  });
+
   it('should allow to reorder columns by dropping outside the header row', () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
@@ -124,6 +207,51 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const dragEndEvent = createDragEndEvent(dragCol);
     fireEvent(dragCol, dragEndEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+  });
+
+  it('should mark the dragged column header as moving during the drag', () => {
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro rows={rows} columns={columns} />
+      </div>,
+    );
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    expect(getColumnHeaderCell(0)).not.to.have.class(gridClasses['columnHeader--moving']);
+
+    fireEvent.dragStart(dragCol);
+    expect(getColumnHeaderCell(0)).to.have.class(gridClasses['columnHeader--moving']);
+    expect(getColumnHeaderCell(1)).not.to.have.class(gridClasses['columnHeader--moving']);
+
+    fireEvent(dragCol, createDragEndEvent(dragCol));
+    expect(getColumnHeaderCell(0)).not.to.have.class(gridClasses['columnHeader--moving']);
+  });
+
+  it('should support custom classes for the dragged column header', () => {
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          rows={rows}
+          columns={columns}
+          classes={{ 'columnHeader--dragging': 'custom-dragging' }}
+        />
+      </div>,
+    );
+
+    // `composeClasses` joins the default and the custom class with a space, which `classList.add` rejects
+    const dragCol = getColumnHeaderCell(0).firstChild! as Element;
+    fireEvent.dragStart(dragCol);
+    expect(dragCol).to.have.class('custom-dragging');
+    expect(dragCol).to.have.class(gridClasses['columnHeader--dragging']);
+
+    fireEvent(dragCol, createDragEndEvent(dragCol));
+    expect(dragCol).not.to.have.class('custom-dragging');
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc']);
   });
 
   it('should cancel the reordering when dropping the column outside the grid', () => {
@@ -224,6 +352,28 @@ describe('<DataGridPro /> - Columns reorder', () => {
       'price1M',
       'id',
     ]);
+  });
+
+  it('should not call onColumnOrderChange when the column is dropped at its original position', () => {
+    const onColumnOrderChange = vi.fn();
+    function Test() {
+      const data = useBasicDemoData(1, 3);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro {...data} onColumnOrderChange={onColumnOrderChange} />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    fireEvent.dragStart(dragCol);
+    const dragEndEvent = createDragEndEvent(dragCol);
+    fireEvent(dragCol, dragEndEvent);
+
+    expect(onColumnOrderChange.mock.calls.length).to.equal(0);
   });
 
   describe('column - disableReorder', () => {
@@ -787,6 +937,56 @@ describe('<DataGridPro /> - Columns reorder', () => {
         'col2',
         'col3',
       ]);
+    });
+  });
+
+  describe('getColumnReorderTargetIndex', () => {
+    let apiRef: RefObject<GridApi | null>;
+
+    function Test() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={[{ id: 0 }]}
+            columns={[{ field: 'a' }, { field: 'b' }, { field: 'c' }]}
+          />
+        </div>
+      );
+    }
+
+    const getTargetIndex = (targetField: string, direction: 'left' | 'right', isRtl: boolean) =>
+      getColumnReorderTargetIndex(apiRef as any, {
+        dragField: 'b',
+        targetField,
+        direction,
+        isRtl,
+        forbiddenIndexes: {},
+      });
+
+    it('should move toward the visual direction in LTR', () => {
+      render(<Test />);
+      expect(getTargetIndex('c', 'right', false)).to.equal(2);
+      expect(getTargetIndex('a', 'left', false)).to.equal(0);
+    });
+
+    it('should not move when the target is on the other side in LTR', () => {
+      render(<Test />);
+      expect(getTargetIndex('c', 'left', false)).to.equal(null);
+      expect(getTargetIndex('a', 'right', false)).to.equal(null);
+    });
+
+    it('should move toward the visual direction in RTL', () => {
+      render(<Test />);
+      expect(getTargetIndex('c', 'left', true)).to.equal(2);
+      expect(getTargetIndex('a', 'right', true)).to.equal(0);
+    });
+
+    it('should not move when the target is on the other side in RTL', () => {
+      render(<Test />);
+      expect(getTargetIndex('c', 'right', true)).to.equal(null);
+      expect(getTargetIndex('a', 'left', true)).to.equal(null);
     });
   });
 });

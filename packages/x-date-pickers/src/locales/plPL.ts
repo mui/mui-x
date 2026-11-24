@@ -3,11 +3,24 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 import type { TimeViewWithMeridiem } from '../internals/models';
 
 const timeViews: Record<TimeViewWithMeridiem, string> = {
-  hours: 'godzin',
-  minutes: 'minut',
-  seconds: 'sekund',
-  meridiem: 'popołudnie',
+  hours: 'godzinę',
+  minutes: 'minutę',
+  seconds: 'sekundę',
+  meridiem: 'porę dnia',
 };
+
+// Polish has 3 count-based forms: 1, 2-4 (excluding 12-14), and everything else
+function getPluralForm(count: number, one: string, few: string, many: string) {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+  if (count === 1) {
+    return one;
+  }
+  if (lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14)) {
+    return few;
+  }
+  return many;
+}
 
 const plPLPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
@@ -42,14 +55,17 @@ const plPLPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Wybierz datę i czas',
   timePickerToolbarTitle: 'Wybierz czas',
   dateRangePickerToolbarTitle: 'Wybierz zakres dat',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Wybierz zakres czasu',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Wybierz ${timeViews[view]}. ${!formattedTime ? 'Nie wybrano czasu' : `Wybrany czas to ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} godzin`,
-  minutesClockNumberText: (minutes) => `${minutes} minut`,
-  secondsClockNumberText: (seconds) => `${seconds} sekund`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${getPluralForm(Number(hours), 'godzina', 'godziny', 'godzin')}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${getPluralForm(Number(minutes), 'minuta', 'minuty', 'minut')}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${getPluralForm(Number(seconds), 'sekunda', 'sekundy', 'sekund')}`,
 
   // Digital clock labels
   selectViewText: (view) => `Wybierz ${timeViews[view]}`,
@@ -65,7 +81,10 @@ const plPLPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Wybierz datę, obecnie wybrana data to ${formattedDate}` : 'Wybierz datę',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Wybierz czas, obecnie wybrany czas to ${formattedTime}` : 'Wybierz czas',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+      ? `Wybierz zakres, obecnie wybrany zakres to ${formattedRange}`
+      : 'Wybierz zakres',
   fieldClearLabel: 'Wyczyść',
 
   // Table labels
@@ -73,27 +92,27 @@ const plPLPickers: Partial<PickersLocaleText> = {
   dateTableLabel: 'wybierz datę',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'R'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'gg',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
   year: 'Rok',
   month: 'Miesiąc',
   day: 'Dzień',
   weekDay: 'Dzień tygodnia',
-  hours: 'Godzin',
-  minutes: 'Minut',
-  seconds: 'Sekund',
-  // meridiem: 'Meridiem',
+  hours: 'Godzina',
+  minutes: 'Minuta',
+  seconds: 'Sekunda',
+  meridiem: 'Pora dnia',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Puste',
 };
 
 export const plPL = getPickersLocalization(plPLPickers);

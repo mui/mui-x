@@ -53,7 +53,13 @@ export interface PiecewiseColorLegendProps
    */
   classes?: Partial<PiecewiseColorLegendClasses>;
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * The `tabIndex` of the root element.
+   */
   tabIndex?: number;
 }
 
@@ -265,8 +271,14 @@ const PiecewiseColorLegend = consumeThemeProps(
                 role={onItemClick ? 'button' : undefined}
                 type={onItemClick ? 'button' : undefined}
                 onClick={
-                  // @ts-ignore onClick is only attached to a button
-                  onItemClick ? (event) => onItemClick(event, clickObject, index) : undefined
+                  onItemClick
+                    ? (event) =>
+                        onItemClick(
+                          event as React.MouseEvent<HTMLButtonElement>,
+                          clickObject,
+                          index,
+                        )
+                    : undefined
                 }
                 className={clsx(classes?.item, {
                   [`${startClass}`]: index === 0,

@@ -9,6 +9,7 @@
       },
       "required": true
     },
+    "value": { "type": { "name": "string" }, "required": true },
     "color": {
       "type": {
         "name": "enum",
@@ -16,6 +17,7 @@
       },
       "default": "'primary'"
     },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
     "endAdornment": { "type": { "name": "node" } },
     "error": { "type": { "name": "bool" }, "default": "false" },
     "focused": { "type": { "name": "bool" } },
@@ -33,6 +35,7 @@
       "default": "'none'"
     },
     "name": { "type": { "name": "string" } },
+    "readOnly": { "type": { "name": "bool" } },
     "required": { "type": { "name": "bool" }, "default": "false" },
     "size": {
       "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },

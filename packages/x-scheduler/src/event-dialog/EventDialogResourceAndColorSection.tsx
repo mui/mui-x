@@ -44,7 +44,7 @@ const ResourceMenuItem = styled(MenuItem, {
   name: 'MuiEventDialog',
   slot: 'ResourceMenuItem',
 })(({ theme }) => ({
-  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-indent) * ${theme.spacing(2)})`,
+  paddingInlineStart: `calc(${theme.spacing(2)} + var(--resource-indent) * ${theme.spacing(2)})`,
 }));
 
 const ResourceMenuListSubheader = styled(ListSubheader, {
@@ -369,11 +369,7 @@ export function EventDialogResourceAndColorSection() {
               return items;
             })}
           </Select>
-          {error && (
-            <FormHelperText id={errorId} role="alert">
-              {error}
-            </FormHelperText>
-          )}
+          {error && <FormHelperText id={errorId}>{error}</FormHelperText>}
         </FormControl>
       )}
       <ResourceMenuColorToggleGroup

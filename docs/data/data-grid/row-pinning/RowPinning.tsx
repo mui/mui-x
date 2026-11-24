@@ -1,4 +1,5 @@
-import { DataGridPro, GridPinnedRowsProp, GridColDef } from '@mui/x-data-grid-pro';
+import type { GridPinnedRowsProp, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomCity,
   randomEmail,

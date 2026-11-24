@@ -4,7 +4,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import { SankeyChart, SankeyItemIdentifier } from '@mui/x-charts-pro/SankeyChart';
+import type { SankeyItemIdentifier } from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 
 const getCircularReplacer = () => {

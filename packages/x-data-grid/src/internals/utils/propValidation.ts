@@ -1,17 +1,44 @@
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { isNumber } from '../../utils/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridSignature } from '../../constants/signature';
 
 export type PropValidator<TProps> = (props: TProps) => string | undefined;
 
+// Hyphenated props that the Data Grid supports. TypeScript doesn't type-check other hyphenated props.
+const SUPPORTED_ATTRIBUTE_PROPS = new Set(['aria-label', 'aria-labelledby']);
+
 export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
+  (props) => {
+    const ignoredProps = Object.keys(props).filter(
+      (key) => key.startsWith('aria-') && !SUPPORTED_ATTRIBUTE_PROPS.has(key),
+    );
+    if (ignoredProps.length === 0) {
+      return undefined;
+    }
+    return [
+      `MUI X Data Grid: The ${ignoredProps.map((key) => `\`${key}\``).join(', ')} prop(s) are not forwarded to the DOM.`,
+      'The Data Grid does not spread unknown props on its root element, so these attributes are ignored.',
+      'Pass them with `slotProps.main` for the `.MuiDataGrid-main` element, or `slotProps.root` for the root element.',
+      'For more details, see https://mui.com/x/react-data-grid/components/#root-and-main-elements',
+    ].join('\n');
+  },
   (props) =>
     (props.autoPageSize &&
       props.autoHeight &&
       [
         'MUI X: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',
         'You cannot use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.',
+        '',
+        'Please remove one of these two props.',
+      ].join('\n')) ||
+    undefined,
+  (props) =>
+    (props.height != null &&
+      props.autoHeight &&
+      [
+        'MUI X: `<DataGrid height={...} autoHeight={true} />` are not valid props.',
+        'You cannot use both the `height` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to its content.',
         '',
         'Please remove one of these two props.',
       ].join('\n')) ||
@@ -52,7 +79,7 @@ export function validateProps<TProps>(props: TProps, validators: PropValidator<T
   validators.forEach((validator) => {
     const message = validator(props);
     if (message) {
-      warnOnce(message, 'error');
+      errorOnce(message);
     }
   });
 }

@@ -1,20 +1,20 @@
-import type { ChartSeriesType, ChartsSeriesConfig } from './config';
+import type { ChartSeriesType } from './config';
 
 export type ComposableCartesianChartSeriesType =
   | 'bar'
   | 'line'
   | 'scatter'
-  // @ts-ignore, 'rangeBar' does not exist in the base ChartsSeriesConfig, but it is added via module augmentation in x-charts-premium
-  | (ChartsSeriesConfig['rangeBar'] extends undefined ? never : 'rangeBar')
-  // @ts-ignore, 'ohlc' does not exist in the base ChartsSeriesConfig, but it is added via module augmentation in x-charts-premium
-  | (ChartsSeriesConfig['ohlc'] extends undefined ? never : 'ohlc');
+  // Range bar and OHLC series only exist when the Premium package augments `ChartsSeriesConfig`.
+  | Extract<ChartSeriesType, 'rangeBar' | 'ohlc'>;
 
+/**
+ * The cartesian series types that can be composed in the same chart.
+ * Packages adding composable series types (for example range bar and OHLC in Premium) register them in this set.
+ */
 export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesType> = new Set([
   'bar',
   'line',
   'scatter',
-  'rangeBar',
-  'ohlc',
 ] as const);
 
 // Idem for radial series

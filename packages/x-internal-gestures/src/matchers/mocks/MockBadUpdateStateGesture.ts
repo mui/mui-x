@@ -1,5 +1,5 @@
 import { Gesture } from '../../core';
-import { MockState } from './MockState';
+import type { MockState } from './MockState';
 
 export class MockBadUpdateStateGesture extends Gesture<string> {
   protected state: MockState = {
@@ -7,15 +7,15 @@ export class MockBadUpdateStateGesture extends Gesture<string> {
     startPosition: { x: 0, y: 0 },
   };
 
-  protected readonly isSinglePhase!: false;
+  declare public readonly isSinglePhase: false;
 
-  protected readonly eventType!: never;
+  declare public readonly eventType: never;
 
-  protected readonly optionsType!: never;
+  declare protected readonly optionsType: never;
 
-  protected readonly mutableOptionsType!: never;
+  declare public readonly mutableOptionsType: never;
 
-  protected readonly mutableStateType!: MockState;
+  declare public readonly mutableStateType: MockState;
 
   protected resetState(): void {
     this.state = {

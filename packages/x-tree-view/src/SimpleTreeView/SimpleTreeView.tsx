@@ -72,11 +72,13 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
-      warnOnce([
-        'MUI X: The Simple Tree View component does not support the `items` prop.',
-        'If you want to add items, you need to pass them as JSX children.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/simple-tree-view/items/.',
-      ]);
+      warnOnce(
+        [
+          'MUI X: The Simple Tree View component does not support the `items` prop.',
+          'If you want to add items, you need to pass them as JSX children.',
+          'Check the documentation for more details: https://mui.com/x/react-tree-view/simple-tree-view/items/.',
+        ].join('\n'),
+      );
     }
   }
 

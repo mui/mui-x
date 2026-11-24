@@ -1,5 +1,9 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
+import { getPlainDateRangeMs } from '@mui/x-scheduler-internals/internals';
+import type { EventCalendarFetchRange } from '@mui/x-scheduler-internals/models';
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
+import { getDateRangeKey } from '../../internals/utils/queue';
+import type { DateRange } from '../../internals/utils/queue';
 import type {
   EventCalendarPremiumState,
   EventCalendarPremiumParameters,
@@ -19,34 +23,47 @@ export class EventCalendarPremiumLazyLoadingPlugin<
     this.disposables.defer(
       store.registerStoreEffect(
         (state) => {
-          const visibleDays =
-            state.viewDefinition?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
-
-          if (visibleDays.length === 0) {
+          const range = getRangeToFetch(state);
+          if (range === null) {
             return null;
           }
 
-          return visibleDays.map((day) => day.key).join('|');
+          return getDateRangeKey(range);
         },
 
         (previousKey, nextKey) => {
-          // `null` means no view is registered, so there is no range to fetch.
+          // `null` means no view is registered or it has no range to fetch.
           if (previousKey === nextKey || nextKey === null || !store.parameters.dataSource) {
             return;
           }
 
-          this.scheduleFetch(() => {
-            const days =
-              store.state.viewDefinition?.visibleDaysSelector?.(
-                store.state as EventCalendarState,
-              ) ?? [];
-            return {
-              start: days[0].value,
-              end: days[days.length - 1].value,
-            };
-          }, previousKey === null);
+          this.scheduleFetch(() => getRangeToFetch(store.state), previousKey === null);
         },
       ),
     );
   }
+}
+
+/**
+ * Returns the range to fetch for the registered view, spanning whole days of the display timezone,
+ * or `null` when there is nothing to fetch.
+ */
+function getRangeToFetch(state: EventCalendarPremiumState): DateRange | null {
+  const { viewDefinition, displayTimezone } = state;
+  if (!viewDefinition) {
+    return null;
+  }
+
+  const calendarState = state as EventCalendarState;
+  let range: EventCalendarFetchRange;
+  if (viewDefinition.fetchRangeSelector) {
+    range = viewDefinition.fetchRangeSelector(calendarState);
+  } else {
+    const days = viewDefinition.visibleDaysSelector(calendarState);
+    if (days.length === 0) {
+      return null;
+    }
+    range = { start: days[0], end: days[days.length - 1] };
+  }
+  return getPlainDateRangeMs(range.start, range.end, displayTimezone);
 }

@@ -8,6 +8,7 @@ import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import type { ChartsContainerProps } from '../ChartsContainer';
 import { ChartsDataProvider } from '../ChartsDataProvider';
+import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 import { ChartsSurface } from '../ChartsSurface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
@@ -72,6 +73,9 @@ export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis?: YAxis;
+  /**
+   * The configuration of axes highlight.
+   */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
    * Type of plot used.
@@ -108,6 +112,8 @@ export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 
    */
   area?: PlotType extends 'line' ? LineSeriesType['area'] : never;
   /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
    * @default 'linear'
    */
   curve?: PlotType extends 'line' ? LineSeriesType['curve'] : never;
@@ -201,10 +207,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     className,
     disableClipping,
     clipAreaOffset,
-    onHighlightChange,
     onHighlightedAxisChange,
-    highlightedAxis,
-    highlightedItem,
+    disableAxisListener,
     ...other
   } = props;
   const id = useId();
@@ -276,27 +280,28 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     ],
     [yAxisProps],
   );
+  const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps({
+    ...other,
+    series,
+    width,
+    height,
+    margin,
+    colors,
+    xAxis,
+    yAxis,
+    onHighlightedAxisChange,
+    sx,
+    disableAxisListener:
+      disableAxisListener ??
+      (onHighlightedAxisChange === undefined &&
+        (!showTooltip || (slotProps?.tooltip?.trigger ?? 'axis') !== 'axis') &&
+        !(showHighlight && plotType === 'line') &&
+        (axisHighlight?.x ?? 'none') === 'none' &&
+        (axisHighlight?.y ?? 'none') === 'none'),
+  });
   return (
-    <ChartsDataProvider
-      series={series}
-      width={width}
-      height={height}
-      margin={margin}
-      xAxis={xAxis}
-      yAxis={yAxis}
-      colors={colors}
-      disableAxisListener={
-        onHighlightedAxisChange === undefined &&
-        (!showTooltip || slotProps?.tooltip?.trigger !== 'axis') &&
-        axisHighlight?.x === 'none' &&
-        axisHighlight?.y === 'none'
-      }
-      onHighlightChange={onHighlightChange}
-      onHighlightedAxisChange={onHighlightedAxisChange}
-      highlightedAxis={highlightedAxis}
-      highlightedItem={highlightedItem}
-    >
-      <ChartsSurface className={className} ref={ref} sx={sx} {...other}>
+    <ChartsDataProvider {...chartsDataProviderProps}>
+      <ChartsSurface {...chartsSurfaceProps} className={className} ref={ref}>
         <g clipPath={`url(#${clipPathId})`}>
           {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
 
@@ -327,6 +332,9 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that exposes the chart API methods.
+   */
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
@@ -336,6 +344,9 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
    * @default false
    */
   area: PropTypes.bool,
+  /**
+   * The configuration of axes highlight.
+   */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
@@ -358,6 +369,9 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
     preventHighlight: PropTypes.bool,
     preventTooltip: PropTypes.bool,
   }),
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -379,6 +393,8 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
    */
   color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
    * @default 'linear'
    */
   curve: PropTypes.oneOf([
@@ -749,11 +765,18 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The color mode passed to `colors` when it is a function.
+   * Defaults to the mode of the Material UI theme.
+   */
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The title of the chart.

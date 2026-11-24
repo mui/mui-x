@@ -6,7 +6,8 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { alpha } from '@mui/material/styles';
-import { Translate, useTranslate } from '@mui/internal-core-docs/i18n';
+import type { Translate } from '@mui/internal-core-docs/i18n';
+import { useTranslate } from '@mui/internal-core-docs/i18n';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { MarkdownElement } from '@mui/internal-core-docs/MarkdownDocs';
 import {
@@ -19,12 +20,13 @@ import type {
   LayoutStorageKeys,
 } from '@mui/internal-core-docs/ApiPage';
 import { AppLayoutDocs } from '@mui/internal-core-docs/AppLayout';
-import { SectionTitle, SectionTitleProps } from '@mui/internal-core-docs/SectionTitle';
-import {
+import type { SectionTitleProps } from '@mui/internal-core-docs/SectionTitle';
+import { SectionTitle } from '@mui/internal-core-docs/SectionTitle';
+import type {
   InterfaceApiTranslation,
   InterfaceApiContent,
 } from 'docs/scripts/api/buildInterfacesDocumentation';
-import { TableOfContentsEntry } from '@mui/internal-markdown';
+import type { TableOfContentsEntry } from '@mui/internal-markdown';
 import { kebabCase } from 'es-toolkit/string';
 
 type HeaderHash = 'demos' | 'import';

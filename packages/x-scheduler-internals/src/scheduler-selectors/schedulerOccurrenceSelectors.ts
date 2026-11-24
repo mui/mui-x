@@ -1,19 +1,14 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type {
-  SchedulerEventOccurrence,
-  SchedulerProcessedDate,
-  SchedulerResource,
-  TemporalSupportedObject,
-} from '../models';
+import type { SchedulerEventOccurrence, SchedulerResource } from '../models';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { getOccurrencesFromEvents, getEventResourceIds } from '../internals/utils/event-utils';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
-  (state: State) => state.adapter,
-  schedulerEventSelectors.processedEventList,
+  schedulerEventSelectors.processedEventRangeIndex,
   schedulerResourceSelectors.visibleMap,
   (state: State) => state.collapsedResources,
   schedulerResourceSelectors.processedResourceList,
@@ -22,24 +17,22 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   (state: State) => state.recurringEventsPlugin,
 
   (
-    adapter,
-    events,
+    eventRangeIndex,
     visibleResources,
     collapsedResources,
     resources,
     resourcesChildrenMap,
     displayTimezone,
     recurringEventsPlugin,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
+    start: number,
+    end: number,
   ) => {
     const occurrencesGroupedByResource = new Map<string, SchedulerEventOccurrence[]>();
 
     const occurrences = getOccurrencesFromEvents({
-      adapter,
       start,
       end,
-      events,
+      eventRangeIndex,
       visibleResources,
       displayTimezone,
       recurringEventsPlugin,
@@ -89,12 +82,9 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
 );
 
 export const schedulerOccurrenceSelectors = {
-  isStarted: (state: State, start: SchedulerProcessedDate) => {
-    const now = state.nowUpdatedEveryMinute;
-    return state.adapter.isBefore(start.value, now) || state.adapter.isEqual(start.value, now);
-  },
-  isEnded: (state: State, end: SchedulerProcessedDate) => {
-    return state.adapter.isBefore(end.value, state.nowUpdatedEveryMinute);
-  },
+  isStarted: (state: State, start: BaseTemporal.ZonedDateTime) =>
+    start.epochMilliseconds <= state.nowTimestamp,
+  isEnded: (state: State, end: BaseTemporal.ZonedDateTime) =>
+    end.epochMilliseconds < state.nowTimestamp,
   groupedByResourceList: occurrencesGroupedByResourceListSelector,
 };

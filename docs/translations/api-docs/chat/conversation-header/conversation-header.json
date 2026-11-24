@@ -2,5 +2,5 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "header": "" }
+  "slotDescriptions": { "header": "The component that renders the header." }
 }

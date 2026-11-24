@@ -2,5 +2,5 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "attachmentList": "" }
+  "slotDescriptions": { "attachmentList": "The component that renders the attachment list." }
 }

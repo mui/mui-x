@@ -1,4 +1,5 @@
-import { DataGridPremium, GridColDef, GridRowModel } from '@mui/x-data-grid-premium';
+import type { GridColDef, GridRowModel } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 const rows: GridRowModel[] = [
   {

@@ -1,5 +1,5 @@
 import Avatar from '@mui/material/Avatar';
-import { GridRenderCellParams } from '@mui/x-data-grid';
+import type { GridRenderCellParams } from '@mui/x-data-grid';
 
 export function renderAvatar(
   params: GridRenderCellParams<{ name: string; color: string }, any, any>,

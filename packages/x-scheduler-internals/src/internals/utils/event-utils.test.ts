@@ -1,74 +1,167 @@
-import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  createDate,
+  endOfDay,
+  EventBuilder,
+  ResourceBuilder,
+  startOfDay,
+  utcJuly4AllDayBuilder,
+} from 'test/utils/scheduler';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { describe, it, expect } from 'vitest';
 import {
+  generateOccurrenceFromEvent,
+  getDayTimezone,
+  getOccurrencePlainDate,
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
+  getOccurrenceLastDayNumber,
   getOccurrencesFromEvents,
   getPrimaryResourceId,
+  getRecurringOccurrenceKey,
   getResourceSelectionMode,
+  isEventOccurrence,
 } from './event-utils';
-import { processDate } from '../../process-date';
+import { getDayListFromPlainDates } from '../../get-day-list';
+import { BaseTemporal } from './base-temporal';
+import { getDayNumber } from './plain-date-utils/plainDate';
+import { toEpochMs } from './plain-date-utils/timeZone';
+import { createEventRangeIndex } from './event-range-index';
 
 describe('event-utils', () => {
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
-    const days = [
-      processDate(adapter.date('2024-01-14', 'default'), adapter),
-      processDate(adapter.date('2024-01-15', 'default'), adapter),
-      processDate(adapter.date('2024-01-16', 'default'), adapter),
-      processDate(adapter.date('2024-01-17', 'default'), adapter),
-      processDate(adapter.date('2024-01-18', 'default'), adapter),
-    ];
+    const days = getDayListFromPlainDates({
+      firstPlainDate: BaseTemporal.PlainDate.from('2024-01-14'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2024-01-18'),
+      timezone: 'default',
+    });
+    const dayNumbers = days.map((day) => getDayNumber(day));
 
-    const formattedDays = days.map((day) => adapter.format(day.value, 'localizedNumericDate'));
+    const dayKeys = ['2024-01-14', '2024-01-15', '2024-01-16', '2024-01-17', '2024-01-18'];
 
     it('should return all days when event spans multiple days', () => {
       const event = EventBuilder.new()
-        .span('2024-01-15T10:00:00Z', '2024-01-17T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-15', '2024-01-18', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
-      expect(result).toEqual([formattedDays[1], formattedDays[2], formattedDays[3]]);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
+      expect(result).toEqual([dayKeys[1], dayKeys[2], dayKeys[3]]);
     });
 
     it('should return empty array when event is completely outside visible range', () => {
       const event = EventBuilder.new()
-        .span('2024-01-10T10:00:00Z', '2024-01-12T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-10', '2024-01-13', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toHaveLength(0);
     });
 
     it('should return empty array when event is after visible range', () => {
       const event = EventBuilder.new()
-        .span('2024-01-20T10:00:00Z', '2024-01-22T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-20', '2024-01-23', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toHaveLength(0);
     });
 
     it('should handle event that partially overlaps with visible range at the beginning', () => {
       const event = EventBuilder.new()
-        .span('2024-01-13T10:00:00Z', '2024-01-16T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-13', '2024-01-17', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
-      expect(result).toEqual([formattedDays[0], formattedDays[1], formattedDays[2]]);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
+      expect(result).toEqual([dayKeys[0], dayKeys[1], dayKeys[2]]);
     });
 
     it('should handle event that partially overlaps with visible range at the end', () => {
       const event = EventBuilder.new()
-        .span('2024-01-16T10:00:00Z', '2024-01-19T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-16', '2024-01-20', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
-      expect(result).toEqual([formattedDays[2], formattedDays[3], formattedDays[4]]);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
+      expect(result).toEqual([dayKeys[2], dayKeys[3], dayKeys[4]]);
+    });
+  });
+
+  describe('exclusive end of all-day occurrences', () => {
+    it.each([
+      // Europe/Paris springs forward on March 29th, 2026: a 23-hour day.
+      {
+        timezone: 'Europe/Paris',
+        start: '2026-03-28',
+        end: '2026-03-30',
+        displayedEnd: '2026-03-30T00:00:00',
+        lastDay: '2026-03-29',
+        days: ['2026-03-28', '2026-03-29'],
+      },
+      // America/Santiago repeats 23:00-23:59 on April 4th, 2026: a 25-hour day.
+      {
+        timezone: 'America/Santiago',
+        start: '2026-04-03',
+        end: '2026-04-05',
+        displayedEnd: '2026-04-05T00:00:00',
+        lastDay: '2026-04-04',
+        days: ['2026-04-03', '2026-04-04'],
+      },
+      // Pacific/Apia skipped December 30th, 2011: the end lands on the next existing day, and the
+      // last day is still the day before the skipped one.
+      {
+        timezone: 'Pacific/Apia',
+        start: '2011-12-28',
+        end: '2011-12-30',
+        displayedEnd: '2011-12-31T00:00:00',
+        lastDay: '2011-12-29',
+        days: ['2011-12-28', '2011-12-29'],
+      },
+    ])(
+      'should end a two-day all-day occurrence displayed in $timezone after its last displayed day',
+      ({ timezone, start: day, end: endDay, displayedEnd: end, lastDay, days: expectedDays }) => {
+        const event = EventBuilder.new()
+          .withDisplayTimezone(timezone)
+          .span(day, endDay, { allDay: true })
+          .rrule({ freq: 'DAILY', count: 1 })
+          .toProcessed();
+        const firstPlainDate = BaseTemporal.PlainDate.from(day).add({ days: -3 });
+        const days = getDayListFromPlainDates({
+          firstPlainDate,
+          lastPlainDate: firstPlainDate.add({ days: 6 }),
+          timezone,
+        });
+        const dayNumbers = days.map((item) => getDayNumber(item));
+        const dayKeys = days.map((item) => item.toString());
+
+        for (const recurringEventsPlugin of [null, schedulerRecurringEventsPlugin]) {
+          const [occurrence] = getOccurrencesFromEvents({
+            start: toEpochMs(days[0], timezone),
+            end: toEpochMs(days[days.length - 1], timezone),
+            eventRangeIndex: createEventRangeIndex([event], recurringEventsPlugin != null),
+            visibleResources: {},
+            displayTimezone: timezone,
+            recurringEventsPlugin,
+          });
+
+          expect(occurrence.end.toPlainDateTime().toString()).to.equal(end);
+          expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
+            getDayNumber(BaseTemporal.PlainDate.from(lastDay)),
+          );
+          expect(getDaysTheOccurrenceIsVisibleOn(occurrence, dayNumbers, dayKeys)).to.deep.equal(
+            expectedDays,
+          );
+        }
+      },
+    );
+
+    it('should keep the end of a timed occurrence', () => {
+      const occurrence = EventBuilder.new()
+        .withDataTimezone('UTC')
+        .span('2026-03-28T22:00:00', '2026-03-29T00:00:00')
+        .toOccurrence();
+
+      // A timed occurrence ending at midnight covers the start of the next day.
+      expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
+        getDayNumber(BaseTemporal.PlainDate.from('2026-03-29')),
+      );
     });
   });
 
@@ -152,22 +245,50 @@ describe('event-utils', () => {
   });
 
   describe('getOccurrencesFromEvents', () => {
-    const start = adapter.date('2024-01-14', 'default');
-    const end = adapter.date('2024-01-18', 'default');
+    const start = createDate('2024-01-14');
+    const end = createDate('2024-01-18');
     const resourceA = ResourceBuilder.new().build();
     const resourceB = ResourceBuilder.new().build();
 
+    it.each(['single', 'recurring', 'recurring-disabled'] as const)(
+      'should keep exception dates on the event rather than its occurrences (%s)',
+      (mode) => {
+        const event = EventBuilder.new()
+          .singleDay('2024-01-15T10:00:00Z')
+          .rrule(mode === 'single' ? undefined : { freq: 'DAILY' })
+          .exDates(['2024-01-16T10:00:00Z'])
+          .toProcessed();
+
+        const result = getOccurrencesFromEvents({
+          start: createDate('2024-01-15T00:00:00Z').getTime(),
+          end: createDate('2024-01-17T23:59:59Z').getTime(),
+          eventRangeIndex: createEventRangeIndex([event], mode === 'recurring'),
+          visibleResources: {},
+          displayTimezone: 'default',
+          recurringEventsPlugin: mode === 'recurring' ? schedulerRecurringEventsPlugin : null,
+        });
+
+        expect(result.map((occurrence) => occurrence.start.day)).to.deep.equal(
+          mode === 'recurring' ? [15, 17] : [15],
+        );
+        for (const occurrence of result) {
+          expect((occurrence as { exDates?: unknown }).exDates).to.equal(undefined);
+          expect(occurrence.modelInBuiltInFormat.exDates).to.deep.equal(['2024-01-16T10:00:00Z']);
+        }
+        expect(event.exDates).toHaveLength(1);
+      },
+    );
+
     it('should include an event assigned to multiple resources when at least one is visible', () => {
-      const event = EventBuilder.new(adapter)
+      const event = EventBuilder.new()
         .resources([resourceA, resourceB])
         .singleDay('2024-01-15T10:00:00Z')
         .toProcessed();
 
       const result = getOccurrencesFromEvents({
-        adapter,
-        start,
-        end,
-        events: [event],
+        start: start.getTime(),
+        end: end.getTime(),
+        eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,
@@ -176,17 +297,69 @@ describe('event-utils', () => {
       expect(result.map((o) => o.id)).toEqual([event.id]);
     });
 
+    it('should preserve visibility filtering when using the range index', () => {
+      const visibleEvent = EventBuilder.new()
+        .id('visible')
+        .resource(resourceA)
+        .singleDay('2024-01-15T10:00:00Z')
+        .toProcessed();
+      const hiddenEvent = EventBuilder.new()
+        .id('hidden')
+        .resource(resourceB)
+        .singleDay('2024-01-15T10:00:00Z')
+        .toProcessed();
+      const events = [visibleEvent, hiddenEvent];
+
+      const result = getOccurrencesFromEvents({
+        start: start.getTime(),
+        end: end.getTime(),
+        eventRangeIndex: createEventRangeIndex(events, false),
+        visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
+        displayTimezone: 'default',
+        recurringEventsPlugin: null,
+      });
+
+      expect(result.map((occurrence) => occurrence.id)).to.deep.equal(['visible']);
+    });
+
+    it('should preserve event order when indexed recurring events are expanded', () => {
+      const events = [
+        EventBuilder.new().id('first').singleDay('2024-01-15T08:00:00Z').toProcessed(),
+        EventBuilder.new()
+          .id('recurring')
+          .singleDay('2024-01-01T09:00:00Z')
+          .rrule({ freq: 'DAILY' })
+          .toProcessed(),
+        EventBuilder.new().id('last').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+      ];
+      const rangeStart = createDate('2024-01-15T00:00:00Z');
+
+      const result = getOccurrencesFromEvents({
+        start: startOfDay(rangeStart).getTime(),
+        end: endOfDay(rangeStart).getTime(),
+        eventRangeIndex: createEventRangeIndex(events, true),
+        visibleResources: {},
+        displayTimezone: 'default',
+        recurringEventsPlugin: schedulerRecurringEventsPlugin,
+      });
+
+      expect(result.map((occurrence) => occurrence.id)).to.deep.equal([
+        'first',
+        'recurring',
+        'last',
+      ]);
+    });
+
     it('should exclude an event when all of its assigned resources are hidden', () => {
-      const event = EventBuilder.new(adapter)
+      const event = EventBuilder.new()
         .resources([resourceA, resourceB])
         .singleDay('2024-01-15T10:00:00Z')
         .toProcessed();
 
       const result = getOccurrencesFromEvents({
-        adapter,
-        start,
-        end,
-        events: [event],
+        start: start.getTime(),
+        end: end.getTime(),
+        eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,
@@ -196,19 +369,99 @@ describe('event-utils', () => {
     });
 
     it('should include an event with no resource regardless of the visibleResources map', () => {
-      const event = EventBuilder.new(adapter).singleDay('2024-01-15T10:00:00Z').toProcessed();
+      const event = EventBuilder.new().singleDay('2024-01-15T10:00:00Z').toProcessed();
 
       const result = getOccurrencesFromEvents({
-        adapter,
-        start,
-        end,
-        events: [event],
+        start: start.getTime(),
+        end: end.getTime(),
+        eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,
       });
 
       expect(result.map((o) => o.id)).toEqual([event.id]);
+    });
+  });
+
+  describe('isEventOccurrence', () => {
+    it('should tell an event occurrence from a placeholder', () => {
+      const occurrence = EventBuilder.new().toOccurrence();
+      const { modelInBuiltInFormat, timezone, rrule, ...placeholder } = occurrence;
+
+      expect(isEventOccurrence(occurrence)).to.equal(true);
+      expect(isEventOccurrence(placeholder)).to.equal(false);
+    });
+  });
+
+  describe('generateOccurrenceFromEvent', () => {
+    it('should copy the event onto the segment bounds without its exception dates', () => {
+      const processed = utcJuly4AllDayBuilder()
+        .withDisplayTimezone('America/New_York')
+        .exDates(['2025-07-05'])
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+
+      const occurrence = generateOccurrenceFromEvent({
+        event: processed,
+        eventId: processed.id,
+        occurrenceKey: 'key',
+        start: processed.start,
+        end: processed.end,
+      });
+
+      expect(occurrence.key).to.equal('key');
+      expect(occurrence.start).to.equal(processed.start);
+      expect(occurrence.end).to.equal(processed.end);
+      expect((occurrence as { exDates?: unknown }).exDates).to.equal(undefined);
+    });
+  });
+
+  describe('getRecurringOccurrenceKey', () => {
+    it('should key the occurrence on its day in the timezone', () => {
+      // July 3rd at 17:00 UTC is July 4th in Tokyo.
+      const timestamp = Date.parse('2025-07-03T17:00:00Z');
+      expect(getRecurringOccurrenceKey('event', timestamp, 'Asia/Tokyo')).to.equal(
+        'event::2025-07-04',
+      );
+      expect(getRecurringOccurrenceKey('event', timestamp, 'UTC')).to.equal('event::2025-07-03');
+    });
+  });
+
+  describe('getDayTimezone', () => {
+    it('should run the days of an all-day event in the display timezone and of a timed one in its own', () => {
+      expect(getDayTimezone({ allDay: true, timezone: 'UTC' }, 'Asia/Tokyo')).to.equal(
+        'Asia/Tokyo',
+      );
+      expect(getDayTimezone({ allDay: false, timezone: 'UTC' }, 'Asia/Tokyo')).to.equal('UTC');
+    });
+  });
+
+  describe('getOccurrencePlainDate', () => {
+    it('should read the day of an all-day occurrence as displayed and of a timed one in its own timezone', () => {
+      const allDay = utcJuly4AllDayBuilder().withDisplayTimezone('Asia/Tokyo').toOccurrence();
+      expect(getOccurrencePlainDate(allDay)).toEqualPlainDate('2025-07-04');
+
+      // July 4th at 22:00 in New York is July 5th in Tokyo.
+      const timed = EventBuilder.new()
+        .withDataTimezone('America/New_York')
+        .singleDay('2025-07-04T22:00:00', 60)
+        .withDisplayTimezone('Asia/Tokyo')
+        .toOccurrence();
+      expect(getOccurrencePlainDate(timed)).toEqualPlainDate('2025-07-04');
+    });
+
+    it('should read the date of a recurring all-day occurrence from its key, even on a day the display timezone skips', () => {
+      // December 30th, 2011 does not exist in Pacific/Apia: the occurrence starts on the 31st.
+      const occurrence = {
+        ...EventBuilder.new()
+          .id('trip')
+          .span('2011-12-31', '2012-01-01', { allDay: true })
+          .withDisplayTimezone('Pacific/Apia')
+          .toOccurrence(),
+        key: 'trip::2011-12-30',
+      };
+      expect(getOccurrencePlainDate(occurrence)).toEqualPlainDate('2011-12-30');
     });
   });
 });

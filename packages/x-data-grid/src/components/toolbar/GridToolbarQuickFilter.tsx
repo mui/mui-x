@@ -41,6 +41,9 @@ export type GridToolbarQuickFilterProps = {
    * @default 150
    */
   debounceMs?: number;
+  /**
+   * The props used for each slot inside.
+   */
   slotProps?: {
     root: TextFieldProps;
   };
@@ -135,8 +138,8 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                   enterDelay={0} // Prevents tooltip lagging behind transitioning trigger element
                 >
                   <GridQuickFilterTrigger
-                    className={classes.trigger}
                     {...triggerProps}
+                    className={classes.trigger}
                     ownerState={currentOwnerState}
                     color="default"
                     aria-disabled={state.expanded}
@@ -150,7 +153,6 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
               render={({ ref, slotProps: controlSlotProps, ...controlProps }) => (
                 <GridQuickFilterTextField
                   as={rootProps.slots.baseTextField}
-                  className={classes.control}
                   ownerState={currentOwnerState}
                   inputRef={ref}
                   aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
@@ -182,6 +184,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                   {...controlProps}
                   {...slotProps?.root}
                   {...other}
+                  className={clsx(classes.control, slotProps?.root?.className)}
                 />
               )}
             />
@@ -219,6 +222,9 @@ GridToolbarQuickFilter.propTypes /* remove-proptypes */ = {
    *   .filter((word) => word !== '')
    */
   quickFilterParser: PropTypes.func,
+  /**
+   * The props used for each slot inside.
+   */
   slotProps: PropTypes.object,
 } as any;
 

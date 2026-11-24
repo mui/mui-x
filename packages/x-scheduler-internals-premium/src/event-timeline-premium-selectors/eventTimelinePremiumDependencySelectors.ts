@@ -1,43 +1,63 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import type { SchedulerDependencyId } from '../models';
+import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
+import type {
+  SchedulerDependenciesState,
+  SchedulerDependencyId,
+  SchedulerResolvedDependencyLag,
+  SchedulerDependencyType,
+} from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
-  classifyDependencyEvent,
+  getActiveDependencies,
+  getEffectiveDependencyLag,
   groupByEventId,
-  isDependencyReadOnly,
 } from '../internals/utils/dependency-utils';
 
+// Typed against the two slices they read, so the scheduling plugin (generic over
+// `SchedulerState & SchedulerDependenciesState`) shares them with the rendering.
+type DependenciesState = SchedulerState & SchedulerDependenciesState;
+
 const activeModelListSelector = createSelectorMemoized(
-  (state: State) => state.dependencyModelLookup,
-  (state: State) => state.processedEventLookup,
-  (dependencyModelLookup, processedEventLookup) =>
-    // `dependencyModelLookup` already deduped duplicate ids (last wins) while
-    // preserving insertion order, so no separate dedup pass is needed here.
-    Array.from(dependencyModelLookup.values()).filter((dependency) =>
-      [dependency.source, dependency.target].every(
-        (eventId) => classifyDependencyEvent(processedEventLookup, eventId) === 'ok',
-      ),
-    ),
+  (state: DependenciesState) => state.dependencyModelLookup,
+  (state: DependenciesState) => state.processedEventLookup,
+  getActiveDependencies,
 );
 
-const activeSourceTitlesByTargetSelector = createSelectorMemoized(
+export interface SchedulerDependencySourceDescription {
+  title: string;
+  type: SchedulerDependencyType;
+  /**
+   * The lag the engine applies to this successor, or `null` when the dependency has no
+   * usable lag.
+   */
+  lag: SchedulerResolvedDependencyLag | null;
+}
+
+const activeSourcesByTargetSelector = createSelectorMemoized(
   activeModelListSelector,
   (state: State) => state.processedEventLookup,
   (dependencies, processedEventLookup) => {
-    const titlesByTarget = new Map<SchedulerEventId, string[]>();
+    const sourcesByTarget = new Map<SchedulerEventId, SchedulerDependencySourceDescription[]>();
     for (const dependency of dependencies) {
       // Active dependencies always resolve: their events exist in the lookup.
-      const title = processedEventLookup.get(dependency.source)!.title;
-      const titles = titlesByTarget.get(dependency.target);
-      if (titles) {
-        titles.push(title);
+      const source = {
+        title: processedEventLookup.get(dependency.source)!.title,
+        type: dependency.type,
+        lag: getEffectiveDependencyLag(
+          dependency,
+          processedEventLookup.get(dependency.target)!.allDay,
+        ),
+      };
+      const sources = sourcesByTarget.get(dependency.target);
+      if (sources) {
+        sources.push(source);
       } else {
-        titlesByTarget.set(dependency.target, [title]);
+        sourcesByTarget.set(dependency.target, [source]);
       }
     }
-    return titlesByTarget;
+    return sourcesByTarget;
   },
 );
 
@@ -51,12 +71,10 @@ const selectedIdSelector = (state: State) => {
 const creationSelector = (state: State) => state.dependencyCreation;
 
 export const eventTimelinePremiumDependencySelectors = {
-  modelList: (state: State) => state.dependencyModelList,
-  modelLookup: (state: State) => state.dependencyModelLookup,
   model: (state: State, dependencyId: SchedulerDependencyId) =>
     state.dependencyModelLookup.get(dependencyId) ?? null,
   /**
-   * Dependencies whose two events exist and are not recurring.
+   * Dependencies with a supported type whose two events exist and are not recurring.
    * Rendering and the scheduling engine must only consume these.
    */
   activeModelList: activeModelListSelector,
@@ -67,14 +85,17 @@ export const eventTimelinePremiumDependencySelectors = {
     groupByEventId(dependencies, 'target'),
   ),
   /**
-   * Titles of the source events of the active dependencies, grouped by target event id.
-   * Used to describe an event with the events it depends on.
+   * The source event title, type and lag of the active dependencies, grouped by target
+   * event id. Used to describe an event with the events it depends on.
    */
-  activeSourceTitlesByTarget: activeSourceTitlesByTargetSelector,
-  activeSourceTitlesForTarget: (state: State, eventId: SchedulerEventId): readonly string[] =>
-    activeSourceTitlesByTargetSelector(state).get(eventId) ?? EMPTY_ARRAY,
+  activeSourcesByTarget: activeSourcesByTargetSelector,
+  activeSourcesForTarget: (
+    state: State,
+    eventId: SchedulerEventId,
+  ): readonly SchedulerDependencySourceDescription[] =>
+    activeSourcesByTargetSelector(state).get(eventId) ?? EMPTY_ARRAY,
   /**
-   * Whether the dependencies feature is enabled (internal parameters provided).
+   * Whether the store received the dependencies feature and the `dependencies` parameter.
    */
   enabled: (state: State) => state.areDependenciesEnabled,
   /**
@@ -84,14 +105,6 @@ export const eventTimelinePremiumDependencySelectors = {
   // Keyed by occurrence *and* resource: an event appearing on several resources
   // repeats the same occurrence key on each row, and only the row appearance the
   // gesture actually involves must highlight.
-  isCreationSource: (state: State, occurrenceKey: string, resourceId: SchedulerResourceId) => {
-    const creation = creationSelector(state);
-    return (
-      creation !== null &&
-      creation.sourceOccurrenceKey === occurrenceKey &&
-      creation.sourceResourceId === resourceId
-    );
-  },
   isCreationTarget: (state: State, occurrenceKey: string, resourceId: SchedulerResourceId) => {
     const creation = creationSelector(state);
     return (
@@ -109,15 +122,23 @@ export const eventTimelinePremiumDependencySelectors = {
    */
   selectedId: selectedIdSelector,
   /**
-   * Whether the dependency cannot be deleted because one of its events is read-only.
-   * Unknown ids resolve to `false`.
+   * The selected dependency, or `null`.
    */
-  isModelReadOnly: (state: State, dependencyId: SchedulerDependencyId | null) => {
-    const dependency =
-      dependencyId === null ? undefined : state.dependencyModelLookup.get(dependencyId);
-    if (!dependency) {
-      return false;
-    }
-    return isDependencyReadOnly(state, dependency);
+  selectedModel: (state: State) => {
+    const selectedId = selectedIdSelector(state);
+    return selectedId === null ? null : (state.dependencyModelLookup.get(selectedId) ?? null);
   },
+  /**
+   * The dependency open in the dependency dialog and its anchor, or `null`.
+   * Masked by membership like `selectedId`.
+   */
+  editor: (state: State) => {
+    const editor = state.dependencyEditor;
+    return editor !== null && state.dependencyModelLookup.has(editor.dependencyId) ? editor : null;
+  },
+  /**
+   * Whether dependencies cannot be created, edited or deleted: only the scheduler-wide
+   * `readOnly` locks them. A read-only event is protected by the cascade veto instead.
+   */
+  isReadOnly: (state: DependenciesState) => state.readOnly,
 };

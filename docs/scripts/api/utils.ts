@@ -1,6 +1,6 @@
 import { kebabCase } from 'es-toolkit/string';
 import * as prettier from 'prettier';
-import { Symbol } from 'typescript';
+import type { Symbol } from 'typescript';
 import fs from 'node:fs/promises';
 import {
   resolveExportSpecifier as resolveExportSpecifierBase,
@@ -9,7 +9,7 @@ import {
   formatType,
   stringifySymbol as stringifySymbolBase,
 } from '@mui/internal-api-docs-builder';
-import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
+import type { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
 import { resolvePrettierConfigPath } from '../utils';
 
 export type DocumentedInterfaces = Map<string, XProjectNames[]>;

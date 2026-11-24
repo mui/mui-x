@@ -40,7 +40,9 @@ const ExportPrint = forwardRef<HTMLButtonElement, ExportPrintProps>(
     const apiRef = useGridApiContext();
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      apiRef.current.exportDataAsPrint(options);
+      apiRef.current.exportDataAsPrint(options).catch((error) => {
+        console.error('MUI X Data Grid: Error exporting the grid as print:', error);
+      });
       onClick?.(event);
     };
 
@@ -61,7 +63,13 @@ ExportPrint.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
+  /**
+   * If `true`, the button is disabled.
+   */
   disabled: PropTypes.bool,
+  /**
+   * The id of the button element.
+   */
   id: PropTypes.string,
   /**
    * The options to apply on the Print export.
@@ -78,18 +86,37 @@ ExportPrint.propTypes /* remove-proptypes */ = {
     hideFooter: PropTypes.bool,
     hideToolbar: PropTypes.bool,
     includeCheckboxes: PropTypes.bool,
+    onStylesheetError: PropTypes.func,
     pageStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   }),
   /**
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  /**
+   * The ARIA role of the button element.
+   */
   role: PropTypes.string,
+  /**
+   * The size of the button.
+   */
   size: PropTypes.oneOf(['large', 'medium', 'small']),
+  /**
+   * Element placed before the children.
+   */
   startIcon: PropTypes.node,
   style: PropTypes.object,
+  /**
+   * The `tabIndex` of the button element.
+   */
   tabIndex: PropTypes.number,
+  /**
+   * The title of the button element.
+   */
   title: PropTypes.string,
+  /**
+   * @ignore
+   */
   touchRippleRef: PropTypes.any,
 } as any;
 

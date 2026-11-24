@@ -1,10 +1,12 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+import type {
   GridPivotModel,
   DataGridPremiumProps,
   GridInitialState,
+} from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';

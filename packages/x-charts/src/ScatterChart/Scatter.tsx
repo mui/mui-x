@@ -31,9 +31,21 @@ import type { UseChartHighlightSignature } from '../internals/plugins/featurePlu
  * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
  */
 export interface ScatterProps {
+  /**
+   * The scatter series to render.
+   */
   series: DefaultizedScatterSeriesType;
+  /**
+   * The scale of the x-axis.
+   */
   xScale: D3Scale;
+  /**
+   * The scale of the y-axis.
+   */
   yScale: D3Scale;
+  /**
+   * The color of the element.
+   */
   color: string;
   /**
    * Function to get the color of a scatter item given its data index.
@@ -54,8 +66,19 @@ export interface ScatterProps {
     event: ChartsActivationEvent<SVGElement>,
     scatterItemIdentifier: ScatterItemIdentifier,
   ) => void;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ScatterClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: ScatterSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ScatterSlotProps;
 }
 
@@ -178,7 +201,13 @@ Scatter.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
+  /**
+   * The color of the element.
+   */
   color: PropTypes.string.isRequired,
   /**
    * Function to get the color of a scatter item given its data index.
@@ -192,14 +221,31 @@ Scatter.propTypes /* remove-proptypes */ = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The scatter series to render.
+   */
   series: PropTypes.object.isRequired,
   /**
    * Function to get the marker size of a scatter item given its data index.
    */
   sizeGetter: PropTypes.func.isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The scale of the x-axis.
+   */
   xScale: PropTypes.func.isRequired,
+  /**
+   * The scale of the y-axis.
+   */
   yScale: PropTypes.func.isRequired,
 } as any;
 

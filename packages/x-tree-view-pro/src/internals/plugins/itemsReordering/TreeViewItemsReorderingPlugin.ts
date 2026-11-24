@@ -7,7 +7,7 @@ import { chooseActionToApply, isAncestor, moveItemInTree } from './utils';
 import { useTreeViewItemsReorderingItemPlugin } from './itemPlugin';
 
 export class TreeViewItemsReorderingPlugin {
-  private store: RichTreeViewProStore<any, any>;
+  declare private store: RichTreeViewProStore<any, any>;
 
   constructor(store: RichTreeViewProStore<any, any>) {
     this.store = store;

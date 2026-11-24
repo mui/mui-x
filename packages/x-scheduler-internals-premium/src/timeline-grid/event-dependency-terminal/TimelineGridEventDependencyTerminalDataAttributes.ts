@@ -9,4 +9,8 @@ export enum TimelineGridEventDependencyTerminalDataAttributes {
    * — an event assigned to several resources repeats the same key on each row.
    */
   resourceId = 'data-resource-id',
+  /**
+   * Always present; the event edge the terminal sits on: `"start"` or `"end"`.
+   */
+  side = 'data-side',
 }

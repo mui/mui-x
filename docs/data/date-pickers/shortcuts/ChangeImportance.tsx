@@ -1,11 +1,12 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
-import { PickerChangeImportance } from '@mui/x-date-pickers/models';
+import type { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
+import type { PickerChangeImportance } from '@mui/x-date-pickers/models';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPro, GridDataSource, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { GridDataSource } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 

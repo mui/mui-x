@@ -1,5 +1,6 @@
 import { describe, test } from 'vitest';
 import type { SchedulerEventOccurrence } from '../models';
+import { toZonedDateTime } from '../internals/utils/plain-date-utils/timeZone';
 import { computeOccurrencesWithTimelinePosition } from './useEventOccurrencesWithTimelinePosition';
 
 const denseOccurrences = createOccurrences(2_000, () => [0, 60]);
@@ -27,10 +28,8 @@ function createOccurrences(
     return {
       id: index,
       key: String(index),
-      displayTimezone: {
-        start: { timestamp: start },
-        end: { timestamp: end },
-      },
-    } as SchedulerEventOccurrence;
+      start: toZonedDateTime(start, 'UTC'),
+      end: toZonedDateTime(end, 'UTC'),
+    } as unknown as SchedulerEventOccurrence;
   });
 }

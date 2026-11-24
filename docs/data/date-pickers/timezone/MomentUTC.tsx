@@ -1,5 +1,6 @@
 import * as React from 'react';
-import moment, { Moment } from 'moment';
+import type { Moment } from 'moment';
+import moment from 'moment';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';

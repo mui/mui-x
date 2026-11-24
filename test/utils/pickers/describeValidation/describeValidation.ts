@@ -1,11 +1,11 @@
-import * as React from 'react';
+import type * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { afterAll } from 'vitest';
 import { testDayViewValidation } from './testDayViewValidation';
 import { testMonthViewValidation } from './testMonthViewValidation';
 import { testTextFieldValidation } from './testTextFieldValidation';
 import { testYearViewValidation } from './testYearViewValidation';
-import { DescribeValidationInputOptions } from './describeValidation.types';
+import type { DescribeValidationInputOptions } from './describeValidation.types';
 import { testMinutesViewValidation } from './testMinutesViewValidation';
 
 const TEST_SUITES = [

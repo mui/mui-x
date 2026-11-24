@@ -17,14 +17,14 @@ components: EventTimelinePremium
 Use the `resources` prop to define available resources, and the `resource` property on the event model to link an event to its resource:
 
 ```tsx
-const event = [
+const events = [
   { resource: 'work' /** other properties */ },
   { resource: 'holidays' /** other properties */ },
 ];
 
 const resources = [
-  { name: 'Work', id: 'work' },
-  { name: 'Holidays', id: 'holidays' },
+  { title: 'Work', id: 'work' },
+  { title: 'Holidays', id: 'holidays' },
 ];
 
 <EventTimelinePremium events={events} resources={resources} />;
@@ -204,8 +204,15 @@ Use the `areEventsResizable` property to prevent resizing a resource's events by
 const resource = {
   // ...other properties
   areEventsResizable: false,
-  areEventsResizable: "start" // only the start edge is draggable.
-  areEventsResizable: "end" // only the end edge is draggable.
+};
+```
+
+Set it to `"start"` or `"end"` to enable resizing only for one side:
+
+```ts
+const resource = {
+  // ...other properties
+  areEventsResizable: 'end',
 };
 ```
 
@@ -231,6 +238,36 @@ Use the `resourceColumnLabel` prop to customize the header of the resource colum
 {{"demo": "ResourceColumnLabel.js", "bg": "inline", "defaultCodeOpen": false}}
 
 When both are provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
+
+## Custom resource title
+
+Use the `timelineResourceTitle` slot to replace the text rendered inside a resource title cell.
+The slot receives the `resource` and is placed next to the legend color and the collapse toggle.
+
+{{"demo": "ResourceTitleSlot.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The events of the row announce the resource through their own accessible name, so the content of the slot doesn't change it.
+The cell is its own focus target and toggles the collapse, so keep some text in it, and describe rather than label it when adding a tooltip, as the demo does with `describeChild`.
+
+On a collapsible resource, the cell toggles the collapse on click, <kbd class="key">Enter</kbd> and <kbd class="key">Space</kbd>.
+Links, buttons, and inputs rendered by the slot keep their own clicks and keys: activating them doesn't toggle the collapse, and the arrow keys don't move the focus to another cell.
+
+### Typing custom slot props
+
+Pass extra props to the slot through `slotProps.timelineResourceTitle` and type them by augmenting the `TimelineResourceTitlePropsOverrides` interface:
+
+```tsx
+declare module '@mui/x-scheduler-premium/models' {
+  interface TimelineResourceTitlePropsOverrides {
+    showOwner?: boolean;
+  }
+}
+
+<EventTimelinePremium
+  slots={{ timelineResourceTitle: ResourceTitle }}
+  slotProps={{ timelineResourceTitle: { showOwner: true } }}
+/>;
+```
 
 ## Store data in custom properties
 

@@ -359,7 +359,9 @@ export const useGridAiAssistant = (
         Number(columnsLookup[GRID_CHECKBOX_SELECTION_FIELD] !== undefined) +
         Number(result.grouping.length);
 
-      interestColumns.reverse().forEach((c) => apiRef.current.setColumnIndex(c, targetIndex));
+      interestColumns
+        .reverse()
+        .forEach((c) => apiRef.current.setColumnIndex(c, targetIndex, false));
     },
     [
       apiRef,

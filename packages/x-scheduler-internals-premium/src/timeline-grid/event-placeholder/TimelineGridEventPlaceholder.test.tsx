@@ -1,19 +1,20 @@
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import {
-  adapter,
   createSchedulerRenderer,
   describeConformance,
+  endOfDay,
   ResourceBuilder,
+  startOfDay,
 } from 'test/utils/scheduler';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { describe } from 'vitest';
 
 describe('<TimelineGrid.EventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
-  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
+  const start = toZonedDateTime(startOfDay(new Date()).getTime(), 'default');
+  const end = toZonedDateTime(endOfDay(new Date()).getTime(), 'default');
 
   describeConformance(<TimelineGrid.EventPlaceholder start={start} end={end} />, () => ({
     refInstanceof: window.HTMLDivElement,

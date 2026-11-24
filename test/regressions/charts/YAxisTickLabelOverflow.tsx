@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { BarChartProps } from '@mui/x-charts/BarChart';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
 import { usAirportPassengersData } from 'docs/data/charts/dataset/airportData';
 
 const defaultYAxis = {

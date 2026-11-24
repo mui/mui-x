@@ -48,7 +48,7 @@ const MAX_REDIRECTS = 5;
 const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
 
 class BlockedUrlError extends Error {
-  url: string;
+  declare url: string;
 
   constructor(url: string) {
     super(`Blocked URL: ${url}`);

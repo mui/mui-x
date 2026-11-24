@@ -2,33 +2,42 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
+import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import type {
-  SchedulerEventOccurrence,
-  SchedulerProcessedDate,
-} from '@mui/x-scheduler-internals/models';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getDisplayedHourRange } from '@mui/x-scheduler-internals/internals';
+import {
+  createStartOfPlainDate,
+  formatDayOfMonth,
+  formatTime,
+  formatWeekdayMonthAndDayOfMonth,
+  formatWeekdayShort,
+  getDayNumber,
+  getDisplayedHourRange,
+  getInitialScrollTime,
+  isWeekendPlainDate,
+  getPlainDateRangeMs,
+} from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
-import { DayGridCell } from './DayGridCell';
+import { DayGridCell, EVENT_HEIGHT } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
-import { useFormatTime } from '../../../internals/hooks/useFormatTime';
-import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
+import { isOccurrenceInDayGrid } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
@@ -44,6 +53,8 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
 })(({ theme }) => ({
   '--fixed-cell-width': 'var(--EventCalendar-size-fixedCellWidth)',
   '--hour-height': `${HOUR_HEIGHT}px`,
+  // Number of all-day event rows displayed before the all-day area starts to scroll.
+  '--all-day-max-visible-events': 6,
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -62,6 +73,11 @@ const DayTimeGridRoot = styled('div', {
   flexDirection: 'column',
   flex: 1,
   overflowY: 'auto',
+  // Reserves the gutter that the all-day row's scrollbar takes when only that row overflows,
+  // so the time grid columns stay aligned with the all-day cells.
+  '&[data-has-scroll]': {
+    scrollbarGutter: 'stable',
+  },
 });
 
 const DayTimeGridHeader = styled(CalendarGrid.HeaderRow, {
@@ -87,7 +103,8 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
     overflowY: 'scroll',
     scrollbarGutter: 'stable',
     height: '100%',
-    gridColumn: '-1',
+    // Fill the last track, which the all-day row spans, so the row's own scrollbar lands in this gutter.
+    gridArea: '1 / -2',
     /* Make scrollbar invisible by setting transparent colors */
     scrollbarColor: 'transparent transparent',
     background: 'transparent',
@@ -123,6 +140,12 @@ const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
   gridRow: 1,
   width: '100%',
   height: '100%',
+  // The visible events end exactly at a multiple of `EVENT_HEIGHT`; the extra spacing is one
+  // gap plus the top of the next event, which peeks out to hint that the area scrolls.
+  maxHeight: `calc(var(--all-day-max-visible-events) * ${EVENT_HEIGHT}px + ${theme.spacing(1)})`,
+  overflow: 'hidden auto',
+  // Keeps the focus ring of an event scrolled into view inside the visible area.
+  scrollPaddingBlock: theme.spacing(0.5),
   '& > *': {
     borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
@@ -139,18 +162,10 @@ const DayTimeGridAllDayEventsCell = styled('div', {
 const DayTimeGridAllDayEventsHeaderCell = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridAllDayEventsHeaderCell',
-})(({ theme }) => ({
+})({
   gridColumn: '1',
   gridRow: '1',
-  fontSize: 'var(--EventCalendar-fontSize-timeText, 0.75rem)',
-  fontStyle: 'italic',
-  padding: theme.spacing(1),
-  textAlign: 'end',
-  color: (theme.vars || theme).palette.text.secondary,
-  overflowWrap: 'break-word',
-  wordBreak: 'break-word',
-  hyphens: 'auto',
-}));
+});
 
 const DayTimeGridHeaderContent = styled('span', {
   name: 'MuiEventCalendar',
@@ -301,8 +316,8 @@ const DayTimeGridTimeAxisCell = styled('div', {
   '&:not(:first-of-type)::after': {
     content: '""',
     position: 'absolute',
-    left: 'var(--fixed-cell-width)',
-    right: 0,
+    insetInlineStart: 'var(--fixed-cell-width)',
+    insetInlineEnd: 0,
     borderBlockEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
     top: 'calc(var(--hour) * var(--hour-height))',
     zIndex: 1,
@@ -341,15 +356,18 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     className,
     startTime: startTimeProp,
     endTime: endTimeProp,
+    initialScrollTime: initialScrollTimeProp,
+    timeGridEvents = 'shorter-than-one-day',
     hourRangeSource = 'viewConfig',
     ...other
   } = props;
 
-  const { startTime, endTime } = getDisplayedHourRange(startTimeProp, endTimeProp, hourRangeSource);
+  const range = getDisplayedHourRange(startTimeProp, endTimeProp, hourRangeSource);
+  const { startTime, endTime } = range;
   const hoursCount = endTime - startTime;
+  const initialScrollTime = getInitialScrollTime(initialScrollTimeProp, range, hourRangeSource);
 
   // Context hooks
-  const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const { stopEditing } = useEventEditingContext();
@@ -358,6 +376,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
+  const allDayRowRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
   const scrollRootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
@@ -373,8 +392,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
-  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -382,32 +405,23 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     days,
     occurrencesMap,
     shouldAddPosition: React.useCallback(
-      (occurrence: SchedulerEventOccurrence) =>
-        isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
-      [adapter],
+      (occurrence: SchedulerEventOccurrence) => isOccurrenceInDayGrid(occurrence, timeGridEvents),
+      [timeGridEvents],
     ),
   });
 
-  const formatTime = useFormatTime();
-
   const [hasScroll, setHasScroll] = React.useState(false);
 
-  const { start, end } = React.useMemo(
-    () => ({
-      start: days[0].value,
-      end: adapter.endOfDay(days[days.length - 1].value),
-    }),
-    [adapter, days],
-  );
+  const { start, end, firstDayNumber, lastDayNumber } = React.useMemo(() => {
+    const lastDay = days[days.length - 1];
+    return {
+      ...getPlainDateRangeMs(days[0], lastDay, displayTimezone),
+      firstDayNumber: getDayNumber(days[0]),
+      lastDayNumber: getDayNumber(lastDay),
+    };
+  }, [days, displayTimezone]);
 
-  const isTodayInView = React.useMemo(
-    () =>
-      adapter.isWithinRange(now, [
-        adapter.startOfDay(days[0].value),
-        adapter.endOfDay(days[days.length - 1].value),
-      ]),
-    [adapter, days, now],
-  );
+  const isTodayInView = nowDayNumber >= firstDayNumber && nowDayNumber <= lastDayNumber;
 
   const updateHasScroll = React.useCallback(() => {
     const body = bodyRef.current;
@@ -415,24 +429,50 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     if (!body || !allDayHeader) {
       return;
     }
-    setHasScroll(body.scrollHeight > body.clientHeight);
+    const allDayRow = allDayRowRef.current;
+    // The all-day row's scrollbar needs the gutter as well, even when the time grid fits.
+    setHasScroll(
+      body.scrollHeight > body.clientHeight ||
+        (allDayRow != null && allDayRow.scrollHeight > allDayRow.clientHeight),
+    );
   }, []);
 
   useIsoLayoutEffect(updateHasScroll, [occurrencesMap, updateHasScroll]);
 
-  useResizeObserver(bodyRef, updateHasScroll);
+  // Applied once, the first time the grid can scroll (earlier, `scrollTop` would clamp to 0).
+  // Navigating to another period keeps the time grid's scroll position.
+  const isInitialScrollAppliedRef = React.useRef(false);
+  const applyInitialScroll = useStableCallback(() => {
+    const scrollRoot = scrollRootRef.current;
+    if (
+      isInitialScrollAppliedRef.current ||
+      !scrollRoot ||
+      scrollRoot.scrollHeight <= scrollRoot.clientHeight
+    ) {
+      return;
+    }
+    // Measured so a `--hour-height` override keeps the hours aligned.
+    const hourHeight = scrollRoot.scrollHeight / hoursCount;
+    scrollRoot.scrollTop = (initialScrollTime - startTime) * hourHeight;
+    isInitialScrollAppliedRef.current = true;
+  });
 
-  const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
+  useIsoLayoutEffect(applyInitialScroll, [applyInitialScroll]);
 
-  const template = adapter.date('2020-01-01T00:00:00', 'default');
+  useResizeObserver(bodyRef, () => {
+    updateHasScroll();
+    applyInitialScroll();
+  });
 
-  const renderHeaderContent = (day: SchedulerProcessedDate) => (
+  const lastIsWeekend = isWeekendPlainDate(days[days.length - 1], weekend);
+
+  const renderHeaderContent = (day: BaseTemporal.PlainDate) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
       <DayTimeGridHeaderDayName className={classes.dayTimeGridHeaderDayName}>
-        {adapter.format(day.value, 'weekday3Letters')}
+        {formatWeekdayShort(locale, day)}
       </DayTimeGridHeaderDayName>
       <DayTimeGridHeaderDayNumber className={classes.dayTimeGridHeaderDayNumber}>
-        {adapter.format(day.value, 'dayOfMonth')}
+        {formatDayOfMonth(locale, day)}
       </DayTimeGridHeaderDayNumber>
     </DayTimeGridHeaderContent>
   );
@@ -457,10 +497,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         />
         {days.map((day, index) => (
           <DayTimeGridHeaderCell
-            key={day.key}
+            key={day.toString()}
             className={classes.dayTimeGridHeaderCell}
             date={day}
-            ariaLabelFormat={`${adapter.formats.weekday} ${adapter.formats.dayOfMonth}`}
+            aria-label={formatWeekdayMonthAndDayOfMonth(locale, day)}
             aria-colindex={index + 1}
             data-has-scroll={(index === days.length - 1 && hasScroll) || undefined}
           >
@@ -468,7 +508,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               <DayTimeGridHeaderButton
                 className={classes.dayTimeGridHeaderButton}
                 type="button"
-                onClick={(event) => store.switchToDay(day.value, event)}
+                onClick={(event) =>
+                  store.switchToDay(createStartOfPlainDate(day, displayTimezone), event)
+                }
                 tabIndex={-1}
               >
                 {renderHeaderContent(day)}
@@ -495,22 +537,35 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           id={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
           aria-hidden="true"
         >
-          {localeText.allDay}
+          <span style={visuallyHidden}>{localeText.dayGridLabel}</span>
         </DayTimeGridAllDayEventsHeaderCell>
         <DayTimeGridAllDayEventsRow
           as={CalendarGrid.DayRow}
+          // Unlike the time grid, the all-day scroll position means nothing in another period.
+          key={start}
+          ref={allDayRowRef}
           start={start}
           end={end}
+          days={days}
           className={classes.dayTimeGridAllDayEventsRow}
         >
           {occurrences.days.map((day, index) => (
-            <DayGridCell key={day.key} day={day} row={occurrences} colIndex={index + 1} />
+            <DayGridCell
+              key={day.plainDate.toString()}
+              day={day}
+              row={occurrences}
+              colIndex={index + 1}
+            />
           ))}
         </DayTimeGridAllDayEventsRow>
         <div className={classes.dayTimeGridScrollablePlaceholder} />
       </DayTimeGridAllDayEventsGrid>
 
-      <DayTimeGridRoot className={classes.dayTimeGrid} ref={scrollRootRef}>
+      <DayTimeGridRoot
+        className={classes.dayTimeGrid}
+        ref={scrollRootRef}
+        data-has-scroll={hasScroll || undefined}
+      >
         <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
           <DayTimeGridScrollableContent
             className={classes.dayTimeGridScrollableContent}
@@ -527,7 +582,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     style={{ '--hour': index } as React.CSSProperties}
                   >
                     <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
-                      {index === 0 ? null : formatTime(adapter.setHours(template, hour))}
+                      {index === 0 ? null : formatTime(locale, hour * 60, ampm)}
                     </DayTimeGridTimeAxisText>
                   </DayTimeGridTimeAxisCell>
                 );
@@ -542,7 +597,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             >
               {occurrences.days.map((day, index) => (
                 <TimeGridColumn
-                  key={day.key}
+                  key={day.plainDate.toString()}
                   day={day}
                   index={index}
                   colIndex={index + 1}

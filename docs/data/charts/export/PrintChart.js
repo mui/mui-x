@@ -6,7 +6,6 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
@@ -75,7 +74,14 @@ export default function PrintChart() {
             <MenuItem value="sankey">Sankey</MenuItem>
           </Select>
         </FormControl>
-        <Button onClick={() => apiRef.current.exportAsPrint()} variant="contained">
+        <Button
+          onClick={() =>
+            apiRef.current.exportAsPrint().catch((error) => {
+              console.error(error);
+            })
+          }
+          variant="contained"
+        >
           Print
         </Button>
       </Stack>

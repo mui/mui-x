@@ -1,4 +1,4 @@
-import { RowId, RowRange } from './core';
+import type { RowId, RowRange } from './core';
 
 type ColumnIndex = number;
 

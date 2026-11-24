@@ -133,5 +133,30 @@ describe('<CompactDayView />', () => {
         });
       }).toWarnDev(['MUI X Scheduler: `viewConfig.day` received an invalid hour range']);
     });
+
+    it('should forward `initialScrollTime` from the `day` key', () => {
+      // The warning proves the prop reaches the grid.
+      clearWarningsCache();
+      expect(() => {
+        renderWithProviders(<CompactDayView />, [], {
+          viewConfig: { day: { startTime: 8, endTime: 20, initialScrollTime: 6 } },
+        });
+      }).toWarnDev(['MUI X Scheduler: `viewConfig.day` received an invalid `initialScrollTime`']);
+    });
+
+    it('should forward `timeGridEvents` from the `day` key', () => {
+      const nightShift = EventBuilder.new()
+        .title('Night shift')
+        .span('2025-07-03T22:00:00Z', '2025-07-04T06:00:00Z')
+        .build();
+
+      renderWithProviders(<CompactDayView />, [nightShift], {
+        viewConfig: { day: { timeGridEvents: 'same-day-only' } },
+      });
+
+      const root = getDayTimeGrid();
+      expect(root.querySelector(`.${eventCalendarClasses.timeGridEvent}`)).to.equal(null);
+      expect(root.querySelector(`.${eventCalendarClasses.dayGridEvent}`)).not.to.equal(null);
+    });
   });
 });

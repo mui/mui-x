@@ -319,6 +319,23 @@ describe('<DesktopDatePicker />', () => {
       expect(onAccept.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 1));
       expect(onClose.mock.calls.length).to.equal(2);
     });
+
+    it('should warn when the defaultValue of an uncontrolled picker changes', () => {
+      const { setProps } = render(
+        <DesktopDatePicker defaultValue={adapterToUse.date('2018-01-01')} />,
+      );
+
+      // A new object with the same value is not a change.
+      expect(() => {
+        setProps({ defaultValue: adapterToUse.date('2018-01-01') });
+      }).not.toErrorDev();
+
+      expect(() => {
+        setProps({ defaultValue: adapterToUse.date('2018-01-04') });
+      }).toErrorDev(
+        'MUI X: A component is changing the defaultValue of an uncontrolled Picker after being initialized.',
+      );
+    });
   });
 
   describe('Month navigation', () => {
@@ -520,7 +537,7 @@ describe('<DesktopDatePicker />', () => {
       const renderCountBeforeChange = renderCount.mock.calls.length;
 
       await act(async () => {
-        setProps({ defaultValue: adapterToUse.date('2018-01-04') });
+        setProps({ defaultValue: adapterToUse.date('2018-01-01') });
       });
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));

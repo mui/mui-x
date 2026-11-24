@@ -4,10 +4,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Box from '@mui/material/Box';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
-import {
-  DateTimePickerTabs,
-  DateTimePickerTabsProps,
-} from '@mui/x-date-pickers/DateTimePicker';
+import type { DateTimePickerTabsProps } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 

@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { AxisValueFormatterContext, YAxis } from '@mui/x-charts/models';
+import type { AxisValueFormatterContext, YAxis } from '@mui/x-charts/models';
 import { sxColors } from '../colors';
 import dataset from '../../data/Goolge-Meta-stoks.json';
 import { shortMonthYearFormatter } from '../../shortMonthYearFormatter';

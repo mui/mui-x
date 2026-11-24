@@ -185,6 +185,7 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
   footerRowCount: React.JSXElementConstructor<GridSlotProps['footerRowCount']>;
   /**
    * Toolbar component rendered in the grid header.
+   * @default GridToolbar
    */
   toolbar: React.JSXElementConstructor<GridSlotProps['toolbar']>;
   /**
@@ -223,6 +224,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   filterPanel: React.JSXElementConstructor<GridSlotProps['filterPanel']>;
   /**
+   * Column input component rendered in each filter form of the filter panel.
+   * @default GridFilterFormColumnInput
+   */
+  filterFormColumnInput: React.JSXElementConstructor<GridSlotProps['filterFormColumnInput']>;
+  /**
    * GridColumns panel component rendered when clicking the columns button.
    * @default GridColumnsPanel
    */
@@ -231,7 +237,7 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * Component used inside Grid Columns panel to manage columns.
    * @default GridColumnsManagement
    */
-  columnsManagement: React.JSXElementConstructor<any>;
+  columnsManagement: React.JSXElementConstructor<GridSlotProps['columnsManagement']>;
   /**
    * Panel component wrapping the filters and columns panels.
    * @default GridPanel

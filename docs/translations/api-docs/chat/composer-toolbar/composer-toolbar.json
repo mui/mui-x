@@ -2,5 +2,5 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "toolbar": "" }
+  "slotDescriptions": { "toolbar": "The component that renders the toolbar." }
 }

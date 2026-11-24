@@ -12,12 +12,13 @@
  * This gesture only works with mouse pointers, not touch or pen.
  */
 
-import { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
-import { GesturePhase, GestureState } from '../Gesture';
+import type { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
+import type { GesturePhase, GestureState } from '../Gesture';
 import type { KeyboardManager } from '../KeyboardManager';
-import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
-import { PointerData, PointerManager } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
+import type { PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerData, PointerManager } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName } from '../utils';
 
 /**
@@ -72,21 +73,21 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     lastPosition: null,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare public readonly isSinglePhase: false;
 
-  protected readonly eventType!: MoveEvent;
+  declare public readonly eventType: MoveEvent;
 
-  protected readonly optionsType!: MoveGestureOptions<GestureName>;
+  declare protected readonly optionsType: MoveGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: never;
+  declare public readonly mutableStateType: never;
 
   /**
    * Movement threshold in pixels that must be exceeded before the gesture activates.
    * Higher values reduce false positive gesture detection for small movements.
    */
-  protected threshold: number;
+  declare protected threshold: number;
 
   constructor(options: MoveGestureOptions<GestureName>) {
     super(options);

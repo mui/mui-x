@@ -1,14 +1,10 @@
 {
   "componentDescription": "",
-  "propDescriptions": {
-    "groupKey": {
-      "description": "A function that maps a message to a group key. Messages that resolve to the same key are visually grouped (shared avatar, author name, etc.). Use <code>createTimeWindowGroupKey(windowMs)</code> to replicate time-window-based grouping."
-    }
-  },
+  "propDescriptions": {},
   "classDescriptions": {},
   "slotDescriptions": {
-    "authorName": "",
-    "group": "",
+    "authorName": "The component that renders the author name.",
+    "group": "The component that renders the group.",
     "groupTimestamp": "The timestamp element rendered next to the author name in compact mode. Only rendered when <code>variant === &#39;compact&#39;</code> and the message has a <code>createdAt</code> value."
   }
 }

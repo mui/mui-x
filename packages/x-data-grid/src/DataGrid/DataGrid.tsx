@@ -18,6 +18,7 @@ import { useMaterialCSSVariables } from '../material/variables';
 import type { GridConfiguration } from '../models/configuration/gridConfiguration';
 import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
+import { pickDataAttributes } from '../utils/utils';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
@@ -32,6 +33,8 @@ const configuration: GridConfiguration = {
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
     useColumnHeaderAdornment: () => null,
+    useIsRowKeyboardReorderTarget: () => false,
+    useIsColumnKeyboardReorderTarget: () => false,
   },
 };
 
@@ -55,6 +58,7 @@ const DataGridRaw = function DataGrid<R extends GridValidRowModel>(
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...pickDataAttributes(props)}
         {...props.slotProps?.root}
         ref={ref}
       />
@@ -221,6 +225,10 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    * Inherits the `columnHeaderHeight` value if not set.
    */
   columnGroupHeaderHeight: PropTypes.number,
+  /**
+   * The column groups of the header.
+   * @see See {@link https://mui.com/x/react-data-grid/column-groups/ column grouping docs} for more details.
+   */
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -347,6 +355,7 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    imeFastEdit: PropTypes.bool,
     virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -422,6 +431,14 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    * @returns {GridRowSpacing} The row spacing values.
    */
   getRowSpacing: PropTypes.func,
+  /**
+   * The fixed height of the Data Grid.
+   * Accepts a number (pixels), a CSS length (for example `'50vh'`), a percentage, or a CSS calculation.
+   * Percentage values require a parent with an explicit height.
+   * Content-based values such as `'auto'`, `'min-content'`, `'max-content'`, and `'fit-content'` are not supported.
+   * For content-based sizing, use a flex parent container instead.
+   */
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -651,14 +668,16 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    */
   onFilterModelChange: PropTypes.func,
   /**
-   * Callback fired when the menu is closed.
+   * Callback fired when a grid menu is closed.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onMenuClose: PropTypes.func,
   /**
-   * Callback fired when the menu is opened.
+   * Callback fired when a grid menu is opened.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -772,6 +791,10 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
       }),
     ]).isRequired,
   ),
+  /**
+   * Pagination is always enabled in the Data Grid.
+   * Use the Data Grid Pro to disable it.
+   */
   pagination: PropTypes.oneOf([true]),
   /**
    * The extra information about the pagination state of the Data Grid.
@@ -841,10 +864,11 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    ids: PropTypes.instanceOf(Set).isRequired,
-    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
-  }),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      ids: PropTypes.instanceOf(Set).isRequired,
+      type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+    }),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"

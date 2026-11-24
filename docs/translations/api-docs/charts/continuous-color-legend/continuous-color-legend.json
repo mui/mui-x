@@ -23,6 +23,9 @@
     "rotateGradient": {
       "description": "If provided, the gradient will be rotated by 90deg. Useful for linear gradients that are not in the correct orientation."
     },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
     "thickness": { "description": "The thickness of the gradient" }
   },
   "classDescriptions": {

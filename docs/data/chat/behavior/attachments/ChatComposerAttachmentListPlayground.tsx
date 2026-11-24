@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatComposerAttachmentList } from '@mui/x-chat';
-import { useChatStore, type ChatDraftAttachmentStatus } from '@mui/x-chat/headless';
+import { useChatStore } from '@mui/x-chat/headless';
+import type { ChatDraftAttachmentStatus } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import { emptyConversation } from 'docs/src/modules/components/chat-playground/sharedFixtures';
@@ -10,10 +11,8 @@ import {
   DividerLabel,
   NumberControl,
 } from 'docs/src/modules/components/chat-playground/controls';
-import {
-  useCustomizations,
-  type CustomizationDef,
-} from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
+import type { CustomizationDef } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 interface FileSpec {
   name: string;

@@ -65,7 +65,8 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
       <GridToolbarExport
         csvOptions={csvOptions}
         printOptions={printOptions}
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds excelOptions only when the Premium package is included.
+        // @ts-ignore Premium augmentation adds excelOptions only when the Premium package is included.
         excelOptions={excelOptions}
       />
       <div style={{ flex: 1 }} />

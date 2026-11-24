@@ -1,1 +1,8 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "featureName": { "description": "The name of the geographic feature." },
+    "seriesId": { "description": "The id of the series the element belongs to." }
+  },
+  "classDescriptions": {}
+}

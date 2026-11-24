@@ -1,6 +1,7 @@
 import { gridClasses } from '../constants/gridClasses';
 import type { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import type { GridRowId } from '../models/gridRows';
+import { isEventFromPreMountedEditor } from './cellEditor';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
@@ -63,6 +64,54 @@ export function isEventTargetInPortal(event: React.SyntheticEvent) {
     return true;
   }
   return false;
+}
+
+const NON_TEXT_INPUT_TYPES = new Set([
+  'button',
+  'checkbox',
+  'color',
+  'file',
+  'hidden',
+  'image',
+  'radio',
+  'range',
+  'reset',
+  'submit',
+]);
+
+/**
+ * Checks if the event target is an element the user can type or paste text into,
+ * for example a text field rendered inside a cell.
+ */
+export function isEventTargetTextEntryElement(event: React.SyntheticEvent | Event) {
+  const target = event.target as HTMLElement | null;
+  // The pre-mounted editor (`imeFastEdit`) stands in for the cell, so the grid handles its keys.
+  if (!target || target.nodeType !== 1 || isEventFromPreMountedEditor(event)) {
+    return false;
+  }
+  if (target.tagName === 'INPUT') {
+    const input = target as HTMLInputElement;
+    return !input.readOnly && !NON_TEXT_INPUT_TYPES.has(input.type);
+  }
+  if (target.tagName === 'TEXTAREA') {
+    return !(target as HTMLTextAreaElement).readOnly;
+  }
+  return target.isContentEditable === true;
+}
+
+/**
+ * Checks if a key press in a cell or a header belongs to its content instead of to a grid shortcut:
+ * a key that the content already handled, like `Alt+ArrowDown` opening a Select,
+ * a text field, a native select, or an element rendered in a portal, like a menu.
+ * Call it from the cell or header `keydown` handler, so `currentTarget` is the cell or the header.
+ */
+export function isEventForCellContent(event: React.SyntheticEvent) {
+  return (
+    (event.defaultPrevented && event.target !== event.currentTarget) ||
+    isEventTargetInPortal(event) ||
+    isEventTargetTextEntryElement(event) ||
+    (event.target as HTMLElement).tagName === 'SELECT'
+  );
 }
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {

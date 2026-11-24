@@ -2,5 +2,8 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "image": "", "root": "" }
+  "slotDescriptions": {
+    "image": "The component that renders the image.",
+    "root": "The component that renders the root."
+  }
 }

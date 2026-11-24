@@ -1,3 +1,5 @@
+import { useSyncExternalStore as useSyncExternalStoreShim } from 'use-sync-external-store/shim';
+
 export type {
   GridBaseColDef,
   GridStateColDef,
@@ -93,6 +95,11 @@ export type {
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {
+  useGridKeyboardUse,
+  keyboardUseStateInitializer,
+} from '../hooks/features/keyboardUse/useGridKeyboardUse';
+export { gridKeyboardUseActiveSelector } from '../hooks/features/keyboardUse/gridKeyboardUseSelector';
+export {
   useGridPagination,
   paginationStateInitializer,
 } from '../hooks/features/pagination/useGridPagination';
@@ -131,12 +138,14 @@ export {
   getRowValue,
   isReplaceUpdate,
   getReplaceRow,
+  asReplaceUpdates,
   warnIfReplaceLosesPrototype,
 } from '../hooks/features/rows/gridRowsUtils';
 export {
   gridAdditionalRowGroupsSelector,
   gridPinnedRowsSelector,
   gridRowSelector,
+  gridRowsStateSelector,
 } from '../hooks/features/rows/gridRowsSelector';
 export {
   headerFilteringStateInitializer,
@@ -155,6 +164,7 @@ export type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowRe
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
+export { getNextGridSortDirection } from '../hooks/features/sorting/gridSortingUtils';
 export { gridSortedRowIndexLookupSelector } from '../hooks/features/sorting/gridSortingSelector';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
@@ -177,10 +187,27 @@ export {
 } from '../hooks/features/listView/useGridListView';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
-export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
+export {
+  useGridVisibleRows,
+  getVisibleRows,
+  getRowIndexRelativeToAllRows,
+} from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
+export { usePointerDrag, getElementAtPoint } from '../hooks/utils/usePointerDrag';
+export {
+  createDragPreview,
+  getEdgeScrollDelta,
+  getVisibleViewportBounds,
+  hasReachedAutoScrollDistance,
+} from '../hooks/utils/pointerDragUtils';
+export type { DragPreview, VisibleViewportBounds } from '../hooks/utils/pointerDragUtils';
+export type {
+  PointerDragPosition,
+  UsePointerDragOptions,
+  UsePointerDragReturnValue,
+} from '../hooks/utils/usePointerDrag';
 
 export type * as BaseSlots from '../models/gridBaseSlots';
 export type { TextFieldProps, AutocompleteProps, SelectProps } from '../models/gridBaseSlots';
@@ -198,6 +225,7 @@ export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataS
 export { CacheChunkManager } from '../hooks/features/dataSource/utils';
 export { gridGetRowsParamsSelector } from '../hooks/features/dataSource/gridDataSourceSelector';
 export { useGridDataSourceFilterModelChange } from '../hooks/features/dataSource/useGridDataSourceFilterModelChange';
+export { useGridDataSourcePolling } from '../hooks/features/dataSource/useGridDataSourcePolling';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
@@ -214,7 +242,10 @@ export {
   findParentElementFromClassName,
   getActiveElement,
   getGridCellElement,
+  getGridRowElement,
+  isEventForCellContent,
   isEventTargetInPortal,
+  isEventTargetTextEntryElement,
 } from '../utils/domUtils';
 export {
   isNavigationKey,
@@ -259,4 +290,11 @@ export { useGridPanelContext } from '../components/panel/GridPanelContext';
 
 export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';
 
-export { useSyncExternalStore } from 'use-sync-external-store/shim';
+/**
+ * @deprecated Import it from `use-sync-external-store/shim` instead. Kept for older `@mui/x-data-grid-pro` versions, it will be removed in v10.
+ */
+export const useSyncExternalStore: <Snapshot>(
+  subscribe: (onStoreChange: () => void) => () => void,
+  getSnapshot: () => Snapshot,
+  getServerSnapshot?: () => Snapshot,
+) => Snapshot = useSyncExternalStoreShim;

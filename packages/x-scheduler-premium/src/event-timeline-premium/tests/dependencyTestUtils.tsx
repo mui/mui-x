@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type {
@@ -8,28 +9,63 @@ import type {
   EventTimelinePremiumStoreParameters,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEvent,
+  SchedulerEventModelStructure,
+  SchedulerResource,
+} from '@mui/x-scheduler-internals/models';
+import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import {
   EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
   SharedComponentsStyledContext,
+  SchedulerDirectionProvider,
 } from '@mui/x-scheduler/internals';
-import { DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
+import { DEFAULT_TESTING_VISIBLE_DATE, mockElementBounds } from 'test/utils/scheduler';
+import { buildDependency, resource1, resource2 } from './dependencyGeometryTestUtils';
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
+import { recurringEventsFeature } from '../../recurring-events';
+import { dependenciesFeature } from '../../dependencies';
+import { EventTimelinePremiumFeaturesContext } from '../features/EventTimelinePremiumFeaturesContext';
+import { useFrozenEventTimelinePremiumFeatures } from '../features/useFrozenEventTimelinePremiumFeatures';
+import type { EventTimelinePremiumFeatures } from '../features/EventTimelinePremiumFeatures.types';
 
-export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
-export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
+export { buildDependency, resource1, resource2 };
+
+/**
+ * Applies mock bounds to all timeline event rows, so jsdom drops resolve positions.
+ */
+export function mockAllEventRowBounds(width = 6720) {
+  const rows = document.querySelectorAll<HTMLElement>(
+    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
+  );
+  for (const row of rows) {
+    mockElementBounds(row, { left: 0, width, height: 40 });
+  }
+  return rows;
+}
+
+/**
+ * Returns the timeline event row for a given resource id.
+ */
+export function getEventRow(resourceId: string): HTMLElement {
+  const row = document.querySelector<HTMLElement>(
+    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
+  );
+  if (!row) {
+    throw /* minify-error-disabled */ new Error(
+      `Could not find event row for resource "${resourceId}"`,
+    );
+  }
+  return row;
+}
 
 // Module scope so the identity survives re-renders: the store compares the resources
 // parameter by reference, and a fresh array on every render would rebuild the whole
 // resource state a real consumer keeps.
 const defaultResources = [resource1, resource2];
-
-export function buildDependency(id: string, source: string, target: string): SchedulerDependency {
-  return { id, source, target, type: 'FinishToStart' };
-}
 
 const styledContextValue = {
   schedulerId: 'test-timeline',
@@ -37,7 +73,15 @@ const styledContextValue = {
   localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 };
 
-const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
+const sharedStyledContextValue = {
+  classes: eventTimelinePremiumClasses,
+  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+};
+
+const defaultFeatures: EventTimelinePremiumFeatures = {
+  recurringEvents: recurringEventsFeature,
+  dependencies: dependenciesFeature,
+};
 
 type PresetConfig = EventTimelinePremiumStoreParameters<
   SchedulerEvent,
@@ -50,6 +94,15 @@ interface TestTimelineProps {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
+  /**
+   * @default both features
+   */
+  features?: EventTimelinePremiumFeatures;
+  /**
+   * Merged into the default locale text.
+   */
+  localeText?: Partial<EventTimelineLocaleText>;
   /**
    * Observes the dependency changes on top of the controlled loop.
    */
@@ -57,8 +110,8 @@ interface TestTimelineProps {
   onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
 }
 
-// `dependencies` is not a public prop yet, so the harness feeds the internal store
-// parameters to the same hook the component uses, and closes the controlled loop
+// The tests need the store, which the component doesn't expose, so the harness feeds the
+// store parameters to the same hook the component uses, and closes the controlled loop
 // (`onEventsChange` / `onDependenciesChange` → new parameter values) like a consumer.
 // Exported for the tests rendering several timelines on one page.
 export function TestTimeline({
@@ -67,6 +120,9 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
+  features: featuresProp = defaultFeatures,
+  localeText,
   onDependenciesChange,
   onStoreReady,
 }: TestTimelineProps) {
@@ -83,11 +139,25 @@ export function TestTimeline({
   // render a timeline with dependencies disabled.
   const dependenciesEnabled = dependencies !== undefined;
 
+  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures(featuresProp);
+
+  const [styledContext, sharedStyledContext] = React.useMemo(() => {
+    if (localeText === undefined) {
+      return [styledContextValue, sharedStyledContextValue];
+    }
+    const mergedLocaleText = { ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText };
+    return [
+      { ...styledContextValue, localeText: mergedLocaleText },
+      { ...sharedStyledContextValue, localeText: mergedLocaleText },
+    ];
+  }, [localeText]);
+
   const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
     events,
     resources,
     dependencies,
     readOnly,
+    eventModelStructure,
     onEventsChange: setEvents,
     onDependenciesChange: dependenciesEnabled
       ? (value) => {
@@ -99,6 +169,7 @@ export function TestTimeline({
     preset: 'dayAndHour',
     presets: ['dayAndHour'],
     presetConfig,
+    storeFeatures,
   };
   const store = useEventTimelinePremium(parameters);
   React.useEffect(() => {
@@ -110,13 +181,15 @@ export function TestTimeline({
 
   return (
     <SchedulerStoreContext.Provider value={storeContextValue}>
-      <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-        <EventEditingStyledContext.Provider value={styledContextValue}>
-          <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-            <EventTimelinePremiumContent />
-          </SharedComponentsStyledContext.Provider>
-        </EventEditingStyledContext.Provider>
-      </EventTimelinePremiumStyledContext.Provider>
+      <EventTimelinePremiumFeaturesContext.Provider value={features}>
+        <EventTimelinePremiumStyledContext.Provider value={styledContext}>
+          <EventEditingStyledContext.Provider value={styledContext}>
+            <SharedComponentsStyledContext.Provider value={sharedStyledContext}>
+              <EventTimelinePremiumContent />
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventTimelinePremiumStyledContext.Provider>
+      </EventTimelinePremiumFeaturesContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }
@@ -127,8 +200,24 @@ interface RenderTimelineParameters {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  /**
+   * Pass a module-scope value: the store compares it by reference.
+   */
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
+  features?: EventTimelinePremiumFeatures;
+  localeText?: Partial<EventTimelineLocaleText>;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
+  /**
+   * Sets the theme direction and the `dir` attribute, like a consumer does.
+   * @default 'ltr'
+   */
+  direction?: 'ltr' | 'rtl';
 }
+
+const themeByDirection = {
+  ltr: createTheme({ direction: 'ltr' }),
+  rtl: createTheme({ direction: 'rtl' }),
+};
 
 /**
  * The rendered root, so `view.setProps` reaches the timeline: the host element it
@@ -140,35 +229,47 @@ function TimelineHost({
   dependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
+  features,
+  localeText,
   onDependenciesChange,
   onStoreReady,
+  direction = 'ltr',
 }: RenderTimelineParameters & {
   onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
 }) {
   return (
     // Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
     // root provides to the content (the row-height CSS resolves against them).
-    <div
-      className="test-timeline-host"
-      style={{
-        width: 1200,
-        height: 600,
-        display: 'flex',
-        flexDirection: 'column',
-        fontSize: '0.875rem',
-      }}
-    >
-      <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
-      <TestTimeline
-        events={events}
-        resources={resources}
-        dependencies={dependencies}
-        presetConfig={presetConfig}
-        readOnly={readOnly}
-        onDependenciesChange={onDependenciesChange}
-        onStoreReady={onStoreReady}
-      />
-    </div>
+    <ThemeProvider theme={themeByDirection[direction]}>
+      <SchedulerDirectionProvider>
+        <div
+          className="test-timeline-host"
+          dir={direction}
+          style={{
+            width: 1200,
+            height: 600,
+            display: 'flex',
+            flexDirection: 'column',
+            fontSize: '0.875rem',
+          }}
+        >
+          <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
+          <TestTimeline
+            events={events}
+            resources={resources}
+            dependencies={dependencies}
+            presetConfig={presetConfig}
+            readOnly={readOnly}
+            eventModelStructure={eventModelStructure}
+            features={features}
+            localeText={localeText}
+            onDependenciesChange={onDependenciesChange}
+            onStoreReady={onStoreReady}
+          />
+        </div>
+      </SchedulerDirectionProvider>
+    </ThemeProvider>
   );
 }
 
@@ -199,6 +300,17 @@ export function createDependencyTimelineRenderer(
 
 export function getArrowPaths() {
   return Array.from(document.querySelectorAll<SVGPathElement>('[data-dependency-id]'));
+}
+
+/**
+ * The numbers of an arrow's path, in order: x and y pairs, with the control points of
+ * the softened corners.
+ */
+export function getPathCoordinates(path: SVGPathElement) {
+  return path
+    .getAttribute('d')!
+    .match(/-?[\d.]+/g)!
+    .map(parseFloat);
 }
 
 export function getEventElement(title: string) {

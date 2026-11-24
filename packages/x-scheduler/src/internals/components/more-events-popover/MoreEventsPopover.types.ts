@@ -8,10 +8,6 @@ export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElem
    */
   occurrences: SchedulerEventOccurrence[];
   /**
-   * The total count of occurrences.
-   */
-  count: number;
-  /**
    * The day data for the occurrences.
    */
   day: useEventOccurrencesWithDayGridPosition.DayData;
@@ -19,6 +15,10 @@ export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElem
    * The anchor element for the popover positioning.
    */
   anchor: HTMLElement;
+  /**
+   * The day cell of the anchor, focused when the anchor has unmounted.
+   */
+  cell: HTMLElement | null;
   /**
    * Handles the close action of the popover.
    */

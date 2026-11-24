@@ -32,6 +32,8 @@ Row reordering emits the following events:
 - `rowDragOver`: emitted when the user drags a row over another row.
 - `rowDragEnd`: emitted when the user stops dragging a row.
 
+These events are only emitted for mouse drags. Touch and pen drags only call `onRowOrderChange`.
+
 ## Customizing the row reordering value
 
 By default, when the user starts dragging a row, its ID is displayed in the draggable box.
@@ -119,6 +121,39 @@ The demo below prohibits reordering leaf rows under the same parent and only all
 The row reorder feature has an internal validation ruleset to ensure that only the supported use cases are allowed.
 `isValidRowReorder()` should only be used to add more validation rules.
 :::
+
+## Keyboard reordering
+
+When `rowReordering` is enabled, users can also move rows with the keyboard, from any cell:
+
+- <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Up</kbd></kbd> and <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Down</kbd></kbd> move the row of the focused cell by one position.
+- <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> and <kbd><kbd class="key">Alt</kbd>+<kbd class="key">End</kbd></kbd> move it to the first or last position of the current page.
+
+On macOS, use <kbd class="key">⌥ Option</kbd> instead of <kbd class="key">Alt</kbd>.
+
+A keyboard move follows the same rules as a drop: `isRowReorderable()` and `isValidRowReorder()` apply, and `onRowOrderChange` is called once per key press.
+With `isValidRowReorder()`, <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> and <kbd><kbd class="key">Alt</kbd>+<kbd class="key">End</kbd></kbd> stop before the first position that the callback rejects.
+Rows only move within the current page, and pinned rows don't move.
+
+While the keyboard is in use, the row that a key press would move has a faint highlight, with the `row--reorderTarget` class.
+Screen readers announce the new position after each move, or the reason why the row can't move.
+
+:::info
+Keyboard reordering isn't available yet with [tree data](/x/react-data-grid/tree-data/) or [row grouping](/x/react-data-grid/row-grouping/), nor while the Data Grid is sorted or a cell is being edited.
+:::
+
+To turn off a key, set `event.defaultMuiPrevented` in `onCellKeyDown()`:
+
+```tsx
+<DataGridPro
+  rowReordering
+  onCellKeyDown={(params, event) => {
+    if (event.altKey && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+      event.defaultMuiPrevented = true;
+    }
+  }}
+/>
+```
 
 ## Row reordering with tree data
 

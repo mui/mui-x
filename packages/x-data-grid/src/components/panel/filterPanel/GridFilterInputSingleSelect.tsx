@@ -169,25 +169,15 @@ GridFilterInputSingleSelect.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disableDebounce: PropTypes.bool,
-  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  /**
+   * A ref allowing to set imperative focus.
+   * @deprecated The grid no longer passes this prop. Header filters focus the input through `inputRef`.
+   */
+  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */
+    .oneOfType([PropTypes.func, PropTypes.object]),
   headerFilterMenu: PropTypes.node,
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: (props, propName) => {
-        if (props[propName] == null) {
-          return null;
-        }
-        if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-          return new Error(`Expected prop '${propName}' to be of type Element`);
-        }
-        return null;
-      },
-    }),
-  ]),
+  inputRef: PropTypes /* @typescript-to-proptypes-ignore */
+    .oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)

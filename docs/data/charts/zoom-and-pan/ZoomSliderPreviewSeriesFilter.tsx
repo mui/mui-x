@@ -1,8 +1,6 @@
 import * as React from 'react';
-import {
-  LineChartPro,
-  type LineChartProProps,
-} from '@mui/x-charts-pro/LineChartPro';
+import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import type { LineChartProProps } from '@mui/x-charts-pro/LineChartPro';
 import { inflationData } from '../dataset/inflationRates';
 
 const percentageFormatter = (v: number | null) =>

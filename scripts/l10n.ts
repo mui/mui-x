@@ -5,7 +5,8 @@ import traverse from '@babel/traverse';
 import * as prettier from 'prettier';
 import * as babel from '@babel/core';
 import * as babelTypes from '@babel/types';
-import yargs, { ArgumentsCamelCase } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
+import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
@@ -16,7 +17,6 @@ import {
 } from '../docs/constants';
 import { resolvePrettierConfigPath } from '../docs/scripts/utils';
 
-// @ts-ignore
 const MyOctokit = Octokit.plugin(retry);
 
 const GIT_ORGANIZATION = 'mui';
@@ -53,7 +53,7 @@ const packagesWithL10n = [
     constantsRelativePath: 'packages/x-scheduler/src/locales/enUS.ts',
     localesRelativePath: 'packages/x-scheduler/src/locales',
     documentationReportPath: 'docs/data/scheduler/localization/data.json',
-    objectNames: ['Dialog', 'Calendar', 'Timeline'],
+    objectNames: ['Dialog', 'Event', 'Calendar', 'Timeline'],
   },
 ];
 
@@ -75,7 +75,7 @@ function git(args: any) {
   });
 }
 
-function plugin(existingTranslations: Translations): babel.PluginObj {
+function plugin(existingTranslations: Translations): babel.PluginObject {
   return {
     visitor: {
       VariableDeclarator: {
@@ -205,6 +205,41 @@ function findLocales(localesDirectory: string, constantsPath: string) {
   });
 
   return locales;
+}
+
+// A word with letters from two of these alphabets is almost always a lookalike typo,
+// for example a Latin "A" in a Cyrillic word.
+const LOOKALIKE_SCRIPTS = ['Latin', 'Cyrillic', 'Greek'].map((name) => ({
+  name,
+  regex: new RegExp(`\\p{Script=${name}}`, 'u'),
+}));
+
+function findMixedScriptWords(localePath: string, workspaceRoot: string) {
+  const relativePath = path.relative(workspaceRoot, localePath);
+  const lines = fs.readFileSync(localePath, 'utf-8').split('\n');
+
+  return lines.flatMap((line, index) => {
+    const words: string[] = line.match(/[\p{L}\p{M}]+/gu) ?? [];
+
+    return words.flatMap((word) => {
+      const scripts = LOOKALIKE_SCRIPTS.map(({ name, regex }) => ({
+        name,
+        letters: Array.from(word).filter((letter) => regex.test(letter)),
+      })).filter(({ letters }) => letters.length > 0);
+
+      if (scripts.length < 2) {
+        return [];
+      }
+
+      // The alphabet with the fewest letters in the word is the typo.
+      const [typo] = scripts.sort((a, b) => a.letters.length - b.letters.length);
+      const codePoints = typo.letters
+        .map((letter) => `U+${letter.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')}`)
+        .join(', ');
+
+      return [`${relativePath}:${index + 1} "${word}" has ${typo.name} ${codePoints}`];
+    });
+  });
 }
 
 function extractAndReplaceTranslations(localePath: string) {
@@ -643,6 +678,25 @@ async function run(argv: ArgumentsCamelCase<HandlerArgv>) {
 
   const missingTranslations: MissingTranslations = {};
   const baseTranslationsNumber: TranslationsNumber = {};
+
+  const mixedScriptWords = packagesWithL10n.flatMap((packageInfo) =>
+    findLocales(
+      path.resolve(workspaceRoot, packageInfo.localesRelativePath),
+      path.join(workspaceRoot, packageInfo.constantsRelativePath),
+    ).flatMap(([localePath]) => findMixedScriptWords(localePath, workspaceRoot)),
+  );
+
+  if (mixedScriptWords.length > 0) {
+    console.error(
+      [
+        'MUI X: Some translations mix letters from different alphabets in one word:',
+        ...mixedScriptWords.map((entry) => `  ${entry}`),
+        'Screen readers, search, and spell check read these words wrong.',
+        'Replace each listed letter with the lookalike letter from the alphabet of the locale.',
+      ].join('\n'),
+    );
+    process.exit(1);
+  }
 
   await Promise.all(
     packagesWithL10n.map(async (packageInfo) => {

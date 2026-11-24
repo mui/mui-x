@@ -48,7 +48,7 @@
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
     "params": "GridCellEditStartParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement> | React.CompositionEvent<HTMLElement>>",
     "componentProp": "onCellEditStart"
   },
   {
@@ -128,7 +128,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "clipboardPasteEnd",
     "description": "Fired when the clipboard paste operation ends.",
-    "params": "{\n  oldRows: Map<GridRowId, GridValidRowModel>\n  newRows: Map<GridRowId, GridValidRowModel>\n}",
+    "params": "{\n  oldRows: Map<GridRowId, GridValidRowModel>\n  newRows: Map<GridRowId, GridValidRowModel>\n  /**\n   * The rows that the paste added to the grid.\n   * The paste adds rows only when `clipboardPasteOptions.createRows()` is set.\n   */\n  createdRows: Map<GridRowId, GridValidRowModel>\n}",
     "event": "MuiEvent<{}>",
     "componentProp": "onClipboardPasteEnd"
   },
@@ -136,7 +136,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "clipboardPasteStart",
     "description": "Fired when the clipboard paste operation starts.",
-    "params": "{ data: string[][] }",
+    "params": "{\n  data: string[][]\n  /**\n   * The cell where the paste starts, when the paste starts from a cell.\n   */\n  startCell?: GridCellCoordinates\n}",
     "event": "MuiEvent<{}>",
     "componentProp": "onClipboardPasteStart"
   },
@@ -231,6 +231,13 @@
     "componentProp": "onColumnWidthChange"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "computedColumnsChange",
+    "description": "Fired when the computed columns model changes.",
+    "params": "GridComputedColumnsModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "debouncedResize",
     "description": "Fired when the grid is resized with a debounced time of 60ms.",
@@ -262,6 +269,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "filteredRowsSet",
+    "description": "Fired when the filtered rows are updated. The event fires after the state update and before the re-render.",
+    "params": "",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "filterModelChange",
     "description": "Fired when the filter model changes.",
     "params": "GridFilterModel",
@@ -284,7 +298,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "menuClose",
-    "description": "Fired when the grid menu is closed.",
+    "description": "Fired when a grid menu is closed. This includes the column menu, the actions cell menu, and the toolbar menus.",
     "params": "GridMenuParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onMenuClose"
@@ -292,7 +306,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "menuOpen",
-    "description": "Fired when the menu is opened.",
+    "description": "Fired when a grid menu is opened. This includes the column menu, the actions cell menu, and the toolbar menus.",
     "params": "GridMenuParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onMenuOpen"
@@ -405,7 +419,7 @@
     "name": "rowEditStart",
     "description": "Fired when the row turns to edit mode.",
     "params": "GridRowEditStartParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement> | React.CompositionEvent<HTMLElement>>",
     "componentProp": "onRowEditStart"
   },
   {
@@ -483,6 +497,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowsSet",
+    "description": "Fired when the rows are updated. The filtering and sorting of the updated rows run after this event.",
+    "params": "",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "scrollPositionChange",
     "description": "Fired during the scroll of the grid viewport.",
     "params": "GridScrollParams",
@@ -503,6 +524,13 @@
     "params": "{ value: GridSidebarValue }",
     "event": "MuiEvent<{}>",
     "componentProp": "onSidebarOpen"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "sortedRowsSet",
+    "description": "Fired when the sorted rows are updated. The event fires after the state update and before the re-render.",
+    "params": "",
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

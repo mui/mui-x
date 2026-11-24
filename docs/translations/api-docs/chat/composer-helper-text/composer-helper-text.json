@@ -2,5 +2,5 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "helperText": "" }
+  "slotDescriptions": { "helperText": "The component that renders the helper text." }
 }

@@ -9,10 +9,11 @@
  * This gesture is commonly used to implement zoom functionality in touch interfaces.
  */
 
-import { GesturePhase, GestureState } from '../Gesture';
-import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
-import { PointerData } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
+import type { GesturePhase, GestureState } from '../Gesture';
+import type { PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerData } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
 import {
   calculateAverageDistance,
   calculateCentroid,
@@ -109,15 +110,15 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
     deltaScale: 0,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare public readonly isSinglePhase: false;
 
-  protected readonly eventType!: PinchEvent;
+  declare public readonly eventType: PinchEvent;
 
-  protected readonly optionsType!: PinchGestureOptions<GestureName>;
+  declare protected readonly optionsType: PinchGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: Omit<
+  declare public readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     'startDistance' | 'lastDistance' | 'lastScale' | 'lastTime' | 'velocity'
   >;
@@ -126,7 +127,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
    * Movement threshold in pixels that must be exceeded before the gesture activates.
    * Higher values reduce false positive gesture detection for small movements.
    */
-  protected threshold: number;
+  declare protected threshold: number;
 
   constructor(options: PinchGestureOptions<GestureName>) {
     super({

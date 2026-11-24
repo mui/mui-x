@@ -6,10 +6,17 @@ import { useConversationContext } from './internals/ConversationContext';
 import type { ConversationHeaderActionsOwnerState } from './conversation.types';
 
 export interface ConversationHeaderActionsSlots {
+  /**
+   * The component that renders the actions.
+   * @default 'div'
+   */
   actions: React.ElementType;
 }
 
 export interface ConversationHeaderActionsSlotProps {
+  /**
+   * The props used for the actions slot.
+   */
   actions?: SlotComponentProps<'div', {}, ConversationHeaderActionsOwnerState>;
 }
 
@@ -17,8 +24,19 @@ export interface ConversationHeaderActionsProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ConversationHeaderActionsSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ConversationHeaderActionsSlotProps;
 }
 

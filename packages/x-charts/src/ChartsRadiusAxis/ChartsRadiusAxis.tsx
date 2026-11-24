@@ -180,6 +180,9 @@ ChartsRadiusAxis.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The direction of the axis.
+   */
   axis: PropTypes.oneOf(['radius']),
   /**
    * The id of the axis to render.
@@ -237,6 +240,9 @@ ChartsRadiusAxis.propTypes /* remove-proptypes */ = {
    * @default 'start'
    */
   position: PropTypes.oneOfType([PropTypes.oneOf(['end', 'none', 'start']), PropTypes.number]),
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

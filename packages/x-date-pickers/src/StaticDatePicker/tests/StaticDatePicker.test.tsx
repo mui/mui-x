@@ -1,7 +1,7 @@
 import { screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<StaticDatePicker />', () => {
   const { render } = createPickerRenderer();
@@ -30,6 +30,32 @@ describe('<StaticDatePicker />', () => {
     await user.click(previousMonth);
 
     expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('December 2018');
+  });
+
+  describe('prop: onCancel', () => {
+    it('should call onCancel and reset the value when clicking the "Cancel" action', async () => {
+      const onCancel = vi.fn();
+      const onChange = vi.fn();
+
+      const { user } = render(
+        <StaticDatePicker
+          onCancel={onCancel}
+          onChange={onChange}
+          defaultValue={adapterToUse.date('2019-01-01')}
+          slotProps={{ actionBar: { actions: ['cancel'] } }}
+        />,
+      );
+
+      await user.click(screen.getByRole('gridcell', { name: '2' }));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 2));
+
+      await user.click(screen.getByText('Cancel'));
+
+      expect(onCancel.mock.calls.length).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 1));
+    });
   });
 
   describe('props - autoFocus', () => {

@@ -2,14 +2,14 @@
 import * as React from 'react';
 
 /**
- * While `active`, disarms on Escape (restoring the Escape-to-close the dialog/popover replaced).
+ * Disarms on Escape while mounted (restoring the Escape-to-close the dialog/popover replaced).
  * Bubble phase, so a dialog opened on top (e.g. the recurring scope confirmation) closes first.
  */
-export function useDisarmOnEscape(parameters: { active: boolean; onDisarm: () => void }) {
-  const { active, onDisarm } = parameters;
+export function useDisarmOnEscape(parameters: { onDisarm: () => void }) {
+  const { onDisarm } = parameters;
 
   React.useEffect(() => {
-    if (!active || typeof document === 'undefined') {
+    if (typeof document === 'undefined') {
       return undefined;
     }
     const onKeyDown = (event: KeyboardEvent) => {
@@ -22,5 +22,5 @@ export function useDisarmOnEscape(parameters: { active: boolean; onDisarm: () =>
     return () => {
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [active, onDisarm]);
+  }, [onDisarm]);
 }

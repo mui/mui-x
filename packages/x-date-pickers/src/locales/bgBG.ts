@@ -47,9 +47,10 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Избери ${views[view]}. ${!formattedTime ? 'Не е избран час' : `Избраният час е ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} часа`,
-  minutesClockNumberText: (minutes) => `${minutes} минути`,
-  secondsClockNumberText: (seconds) => `${seconds} секунди`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'час' : 'часа'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'минута' : 'минути'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'секунда' : 'секунди'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Избери ${views[view]}`,

@@ -185,25 +185,25 @@ const PickersInputBaseInput = styled('input', {
 const PickersInputBaseActiveBar = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'ActiveBar',
-})<{ ownerState: { sectionOffsets: number[] } }>(({ theme, ownerState }) => ({
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   display: 'none',
   position: 'absolute',
   height: 2,
   bottom: 2,
   borderTopLeftRadius: 2,
   borderTopRightRadius: 2,
-  transition: theme.transitions.create(['width', 'left'], {
+  transition: `${theme.transitions.create(['width', 'left'], {
     duration: theme.transitions.duration.shortest,
-  }),
+  })} /*! @noflip */`,
   backgroundColor: (theme.vars || theme).palette.primary.main,
   '[data-active-range-position="start"] &, [data-active-range-position="end"] &': {
     display: 'block',
   },
   '[data-active-range-position="start"] &': {
-    left: ownerState.sectionOffsets[0],
+    left: 'var(--PickerInputBase-activeBar-start-offset) /*! @noflip */',
   },
   '[data-active-range-position="end"] &': {
-    left: ownerState.sectionOffsets[1],
+    left: 'var(--PickerInputBase-activeBar-end-offset) /*! @noflip */',
   },
 }));
 
@@ -340,7 +340,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const ownerStateContext = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
   const activeBarRef = React.useRef<HTMLDivElement>(null);
-  const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
@@ -435,9 +434,16 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
       return;
     }
     const { activeBarWidth, sectionOffsets } = resolveSectionWidthAndOffsets(elements, rootRef);
-    sectionOffsetsRef.current = [sectionOffsets[0], sectionOffsets[1]];
     if (activeBarRef.current) {
       activeBarRef.current.style.width = `${activeBarWidth}px`;
+      activeBarRef.current.style.setProperty(
+        '--PickerInputBase-activeBar-start-offset',
+        `${sectionOffsets[0]}px`,
+      );
+      activeBarRef.current.style.setProperty(
+        '--PickerInputBase-activeBar-end-offset',
+        `${sectionOffsets[1]}px`,
+      );
     }
   }, [elements, isSingleInputRange, ownerState.isPickerOpen]);
 
@@ -505,7 +511,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         <PickersInputBaseActiveBar
           className={classes.activeBar}
           ref={activeBarRef}
-          ownerState={{ sectionOffsets: sectionOffsetsRef.current }}
+          ownerState={ownerState}
         />
       )}
     </InputRoot>
@@ -524,6 +530,9 @@ PickersInputBase.propTypes /* remove-proptypes */ = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * If true, the whole element is editable.
@@ -569,15 +578,39 @@ PickersInputBase.propTypes /* remove-proptypes */ = {
    * Name attribute of the `input` element.
    */
   name: PropTypes.string,
+  /**
+   * @ignore
+   */
   onChange: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onClick: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onInput: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onKeyDown: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onMouseDown: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
+  /**
+   * If `true`, the component is read-only.
+   */
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
+  /**
+   * @ignore
+   */
   sectionListRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
@@ -612,6 +645,9 @@ PickersInputBase.propTypes /* remove-proptypes */ = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The value of the hidden `input` element.
+   */
   value: PropTypes.string.isRequired,
 } as any;
 

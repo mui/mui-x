@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {
+import type {
   SchedulerEvent,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler/models';
@@ -25,7 +25,7 @@ export default function CustomEditingUI() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
   const [editedEvent, setEditedEvent] = React.useState<EditedEvent | null>(null);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (editedEvent == null) {
       return;
@@ -40,8 +40,13 @@ export default function CustomEditingUI() {
         {
           id: `custom-${Date.now()}`,
           title,
-          start: new Date(occurrence.displayTimezone.start.timestamp).toISOString(),
-          end: new Date(occurrence.displayTimezone.end.timestamp).toISOString(),
+          // The dates of an all-day event are `YYYY-MM-DD` strings, with an exclusive end.
+          start: occurrence.allDay
+            ? occurrence.start.toPlainDate().toString()
+            : new Date(occurrence.start.epochMilliseconds).toISOString(),
+          end: occurrence.allDay
+            ? occurrence.end.toPlainDate().toString()
+            : new Date(occurrence.end.epochMilliseconds).toISOString(),
           allDay: occurrence.allDay,
           resource: occurrence.resource,
         },

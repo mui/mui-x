@@ -22,6 +22,9 @@ export interface DayCalendarSkeletonProps extends HTMLDivProps {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * @ignore
+   */
   ref?: React.Ref<HTMLDivElement>;
 }
 

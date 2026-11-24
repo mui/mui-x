@@ -7,6 +7,7 @@ import {
   describeValue,
   getFieldSectionsContainer,
   openPicker,
+  multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
@@ -92,21 +93,11 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
 
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
-      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const hours = adapterToUse.format(
+      await multiSectionDigitalClockHandler.setViewValue(
+        user,
+        adapterToUse,
         newValue[setEndDate ? 1 : 0],
-        hasMeridiem ? 'hours12h' : 'hours24h',
       );
-      const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      await user.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-      await user.click(
-        screen.getByRole('option', {
-          name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
-        }),
-      );
-      if (hasMeridiem) {
-        await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
-      }
       // Close the picker
       if (!isOpened) {
         await user.keyboard('{Escape}');

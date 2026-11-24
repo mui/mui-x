@@ -21,10 +21,17 @@ function resolveTypingUser(
 }
 
 export interface TypingIndicatorSlots {
+  /**
+   * The component that renders the root.
+   * @default 'div'
+   */
   root: React.ElementType;
 }
 
 export interface TypingIndicatorSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, TypingIndicatorOwnerState>;
 }
 
@@ -32,7 +39,15 @@ export interface TypingIndicatorProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<TypingIndicatorSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: TypingIndicatorSlotProps;
 }
 

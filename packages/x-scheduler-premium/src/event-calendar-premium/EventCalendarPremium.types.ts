@@ -8,6 +8,9 @@ import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
 import type { EventCalendarSchedulerParametersOverrides } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { EventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import type { EventCalendarPremiumFeatures } from './features/EventCalendarPremiumFeatures.types';
+
+export type { EventCalendarPremiumFeatures } from './features/EventCalendarPremiumFeatures.types';
 
 export type EventCalendarPremiumApiRef<
   TEvent extends object = any,
@@ -40,6 +43,12 @@ export interface EventCalendarPremiumProps<TEvent extends object, TResource exte
    * Can be instantiated with `useEventCalendarPremiumApiRef()`.
    */
   apiRef?: EventCalendarPremiumApiRef;
+  /**
+   * The optional features of the Event Calendar: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features?: EventCalendarPremiumFeatures;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

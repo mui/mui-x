@@ -1,3 +1,5 @@
+import '../../typeOverloads';
+
 import type { ChartsColor } from '@mui/x-charts/colorPalettes';
 import type {
   CommonSeriesType,

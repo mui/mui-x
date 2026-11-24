@@ -1,5 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import type { GridSortingModelApplier } from './gridSortingState';
 import type { GridRowId, GridTreeNode } from '../../../models';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -26,12 +26,11 @@ interface GridParsedSortItem {
 export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
   if (disableMultipleColumnsSorting && model.length > 1) {
     if (process.env.NODE_ENV !== 'production') {
-      warnOnce(
+      errorOnce(
         [
           'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
           'If you are using the community version of the Data Grid, this prop is always `true`.',
-        ],
-        'error',
+        ].join('\n'),
       );
     }
     return [model[0]];
@@ -171,7 +170,8 @@ export const getNextGridSortDirection = (
   return sortingOrder[currentIdx + 1];
 };
 
-const gridNillComparator = (v1: any, v2: any): number | null => {
+/** Returns `null` when both values are non-nil. */
+export const gridNilComparator = (v1: any, v2: any): number | null => {
   if (v1 == null && v2 != null) {
     return -1;
   }
@@ -188,9 +188,9 @@ const gridNillComparator = (v1: any, v2: any): number | null => {
 const collator = new Intl.Collator();
 
 export const gridStringOrNumberComparator: GridComparatorFn = (value1, value2) => {
-  const nillResult = gridNillComparator(value1, value2);
-  if (nillResult !== null) {
-    return nillResult;
+  const nilResult = gridNilComparator(value1, value2);
+  if (nilResult !== null) {
+    return nilResult;
   }
 
   if (typeof value1 === 'string') {
@@ -200,18 +200,18 @@ export const gridStringOrNumberComparator: GridComparatorFn = (value1, value2) =
 };
 
 export const gridNumberComparator: GridComparatorFn = (value1, value2) => {
-  const nillResult = gridNillComparator(value1, value2);
-  if (nillResult !== null) {
-    return nillResult;
+  const nilResult = gridNilComparator(value1, value2);
+  if (nilResult !== null) {
+    return nilResult;
   }
 
   return Number(value1) - Number(value2);
 };
 
 export const gridDateComparator: GridComparatorFn = (value1, value2) => {
-  const nillResult = gridNillComparator(value1, value2);
-  if (nillResult !== null) {
-    return nillResult;
+  const nilResult = gridNilComparator(value1, value2);
+  if (nilResult !== null) {
+    return nilResult;
   }
 
   if (value1! > value2!) {

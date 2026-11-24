@@ -9,11 +9,12 @@
  * The gesture can be configured to recognize movement only in specific directions.
  */
 
-import { GesturePhase, GestureState } from '../Gesture';
-import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
-import { PointerData } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
-import { Direction } from '../types/Direction';
+import type { GesturePhase, GestureState } from '../Gesture';
+import type { PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerData } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
+import type { Direction } from '../types/Direction';
 import { calculateCentroid, createEventName, getDirection, isDirectionAllowed } from '../utils';
 
 /**
@@ -126,15 +127,15 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     lastDeltas: null,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare public readonly isSinglePhase: false;
 
-  protected readonly eventType!: PanEvent;
+  declare public readonly eventType: PanEvent;
 
-  protected readonly optionsType!: PanGestureOptions<GestureName>;
+  declare protected readonly optionsType: PanGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: Omit<
+  declare public readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     | 'startPointers'
     | 'startCentroid'
@@ -147,13 +148,13 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
    * Movement threshold in pixels that must be exceeded before the gesture activates.
    * Higher values reduce false positive gesture detection for small movements.
    */
-  protected threshold: number;
+  declare protected threshold: number;
 
   /**
    * Allowed directions for the pan gesture
    * Default allows all directions
    */
-  private direction: Array<'up' | 'down' | 'left' | 'right'>;
+  declare private direction: Array<'up' | 'down' | 'left' | 'right'>;
 
   constructor(options: PanGestureOptions<GestureName>) {
     super(options);

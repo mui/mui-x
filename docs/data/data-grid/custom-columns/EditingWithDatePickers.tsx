@@ -1,14 +1,16 @@
 import * as React from 'react';
-import {
-  DataGrid,
+import type {
   GridColDef,
   GridRowsProp,
-  useGridApiContext,
   GridRenderEditCellParams,
-  GRID_DATE_COL_DEF,
-  GRID_DATETIME_COL_DEF,
   GridColTypeDef,
   GridFilterInputValueProps,
+} from '@mui/x-data-grid';
+import {
+  DataGrid,
+  useGridApiContext,
+  GRID_DATE_COL_DEF,
+  GRID_DATETIME_COL_DEF,
   getGridDateOperators,
 } from '@mui/x-data-grid';
 import {

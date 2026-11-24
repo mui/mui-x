@@ -1,20 +1,45 @@
 import {
-  adapter,
-  adapterFr,
+  addDays,
+  createDate,
+  createOccurrence,
+  createStoreOccurrence,
   EventBuilder,
   premiumStoreClasses,
   ResourceBuilder,
   storeClasses,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type {
+  RecurringEventScope,
   SchedulerEvent,
+  SchedulerEventId,
   SchedulerEventModelStructure,
+  SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
+
+// Pins the reason text `datesNotWritableReason` in `SchedulerStore.utils.ts` builds:
+// `toWarnDev` matches by `includes`, so an assertion naming only the first line of a warning
+// never pins this text. Written out as literals, not by calling an equivalent helper here — a
+// helper that rebuilt the same string the same way would mirror a bug in the pronoun or
+// separator logic instead of catching it.
+const DATES_NOT_WRITABLE_REASON_START =
+  '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.';
+const DATES_NOT_WRITABLE_REASON_END =
+  '`eventModelStructure` declares `end` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.';
+const DATES_NOT_WRITABLE_REASON_BOTH =
+  '`eventModelStructure` declares `start` and `end` with a getter but no setter, so they cannot be written back to your event model. Add a `setter` to make them editable.';
+const READ_ONLY_EVENT_REASON =
+  'The event is read-only. Remove `readOnly` from it, `areEventsReadOnly` from its resource, or `readOnly` from the scheduler, to allow it to move.';
+const READ_ONLY_RESOURCE_REASON =
+  'The destination is read-only. Remove `areEventsReadOnly` from its resource, or `readOnly` from the scheduler, to allow it.';
 
 storeClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
@@ -59,6 +84,38 @@ storeClasses.forEach((storeClass) => {
         },
       };
 
+      // `start` is readable but not writable, so it can never be moved: there is nowhere to
+      // write it, and the built-in key would land next to `myStart`. `end` keeps its setter, so
+      // a mixed structure like this still lets a resize of the end handle through. Shared by
+      // both `updateEvent`/`pasteEvent` refusals below and creation refusals further down.
+      const readOnlyStartStructure: SchedulerEventModelStructure<MyEvent> = {
+        ...eventModelStructure,
+        start: { getter: (event) => event.myStart },
+      };
+
+      const unchangedEvent: MyEvent = {
+        myId: '1',
+        myTitle: 'Event 1',
+        myStart: '2025-07-01T09:00:00.000Z',
+        myEnd: '2025-07-01T10:00:00.000Z',
+        allDay: false,
+      };
+
+      // Shared by `dates declared without a setter` and `refused creation` below.
+      const createStore = (
+        onEventsChange: (...args: any[]) => void,
+        overrides?: {
+          eventModelStructure?: SchedulerEventModelStructure<MyEvent>;
+          events?: MyEvent[];
+        },
+      ) =>
+        new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: overrides?.events ?? [{ ...unchangedEvent }],
+          eventModelStructure: overrides?.eventModelStructure ?? readOnlyStartStructure,
+          onEventsChange,
+        });
+
       it('should use the provided event model structure to read event properties', () => {
         const events: MyEvent[] = [
           {
@@ -70,22 +127,20 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events, eventModelStructure },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure,
+        });
         const event = schedulerEventSelectors.processedEvent(store.state, '1');
 
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          displayTimezone: {
-            start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
-            end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
-            timezone: 'default',
-            rrule: undefined,
-            exDates: undefined,
-          },
+          start: toZonedDateTime(Date.parse('2025-07-01T09:00:00.000Z'), 'default'),
+          end: toZonedDateTime(Date.parse('2025-07-01T10:00:00.000Z'), 'default'),
+          timezone: 'default',
+          exDates: undefined,
           allDay: false,
         });
       });
@@ -103,15 +158,17 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure,
+          onEventsChange,
+        });
         store.updateEvent({
           id: '1',
           title: 'Event 1 updated',
-          start: adapter.date('2025-07-01T09:30:00.000Z', 'default'),
-          end: adapter.date('2025-07-01T10:30:00.000Z', 'default'),
+          start: createDate('2025-07-01T00:00:00.000Z'),
+          end: createDate('2025-07-02T00:00:00.000Z'),
           allDay: true,
         });
 
@@ -121,8 +178,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             myTitle: 'Event 1 updated',
-            myStart: '2025-07-01T09:30:00.000Z',
-            myEnd: '2025-07-01T10:30:00.000Z',
+            myStart: '2025-07-01',
+            myEnd: '2025-07-02',
             allDay: true,
           },
         ]);
@@ -133,14 +190,16 @@ storeClasses.forEach((storeClass) => {
 
         const events: MyEvent[] = [];
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure,
+          onEventsChange,
+        });
         const createdId = store.createEvent({
           title: 'Event 1',
-          start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
-          end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
+          start: createDate('2025-07-01T09:00:00.000Z'),
+          end: createDate('2025-07-01T10:00:00.000Z'),
           allDay: false,
         });
 
@@ -170,13 +229,15 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure,
+          onEventsChange,
+        });
 
-        const start = adapter.date('2025-07-01T11:00:00.000Z', 'default');
-        const end = adapter.date('2025-07-01T12:00:00.000Z', 'default');
+        const start = createDate('2025-07-01T11:00:00.000Z');
+        const end = createDate('2025-07-01T12:00:00.000Z');
         const duplicatedId = store.duplicateEventOccurrence('1', start, end);
 
         const duplicated = onEventsChange.mock.lastCall?.[0].find(
@@ -185,6 +246,370 @@ storeClasses.forEach((storeClass) => {
         // The mapped start comes from the setter, not the stale key carried by the custom-data merge.
         expect(duplicated.myStart).to.equal('2025-07-01T11:00:00.000Z');
         expect(duplicated.priority).to.equal('high');
+      });
+
+      describe('dates declared without a setter', () => {
+        // Mirror cases of `readOnlyStartStructure`: `end` alone, then both, lacking a setter.
+        const readOnlyEndStructure: SchedulerEventModelStructure<MyEvent> = {
+          ...eventModelStructure,
+          end: { getter: (event) => event.myEnd },
+        };
+        const readOnlyBothStructure: SchedulerEventModelStructure<MyEvent> = {
+          ...eventModelStructure,
+          start: { getter: (event) => event.myStart },
+          end: { getter: (event) => event.myEnd },
+        };
+
+        const START_WARNING = "MUI X Scheduler: An event's `start` date was not updated.";
+        const START_NOT_WRITABLE_REASON =
+          '`eventModelStructure.start` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.';
+        const PASTE_WARNING = 'MUI X Scheduler: The event with id="1" was not pasted.';
+
+        // Both bounds genuinely move together: a rigid shift, not a resize. Applying only the
+        // writable side would stretch or invert the event's range, so the whole update is
+        // refused instead of half-applied.
+        it('should reject a move of both dates when one lacks a setter', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          let result: ReturnType<typeof store.updateEvent>;
+          expect(() => {
+            result = store.updateEvent({
+              id: '1',
+              title: 'Event 1 updated',
+              start: createDate('2025-07-02T09:00:00.000Z'),
+              end: createDate('2025-07-02T10:00:00.000Z'),
+            });
+          }).toWarnDev([
+            `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
+          ]);
+
+          expect(result!.applied).to.equal(false);
+          // The `eventModelStructure` / `setter` explanation belongs in the dev warning above,
+          // not in what the dialog or a toast shows.
+          expect(result!).to.deep.equal({
+            applied: false,
+            rejection: { code: 'datesNotWritableError' },
+          });
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+
+        // The warning names the structural mistake (`eventModelStructure` needs a setter), not
+        // the specific gesture — so it fires once, not once per event that hits it. Per-gesture
+        // feedback is what the returned `rejection` is for.
+        it('should warn once for the structural mistake, not once per event moved', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange, {
+            events: [
+              { ...unchangedEvent, myId: '1' },
+              { ...unchangedEvent, myId: '2' },
+            ],
+          });
+
+          expect(() => {
+            store.updateEvent({
+              id: '1',
+              start: createDate('2025-07-02T09:00:00.000Z'),
+              end: createDate('2025-07-02T10:00:00.000Z'),
+            });
+          }).toWarnDev([
+            `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
+          ]);
+
+          // Same mistake, a different event: no second warning.
+          expect(() => {
+            store.updateEvent({
+              id: '2',
+              start: createDate('2025-07-02T09:00:00.000Z'),
+              end: createDate('2025-07-02T10:00:00.000Z'),
+            });
+          }).not.toWarnDev();
+        });
+
+        // A single submitted bound is a resize, not a move: only the unwritable `start` is
+        // dropped, and another field (`title`) in the same update still applies.
+        it('should drop only the date without a setter and keep the rest of the update', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          let result: ReturnType<typeof store.updateEvent>;
+          expect(() => {
+            result = store.updateEvent({
+              id: '1',
+              title: 'Event 1 updated',
+              start: createDate('2025-07-02T09:00:00.000Z'),
+            });
+          }).toWarnDev([`${START_WARNING}\n${START_NOT_WRITABLE_REASON}`]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
+            { ...unchangedEvent, myTitle: 'Event 1 updated' },
+          ]);
+
+          // The result reports what was actually applied: the stripped `start` is absent, not
+          // silently reporting the caller's original (never-applied) request as successful.
+          expect(result!.applied).to.equal(true);
+          const { changes } = result! as Extract<typeof result, { applied: true }>;
+          expect('start' in changes).to.equal(false);
+          expect(changes.title).to.equal('Event 1 updated');
+        });
+
+        // Mirrors a resize of the end handle alone: `start` is absent from the change entirely,
+        // so there is nothing to drop and nothing to warn about.
+        it('should not warn when the update only touches the writable date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          expect(() => {
+            store.updateEvent({
+              id: '1',
+              end: createDate('2025-07-01T11:00:00.000Z'),
+            });
+          }).not.toWarnDev();
+
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
+            { ...unchangedEvent, myEnd: '2025-07-01T11:00:00.000Z' },
+          ]);
+        });
+
+        // Both bounds present is unconditionally a move, regardless of timezone or value.
+        it('should reject a move on an all-day event viewed in another timezone even when start is unchanged', () => {
+          const event = utcJuly4AllDayBuilder().id('1').build();
+          const onEventsChange = vi.fn();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            eventModelStructure: { start: { getter: (evt: any) => evt.start } },
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+          const start = new Date(
+            schedulerEventSelectors.processedEvent(store.state, '1')!.start.epochMilliseconds,
+          );
+
+          let result: ReturnType<typeof store.updateEvent>;
+          expect(() => {
+            result = store.updateEvent({
+              id: '1',
+              start,
+              end: addDays(start, 2),
+            });
+          }).toWarnDev([
+            `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
+          ]);
+
+          expect(result!.applied).to.equal(false);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+
+        // Mirror case: `end` lacks a setter instead of `start` — the drop and the warning are
+        // symmetric per property. A rigid move of both bounds is still refused wholesale, the
+        // same as when `start` is the one that's read-only.
+        it('should reject a move of both dates when only end lacks a setter', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange, { eventModelStructure: readOnlyEndStructure });
+
+          let result: ReturnType<typeof store.updateEvent>;
+          expect(() => {
+            result = store.updateEvent({
+              id: '1',
+              start: createDate('2025-07-02T09:00:00.000Z'),
+              end: createDate('2025-07-02T10:00:00.000Z'),
+            });
+          }).toWarnDev([
+            `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_END}`,
+          ]);
+
+          expect(result!.applied).to.equal(false);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+
+        // Only `end` is submitted (`start` isn't part of the change at all), so this is a
+        // resize, not a move: `end` is dropped and warned about, while the rest of the update
+        // (here, `title`) still goes through.
+        it('should drop only the end date when only end lacks a setter', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange, { eventModelStructure: readOnlyEndStructure });
+
+          expect(() => {
+            store.updateEvent({
+              id: '1',
+              title: 'Event 1 updated',
+              end: createDate('2025-07-02T10:00:00.000Z'),
+            });
+          }).toWarnDev([
+            "MUI X Scheduler: An event's `end` date was not updated.\n" +
+              '`eventModelStructure.end` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+          ]);
+
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
+            { ...unchangedEvent, myTitle: 'Event 1 updated' },
+          ]);
+        });
+
+        it('should reject a move when neither date has a setter', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange, { eventModelStructure: readOnlyBothStructure });
+
+          let result: ReturnType<typeof store.updateEvent>;
+          expect(() => {
+            result = store.updateEvent({
+              id: '1',
+              title: 'Event 1 updated',
+              start: createDate('2025-07-02T09:00:00.000Z'),
+              end: createDate('2025-07-02T11:00:00.000Z'),
+            });
+          }).toWarnDev([
+            `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_BOTH}`,
+          ]);
+
+          expect(result!.applied).to.equal(false);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+
+        // A lone unwritable date, with nothing else in the change: once it's dropped there is
+        // nothing left to apply, so the update is a no-op rather than an empty write.
+        it('should drop an unwritable date and apply nothing when it is the only change', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          let result: ReturnType<typeof store.updateEvent>;
+          expect(() => {
+            result = store.updateEvent({
+              id: '1',
+              start: createDate('2025-07-02T09:00:00.000Z'),
+            });
+          }).toWarnDev([`${START_WARNING}\n${START_NOT_WRITABLE_REASON}`]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          // Still `{ applied: true, changes: { id } }`, not `{ applied: true, changes: undefined }`
+          // — a caller reading `result.changes.start` must not crash on a no-op update.
+          expect(result!.applied).to.equal(true);
+          const { changes } = result! as Extract<typeof result, { applied: true }>;
+          expect(changes).to.deep.equal({ id: '1' });
+        });
+
+        // A submitted bound is a request to set it, not merely information: a direct caller
+        // resubmitting the current, locked dates unchanged is still refused like any other move
+        // (the dialog itself never does this — it omits an untouched bound from the submitted
+        // changes entirely).
+        it('should reject a move when updateEvent resubmits the current dates unchanged', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          let result: ReturnType<typeof store.updateEvent>;
+          expect(() => {
+            result = store.updateEvent({
+              id: '1',
+              title: 'Event 1 updated',
+              start: createDate('2025-07-01T09:00:00.000Z'),
+              end: createDate('2025-07-01T10:00:00.000Z'),
+            });
+          }).toWarnDev([
+            `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
+          ]);
+
+          expect(result!.applied).to.equal(false);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+
+        it('should refuse to paste a cut event onto a new date and keep it in the clipboard', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.cutEvent('1');
+
+          expect(() => {
+            expect(store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') })).to.equal(
+              null,
+            );
+          }).toWarnDev([`${PASTE_WARNING}\n${DATES_NOT_WRITABLE_REASON_START}`]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.copiedEvent).to.deep.equal({ id: '1', action: 'cut' });
+        });
+
+        it('should still paste a cut event when the paste moves no date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.cutEvent('1');
+
+          expect(() => {
+            store.pasteEvent({ resource: null });
+          }).not.toWarnDev();
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
+            { ...unchangedEvent, resource: null },
+          ]);
+        });
+
+        // A copy writes the whole model into a new event, dates included, so it is always refused.
+        it('should refuse to paste a copied event onto a new date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.copyEvent('1');
+
+          expect(() => {
+            expect(store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') })).to.equal(
+              null,
+            );
+          }).toWarnDev([`${PASTE_WARNING}\n${DATES_NOT_WRITABLE_REASON_START}`]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+
+        it('should refuse to paste a copied event even when the paste moves no date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.copyEvent('1');
+
+          expect(() => {
+            expect(store.pasteEvent({ allDay: true })).to.equal(null);
+          }).toWarnDev([`${PASTE_WARNING}\n${DATES_NOT_WRITABLE_REASON_START}`]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+      });
+
+      describe('refused creation', () => {
+        it('should refuse to create an event when a date has no setter, warn, and never call onEventsChange', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange, { events: [] });
+
+          let createdId: SchedulerEventId | undefined;
+          expect(() => {
+            createdId = store.createEvent({
+              title: 'New event',
+              start: createDate('2025-07-01T09:00:00.000Z'),
+              end: createDate('2025-07-01T10:00:00.000Z'),
+            });
+          }).toWarnDev([
+            `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
+          ]);
+
+          expect(createdId).to.equal(undefined);
+          // Refused, not just empty — the whole call is a no-op.
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+
+        it('should refuse a duplicate through duplicateEventOccurrence when a date has no setter', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          let duplicatedId: SchedulerEventId | undefined;
+          expect(() => {
+            duplicatedId = store.duplicateEventOccurrence(
+              '1',
+              createDate('2025-07-01T11:00:00.000Z'),
+              createDate('2025-07-01T12:00:00.000Z'),
+            );
+          }).toWarnDev([
+            `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
+          ]);
+
+          expect(duplicatedId).to.equal(undefined);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
       });
 
       it('should only re-compute event models affected by updated processing parameters', () => {
@@ -216,15 +641,12 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events,
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: false,
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: false,
+        });
 
         // Called to convert Event 1 on mount.
         expect(idGetter.mock.calls.length).to.equal(1);
@@ -233,28 +655,22 @@ storeClasses.forEach((storeClass) => {
         const initialEventModelLookup = store.state.eventModelLookup;
         const initialProcessedEventLookup = store.state.processedEventLookup;
 
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events,
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: true,
+        });
 
         // Not called again when updating a non-related parameter.
         expect(idGetter.mock.calls.length).to.equal(1);
 
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: [...events],
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [...events],
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: true,
+        });
 
         expect(idGetter.mock.calls.length).to.equal(1);
         expect(store.state.eventIdList).to.equal(initialEventIdList);
@@ -271,15 +687,12 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events2,
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: events2,
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: true,
+        });
 
         // Only the new model is processed.
         expect(idGetter.mock.calls.length).to.equal(2);
@@ -287,15 +700,12 @@ storeClasses.forEach((storeClass) => {
         const processedEvent2 = schedulerEventSelectors.processedEvent(store.state, '2');
 
         const events3 = [events2[0], { ...events2[1], title: 'Event 2 updated' }];
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events3,
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: events3,
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: true,
+        });
 
         expect(idGetter.mock.calls.length).to.equal(3);
         expect(schedulerEventSelectors.processedEvent(store.state, '1')).to.equal(processedEvent1);
@@ -304,16 +714,13 @@ storeClasses.forEach((storeClass) => {
         );
 
         const event2BeforeTimezoneChange = schedulerEventSelectors.processedEvent(store.state, '2');
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events3,
-            eventModelStructure: eventModelStructure2,
-            displayTimezone: 'Europe/Paris',
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: events3,
+          eventModelStructure: eventModelStructure2,
+          displayTimezone: 'Europe/Paris',
+          showCurrentTimeIndicator: true,
+        });
 
         // The display timezone affects every processed event.
         expect(idGetter.mock.calls.length).to.equal(5);
@@ -324,51 +731,28 @@ storeClasses.forEach((storeClass) => {
           event2BeforeTimezoneChange,
         );
 
-        const event2BeforeAdapterChange = schedulerEventSelectors.processedEvent(store.state, '2');
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events3,
-            eventModelStructure: eventModelStructure2,
-            displayTimezone: 'Europe/Paris',
-            showCurrentTimeIndicator: true,
-          },
-          adapterFr,
-        );
-
-        expect(idGetter.mock.calls.length).to.equal(7);
-        expect(schedulerEventSelectors.processedEvent(store.state, '2')).not.to.equal(
-          event2BeforeAdapterChange,
-        );
-
         const updatedEventModelStructure = { ...eventModelStructure2 };
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events3,
-            eventModelStructure: updatedEventModelStructure,
-            displayTimezone: 'Europe/Paris',
-            showCurrentTimeIndicator: true,
-          },
-          adapterFr,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: events3,
+          eventModelStructure: updatedEventModelStructure,
+          displayTimezone: 'Europe/Paris',
+          showCurrentTimeIndicator: true,
+        });
 
         // Called again to convert Event 1 and Event 2 because props.eventModelStructure changed.
-        expect(idGetter.mock.calls.length).to.equal(9);
+        expect(idGetter.mock.calls.length).to.equal(7);
 
         const processedEventsBeforeReorder = store.state.processedEventLookup;
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: [events3[1], events3[0]],
-            eventModelStructure: updatedEventModelStructure,
-            displayTimezone: 'Europe/Paris',
-            showCurrentTimeIndicator: true,
-          },
-          adapterFr,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [events3[1], events3[0]],
+          eventModelStructure: updatedEventModelStructure,
+          displayTimezone: 'Europe/Paris',
+          showCurrentTimeIndicator: true,
+        });
 
-        expect(idGetter.mock.calls.length).to.equal(9);
+        expect(idGetter.mock.calls.length).to.equal(7);
         expect(store.state.eventIdList).to.deep.equal(['2', '1']);
         expect(store.state.processedEventLookup.get('1')).to.equal(
           processedEventsBeforeReorder.get('1'),
@@ -389,10 +773,7 @@ storeClasses.forEach((storeClass) => {
 
         expect(() => {
           // eslint-disable-next-line no-new
-          new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [validEvent, eventWithoutId] },
-            adapter,
-          );
+          new storeClass.Value({ resources: TEST_RESOURCES, events: [validEvent, eventWithoutId] });
         }).to.throw(/All events must have a unique `id`/);
       });
 
@@ -401,7 +782,7 @@ storeClasses.forEach((storeClass) => {
         const second = EventBuilder.new().id('1').title('Second').build();
 
         const createStore = () =>
-          new storeClass.Value({ resources: TEST_RESOURCES, events: [first, second] }, adapter);
+          new storeClass.Value({ resources: TEST_RESOURCES, events: [first, second] });
 
         let store!: ReturnType<typeof createStore>;
         expect(() => {
@@ -417,10 +798,7 @@ storeClasses.forEach((storeClass) => {
         const initialEventModelLookup = store.state.eventModelLookup;
         const initialProcessedEventLookup = store.state.processedEventLookup;
 
-        store.updateStateFromParameters(
-          { resources: TEST_RESOURCES, events: [first, second] },
-          adapter,
-        );
+        store.updateStateFromParameters({ resources: TEST_RESOURCES, events: [first, second] });
 
         expect(store.state.eventIdList).to.equal(initialEventIdList);
         expect(store.state.eventModelLookup).to.equal(initialEventModelLookup);
@@ -429,23 +807,40 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('Method: updateEvent', () => {
+      it('should remove a property that is not a date when passed as undefined', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().description('To remove').build();
+
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.updateEvent({ id: event.id, description: undefined });
+
+        const updated = onEventsChange.mock.lastCall?.[0][0];
+        expect(updated).to.not.have.property('description');
+      });
+
       it('should replace matching id and emit onEventsChange with the updated events', () => {
         const onEventsChange = vi.fn();
         const event1 = EventBuilder.new().build();
         const event2 = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event1, event2], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event1, event2],
+          onEventsChange,
+        });
 
         store.updateEvent({
           id: event2.id,
           title: 'Event 2 updated',
           description: 'Event 2 description',
           allDay: false,
-          start: adapter.date('2025-07-01T11:30:00Z', 'default'),
-          end: adapter.date('2025-07-01T12:30:00Z', 'default'),
+          start: createDate('2025-07-01T11:30:00Z'),
+          end: createDate('2025-07-01T12:30:00Z'),
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -472,14 +867,16 @@ storeClasses.forEach((storeClass) => {
           .withDataTimezone(dataTimezone)
           .build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange, displayTimezone },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+          displayTimezone,
+        });
 
         // New instants (what the UI would provide as absolute values)
-        const newStart = adapter.date('2025-03-10T14:00:00Z', 'default');
-        const newEnd = adapter.date('2025-03-10T15:00:00Z', 'default');
+        const newStart = createDate('2025-03-10T14:00:00Z');
+        const newEnd = createDate('2025-03-10T15:00:00Z');
 
         store.updateEvent({
           id: event.id,
@@ -507,10 +904,11 @@ storeClasses.forEach((storeClass) => {
           priority: 'high',
         } as SchedulerEvent;
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.updateEvent({ id: event.id, title: 'Updated title' });
 
@@ -526,12 +924,13 @@ storeClasses.forEach((storeClass) => {
 
           let store: any;
           expect(() => {
-            store = new storeClass.Value(
-              { resources: TEST_RESOURCES, events: [event], onEventsChange: () => {} },
-              adapter,
-            );
+            store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              onEventsChange: () => {},
+            });
           }).toWarnDev([
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
 
           expect(() => {
@@ -540,12 +939,61 @@ storeClasses.forEach((storeClass) => {
         },
       );
 
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should keep the stored rrule when updating with a new rrule without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new().recurrent('DAILY').build();
+
+          let store: any;
+          expect(() => {
+            store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              onEventsChange,
+            });
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
+          ]);
+
+          store.updateEvent({ id: event.id, title: 'updated', rrule: { freq: 'WEEKLY' } });
+
+          const updated = onEventsChange.mock.lastCall?.[0][0];
+          expect(updated.title).to.equal('updated');
+          expect(updated.rrule).to.deep.equal(event.rrule);
+        },
+      );
+
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should warn and ignore the rrule of the changes of a non-recurring event without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new().build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
+
+          expect(() => {
+            store.updateEvent({ id: event.id, title: 'updated', rrule: 'FREQ=DAILY' });
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
+          ]);
+
+          const updated = onEventsChange.mock.lastCall?.[0][0];
+          expect(updated.title).to.equal('updated');
+          expect(updated.rrule).to.equal(undefined);
+        },
+      );
+
       it('should warn in dev when the same id is in both `deleted` and `updated`', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange: () => {} },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange: () => {},
+        });
 
         expect(() => {
           (store as any).updateEvents({
@@ -558,6 +1006,176 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('Method: deleteOccurrence', () => {
+      it('should open the delete confirmation dialog by default instead of deleting immediately', () => {
+        const onEventsChange = vi.fn();
+        const onDelete = vi.fn();
+        const builder = EventBuilder.new();
+        const event = builder.build();
+
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.deleteOccurrence(builder.toOccurrence(), onDelete);
+        expect(onDelete.mock.calls.length).to.equal(0);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.pendingDeleteConfirmation).to.deep.equal({
+          eventId: event.id,
+          onSubmit: onDelete,
+        });
+      });
+
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should open the delete confirmation dialog by default for a recurring occurrence without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const onDelete = vi.fn();
+          const builder = EventBuilder.new().recurrent('DAILY');
+          const event = builder.build();
+
+          let store: any;
+          expect(() => {
+            store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              onEventsChange,
+            });
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
+          ]);
+
+          // No plugin to open a scope dialog with, so this goes through the confirmation dialog
+          // like any other non-recurring delete, not straight to `deleteEvent`.
+          store.deleteOccurrence(builder.toOccurrence(), onDelete);
+          expect(onDelete.mock.calls.length).to.equal(0);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.pendingRecurringEventOperation).to.equal(null);
+          expect(store.state.pendingDeleteConfirmation).to.deep.equal({
+            eventId: event.id,
+            onSubmit: onDelete,
+          });
+
+          store.resolveEventDeletion(true);
+
+          expect(onDelete.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        },
+      );
+
+      it.skipIf(storeClass.name === 'EventCalendarStore')(
+        'should open the recurring scope dialog and delete on scope submit',
+        async () => {
+          const onEventsChange = vi.fn();
+          const onDelete = vi.fn();
+          const builder = EventBuilder.new().recurrent('DAILY');
+          const event = builder.build();
+
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
+          const occurrence = builder.toOccurrence();
+
+          // Nothing is deleted until the user picks a scope; `onDelete` waits for it too.
+          store.deleteOccurrence(occurrence, onDelete);
+          expect(onDelete.mock.calls.length).to.equal(0);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.pendingRecurringEventOperation).to.deep.include({
+            kind: 'delete',
+            occurrence,
+          });
+
+          store.selectRecurringEventScope('only-this');
+          // `onSubmit` is deferred to a microtask.
+          await Promise.resolve();
+
+          expect(onDelete.mock.calls.length).to.equal(1);
+          // `onSubmit` must receive the picked scope, not just fire.
+          expect(onDelete.mock.calls[0]).to.deep.equal(['only-this']);
+          const series = onEventsChange.mock.lastCall![0][0];
+          expect(series.exDates).to.have.length(1);
+        },
+      );
+
+      it.skipIf(storeClass.name === 'EventCalendarStore')(
+        'should trust the store over the occurrence snapshot when the event is loaded',
+        () => {
+          const onEventsChange = vi.fn();
+          // The store holds the event without a rule; the snapshot still carries one.
+          const event = EventBuilder.new().id('meeting').build();
+          const staleOccurrence = EventBuilder.new()
+            .id('meeting')
+            .recurrent('DAILY')
+            .toOccurrence();
+
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+            eventDeletion: { confirmation: false },
+          });
+
+          store.deleteOccurrence(staleOccurrence);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        },
+      );
+
+      it('should reject the delete of an event the store does not hold yet', () => {
+        const onEventsChange = vi.fn();
+        const onDelete = vi.fn();
+        // A `this-and-following` split re-points the armed occurrence at the created event
+        // before a `dataSource` persist feeds it back.
+        const pendingOccurrence = EventBuilder.new().id('split').recurrent('DAILY').toOccurrence();
+
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          onEventsChange,
+        });
+
+        store.deleteOccurrence(pendingOccurrence, onDelete);
+        expect(onDelete.mock.calls.length).to.equal(0);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.pendingRecurringEventOperation).to.equal(null);
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'eventNotLoadedError',
+        ]);
+      });
+    });
+
+    describe('Method: selectRecurringEventScope', () => {
+      it.skipIf(storeClass.name === 'EventCalendarStore')(
+        'should drop the pending operation with an error when the event left the store',
+        () => {
+          const onEventsChange = vi.fn();
+          const onSubmit = vi.fn();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [],
+            onEventsChange,
+          });
+          store.deleteRecurringEvent({
+            occurrence: EventBuilder.new().id('gone').toOccurrence(),
+            onSubmit,
+          });
+          expect(store.state.pendingRecurringEventOperation).to.not.equal(null);
+
+          expect(() => store.selectRecurringEventScope('all')).not.to.throw();
+
+          expect(store.state.pendingRecurringEventOperation).to.equal(null);
+          expect(onSubmit.mock.calls.length).to.equal(0);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+            'eventNotLoadedError',
+          ]);
+        },
+      );
+    });
+
     describe('Method: deleteEvent', () => {
       it('should remove by id and call onEventsChange with the updated events', () => {
         const onEventsChange = vi.fn();
@@ -565,14 +1183,11 @@ storeClasses.forEach((storeClass) => {
         const event2 = EventBuilder.new().build();
         const event3 = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: [event1, event2, event3],
-            onEventsChange,
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event1, event2, event3],
+          onEventsChange,
+        });
         store.deleteEvent(event2.id);
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -581,15 +1196,297 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('Method: requestEventDeletion / resolveEventDeletion', () => {
+      it('should default `eventDeletion.confirmation` to `true`, including when explicitly `undefined`', () => {
+        const defaultStore = new storeClass.Value({ resources: TEST_RESOURCES, events: [] });
+        expect(defaultStore.state.eventDeletion).to.deep.equal({ confirmation: true });
+
+        const undefinedStore = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          eventDeletion: { confirmation: undefined },
+        });
+        expect(undefinedStore.state.eventDeletion).to.deep.equal({ confirmation: true });
+      });
+
+      it('should open the delete confirmation dialog instead of deleting immediately by default', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.requestEventDeletion({ eventId: event.id });
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.pendingDeleteConfirmation).to.deep.equal({
+          eventId: event.id,
+          onSubmit: undefined,
+        });
+      });
+
+      it('should delete the event and call onSubmit once the deletion is confirmed', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+        store.resolveEventDeletion(true);
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        expect(onSubmit.mock.calls.length).to.equal(1);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should push a transient error and not call onSubmit when the event left the store while the dialog was open', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+        // A controlled `events` change (or a dataSource refetch) can drop the event while the
+        // confirmation dialog is still open.
+        store.updateStateFromParameters({ resources: TEST_RESOURCES, events: [], onEventsChange });
+
+        store.resolveEventDeletion(true);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(onSubmit.mock.calls.length).to.equal(0);
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'eventNotLoadedError',
+        ]);
+      });
+
+      it('should push a transient error and not call onSubmit when the event became read-only while the dialog was open', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+        // The confirmation was requested for a flat delete; a controlled `events` update can turn
+        // the event read-only while the dialog is still open.
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [{ ...event, readOnly: true }],
+          onEventsChange,
+        });
+
+        store.resolveEventDeletion(true);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(onSubmit.mock.calls.length).to.equal(0);
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'eventChangedWhileConfirmingError',
+        ]);
+      });
+
+      it.skipIf(storeClass.name === 'EventCalendarStore')(
+        'should push a transient error and not call onSubmit when the event gained a recurrence rule while the dialog was open',
+        () => {
+          const onEventsChange = vi.fn();
+          const onSubmit = vi.fn();
+          const event = EventBuilder.new().id('meeting').build();
+          const recurringEvent = EventBuilder.new().id('meeting').recurrent('DAILY').build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
+
+          store.requestEventDeletion({ eventId: event.id, onSubmit });
+          // The confirmation was requested for a flat delete; a controlled `events` update can
+          // give the event a recurrence rule while the dialog is open, which now needs a scope
+          // choice instead.
+          store.updateStateFromParameters({
+            resources: TEST_RESOURCES,
+            events: [recurringEvent],
+            onEventsChange,
+          });
+
+          store.resolveEventDeletion(true);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(onSubmit.mock.calls.length).to.equal(0);
+          expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+            'eventChangedWhileConfirmingError',
+          ]);
+        },
+      );
+
+      it('should keep the event and not call onSubmit when the deletion is canceled', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+        store.resolveEventDeletion(false);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(onSubmit.mock.calls.length).to.equal(0);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should be a no-op when resolved with no pending deletion', () => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          onEventsChange,
+        });
+
+        store.resolveEventDeletion(true);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should delete immediately and skip the dialog when eventDeletion.confirmation is false', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+          eventDeletion: { confirmation: false },
+        });
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        expect(onSubmit.mock.calls.length).to.equal(1);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should pick up a new `eventDeletion` prop applied through `updateStateFromParameters`', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const params = { resources: TEST_RESOURCES, events: [event], onEventsChange };
+        const store = new storeClass.Value(params);
+
+        // Confirmation is on by default; requesting a deletion now would only open the dialog.
+        store.updateStateFromParameters({ ...params, eventDeletion: { confirmation: false } });
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        expect(onSubmit.mock.calls.length).to.equal(1);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should keep the same `eventDeletion` reference when an unrelated update leaves `confirmation` unchanged', () => {
+        const params = { resources: TEST_RESOURCES, events: [], onEventsChange: vi.fn() };
+        const store = new storeClass.Value(params);
+        const eventDeletionBefore = store.state.eventDeletion;
+
+        // A parent re-rendering for an unrelated reason (e.g. a fresh inline callback) shouldn't
+        // make the store treat an unchanged `confirmation` as a change: `Store.update()` compares
+        // each key by reference, so a fresh object here would spuriously notify every subscriber.
+        store.updateStateFromParameters({ ...params, onEventsChange: vi.fn() });
+
+        expect(store.state.eventDeletion).to.equal(eventDeletionBefore);
+      });
+
+      it('should normalize `eventDeletion={false}` to `false` and `eventDeletion={true}` to the default config', () => {
+        const disabledStore = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          eventDeletion: false,
+        });
+        expect(disabledStore.state.eventDeletion).to.equal(false);
+
+        const enabledStore = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          eventDeletion: true,
+        });
+        expect(enabledStore.state.eventDeletion).to.deep.equal({ confirmation: true });
+      });
+
+      it('should toggle `eventDeletion` between `false` and enabled through `updateStateFromParameters`', () => {
+        const params = { resources: TEST_RESOURCES, events: [], onEventsChange: vi.fn() };
+        const store = new storeClass.Value({ ...params, eventDeletion: false });
+
+        store.updateStateFromParameters({ ...params, eventDeletion: true });
+        expect(store.state.eventDeletion).to.deep.equal({ confirmation: true });
+
+        store.updateStateFromParameters({ ...params, eventDeletion: false });
+        expect(store.state.eventDeletion).to.equal(false);
+      });
+
+      it('should still delete immediately, with no dialog, when `eventDeletion` is `false`', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+          eventDeletion: false,
+        });
+
+        // `eventDeletion={false}` only removes the UI affordances, a programmatic request still applies.
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        expect(onSubmit.mock.calls.length).to.equal(1);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should not block `deleteEvent` when `eventDeletion` is `false`', () => {
+        const onEventsChange = vi.fn();
+        const event1 = EventBuilder.new().build();
+        const event2 = EventBuilder.new().build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event1, event2],
+          onEventsChange,
+          eventDeletion: false,
+        });
+
+        store.deleteEvent(event1.id);
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([event2]);
+      });
+    });
+
     describe('Method: createEvent', () => {
       it('should append the new event and emit onEventsChange with the updated list', () => {
         const onEventsChange = vi.fn();
         const event1 = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event1], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event1],
+          onEventsChange,
+        });
 
         const newEvent = EventBuilder.new().toCreationProperties();
 
@@ -605,15 +1502,12 @@ storeClasses.forEach((storeClass) => {
       it('should not inject timezone into the created event model', () => {
         const onEventsChange = vi.fn();
 
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: [],
-            displayTimezone: 'Europe/Paris',
-            onEventsChange,
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'Europe/Paris',
+          onEventsChange,
+        });
 
         const newEvent = EventBuilder.new().toCreationProperties();
         const createdId = store.createEvent(newEvent);
@@ -621,6 +1515,29 @@ storeClasses.forEach((storeClass) => {
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([{ ...newEvent, id: createdId }]);
       });
+
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should warn and strip the rrule without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [],
+            onEventsChange,
+          });
+
+          expect(() => {
+            store.createEvent({
+              ...EventBuilder.new().toCreationProperties(),
+              rrule: 'FREQ=DAILY',
+            });
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
+          ]);
+
+          expect(onEventsChange.mock.lastCall?.[0][0].rrule).to.equal(undefined);
+        },
+      );
     });
 
     describe('Method: duplicateEventOccurrence', () => {
@@ -628,13 +1545,14 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
-        const start = adapter.date('2025-07-01T09:00:00Z', 'default');
-        const end = adapter.date('2025-07-01T10:00:00Z', 'default');
+        const start = createDate('2025-07-01T09:00:00Z');
+        const end = createDate('2025-07-01T10:00:00Z');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -656,13 +1574,14 @@ storeClasses.forEach((storeClass) => {
           const onEventsChange = vi.fn();
           const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14Z']).build();
 
-          const store = new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [event], onEventsChange },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
 
-          const start = adapter.date('2025-07-01T09:00:00Z', 'default');
-          const end = adapter.date('2025-07-01T10:00:00Z', 'default');
+          const start = createDate('2025-07-01T09:00:00Z');
+          const end = createDate('2025-07-01T10:00:00Z');
           const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
           const originalEventWithoutRecurrence = { ...event };
@@ -690,13 +1609,14 @@ storeClasses.forEach((storeClass) => {
           priority: 'high',
         } as SchedulerEvent;
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
-        const start = adapter.date('2025-07-01T09:00:00Z', 'default');
-        const end = adapter.date('2025-07-01T10:00:00Z', 'default');
+        const start = createDate('2025-07-01T09:00:00Z');
+        const end = createDate('2025-07-01T10:00:00Z');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
         const duplicated = onEventsChange.mock.lastCall?.[0].find(
@@ -706,38 +1626,12 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
-    describe('Method: copyEvent', () => {
-      it('should set the copiedEvent state with the event and action', () => {
-        const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
-        store.copyEvent(event.id);
-
-        expect(store.state.copiedEvent).to.deep.equal({
-          id: event.id,
-          action: 'copy',
-        });
-      });
-    });
-
-    describe('Method: cutEvent', () => {
-      it('should set the copiedEvent state with the event and action', () => {
-        const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
-        store.cutEvent(event.id);
-
-        expect(store.state.copiedEvent).to.deep.equal({
-          id: event.id,
-          action: 'cut',
-        });
-      });
-    });
-
     describe('Method: pasteEvent', () => {
       it('should do nothing if there is no copiedEvent', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] });
         const oldState = store.state;
-        store.pasteEvent({ start: adapter.date('2025-07-01T09:00:00Z', 'default') });
+        store.pasteEvent({ start: createDate('2025-07-01T09:00:00Z') });
         expect(store.state).to.deep.equal(oldState);
       });
 
@@ -745,14 +1639,15 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+          start: createDate('2025-07-01T09:00:00Z'),
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -775,14 +1670,15 @@ storeClasses.forEach((storeClass) => {
           priority: 'high',
         } as SchedulerEvent;
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+          start: createDate('2025-07-01T09:00:00Z'),
         });
 
         const pasted = onEventsChange.mock.lastCall?.[0].find(
@@ -797,10 +1693,11 @@ storeClasses.forEach((storeClass) => {
         const resource2 = ResourceBuilder.new().build();
         const event = EventBuilder.new().resource(resource1).build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -823,16 +1720,18 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
           allDay: true,
         });
 
+        // A timed event pasted as all-day covers its own day.
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           event,
@@ -840,6 +1739,8 @@ storeClasses.forEach((storeClass) => {
             ...event,
             id: createdEventId,
             allDay: true,
+            start: '2025-07-03',
+            end: '2025-07-04',
             extractedFromId: event.id,
           },
         ]);
@@ -849,14 +1750,15 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+          start: createDate('2025-07-01T09:00:00Z'),
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -876,10 +1778,11 @@ storeClasses.forEach((storeClass) => {
         const resource2 = ResourceBuilder.new().build();
         const event = EventBuilder.new().resource(resource1).build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -900,22 +1803,26 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
           allDay: true,
         });
 
+        // A timed event pasted as all-day covers its own day.
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           {
             ...event,
             id: createdEventId,
             allDay: true,
+            start: '2025-07-03',
+            end: '2025-07-04',
           },
         ]);
       });
@@ -924,19 +1831,20 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.cutEvent(event.id);
 
-        store.pasteEvent({ start: adapter.date('2025-07-01T09:00:00Z', 'default') });
+        store.pasteEvent({ start: createDate('2025-07-01T09:00:00Z') });
 
         expect(store.state.copiedEvent).to.equal(null);
         expect(onEventsChange.mock.calls.length).to.equal(1);
 
         const result = store.pasteEvent({
-          start: adapter.date('2025-07-02T09:00:00Z', 'default'),
+          start: createDate('2025-07-02T09:00:00Z'),
         });
 
         expect(result).to.equal(null);
@@ -947,17 +1855,18 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const firstPastedId = store.pasteEvent({
-          start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+          start: createDate('2025-07-01T09:00:00Z'),
         });
         const secondPastedId = store.pasteEvent({
-          start: adapter.date('2025-07-02T09:00:00Z', 'default'),
+          start: createDate('2025-07-02T09:00:00Z'),
         });
 
         expect(store.state.copiedEvent).to.deep.equal({ id: event.id, action: 'copy' });
@@ -966,12 +1875,595 @@ storeClasses.forEach((storeClass) => {
         expect(firstPastedId).not.to.equal(secondPastedId);
         expect(onEventsChange.mock.calls.length).to.equal(2);
       });
+
+      // A normal (fully writable) structure throughout, so every case here isolates the `readOnly`
+      // business rule from the `eventModelStructure` one covered above.
+      describe('read-only event', () => {
+        const readOnlyEvent = EventBuilder.new()
+          .id('1')
+          .title('Event 1')
+          .span('2025-07-01T09:00:00.000Z', '2025-07-01T10:00:00.000Z')
+          .readOnly()
+          .build();
+
+        const createStore = (onEventsChange: (...args: any[]) => void, extra?: object) =>
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [readOnlyEvent],
+            onEventsChange,
+            ...extra,
+          });
+
+        // `readOnly` has always been a UI-only gate (it disables the drag/resize gestures and the
+        // dialog's fields) — `updateEvent()` itself doesn't enforce it, matching every other
+        // property. Only a date `eventModelStructure` can't write back is refused by the store.
+        it('should still apply a direct updateEvent call on a read-only event', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          expect(() => {
+            store.updateEvent({
+              id: '1',
+              start: createDate('2025-07-02T09:00:00.000Z'),
+              end: createDate('2025-07-02T10:00:00.000Z'),
+            });
+          }).not.toWarnDev();
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.lastCall?.[0][0];
+          expect(updated.start).to.equal('2025-07-02T09:00:00.000Z');
+          expect(updated.end).to.equal('2025-07-02T10:00:00.000Z');
+        });
+
+        it('should refuse to paste a cut of the event onto a new date and keep it in the clipboard', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.cutEvent('1');
+
+          expect(() => {
+            expect(store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') })).to.equal(
+              null,
+            );
+          }).toWarnDev([
+            `MUI X Scheduler: The event with id="1" was not pasted.\n${READ_ONLY_EVENT_REASON}`,
+          ]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.copiedEvent).to.deep.equal({ id: '1', action: 'cut' });
+        });
+
+        it('should still paste a cut of the event when the paste moves no date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.cutEvent('1');
+
+          expect(() => {
+            store.pasteEvent({ resource: null });
+          }).not.toWarnDev();
+
+          expect(onEventsChange.mock.lastCall?.[0][0].resource).to.equal(null);
+        });
+
+        // A copy never touches the source event, so its own `readOnly` flag doesn't gate it.
+        it('should still paste a copy of a read-only event', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.copyEvent('1');
+
+          expect(() => {
+            store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') });
+          }).not.toWarnDev();
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const pasted = onEventsChange.mock.lastCall?.[0].find((event: any) => event.id !== '1');
+          expect(pasted.start).to.equal('2025-07-02T09:00:00.000Z');
+        });
+
+        it('should refuse to paste a copy when the scheduler itself is read-only and keep it in the clipboard', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange, { readOnly: true });
+          store.copyEvent('1');
+
+          expect(() => {
+            expect(store.pasteEvent({ allDay: true })).to.equal(null);
+          }).toWarnDev([
+            `MUI X Scheduler: The event with id="1" was not pasted.\n${READ_ONLY_RESOURCE_REASON}`,
+          ]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.copiedEvent).to.deep.equal({ id: '1', action: 'copy' });
+        });
+      });
+
+      // A writable event throughout, so a refusal here can only come from the destination — not
+      // from folding in the source event's own `readOnly` (which a copy never touches).
+      describe('paste destination', () => {
+        const writableEvent = EventBuilder.new()
+          .id('1')
+          .title('Event 1')
+          .span('2025-07-01T09:00:00.000Z', '2025-07-01T10:00:00.000Z')
+          .build();
+
+        const createStoreWithWritableEvent = (
+          onEventsChange: (...args: any[]) => void,
+          extra?: object,
+        ) =>
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [writableEvent],
+            onEventsChange,
+            ...extra,
+          });
+
+        // Shared by the fallback tests below: the event already sits on the read-only resource, so
+        // a paste that doesn't name a destination still resolves and checks one.
+        const readOnlyResource = ResourceBuilder.new().areEventsReadOnly().build();
+        const eventOnReadOnlyResource = EventBuilder.new()
+          .id('2')
+          .title('Event 2')
+          .span('2025-07-01T09:00:00.000Z', '2025-07-01T10:00:00.000Z')
+          .resource(readOnlyResource)
+          .build();
+        const createStoreWithEventOnReadOnlyResource = (onEventsChange: (...args: any[]) => void) =>
+          new storeClass.Value({
+            resources: [readOnlyResource],
+            events: [eventOnReadOnlyResource],
+            onEventsChange,
+          });
+
+        it('should refuse to paste a copy when the destination resource is read-only and keep it in the clipboard', () => {
+          const onEventsChange = vi.fn();
+          const store = createStoreWithWritableEvent(onEventsChange, {
+            resources: [readOnlyResource],
+          });
+          store.copyEvent('1');
+
+          expect(() => {
+            expect(store.pasteEvent({ resource: readOnlyResource.id })).to.equal(null);
+          }).toWarnDev([
+            `MUI X Scheduler: The event with id="1" was not pasted.\n${READ_ONLY_RESOURCE_REASON}`,
+          ]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.copiedEvent).to.deep.equal({ id: '1', action: 'copy' });
+        });
+
+        // No `resource` in the paste falls back to the source's own resource — the destination is
+        // still resolved and checked, not treated as "no resource" (which would skip the resource
+        // hierarchy and read only the scheduler's `readOnly`).
+        it('should refuse to paste a copy without a resource when the event is already on a read-only resource', () => {
+          const onEventsChange = vi.fn();
+          const store = createStoreWithEventOnReadOnlyResource(onEventsChange);
+          store.copyEvent('2');
+
+          expect(() => {
+            expect(store.pasteEvent({ allDay: true })).to.equal(null);
+          }).toWarnDev([
+            `MUI X Scheduler: The event with id="2" was not pasted.\n${READ_ONLY_RESOURCE_REASON}`,
+          ]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+
+        // The same fallback applies to a cut, which is why the destination check runs regardless
+        // of `isMovingDates`: an `allDay`-only paste still lands on the event's own resource.
+        it('should refuse to paste a cut onto a read-only destination resource, even moving no date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStoreWithEventOnReadOnlyResource(onEventsChange);
+          store.cutEvent('2');
+
+          expect(() => {
+            expect(store.pasteEvent({ allDay: true })).to.equal(null);
+          }).toWarnDev([
+            `MUI X Scheduler: The event with id="2" was not pasted.\n${READ_ONLY_RESOURCE_REASON}`,
+          ]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.copiedEvent).to.deep.equal({ id: '2', action: 'cut' });
+        });
+
+        // `resource: null` is the documented "no resource" value — distinct from omitting the key,
+        // which falls back to the source's own (read-only) resource per the test above. Landing on
+        // no resource has no resource-level `readOnly` to check, so the paste goes through.
+        it('should paste onto no resource when the paste explicitly clears a read-only resource', () => {
+          const onEventsChange = vi.fn();
+          const store = createStoreWithEventOnReadOnlyResource(onEventsChange);
+          store.copyEvent('2');
+
+          expect(() => {
+            store.pasteEvent({ resource: null });
+          }).not.toWarnDev();
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const pasted = onEventsChange.mock.lastCall?.[0].find((event: any) => event.id !== '2');
+          expect(pasted.resource).to.equal(null);
+        });
+
+        // The scheduler-level fallback, not a resource override — covered above only for a copy.
+        it('should refuse to paste a cut when the scheduler itself is read-only and keep it in the clipboard', () => {
+          const onEventsChange = vi.fn();
+          const store = createStoreWithWritableEvent(onEventsChange, { readOnly: true });
+          store.cutEvent('1');
+
+          expect(() => {
+            expect(store.pasteEvent({ allDay: true })).to.equal(null);
+          }).toWarnDev([
+            `MUI X Scheduler: The event with id="1" was not pasted.\n${READ_ONLY_RESOURCE_REASON}`,
+          ]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.copiedEvent).to.deep.equal({ id: '1', action: 'cut' });
+        });
+
+        // A cut with nothing left to apply (no change at all, not even one an `eventModelStructure`
+        // restriction strips away) is still a no-op the same way `updateEvent()` treats one — see
+        // `toUpdateEventResult`. The clipboard clears regardless, since the cut target was resolved.
+        it('should clear the clipboard and return the id when a cut-paste leaves nothing to write', () => {
+          const onEventsChange = vi.fn();
+          const store = createStoreWithWritableEvent(onEventsChange);
+          store.cutEvent('1');
+
+          let pastedId: ReturnType<typeof store.pasteEvent>;
+          expect(() => {
+            pastedId = store.pasteEvent({});
+          }).not.toWarnDev();
+
+          // A no-op, not a rejection: still the pasted event's own id, not `null`.
+          expect(pastedId!).to.equal('1');
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.copiedEvent).to.equal(null);
+        });
+      });
+    });
+
+    describe('Method: updateRecurringEvent', () => {
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should warn and ignore the update without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const builder = EventBuilder.new();
+          const event = builder.build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
+
+          expect(() => {
+            store.updateRecurringEvent({
+              occurrence: builder.toOccurrence(),
+              changes: { id: event.id, title: 'updated' },
+            });
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are not enabled. The recurring event update will be ignored.',
+          ]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.pendingRecurringEventOperation).to.equal(null);
+        },
+      );
+    });
+
+    describe('all-day events', () => {
+      it('should write an all-day update as dates in the display timezone with an exclusive end', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateEvent({
+          id: 'trip',
+          start: createDate('2025-07-10T00:00:00', 'Asia/Tokyo'),
+          end: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+        });
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.start).to.equal('2025-07-10');
+        expect(updated.end).to.equal('2025-07-12');
+        expect(processEvent(updated, 'Asia/Tokyo').start.toPlainDateTime().toString()).to.equal(
+          '2025-07-10T00:00:00',
+        );
+      });
+
+      it('should create an all-day event from dates read in the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+
+        store.createEvent({
+          title: 'Trip',
+          allDay: true,
+          start: createDate('2025-07-04T00:00:00', 'America/New_York'),
+          end: createDate('2025-07-05T00:00:00', 'America/New_York'),
+        });
+
+        const created: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(created.start).to.equal('2025-07-04');
+        expect(created.end).to.equal('2025-07-05');
+      });
+
+      it('should keep date-only creation strings as they are', () => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+
+        store.createEvent({ title: 'Trip', allDay: true, start: '2025-07-04', end: '2025-07-05' });
+
+        const created: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(created.start).to.equal('2025-07-04');
+        expect(created.end).to.equal('2025-07-05');
+      });
+
+      it('should refuse an all-day Date that is not the first instant of a day', () => {
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange: vi.fn(),
+        });
+
+        // `new Date('YYYY-MM-DD')` is midnight in UTC: 20:00 of the previous day in New York.
+        expect(() =>
+          store.createEvent({
+            title: 'Trip',
+            allDay: true,
+            start: new Date('2025-07-04'),
+            end: new Date('2025-07-06'),
+          }),
+        ).to.throw(/first instant of a day/);
+      });
+
+      it('should refuse the inclusive end of the last day of an all-day event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-06', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        expect(() =>
+          store.updateEvent({ id: 'trip', end: createDate('2025-07-05T23:59:59.999Z') }),
+        ).to.throw(/first instant of a day/);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should paste an all-day event on the pasted day with its day count', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00') });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-23');
+      });
+
+      it('should paste an all-day event on the pasted day of the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00', 'Asia/Tokyo') });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-23');
+      });
+
+      it('should paste a timed event as a one-day all-day event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().id('standup').singleDay('2025-07-04T09:00:00Z').build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00'), allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-21');
+      });
+
+      it('should paste a timed event as an all-day event on its own day when no start is given', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().id('standup').singleDay('2025-07-04T09:00:00Z').build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.cutEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+      });
+
+      it('should paste an all-day event as a timed event with the default duration', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          eventCreation: { duration: 60 },
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T14:00:00'), allDay: false });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(false);
+        expect(pasted.start).to.equal('2025-07-20T14:00:00');
+        expect(pasted.end).to.equal('2025-07-20T15:00:00');
+        // The default display timezone follows the timezone of the system, like the source.
+        expect(pasted).not.to.have.property('timezone');
+      });
+
+      it('should paste an all-day event as a timed event on its first day of the display timezone when no start is given', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.cutEvent('trip');
+
+        store.pasteEvent({ allDay: false });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(Boolean(pasted.allDay)).to.equal(false);
+        expect(pasted.timezone).to.equal('Asia/Tokyo');
+        expect(pasted.start).to.equal('2025-07-04T00:00:00');
+        expect(pasted.end).to.equal('2025-07-04T00:30:00');
+      });
+
+      it('should refuse to paste a cut read-only all-day event as a timed event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .readOnly()
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.cutEvent('trip');
+
+        expect(() => {
+          expect(store.pasteEvent({ allDay: false })).to.equal(null);
+        }).toWarnDev([
+          `MUI X Scheduler: The event with id="trip" was not pasted.\n${READ_ONLY_EVENT_REASON}`,
+        ]);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should make an all-day event timed on its displayed days in the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('holiday')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateEvent({ id: 'holiday', allDay: false });
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated).not.to.have.property('allDay');
+        expect(updated.timezone).to.equal('Asia/Tokyo');
+        expect(updated.start).to.equal('2025-07-04T00:00:00');
+        expect(updated.end).to.equal('2025-07-05T00:00:00');
+      });
+
+      it('should keep no timezone on an all-day event made timed in the default display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('holiday')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.updateEvent({ id: 'holiday', allDay: false });
+
+        // It follows the timezone of the system, like the other events without a timezone.
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated).not.to.have.property('timezone');
+        expect(updated.start).to.equal('2025-07-04T00:00:00');
+        expect(updated.end).to.equal('2025-07-05T00:00:00');
+      });
+
+      it('should duplicate an all-day occurrence as dates', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.duplicateEventOccurrence(
+          'trip',
+          createDate('2025-07-20T00:00:00'),
+          createDate('2025-07-23T00:00:00'),
+        );
+
+        const duplicated: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(duplicated.start).to.equal('2025-07-20');
+        expect(duplicated.end).to.equal('2025-07-23');
+      });
     });
 
     describe('dev warnings', () => {
       it('should warn in dev when events are updated without onEventsChange nor dataSource', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] });
 
         expect(() => {
           store.updateEvent({ id: event.id, title: 'updated' });
@@ -987,6 +2479,803 @@ storeClasses.forEach((storeClass) => {
 // plugin, so the community store is not expected to honor it.
 premiumStoreClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
+    describe('Method: pasteEvent', () => {
+      it('should paste a copy of a timed series as an all-day series with its exceptions as dates', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('UTC')
+          .singleDay('2025-07-04T09:00:00Z')
+          .rrule({ freq: 'DAILY' })
+          .exDates(['2025-07-05T09:00:00Z'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'UTC',
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+        expect(pasted.exDates).to.deep.equal(['2025-07-05']);
+        expect(() => processEvent(pasted, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+
+      it('should paste a timed series as an all-day series on the days of its timezone', () => {
+        const onEventsChange = vi.fn();
+        // Fridays at 20:00 in New York are Saturdays in Tokyo: the series stays on Fridays.
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('America/New_York')
+          .singleDay('2025-07-04T20:00:00')
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25T20:00:00' })
+          .exDates(['2025-07-11T20:00:00'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+        // The until is written as its day in the event timezone, July 25th.
+        expect(pasted.rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25' });
+        expect(pasted.exDates).to.deep.equal(['2025-07-11']);
+      });
+
+      it('should paste an all-day series whose rule has time parts as a timed series without them', () => {
+        const onEventsChange = vi.fn();
+        // Calendar apps can export BYHOUR on an all-day rule, where RFC 5545 ignores it.
+        const event: SchedulerEvent = {
+          ...EventBuilder.new()
+            .id('holiday')
+            .span('2025-07-01', '2025-07-02', { allDay: true })
+            .build(),
+          rrule: 'FREQ=DAILY;BYHOUR=9;BYMINUTE=30;COUNT=5',
+        };
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.copyEvent('holiday');
+
+        store.pasteEvent({ allDay: false, start: createDate('2025-07-01T09:00:00') });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.rrule).to.equal('FREQ=DAILY;COUNT=5');
+        expect(() => processEvent(pasted, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+    });
+
+    describe('Method: updateRecurringEvent', () => {
+      ['2025-07-01', '2025-07-03'].forEach((day) => {
+        it(`should drop the time parts of the rule of an all-day series dropped on the time grid on ${day}`, () => {
+          const onEventsChange = vi.fn();
+          const event: SchedulerEvent = {
+            ...EventBuilder.new()
+              .id('holiday')
+              .span('2025-07-01', '2025-07-02', { allDay: true })
+              .build(),
+            rrule: 'FREQ=DAILY;BYHOUR=9;COUNT=5',
+          };
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(store, 'holiday', createDate(`${day}T00:00:00`)),
+            changes: {
+              id: 'holiday',
+              allDay: false,
+              start: createDate(`${day}T09:00:00`),
+              end: createDate(`${day}T09:30:00`),
+            },
+          });
+          store.selectRecurringEventScope('all');
+
+          const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+          // The series keeps its first day, at the time of the drop.
+          expect(updated.start).to.equal('2025-07-01T09:00:00');
+          expect(() => processEvent(updated, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+        });
+      });
+
+      it('should rewrite the exception dates when an update makes a series all-day', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('UTC')
+          .singleDay('2025-07-04T09:00:00Z')
+          .rrule({ freq: 'DAILY' })
+          .exDates(['2025-07-11T09:00:00Z'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'UTC',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(store, 'standup', createDate('2025-07-04T09:00:00Z')),
+          changes: {
+            id: 'standup',
+            allDay: true,
+            start: createDate('2025-07-04T00:00:00', 'UTC'),
+            end: createDate('2025-07-05T00:00:00', 'UTC'),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.allDay).to.equal(true);
+        expect(updated.start).to.equal('2025-07-04');
+        expect(updated.end).to.equal('2025-07-05');
+        expect(updated.exDates).to.deep.equal(['2025-07-11']);
+        expect(() => processEvent(updated, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+
+      it('should make a series all-day on the days of its timezone when no day is given', () => {
+        const onEventsChange = vi.fn();
+        // Fridays at 20:00 in New York, until July 18th, are Saturdays in Tokyo.
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('America/New_York')
+          .singleDay('2025-07-04T20:00:00')
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-18T20:00:00' })
+          .exDates(['2025-07-11T20:00:00'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'standup',
+            createDate('2025-07-18T20:00:00', 'America/New_York'),
+          ),
+          changes: { id: 'standup', allDay: true },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.start).to.equal('2025-07-04');
+        expect(updated.end).to.equal('2025-07-05');
+        // The rule keeps its days: its until is written as its day in the event timezone, July 18th.
+        expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-18' });
+        expect(updated.exDates).to.deep.equal(['2025-07-11']);
+        expect(() =>
+          processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+        ).not.to.throw();
+      });
+
+      it.each(['only-this', 'this-and-following', 'all'] as const)(
+        'should keep no timezone on an all-day series made timed in the default display timezone with scope %s',
+        (scope) => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new()
+            .id('holiday')
+            .span('2025-07-01', '2025-07-02', { allDay: true })
+            .rrule({ freq: 'DAILY' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(store, 'holiday', createDate('2025-07-03T00:00:00')),
+            changes: {
+              id: 'holiday',
+              allDay: false,
+              start: createDate('2025-07-03T09:00:00'),
+              end: createDate('2025-07-03T10:00:00'),
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          // The event the change writes: the series itself, or the event split or detached from
+          // it on the changed occurrence.
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'holiday' : item.id !== 'holiday',
+          )!;
+          expect(updated).not.to.have.property('timezone');
+          expect(updated.start).to.equal(`2025-07-0${scope === 'all' ? 1 : 3}T09:00:00`);
+        },
+      );
+
+      (['all', 'this-and-following'] as const).forEach((scope) => {
+        it(`should make a series all-day on its displayed days when a day is given with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          // Fridays at 08:00 in Tokyo are Thursdays in New York; July 18th is July 17th there.
+          const event = EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('Asia/Tokyo')
+            .singleDay('2025-07-04T08:00:00')
+            .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+            .exDates(['2025-07-18T08:00:00'])
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+
+          // The occurrence shown on Thursday, July 10th, dropped on the all-day row of that day.
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'standup',
+              createDate('2025-07-11T08:00:00', 'Asia/Tokyo'),
+            ),
+            changes: {
+              id: 'standup',
+              allDay: true,
+              start: createDate('2025-07-10T00:00:00', 'America/New_York'),
+              end: createDate('2025-07-11T00:00:00', 'America/New_York'),
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+          )!;
+          expect(updated.start).to.equal(scope === 'all' ? '2025-07-03' : '2025-07-10');
+          expect((updated.rrule as SchedulerEventRecurrenceRule).byDay).to.deep.equal(['TH']);
+          expect(updated.exDates).to.deep.equal(['2025-07-17']);
+        });
+
+        (
+          [
+            { freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25T23:59:59' },
+            'FREQ=WEEKLY;BYDAY=FR;UNTIL=20250726T030000Z',
+          ] as const
+        ).forEach((rrule) => {
+          it(`should move the last day of a series made all-day on a given day with scope '${scope}' and the rule ${JSON.stringify(rrule)}`, () => {
+            const onEventsChange = vi.fn();
+            // Fridays at 23:00 in New York until July 25th are Saturdays in Tokyo, until July 26th.
+            const event: SchedulerEvent = {
+              ...EventBuilder.new()
+                .id('standup')
+                .withDataTimezone('America/New_York')
+                .singleDay('2025-07-04T23:00:00')
+                .build(),
+              rrule: rrule as SchedulerEvent['rrule'],
+            };
+            const store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              displayTimezone: 'Asia/Tokyo',
+              onEventsChange,
+            });
+
+            // The occurrence shown on Saturday, July 12th, dropped on the all-day row of that day.
+            store.updateRecurringEvent({
+              occurrence: createStoreOccurrence(
+                store,
+                'standup',
+                createDate('2025-07-11T23:00:00', 'America/New_York'),
+              ),
+              changes: {
+                id: 'standup',
+                allDay: true,
+                start: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+                end: createDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
+              },
+            });
+            store.selectRecurringEventScope(scope);
+
+            const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+            const updated = updatedEvents.find((item) =>
+              scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+            )!;
+            const processed = processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
+            expect(processed.rrule!.byDay).to.deep.equal(['SA']);
+            expect(processed.rrule!.until!.toString()).to.match(/^2025-07-26/);
+          });
+        });
+
+        it(`should write the until of a timed series made all-day as its date with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-01T09:00:00', '2025-07-01T09:30:00')
+            .rrule({ freq: 'DAILY', until: '2025-07-08T09:00:00' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'standup',
+              createDate('2025-07-03T09:00:00', 'America/New_York'),
+            ),
+            changes: { id: 'standup', allDay: true },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+          )!;
+          expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal('2025-07-08');
+          expect(() =>
+            processEvent(updated, 'America/New_York', schedulerRecurringEventsPlugin),
+          ).not.to.throw();
+        });
+
+        it(`should write the until of a rule given with a timed series made all-day as its date with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          // Before 09:00, the last occurrence is the one of July 7th.
+          const event = EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-01T09:00:00', '2025-07-01T09:30:00')
+            .rrule({ freq: 'DAILY', until: '2025-07-08T08:00:00' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+          const rule = schedulerEventSelectors.processedEventRequired(
+            store.state,
+            'standup',
+          ).rrule!;
+
+          // Like the dialog: the rule is edited, its until is the one of the timed series.
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'standup',
+              createDate('2025-07-03T09:00:00', 'America/New_York'),
+            ),
+            changes: { id: 'standup', allDay: true, rrule: { ...rule, interval: 2 } },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+          )!;
+          const written = updated.rrule as SchedulerEventRecurrenceRule;
+          expect(written.interval).to.equal(2);
+          expect(written.until).to.equal('2025-07-07');
+          expect(() =>
+            processEvent(updated, 'America/New_York', schedulerRecurringEventsPlugin),
+          ).not.to.throw();
+        });
+
+        (
+          [
+            { until: '2025-07-25T23:00:00', expected: '2025-07-26' },
+            // Before 23:00, the last Friday is July 18th, July 19th in Tokyo.
+            { until: '2025-07-25T22:00:00', expected: '2025-07-24' },
+          ] as const
+        ).forEach(({ until, expected }) => {
+          it(`should write the moved until ${until} of a series made all-day on a given day as a date with scope '${scope}'`, () => {
+            const onEventsChange = vi.fn();
+            const event = EventBuilder.new()
+              .id('standup')
+              .withDataTimezone('America/New_York')
+              .singleDay('2025-07-04T23:00:00')
+              .rrule({ freq: 'WEEKLY', byDay: ['FR'], until })
+              .build();
+            const store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              displayTimezone: 'Asia/Tokyo',
+              onEventsChange,
+            });
+
+            // The occurrence shown on Saturday, July 12th, dropped on the all-day row of that day.
+            store.updateRecurringEvent({
+              occurrence: createStoreOccurrence(
+                store,
+                'standup',
+                createDate('2025-07-11T23:00:00', 'America/New_York'),
+              ),
+              changes: {
+                id: 'standup',
+                allDay: true,
+                start: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+                end: createDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
+              },
+            });
+            store.selectRecurringEventScope(scope);
+
+            const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+            const updated = updatedEvents.find((item) =>
+              scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+            )!;
+            expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(expected);
+            expect(() =>
+              processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+            ).not.to.throw();
+          });
+        });
+
+        it(`should write the until of an all-day series made timed on a given time as a date-time with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new()
+            .id('holiday')
+            .span('2025-07-01', '2025-07-02', { allDay: true })
+            .rrule({ freq: 'DAILY', until: '2025-07-08' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'Asia/Tokyo',
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'holiday',
+              createDate('2025-07-03T00:00:00', 'Asia/Tokyo'),
+            ),
+            changes: {
+              id: 'holiday',
+              allDay: false,
+              start: createDate('2025-07-03T09:00:00', 'Asia/Tokyo'),
+              end: createDate('2025-07-03T10:00:00', 'Asia/Tokyo'),
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'holiday' : item.id !== 'holiday',
+          )!;
+          expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(
+            '2025-07-08T23:59:59',
+          );
+          expect(() =>
+            processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+          ).not.to.throw();
+        });
+      });
+
+      it('should keep the last day of an all-day series with a date-time until made timed in another timezone', () => {
+        const onEventsChange = vi.fn();
+        // Its until, 03:00 UTC on July 9th, is July 8th in New York: the series ends on July 8th.
+        const event = EventBuilder.new()
+          .id('trip')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .rrule({ freq: 'DAILY', until: '2025-07-09T03:00:00Z' })
+          .build();
+        const createStore = () =>
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'Asia/Tokyo',
+            onEventsChange,
+          });
+        clearWarningsCache();
+        let store!: ReturnType<typeof createStore>;
+        expect(() => {
+          store = createStore();
+        }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'trip',
+            createDate('2025-07-04T00:00:00', 'Asia/Tokyo'),
+          ),
+          changes: {
+            id: 'trip',
+            allDay: false,
+            start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
+            end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.timezone).to.equal('Asia/Tokyo');
+        expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(
+          '2025-07-08T23:59:59',
+        );
+      });
+
+      it('should keep the last day of an all-day RRULE string with a date-time until made timed in another timezone', () => {
+        const onEventsChange = vi.fn();
+        // 00:00 UTC on July 19th is July 18th in New York: the series ends on Friday, July 18th.
+        const event: SchedulerEvent = {
+          ...EventBuilder.new()
+            .id('review')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-04', '2025-07-05', { allDay: true })
+            .build(),
+          rrule: 'FREQ=WEEKLY;BYDAY=FR;UNTIL=20250719T000000Z',
+        };
+        const createStore = () =>
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/Los_Angeles',
+            onEventsChange,
+          });
+        clearWarningsCache();
+        let store!: ReturnType<typeof createStore>;
+        expect(() => {
+          store = createStore();
+        }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'review',
+            createDate('2025-07-11T00:00:00', 'America/Los_Angeles'),
+          ),
+          changes: {
+            id: 'review',
+            allDay: false,
+            start: createDate('2025-07-11T18:00:00', 'America/Los_Angeles'),
+            end: createDate('2025-07-11T19:00:00', 'America/Los_Angeles'),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        // The last instant of July 18th in Los Angeles, after its occurrence at 18:00.
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.rrule).to.equal('FREQ=WEEKLY;BYDAY=FR;UNTIL=20250719T065959Z');
+      });
+
+      it("should keep the RRULE string of a timed series made all-day with scope 'all'", () => {
+        const onEventsChange = vi.fn();
+        // 13:00 UTC is 09:00 in New York, the time of the series.
+        const event: SchedulerEvent = {
+          ...EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-01T09:00:00', '2025-07-01T09:30:00')
+            .build(),
+          rrule: 'FREQ=DAILY;UNTIL=20250708T130000Z',
+        };
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'standup',
+            createDate('2025-07-03T09:00:00', 'America/New_York'),
+          ),
+          changes: { id: 'standup', allDay: true },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.rrule).to.equal('FREQ=DAILY;UNTIL=20250708');
+      });
+
+      it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {
+        // The rule is passed through as is: saving it with a new count keeps the 3rd.
+        const event = utcJuly4AllDayBuilder()
+          .id('report')
+          .recurrent('MONTHLY', { byMonthDay: [3] })
+          .build();
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+        const occurrence = schedulerEventSelectors.processedEventRequired(store.state, 'report');
+        expect(occurrence.rrule!.byMonthDay).to.deep.equal([3]);
+
+        store.updateRecurringEvent({
+          // The occurrence of August 3rd: the series starts on July 4th, which isn't a 3rd.
+          occurrence: createOccurrence(occurrence, new Date('2025-08-03T00:00:00Z')),
+          changes: {
+            id: 'report',
+            rrule: { ...occurrence.rrule!, count: 5 },
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === 'report',
+        );
+        expect(updated.rrule).to.deep.equal({
+          freq: 'MONTHLY',
+          interval: 1,
+          byMonthDay: [3],
+          count: 5,
+        });
+      });
+
+      (['all', 'this-and-following'] as const).forEach((scope) => {
+        it(`should store the submitted rule as is with scope '${scope}' from another timezone`, () => {
+          // The rule is picked in the data timezone (RFC 5545 evaluates it in the DTSTART
+          // timezone): the July 20 occurrence of a daily UTC series shows on July 19 in New
+          // York, and a monthly rule on the 20th picked from it is stored on the 20th.
+          const event = EventBuilder.new()
+            .id('report')
+            .withDataTimezone('UTC')
+            .singleDay('2025-07-04T00:00:00Z', 60)
+            .recurrent('DAILY')
+            .build();
+          const onEventsChange = vi.fn();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'report',
+              createDate('2025-07-20T00:00:00', 'UTC'),
+            ),
+            changes: {
+              id: 'report',
+              rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [20] },
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated =
+            updatedEvents.find((item) => item.rrule != null && item.id !== 'report') ??
+            updatedEvents.find((item) => item.id === 'report')!;
+          expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byMonthDay: [20] });
+        });
+      });
+    });
+
+    describe('Method: deleteRecurringEvent', () => {
+      // December 30th, 2011 does not exist in Pacific/Apia: the two-day occurrence of that date,
+      // from a weekly series of Fridays, only shows on December 31st.
+      const createApiaStore = (onEventsChange: (events: SchedulerEvent[]) => void) =>
+        new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [
+            EventBuilder.new()
+              .id('trip')
+              .span('2011-12-23', '2011-12-25', { allDay: true })
+              .rrule({ freq: 'WEEKLY' })
+              .build(),
+          ],
+          displayTimezone: 'Pacific/Apia',
+          onEventsChange,
+        });
+
+      const deleteSkippedDayOccurrence = (scope: RecurringEventScope) => {
+        const onEventsChange = vi.fn();
+        const store = createApiaStore(onEventsChange);
+        const occurrence = createStoreOccurrence(
+          store,
+          'trip',
+          createDate('2011-12-31T00:00:00', 'Pacific/Apia'),
+        );
+        expect(occurrence.key).to.equal('trip::2011-12-30');
+
+        store.deleteRecurringEvent({ occurrence });
+        store.selectRecurringEventScope(scope);
+
+        return onEventsChange.mock.lastCall![0][0] as SchedulerEvent;
+      };
+
+      it("should exclude the occurrence of a date the display timezone skips with scope 'only-this'", () => {
+        const updated = deleteSkippedDayOccurrence('only-this');
+
+        expect(updated.exDates).to.deep.equal(['2011-12-30']);
+        const keys = schedulerRecurringEventsPlugin
+          .getOccurrencesForVisibleDays(
+            processEvent(updated, 'Pacific/Apia', schedulerRecurringEventsPlugin),
+            createDate('2011-12-31T00:00:00', 'Pacific/Apia').getTime(),
+            createDate('2011-12-31T00:00:00', 'Pacific/Apia').getTime(),
+            'Pacific/Apia',
+          )
+          .map((occurrence) => occurrence.key);
+        expect(keys).to.deep.equal([]);
+      });
+
+      it("should end the series before the occurrence of a date the display timezone skips with scope 'this-and-following'", () => {
+        const updated = deleteSkippedDayOccurrence('this-and-following');
+
+        expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal('2011-12-29');
+      });
+    });
+
+    describe('Method: updateRecurringEvent on a date the display timezone skips', () => {
+      // A daily series of 6 dates from December 28th, 2011: December 30th doesn't exist in
+      // Pacific/Apia, where its occurrence starts at the same instant as the one of the 31st.
+      const editSkippedDayOccurrence = (scope: RecurringEventScope) => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [
+            EventBuilder.new()
+              .id('trip')
+              .span('2011-12-28', '2011-12-29', { allDay: true })
+              .rrule({ freq: 'DAILY', count: 6 })
+              .build(),
+          ],
+          displayTimezone: 'Pacific/Apia',
+          onEventsChange,
+        });
+        const occurrence = schedulerRecurringEventsPlugin
+          .getOccurrencesForVisibleDays(
+            schedulerEventSelectors.processedEventRequired(store.state, 'trip'),
+            createDate('2011-12-28T00:00:00', 'Pacific/Apia').getTime(),
+            createDate('2012-01-02T00:00:00', 'Pacific/Apia').getTime(),
+            'Pacific/Apia',
+          )
+          .find((item) => item.key === 'trip::2011-12-30')!;
+
+        store.updateRecurringEvent({ occurrence, changes: { id: 'trip', title: 'Renamed' } });
+        store.selectRecurringEventScope(scope);
+
+        const events: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+        return {
+          series: events.find((item) => item.id === 'trip')!,
+          created: events.find((item) => item.id !== 'trip')!,
+        };
+      };
+
+      it("should split the series on the date the display timezone skips with scope 'this-and-following'", () => {
+        const { series, created } = editSkippedDayOccurrence('this-and-following');
+
+        expect((series.rrule as SchedulerEventRecurrenceRule).until).to.equal('2011-12-29');
+        expect(created.start).to.equal('2011-12-30');
+        expect(created.end).to.equal('2011-12-31');
+        // 2 occurrences before the split and 4 after it: the 6 of the series.
+        expect((created.rrule as SchedulerEventRecurrenceRule).count).to.equal(4);
+      });
+
+      it("should detach the occurrence on the date the display timezone skips with scope 'only-this'", () => {
+        const { series, created } = editSkippedDayOccurrence('only-this');
+
+        expect(series.exDates).to.deep.equal(['2011-12-30']);
+        expect(created.start).to.equal('2011-12-30');
+        expect(created.end).to.equal('2011-12-31');
+        expect(created.title).to.equal('Renamed');
+      });
+    });
+
     describe('dev warnings', () => {
       it('should not warn about a missing onEventsChange when a dataSource is provided', () => {
         const event = EventBuilder.new().build();
@@ -994,10 +3283,7 @@ premiumStoreClasses.forEach((storeClass) => {
           getEvents: async () => [event],
           persistEvents: async () => ({ success: true }),
         };
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [], dataSource },
-          adapter,
-        );
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [], dataSource });
 
         expect(() => {
           store.createEvent(EventBuilder.new().toCreationProperties());

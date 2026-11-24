@@ -9,6 +9,7 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "titleId": { "type": { "name": "string" } },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },

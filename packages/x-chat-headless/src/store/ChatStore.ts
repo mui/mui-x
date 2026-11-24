@@ -1,4 +1,4 @@
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import type {
   ChatConversation,
   ChatDraftAttachment,
@@ -8,7 +8,7 @@ import type {
   ChatUser,
 } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
-import type { ChatInternalState } from '../types/chat-state';
+import type { ChatHistoryStatus, ChatInternalState } from '../types/chat-state';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorGetterProps {
@@ -26,23 +26,60 @@ export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorG
   currentUser?: ChatUser;
   /** Locale-driven fallback labels for messages without explicit author information. */
   roleDisplayNames?: Partial<Record<ChatRole, string>>;
+  /**
+   * The messages of the active conversation.
+   * Use with `onMessagesChange` to control them.
+   */
   messages?: ChatMessage[];
   /** The initial messages when uncontrolled. Ignored after initialization and when `messages` is provided. */
   initialMessages?: ChatMessage[];
+  /**
+   * Callback fired when the messages change.
+   * @param {ChatMessage[]} messages The new messages.
+   */
   onMessagesChange?: (messages: ChatMessage[]) => void;
+  /**
+   * The conversations.
+   * Use with `onConversationsChange` to control them.
+   */
   conversations?: ChatConversation[];
   /** The initial conversations when uncontrolled. Ignored after initialization and when `conversations` is provided. */
   initialConversations?: ChatConversation[];
+  /**
+   * Callback fired when the conversations change.
+   * @param {ChatConversation[]} conversations The new conversations.
+   */
   onConversationsChange?: (conversations: ChatConversation[]) => void;
+  /**
+   * The id of the active conversation.
+   * Use with `onActiveConversationChange` to control it.
+   */
   activeConversationId?: string;
   /** Internal flag used to distinguish a controlled `undefined` active conversation from an uncontrolled model. */
   activeConversationIdControlled?: boolean;
+  /**
+   * Internal flag set when the adapter implements `listMessages`.
+   * Lets the store start in the `'loading'` history status so the first paint doesn't show an empty thread.
+   */
+  hasHistoryLoader?: boolean;
   /** The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided. */
   initialActiveConversationId?: string;
+  /**
+   * Callback fired when the active conversation changes.
+   * @param {string | undefined} conversationId The id of the new active conversation.
+   */
   onActiveConversationChange?: (conversationId: string | undefined) => void;
+  /**
+   * The value of the composer.
+   * Use with `onComposerValueChange` to control it.
+   */
   composerValue?: string;
   /** The initial composer value when uncontrolled. Ignored after initialization and when `composerValue` is provided. */
   initialComposerValue?: string;
+  /**
+   * Callback fired when the composer value changes.
+   * @param {string} value The new composer value.
+   */
   onComposerValueChange?: (value: string) => void;
 }
 
@@ -160,7 +197,7 @@ function deriveStateFromParameters<Cursor = string>(parameters: ChatStoreParamet
 }
 
 export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>> {
-  public parameters: ChatStoreParameters<Cursor>;
+  declare public parameters: ChatStoreParameters<Cursor>;
 
   /** Local (sending) user: explicit prop → members list → active conversation participants. */
   get currentUser(): ChatUser | undefined {
@@ -210,6 +247,9 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       activeConversationId,
       composerValue,
     } = deriveStateFromParameters(parameters);
+    // The initial history fetch starts in a passive effect; mark it pending up front
+    // so the first committed frame can't be mistaken for an empty conversation.
+    const isHistoryPending = activeConversationId != null && parameters.hasHistoryLoader === true;
 
     super({
       conversationIds,
@@ -223,7 +263,8 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       isStreaming: false,
       streamingConversationId: undefined,
       hasMoreHistory: false,
-      isLoadingHistory: false,
+      isLoadingHistory: isHistoryPending,
+      historyStatus: isHistoryPending ? 'loading' : 'idle',
       historyCursor: undefined,
       composerValue,
       composerIsComposing: false,
@@ -281,7 +322,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     this.parameters = parameters;
-    this.update(newState);
+    this.update(newState as ChatInternalState<Cursor>);
   };
 
   /**
@@ -542,6 +583,10 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.set('isLoadingHistory', value);
   };
 
+  public setHistoryStatus = (value: ChatHistoryStatus) => {
+    this.set('historyStatus', value);
+  };
+
   public setActiveStreamAbortController = (value: AbortController | null) => {
     this.set('activeStreamAbortController', value);
   };
@@ -604,6 +649,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       streamingConversationId: undefined,
       hasMoreHistory: false,
       isLoadingHistory: false,
+      historyStatus: 'idle',
       historyCursor: undefined,
       error: null,
     });

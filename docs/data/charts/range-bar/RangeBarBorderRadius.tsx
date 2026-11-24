@@ -5,10 +5,8 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
-import {
-  BarChartPremium,
-  BarChartPremiumProps,
-} from '@mui/x-charts-premium/BarChartPremium';
+import type { BarChartPremiumProps } from '@mui/x-charts-premium/BarChartPremium';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 

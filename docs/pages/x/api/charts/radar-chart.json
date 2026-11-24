@@ -11,7 +11,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "className": { "type": { "name": "string" } },
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -123,6 +123,14 @@
         "returned": "string"
       }
     },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "theme": { "type": { "name": "enum", "description": "'dark'<br>&#124;&nbsp;'light'" } },
     "title": { "type": { "name": "string" } },
     "tooltipItem": {
       "type": {
@@ -140,14 +148,30 @@
     "import { RadarChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
-    { "name": "baseButton", "description": "", "class": null },
-    { "name": "baseIconButton", "description": "", "class": null },
     {
-      "name": "baseToggleButton",
-      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "name": "baseButton",
+      "description": "The component used for buttons.",
+      "default": "Button",
       "class": null
     },
-    { "name": "baseToggleButtonGroup", "description": "", "class": null },
+    {
+      "name": "baseIconButton",
+      "description": "The component used for icon buttons.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "baseToggleButton",
+      "description": "The component used for toggle buttons.\nNote: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "default": "ToggleButton",
+      "class": null
+    },
+    {
+      "name": "baseToggleButtonGroup",
+      "description": "The component used for toggle button groups.",
+      "default": "ToggleButtonGroup",
+      "class": null
+    },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",

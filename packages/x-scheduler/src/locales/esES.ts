@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const esESDialog: Partial<EventEditingLocaleText> = {
+const esESDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Color del evento',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Eliminar evento',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Cancelar',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -42,16 +46,20 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Cada',
   recurrenceRepeatLabel: 'Repetir',
   recurrenceTabLabel: 'Recurrencia',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Recurrencia',
   recurrenceWeeklyFrequencyLabel: 'semanas',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repite semanalmente el ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'meses',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Día ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} de la última semana del mes`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} última semana`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} de la última semana del mes`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} última semana`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Se repite mensualmente el día ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} semana ${ord} del mes`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} semana ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName} semana ${ord} del mes`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} semana ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'El',
   recurrenceYearlyFrequencyLabel: 'años',
   recurrenceYearlyPresetLabel: (date) => `Se repite anualmente el ${date}`,
@@ -69,15 +77,46 @@ const esESDialog: Partial<EventEditingLocaleText> = {
 
   // RecurringScopeDialog
   all: 'Todos los eventos',
-  cancel: 'Cancelar',
   confirm: 'Confirmar',
   onlyThis: 'Solo este evento',
   radioGroupAriaLabel: 'Alcance de edición de eventos recurrentes',
   thisAndFollowing: 'Este y los eventos siguientes',
   title: 'Aplicar este cambio a:',
+
+  // Errors
+  // somethingWentWrongError: 'Something went wrong. Try again.',
+  // eventNotLoadedError: 'This event is still being saved, so the change was not applied. Try again once it is saved.',
+  // eventChangedWhileConfirmingError: 'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+  // datesNotWritableError: "This date can't be changed, so the change was not applied.",
+  // eventNotCreatableError: "This can't be saved as a new event, so the change was not applied.",
+  // readOnlyEventMovedError: title => `This change would move the read-only event "${title}", so it was not applied.`,
+  // unwritableEventMovedError: title => `This change would move the event "${title}", whose dates can't be changed, so it was not applied.`,
+  // dependencyCascadeBlockedError: 'This dependency would move a read-only event, so it was not created.',
+  // dependencyDatesNotWritableError: "This dependency would move an event whose dates can't be changed, so it was not created.",
+  // dependencyCycleError: 'This dependency would create a cycle between events.',
+  // dependencyDuplicateError: 'A dependency of this type already exists between these two events.',
+  // dependencyRecurringEventError: 'Dependencies cannot involve recurring events.',
+  // dependencyReadOnlyError: 'Dependencies cannot be changed while the scheduler is read-only.',
+  // dependencyUnknownEventError: 'This dependency cannot be created because one of its events no longer exists.',
 };
 
-const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const esESEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}`,
+  eventAriaLabelDateRange: (start, end) => `Del ${start} al ${end}`,
+  eventAriaLabelAllDay: 'Todo el día',
+  eventAriaLabelRecurring: 'Recurrente',
+  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const esESCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Recursos',
 
@@ -93,6 +132,7 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   months: 'Meses',
   weeks: 'Semanas',
   years: 'Años',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Cerrar panel lateral',
@@ -117,12 +157,15 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
 
   // WeekView
   allDay: 'Todo el día',
+  dayGridLabel: 'Todo el día y varios días',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} más..`,
   nextTimeSpan: (timeSpan) => `Siguiente ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
-  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
+
+  // AgendaView
+  agendaViewEmptyStateLabel: 'No hay eventos próximos',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Finaliza ${endDate}`,
@@ -139,13 +182,65 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Nombre del recurso',
 };
 
-const esESTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const esESTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Nombre del recurso',
+  // timelineResourceExpand: 'Expand resource',
+  // timelineResourceCollapse: 'Collapse resource',
+
+  // Dependency dialog
+  // dependencyEditTitle: 'Edit dependency',
+  // dependencyDetailsTitle: 'Dependency details',
+  // dependencySourceLabel: 'From',
+  // dependencyTargetLabel: 'To',
+  // dependencyTypeLabel: 'Type',
+  // dependencyLagLabel: 'Lag',
+  // dependencyLagUnitAriaLabel: 'Lag unit',
+  // dependencyNoLag: 'None',
+  // dependencyInvalidLagError: 'Enter a whole number, 0 or more.',
+  // dependencyAllDayLagIgnored: 'An all-day event can only wait whole days, so this lag adds no wait.',
+  // dependencyAllDayLagRounded: lag => `An all-day event can only wait whole days: ${lag}.`,
+  // dependencyUpdateCascadeBlockedError: 'This change would move a read-only event, so it was not applied.',
+  // dependencyUpdateDatesNotWritableError: "This change would move an event whose dates can't be changed, so it was not applied.",
+  // dependencyUpdateNotFoundError: 'This dependency no longer exists.',
+  // dependencyTypeFinishToStart: 'Finish to start',
+  // dependencyTypeStartToStart: 'Start to start',
+  // dependencyTypeFinishToFinish: 'Finish to finish',
+  // dependencyTypeStartToFinish: 'Start to finish',
+  // dependencyLagUnitMinutes: 'minutes',
+  // dependencyLagUnitHours: 'hours',
+  // dependencyLagUnitDays: 'days',
+  // dependencyLagUnitWeeks: 'weeks',
+  // dependencyLag: (amount, unit) => `${amount} ${unit}${amount === 1 ? '' : 's'}`,
+
+  // Dependency context menu and dialog actions
+  // dependencyActionsAriaLabel: 'Dependency actions',
+  // editDependency: 'Edit dependency',
+  // showDependencyDetails: 'Show details',
+  // deleteDependency: 'Delete',
+
+  // Accessible description of an event that waits on dependencies
+  // dependencyFinishToStartDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot start until ${lag === null ? '' : `${lag} after `}${title} finishes.`,
+  // dependencyStartToStartDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot start until ${lag === null ? '' : `${lag} after `}${title} starts.`,
+  // dependencyFinishToFinishDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot finish until ${lag === null ? '' : `${lag} after `}${title} finishes.`,
+  // dependencyStartToFinishDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot finish until ${lag === null ? '' : `${lag} after `}${title} starts.`,
 };
 
 export const esES: SchedulerLocalization = getSchedulerLocalization({
   dialog: esESDialog,
+  event: esESEvent,
   calendar: esESCalendar,
   timeline: esESTimeline,
 });

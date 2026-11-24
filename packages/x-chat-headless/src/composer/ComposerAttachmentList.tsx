@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatStore } from '../hooks/useChatStore';
@@ -9,15 +9,30 @@ import { useComposerContext } from './internals/ComposerContext';
 import type { ComposerAttachmentListOwnerState } from './composer.types';
 
 export interface ComposerAttachmentListSlots {
+  /**
+   * The component that renders the attachment list.
+   * @default 'div'
+   */
   attachmentList: React.ElementType;
 }
 
 export interface ComposerAttachmentListSlotProps {
+  /**
+   * The props used for the attachment list slot.
+   */
   attachmentList?: SlotComponentProps<'div', {}, ComposerAttachmentListOwnerState>;
 }
 
 export interface ComposerAttachmentListProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ComposerAttachmentListSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ComposerAttachmentListSlotProps;
 }
 

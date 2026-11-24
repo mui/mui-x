@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-
 import Button from '@mui/material/Button';
 import { chartsToolbarClasses } from '@mui/x-charts/Toolbar';
 import { data } from './randomData';

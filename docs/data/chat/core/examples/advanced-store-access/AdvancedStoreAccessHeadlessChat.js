@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import {
   ChatProvider,
   chatSelectors,

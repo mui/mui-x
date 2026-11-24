@@ -337,6 +337,15 @@ export interface GridCellEventLookup {
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
+   * Fired when an input method editor (IME) starts a composition in the hidden editor of a focused cell.
+   * Requires `experimentalFeatures.imeFastEdit`.
+   * @ignore - do not document.
+   */
+  cellCompositionStart: {
+    params: GridCellParams<any>;
+    event: React.CompositionEvent<HTMLElement>;
+  };
+  /**
    * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
    * @ignore - do not document.
    */
@@ -480,17 +489,17 @@ export interface GridEventLookup
   // Rows
   /**
    * Fired when the rows are updated.
-   * @ignore - do not document.
+   * The filtering and sorting of the updated rows run after this event.
    */
   rowsSet: {};
   /**
-   * Fired when the filtered rows are updated
-   * @ignore - do not document.
+   * Fired when the filtered rows are updated.
+   * The event fires after the state update and before the re-render.
    */
   filteredRowsSet: {};
   /**
-   * Fired when the sorted rows are updated
-   * @ignore - do not document
+   * Fired when the sorted rows are updated.
+   * The event fires after the state update and before the re-render.
    */
   sortedRowsSet: {};
   /**
@@ -526,7 +535,10 @@ export interface GridEventLookup
    */
   cellEditStart: {
     params: GridCellEditStartParams;
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+    event:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLElement>
+      | React.CompositionEvent<HTMLElement>;
   };
   /**
    * Fired when the cell turns back to view mode.
@@ -540,7 +552,10 @@ export interface GridEventLookup
    */
   rowEditStart: {
     params: GridRowEditStartParams;
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+    event:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLElement>
+      | React.CompositionEvent<HTMLElement>;
   };
   /**
    * Fired when the row turns back to view mode.
@@ -627,11 +642,13 @@ export interface GridEventLookup
 
   // Menu
   /**
-   * Fired when the menu is opened.
+   * Fired when a grid menu is opened.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    */
   menuOpen: { params: GridMenuParams };
   /**
-   * Fired when the grid menu is closed.
+   * Fired when a grid menu is closed.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    */
   menuClose: { params: GridMenuParams };
 }

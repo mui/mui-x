@@ -1,7 +1,8 @@
 import {
-  adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
+  EventBuilder,
+  startOfWeek,
 } from 'test/utils/scheduler';
 import { within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
@@ -55,8 +56,8 @@ describe('<CompactWeekView />', () => {
     const root = getDayTimeGrid();
     const headerCells = within(root).getAllByRole('columnheader');
     // visibleDate is 2025-07-03 (Thursday). startOfWeek (Sunday-start) → June 29.
-    const expectedFirstDay = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
-    const expectedFirstDayOfMonth = adapter.format(expectedFirstDay, 'dayOfMonth');
+    const expectedFirstDay = startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
+    const expectedFirstDayOfMonth = expectedFirstDay.getDate();
     expect(headerCells[0].getAttribute('aria-label')).to.match(
       new RegExp(`${expectedFirstDayOfMonth}$`),
     );
@@ -95,6 +96,31 @@ describe('<CompactWeekView />', () => {
           viewConfig: { week: { startTime: 20, endTime: 8 } },
         });
       }).toWarnDev(['MUI X Scheduler: `viewConfig.week` received an invalid hour range']);
+    });
+
+    it('should forward `initialScrollTime` from the `week` key', () => {
+      // The warning proves the prop reaches the grid.
+      clearWarningsCache();
+      expect(() => {
+        renderWithProviders(<CompactWeekView />, [], {
+          viewConfig: { week: { startTime: 8, endTime: 20, initialScrollTime: 6 } },
+        });
+      }).toWarnDev(['MUI X Scheduler: `viewConfig.week` received an invalid `initialScrollTime`']);
+    });
+
+    it('should forward `timeGridEvents` from the `week` key', () => {
+      const nightShift = EventBuilder.new()
+        .title('Night shift')
+        .span('2025-07-03T22:00:00Z', '2025-07-04T06:00:00Z')
+        .build();
+
+      renderWithProviders(<CompactWeekView />, [nightShift], {
+        viewConfig: { week: { timeGridEvents: 'same-day-only' } },
+      });
+
+      const root = getDayTimeGrid();
+      expect(root.querySelector(`.${eventCalendarClasses.timeGridEvent}`)).to.equal(null);
+      expect(root.querySelector(`.${eventCalendarClasses.dayGridEvent}`)).not.to.equal(null);
     });
   });
 });

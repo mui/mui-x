@@ -2,8 +2,7 @@
   "props": {
     "text": { "type": { "name": "string" }, "required": true },
     "lineHeight": { "type": { "name": "number" } },
-    "needsComputation": { "type": { "name": "bool" }, "default": "false" },
-    "style": { "type": { "name": "object" } }
+    "needsComputation": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "ChartsText",
   "imports": [

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { LineChart, type LineChartProps } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
+import type { LineChartProps } from '@mui/x-charts/LineChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const years = [2010, 2011, 2012, 2013, 2014, 2015];

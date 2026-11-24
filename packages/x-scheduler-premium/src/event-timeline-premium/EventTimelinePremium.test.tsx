@@ -4,24 +4,32 @@ import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { ErrorContainer, SharedComponentsStyledContext } from '@mui/x-scheduler/internals';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
+import { getMinutesInDay, toLocalDayNumber } from '@mui/x-scheduler-internals/internals';
 import {
-  adapter,
+  addDays,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  getAllEventsByTitle,
+  getEventByTitle,
   ResourceBuilder,
+  startOfWeek,
 } from 'test/utils/scheduler';
-import type {
-  SchedulerEvent,
-  SchedulerResource,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import type {
+  EventTimelinePremiumSlotProps,
+  EventTimelinePremiumSlots,
+  TimelineEventContentProps,
+  TimelineEventContentPropsOverrides,
+  TimelineResourceTitleProps,
+  TimelineResourceTitlePropsOverrides,
+} from '@mui/x-scheduler-premium/models';
 import { vi, describe, it, expect } from 'vitest';
 
 const engineering = ResourceBuilder.new().build();
@@ -42,7 +50,7 @@ const event3 = EventBuilder.new()
 const baseEvents = [event1, event2, event3];
 
 describe('<EventTimelinePremium />', () => {
-  const { render, renderSettled } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -51,7 +59,8 @@ describe('<EventTimelinePremium />', () => {
     events?: SchedulerEvent[];
     preset?: EventTimelinePremiumPreset;
     presets?: EventTimelinePremiumPreset[];
-    visibleDate?: TemporalSupportedObject;
+    visibleDate?: Date;
+    displayTimezone?: string;
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;
     localeText?: Partial<EventTimelineLocaleText>;
@@ -60,12 +69,16 @@ describe('<EventTimelinePremium />', () => {
     onCollapsedResourcesChange?: (collapsedResources: Record<string, boolean>) => void;
     defaultVisibleResources?: Record<string, boolean>;
     onEventEditingStart?: React.ComponentProps<typeof EventTimelinePremium>['onEventEditingStart'];
+    slots?: EventTimelinePremiumSlots;
+    slotProps?: EventTimelinePremiumSlotProps;
+    getEventAriaLabel?: React.ComponentProps<typeof EventTimelinePremium>['getEventAriaLabel'];
   }) {
     const view = await renderSettled(
       <EventTimelinePremium
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
         visibleDate={options?.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone={options?.displayTimezone}
         preset={options?.preset ?? 'dayAndMonth'}
         presets={
           options?.presets ?? ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']
@@ -78,6 +91,10 @@ describe('<EventTimelinePremium />', () => {
         onCollapsedResourcesChange={options?.onCollapsedResourcesChange}
         defaultVisibleResources={options?.defaultVisibleResources}
         onEventEditingStart={options?.onEventEditingStart}
+        slots={options?.slots}
+        slotProps={options?.slotProps}
+        getEventAriaLabel={options?.getEventAriaLabel}
+        features={{ recurringEvents: recurringEventsFeature }}
       />,
     );
     return view;
@@ -158,6 +175,8 @@ describe('<EventTimelinePremium />', () => {
       document.querySelector(
         `[id$="-EventTimelinePremiumTitleCell-${resourceId}"]`,
       ) as HTMLElement | null;
+    const getRow = (resourceId: string) => getTitleCell(resourceId)!.closest('[role="row"]')!;
+    const getToggle = (resourceId: string) => within(getTitleCell(resourceId)!).getByRole('button');
 
     it('should not mark a leaf resource as collapsible', async () => {
       await renderTimeline({ resources: nestedResources, events: [] });
@@ -165,7 +184,8 @@ describe('<EventTimelinePremium />', () => {
       const childCell = getTitleCell(child.id);
       expect(childCell).not.to.equal(null);
       expect(childCell!.getAttribute('data-collapsible')).to.equal(null);
-      expect(childCell!.getAttribute('aria-expanded')).to.equal(null);
+      expect(getRow(child.id).getAttribute('aria-expanded')).to.equal(null);
+      expect(within(childCell!).queryByRole('button')).to.equal(null);
     });
 
     it('should not mark a parent collapsible when all children are hidden', async () => {
@@ -178,16 +198,80 @@ describe('<EventTimelinePremium />', () => {
       expect(getTitleCell(parent.id)!.getAttribute('data-collapsible')).to.equal(null);
     });
 
-    it('should mark a collapsible parent as expanded', async () => {
+    it('should mark a collapsible parent row as expanded', async () => {
       await renderTimeline({ resources: nestedResources, events: [] });
 
-      expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal('true');
+      expect(getRow(parent.id).getAttribute('aria-expanded')).to.equal('true');
+      expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal(null);
+    });
+
+    it('should render the title cell as the row header', async () => {
+      await renderTimeline({ resources: nestedResources, events: [] });
+
+      expect(getTitleCell(parent.id)!.getAttribute('role')).to.equal('rowheader');
+      expect(getTitleCell(child.id)!.getAttribute('role')).to.equal('rowheader');
+    });
+
+    it('should expose the nesting level on the rows of a treegrid', async () => {
+      await renderTimeline({ resources: nestedResources, events: [] });
+
+      expect(screen.getByRole('treegrid')).not.to.equal(null);
+      expect(getRow(parent.id).getAttribute('aria-level')).to.equal('1');
+      expect(getRow(child.id).getAttribute('aria-level')).to.equal('2');
+    });
+
+    it('should not expose a nesting level on a flat timeline', async () => {
+      await renderTimeline({ resources: baseResources, events: [] });
+
+      expect(screen.queryByRole('treegrid')).to.equal(null);
+      expect(getRow(baseResources[0].id).getAttribute('aria-level')).to.equal(null);
+    });
+
+    it('should label the collapse toggle and keep it out of the tab order', async () => {
+      const { user } = await renderTimeline({ resources: nestedResources, events: [] });
+
+      const toggle = getToggle(parent.id);
+      expect(toggle.getAttribute('aria-label')).to.equal('Collapse resource');
+      expect(toggle.getAttribute('tabindex')).to.equal('-1');
+
+      await user.click(toggle);
+
+      expect(getToggle(parent.id).getAttribute('aria-label')).to.equal('Expand resource');
+    });
+
+    it('should move the focus back to the cell after a click on the toggle', async () => {
+      const sibling = ResourceBuilder.new().title('Sibling').build();
+      const { user } = await renderTimeline({ resources: [parent, sibling], events: [] });
+
+      await user.click(getToggle(parent.id));
+
+      expect(document.activeElement).to.equal(getTitleCell(parent.id));
+
+      await user.keyboard('{ArrowDown}');
+
+      expect(document.activeElement).to.equal(getTitleCell(sibling.id));
+    });
+
+    it('should not collapse a parent when the rest of the cell is clicked', async () => {
+      const onCollapsedResourcesChange = vi.fn();
+      const { user } = await renderTimeline({
+        resources: nestedResources,
+        events: [],
+        onCollapsedResourcesChange,
+      });
+
+      await user.click(getTitleCell(parent.id)!);
+      await user.click(within(getTitleCell(parent.id)!).getByText(parent.title));
+
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
+      expect(screen.getByText(child.title)).not.to.equal(null);
+      expect(getRow(parent.id).getAttribute('aria-expanded')).to.equal('true');
     });
 
     it('should reserve the toggle column when the timeline has nested resources', async () => {
       await renderTimeline({ resources: nestedResources, events: [] });
 
-      expect(screen.getByRole('grid').closest('[data-flat]')).to.equal(null);
+      expect(screen.getByRole('treegrid').closest('[data-flat]')).to.equal(null);
     });
 
     it('should not reserve the toggle column on a flat timeline', async () => {
@@ -196,15 +280,15 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.getByRole('grid').closest('[data-flat]')).not.to.equal(null);
     });
 
-    it('should collapse a parent and hide its children when the cell is clicked', async () => {
+    it('should collapse a parent and hide its children when the toggle is clicked', async () => {
       const { user } = await renderTimeline({ resources: nestedResources, events: [] });
 
       expect(screen.getByText(child.title)).not.to.equal(null);
 
-      await user.click(getTitleCell(parent.id)!);
+      await user.click(getToggle(parent.id));
 
       expect(screen.queryByText(child.title)).to.equal(null);
-      expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal('false');
+      expect(getRow(parent.id).getAttribute('aria-expanded')).to.equal('false');
     });
 
     it('should hide children initially when collapsedResources is controlled', async () => {
@@ -227,7 +311,7 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.queryByText(child.title)).to.equal(null);
     });
 
-    it('should call onCollapsedResourcesChange when the cell is clicked', async () => {
+    it('should call onCollapsedResourcesChange when the toggle is clicked', async () => {
       const onCollapsedResourcesChange = vi.fn();
       const { user } = await renderTimeline({
         resources: nestedResources,
@@ -235,7 +319,7 @@ describe('<EventTimelinePremium />', () => {
         onCollapsedResourcesChange,
       });
 
-      await user.click(getTitleCell(parent.id)!);
+      await user.click(getToggle(parent.id));
 
       expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
       expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [parent.id]: true });
@@ -272,7 +356,7 @@ describe('<EventTimelinePremium />', () => {
       await waitFor(() => {
         expect(screen.queryByText(child.title)).to.equal(null);
       });
-      expect(parentCell.getAttribute('aria-expanded')).to.equal('false');
+      expect(getRow(parent.id).getAttribute('aria-expanded')).to.equal('false');
       expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [parent.id]: true });
     });
 
@@ -331,13 +415,6 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('events', () => {
-    it('should render all visible events', async () => {
-      await renderTimeline();
-      baseEvents.forEach((eventItem) => {
-        expect(screen.getByText(eventItem.title)).not.to.equal(null);
-      });
-    });
-
     it('does not render events out of range', async () => {
       const outOfRangeEvent = EventBuilder.new()
         .title('Out of range')
@@ -361,6 +438,7 @@ describe('<EventTimelinePremium />', () => {
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndMonth"
           presets={['dayAndMonth', 'dayAndWeek']}
+          features={{ recurringEvents: recurringEventsFeature }}
         />,
       );
       baseEvents.forEach((eventItem) => {
@@ -383,7 +461,7 @@ describe('<EventTimelinePremium />', () => {
 
       await renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
 
-      const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
+      const recurringEventElements = getAllEventsByTitle(recurringEvent.title);
       expect(recurringEventElements.length).to.be.greaterThan(0);
       recurringEventElements.forEach((element) => {
         expect(
@@ -391,7 +469,7 @@ describe('<EventTimelinePremium />', () => {
         ).not.to.equal(null);
       });
 
-      const singleEventElement = screen.getByLabelText(singleEvent.title);
+      const singleEventElement = getEventByTitle(singleEvent.title);
       expect(
         singleEventElement.querySelector(`.${eventTimelinePremiumClasses.eventRecurringIcon}`),
       ).to.equal(null);
@@ -407,16 +485,16 @@ describe('<EventTimelinePremium />', () => {
 
       const { user } = await renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
 
-      const occurrences = screen.getAllByLabelText(recurringEvent.title);
+      const occurrences = getAllEventsByTitle(recurringEvent.title);
       expect(occurrences.length).to.be.greaterThan(1);
       const clickedOccurrenceKey = occurrences[0].getAttribute('data-occurrence-key');
       expect(clickedOccurrenceKey).not.to.equal(null);
 
       await user.click(occurrences[0]);
 
-      const editedOccurrences = screen
-        .getAllByLabelText(recurringEvent.title)
-        .filter((occurrence) => occurrence.hasAttribute('data-editing'));
+      const editedOccurrences = getAllEventsByTitle(recurringEvent.title).filter((occurrence) =>
+        occurrence.hasAttribute('data-editing'),
+      );
       expect(editedOccurrences).to.have.length(1);
       expect(editedOccurrences[0].getAttribute('data-occurrence-key')).to.equal(
         clickedOccurrenceKey,
@@ -433,20 +511,20 @@ describe('<EventTimelinePremium />', () => {
 
       const { user } = await renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
 
-      const occurrences = screen.getAllByLabelText(recurringEvent.title);
+      const occurrences = getAllEventsByTitle(recurringEvent.title);
       await user.click(occurrences[0]);
       expect(
-        screen
-          .getAllByLabelText(recurringEvent.title)
-          .filter((occurrence) => occurrence.hasAttribute('data-editing')),
+        getAllEventsByTitle(recurringEvent.title).filter((occurrence) =>
+          occurrence.hasAttribute('data-editing'),
+        ),
       ).to.have.length(1);
 
       await user.click(screen.getByRole('button', { name: 'Close' }));
 
       expect(
-        screen
-          .getAllByLabelText(recurringEvent.title)
-          .filter((occurrence) => occurrence.hasAttribute('data-editing')),
+        getAllEventsByTitle(recurringEvent.title).filter((occurrence) =>
+          occurrence.hasAttribute('data-editing'),
+        ),
       ).to.have.length(0);
     });
 
@@ -455,7 +533,7 @@ describe('<EventTimelinePremium />', () => {
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
       await renderTimeline({ preset: 'dayAndHour' });
 
-      const eventElement = screen.getByLabelText(event1.title);
+      const eventElement = getEventByTitle(event1.title);
       expect(eventElement).not.to.equal(null);
       const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
@@ -470,7 +548,7 @@ describe('<EventTimelinePremium />', () => {
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
       await renderTimeline({ preset: 'dayAndMonth' });
 
-      const eventElement = screen.getByLabelText(event3.title);
+      const eventElement = getEventByTitle(event3.title);
       expect(eventElement).not.to.equal(null);
       const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
@@ -482,16 +560,15 @@ describe('<EventTimelinePremium />', () => {
 
     it('should render events correctly in the dayAndWeek preset', async () => {
       const totalWidth = 64 * 7 * 16; // 64px * 7 days * 16 weeks
-      const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
-      const weekDayNumber = adapter.differenceInDays(
-        adapter.date(baseEvents[0].start, 'default'),
-        startOfWeek,
-      );
+      const weekStart = startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
+      const weekDayNumber =
+        toLocalDayNumber(Date.parse(baseEvents[0].start), 'default') -
+        toLocalDayNumber(weekStart.getTime(), 'default');
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
       await renderTimeline({ preset: 'dayAndWeek' });
 
-      const eventElement = screen.getByLabelText(event1.title);
+      const eventElement = getEventByTitle(event1.title);
       expect(eventElement).not.to.equal(null);
       const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
@@ -520,7 +597,7 @@ describe('<EventTimelinePremium />', () => {
         parseFloat(grid.style.getPropertyValue('--unit-count'));
       const monthWidth = totalWidth / 36;
 
-      const event1Element = screen.getByLabelText(event1.title);
+      const event1Element = getEventByTitle(event1.title);
       expect(event1Element).not.to.equal(null);
       const xPositioning = event1Element.style.getPropertyValue('--x-position');
 
@@ -528,7 +605,7 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition).to.be.lessThanOrEqual(monthWidth); // first month
 
-      const nextMonthEventElement = screen.getByLabelText('Next month');
+      const nextMonthEventElement = getEventByTitle('Next month');
       expect(nextMonthEventElement).not.to.equal(null);
       const xPositioning2 = nextMonthEventElement.style.getPropertyValue('--x-position');
 
@@ -551,7 +628,7 @@ describe('<EventTimelinePremium />', () => {
       await renderTimeline({ events: [thisYearEvent, nextYearEvent], preset: 'year' });
 
       const totalWidth = 30 * 200;
-      const thisYearEventElement = screen.getByLabelText(thisYearEvent.title);
+      const thisYearEventElement = getEventByTitle(thisYearEvent.title);
       expect(thisYearEventElement).not.to.equal(null);
       const xPositioning = thisYearEventElement.style.getPropertyValue('--x-position');
 
@@ -559,7 +636,7 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition).to.be.lessThanOrEqual(200); // 2025
 
-      const nextYearEventElement = screen.getByLabelText(nextYearEvent.title);
+      const nextYearEventElement = getEventByTitle(nextYearEvent.title);
       expect(nextYearEventElement).not.to.equal(null);
       const xPositioning2 = nextYearEventElement.style.getPropertyValue('--x-position');
 
@@ -567,6 +644,247 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition2).to.be.greaterThanOrEqual(200); // 2026
       expect(eventPosition2).to.be.lessThanOrEqual(400); // 2026
+    });
+  });
+
+  describe('content slots', () => {
+    const child = ResourceBuilder.new().title('Child').build();
+    const parent = ResourceBuilder.new().title('Parent').children([child]).build();
+
+    const getTitleCell = (resourceId: string) =>
+      document.querySelector(`[id$="-EventTimelinePremiumTitleCell-${resourceId}"]`) as HTMLElement;
+
+    // The overrides interfaces are only populated through module augmentation on the consumer side.
+    const asEventContentSlot = (component: React.ComponentType<any>) =>
+      component as React.ComponentType<
+        TimelineEventContentProps & TimelineEventContentPropsOverrides
+      >;
+    const asResourceTitleSlot = (component: React.ComponentType<any>) =>
+      component as React.ComponentType<
+        TimelineResourceTitleProps & TimelineResourceTitlePropsOverrides
+      >;
+
+    it('should render the timelineEventContent slot instead of the title, with the row resource and the variant', async () => {
+      function CustomEventContent(props: TimelineEventContentProps & { marker?: string }) {
+        return (
+          <span
+            data-testid="custom-event-content"
+            data-resource={props.resource.id}
+            data-variant={props.variant}
+          >
+            {props.marker} {props.occurrence.title}
+          </span>
+        );
+      }
+
+      await renderTimeline({
+        events: [event1],
+        slots: { timelineEventContent: asEventContentSlot(CustomEventContent) },
+        slotProps: {
+          timelineEventContent: { marker: 'custom' } as TimelineEventContentPropsOverrides,
+        },
+      });
+
+      const content = screen.getByTestId('custom-event-content');
+      expect(content.textContent).to.equal(`custom ${event1.title}`);
+      expect(content.getAttribute('data-resource')).to.equal(String(engineering.id));
+      expect(content.getAttribute('data-variant')).to.equal('regular');
+      expect(content.closest(`.${eventTimelinePremiumClasses.eventLinesClamp}`)).not.to.equal(null);
+      expect(screen.queryByText(event1.title, { exact: true })).to.equal(null);
+    });
+
+    it('should pass the resource of each row to the timelineEventContent slot of a multi-resource event', async () => {
+      function CustomEventContent(props: TimelineEventContentProps) {
+        return <span data-testid="custom-event-content" data-resource={props.resource.id} />;
+      }
+      const multiResourceEvent = EventBuilder.new()
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([engineering, design])
+        .build();
+
+      await renderTimeline({
+        events: [multiResourceEvent],
+        slots: { timelineEventContent: asEventContentSlot(CustomEventContent) },
+      });
+
+      const resourceIds = screen
+        .getAllByTestId('custom-event-content')
+        .map((element) => element.getAttribute('data-resource'))
+        .sort();
+      expect(resourceIds).to.deep.equal([engineering.id, design.id].sort());
+    });
+
+    it('should render the timelineResourceTitle slot instead of the title', async () => {
+      function CustomResourceTitle(props: TimelineResourceTitleProps & { marker?: string }) {
+        return (
+          <span data-testid="custom-resource-title">
+            {props.marker} {props.resource.title}
+          </span>
+        );
+      }
+
+      await renderTimeline({
+        resources: [engineering],
+        events: [],
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
+        slotProps: {
+          timelineResourceTitle: { marker: 'custom' } as TimelineResourceTitlePropsOverrides,
+        },
+      });
+
+      const content = screen.getByTestId('custom-resource-title');
+      expect(content.textContent).to.equal(`custom ${engineering.title}`);
+      expect(content.closest(`.${eventTimelinePremiumClasses.titleCellContent}`)).not.to.equal(
+        null,
+      );
+      expect(screen.queryByText(engineering.title, { exact: true })).to.equal(null);
+    });
+
+    it('should not toggle the collapse when clicking the text of the timelineResourceTitle slot', async () => {
+      const onCollapsedResourcesChange = vi.fn();
+      function CustomResourceTitle(props: TimelineResourceTitleProps) {
+        return (
+          <span data-testid={`custom-title-${props.resource.id}`}>{props.resource.title}</span>
+        );
+      }
+
+      const { user } = await renderTimeline({
+        resources: [parent],
+        events: [],
+        onCollapsedResourcesChange,
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
+      });
+
+      await user.click(screen.getByTestId(`custom-title-${parent.id}`));
+
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should leave clicks and keys to interactive content rendered by the timelineResourceTitle slot', async () => {
+      const onCollapsedResourcesChange = vi.fn();
+      const onButtonClick = vi.fn();
+      function CustomResourceTitle(props: TimelineResourceTitleProps) {
+        return (
+          <button type="button" data-testid="title-button" onClick={onButtonClick}>
+            {props.resource.title}
+          </button>
+        );
+      }
+
+      const { user } = await renderTimeline({
+        resources: [parent],
+        events: [],
+        onCollapsedResourcesChange,
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
+      });
+
+      const button = within(getTitleCell(parent.id)).getByTestId('title-button');
+      await user.click(button);
+      expect(onButtonClick.mock.calls.length).to.equal(1);
+
+      act(() => {
+        button.focus();
+      });
+      await user.keyboard('{Enter}');
+      expect(onButtonClick.mock.calls.length).to.equal(2);
+
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
+      expect(
+        getTitleCell(parent.id).closest('[role="row"]')!.getAttribute('aria-expanded'),
+      ).to.equal('true');
+    });
+
+    it('should not toggle the collapse when clicking the label of an input rendered by the timelineResourceTitle slot', async () => {
+      const onCollapsedResourcesChange = vi.fn();
+      function CustomResourceTitle(props: TimelineResourceTitleProps) {
+        return (
+          <label>
+            <input type="checkbox" data-testid="title-checkbox" />
+            {props.resource.title}
+          </label>
+        );
+      }
+
+      const { user } = await renderTimeline({
+        resources: [parent],
+        events: [],
+        onCollapsedResourcesChange,
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
+      });
+
+      await user.click(within(getTitleCell(parent.id)).getByText(parent.title));
+      expect(
+        within(getTitleCell(parent.id)).getByTestId<HTMLInputElement>('title-checkbox').checked,
+      ).to.equal(true);
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
+      expect(
+        getTitleCell(parent.id).closest('[role="row"]')!.getAttribute('aria-expanded'),
+      ).to.equal('true');
+    });
+
+    it('should leave the arrow keys to an input rendered by the timelineResourceTitle slot', async () => {
+      function CustomResourceTitle() {
+        return <input data-testid="title-input" />;
+      }
+
+      const { user } = await renderTimeline({
+        resources: [engineering, design],
+        events: [],
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
+      });
+
+      const input = within(getTitleCell(engineering.id)).getByTestId('title-input');
+      act(() => {
+        input.focus();
+      });
+      await user.keyboard('{ArrowDown}{ArrowRight}{ArrowLeft}{ArrowUp}');
+
+      expect(document.activeElement).to.equal(input);
+    });
+
+    it('should leave the arrow keys to an input rendered by the timelineEventContent slot', async () => {
+      function CustomEventContent() {
+        return <input data-testid="event-input" />;
+      }
+
+      const { user } = await renderTimeline({
+        events: [event1],
+        slots: { timelineEventContent: asEventContentSlot(CustomEventContent) },
+      });
+
+      const input = screen.getByTestId('event-input');
+      act(() => {
+        input.focus();
+      });
+      await user.keyboard('{ArrowDown}{ArrowRight}{ArrowLeft}{ArrowUp}');
+
+      expect(document.activeElement).to.equal(input);
+    });
+
+    it('should not start editing from interactive content rendered by the timelineEventContent slot', async () => {
+      const onEventEditingStart = vi.fn();
+      const onButtonClick = vi.fn();
+      function CustomEventContent(props: TimelineEventContentProps) {
+        return (
+          <React.Fragment>
+            <span data-testid="event-text">{props.occurrence.title}</span>
+            <button type="button" data-testid="event-button" onClick={onButtonClick} />
+          </React.Fragment>
+        );
+      }
+
+      const { user } = await renderTimeline({
+        events: [event1],
+        onEventEditingStart,
+        slots: { timelineEventContent: asEventContentSlot(CustomEventContent) },
+      });
+
+      await user.click(screen.getByTestId('event-button'));
+      expect(onButtonClick.mock.calls.length).to.equal(1);
+      expect(onEventEditingStart.mock.calls.length).to.equal(0);
+
+      await user.click(screen.getByTestId('event-text'));
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
     });
   });
 
@@ -581,7 +899,7 @@ describe('<EventTimelinePremium />', () => {
     });
 
     it('should not render the indicator when today is not in view', async () => {
-      const visibleDate = adapter.date('2030-01-01T00:00:00Z', 'default');
+      const visibleDate = createDate('2030-01-01T00:00:00Z');
       await renderTimeline({ visibleDate });
 
       const indicators = document.querySelectorAll(
@@ -668,7 +986,7 @@ describe('<EventTimelinePremium />', () => {
               visibleDate={visibleDate}
               defaultPreset="dayAndMonth"
             />
-            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+            <button type="button" onClick={() => setVisibleDate(addDays(visibleDate, 56))}>
               Next
             </button>
           </React.Fragment>
@@ -735,70 +1053,30 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('error handling', () => {
-    function renderErrorContainer(initialErrors: Error[]) {
-      const store = new EventTimelinePremiumStore(
-        { events: [], resources: baseResources },
-        adapter,
-      );
-      store.set(
-        'errors',
-        initialErrors.map((error, index) => ({ error, key: String(index) })),
-      );
+    const failure = EVENT_TIMELINE_DEFAULT_LOCALE_TEXT.somethingWentWrongError;
 
-      return render(
-        <SchedulerStoreContext.Provider value={store as any}>
-          <SharedComponentsStyledContext.Provider value={{ classes: eventTimelinePremiumClasses }}>
-            <ErrorContainer />
-          </SharedComponentsStyledContext.Provider>
-        </SchedulerStoreContext.Provider>,
-      );
-    }
-
-    it('should render an error alert when dataSource.getEvents rejects', async () => {
+    it('should render the generic error and log the original one when dataSource.getEvents rejects', async () => {
       const dataSource = {
         getEvents: () => Promise.reject(new Error('Network error')),
         persistEvents: async () => ({ success: true }),
       };
 
-      await renderSettled(
-        <EventTimelinePremium
-          resources={baseResources}
-          dataSource={dataSource}
-          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          defaultPreset="dayAndMonth"
-        />,
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('Network error')).not.to.equal(null);
-      });
-    });
-
-    it('should render multiple alerts when state.errors contains multiple errors', () => {
-      renderErrorContainer([new Error('First error'), new Error('Second error')]);
-
-      expect(
-        document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
-      ).to.equal(2);
-      expect(screen.getByText('First error')).not.to.equal(null);
-      expect(screen.getByText('Second error')).not.to.equal(null);
-    });
-
-    it('should remove only the dismissed alert and keep the others', async () => {
-      const { user } = renderErrorContainer([new Error('First error'), new Error('Second error')]);
-
-      const closeButtons = screen.getAllByRole('button', { name: /close/i });
-      expect(closeButtons.length).to.equal(2);
-
-      await user.click(closeButtons[0]);
-
-      await waitFor(() => {
-        expect(
-          document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
-        ).to.equal(1);
-      });
-      expect(screen.queryByText('First error')).to.equal(null);
-      expect(screen.getByText('Second error')).not.to.equal(null);
+      await expect(async () => {
+        await renderSettled(
+          <EventTimelinePremium
+            resources={baseResources}
+            dataSource={dataSource}
+            defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            defaultPreset="dayAndMonth"
+          />,
+        );
+        await waitFor(() => {
+          expect(screen.getByText(failure)).not.to.equal(null);
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network error',
+      ]);
+      expect(screen.queryByText('Network error')).to.equal(null);
     });
 
     it('should clear the error alert when a subsequent fetch succeeds', async () => {
@@ -824,26 +1102,30 @@ describe('<EventTimelinePremium />', () => {
               visibleDate={visibleDate}
               defaultPreset="dayAndMonth"
             />
-            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+            <button type="button" onClick={() => setVisibleDate(addDays(visibleDate, 56))}>
               Next
             </button>
           </React.Fragment>
         );
       }
 
-      const { user } = await renderSettled(<Test />);
-
-      await waitFor(() => {
-        expect(screen.getByText('Transient error')).not.to.equal(null);
-        expect(
-          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
-        ).to.equal(0);
-      });
+      let user!: Awaited<ReturnType<typeof renderSettled>>['user'];
+      await expect(async () => {
+        ({ user } = await renderSettled(<Test />));
+        await waitFor(() => {
+          expect(screen.getByText(failure)).not.to.equal(null);
+          expect(
+            document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+          ).to.equal(0);
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Transient error',
+      ]);
 
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
       await waitFor(() => {
-        expect(screen.queryByText('Transient error')).to.equal(null);
+        expect(screen.queryByText(failure)).to.equal(null);
       });
     });
 
@@ -874,10 +1156,10 @@ describe('<EventTimelinePremium />', () => {
               visibleDate={visibleDate}
               defaultPreset="dayAndMonth"
             />
-            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+            <button type="button" onClick={() => setVisibleDate(addDays(visibleDate, 56))}>
               Next
             </button>
-            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, -56))}>
+            <button type="button" onClick={() => setVisibleDate(addDays(visibleDate, -56))}>
               Prev
             </button>
           </React.Fragment>
@@ -893,107 +1175,58 @@ describe('<EventTimelinePremium />', () => {
         ).to.equal(0);
       });
 
-      await user.click(screen.getByRole('button', { name: 'Next' }));
-      await waitFor(() => {
-        expect(screen.getByText('Network failure')).not.to.equal(null);
-      });
+      await expect(async () => {
+        await user.click(screen.getByRole('button', { name: 'Next' }));
+        await waitFor(() => {
+          expect(screen.getByText(failure)).not.to.equal(null);
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network failure',
+      ]);
 
       await user.click(screen.getByRole('button', { name: 'Prev' }));
       await waitFor(() => {
-        expect(screen.queryByText('Network failure')).to.equal(null);
+        expect(screen.queryByText(failure)).to.equal(null);
       });
     });
 
-    it('should render a non-Error rejection by stringifying it', async () => {
-      // dataSource that rejects with a non-Error value (e.g. a `fetch` Response).
-      const nonError = { status: 500, toString: () => '500 Internal Server Error' };
+    it('should render the data source error from the localeText', async () => {
       const dataSource = {
-        getEvents: () => Promise.reject(nonError),
+        getEvents: () => Promise.reject(new Error('Network error')),
         persistEvents: async () => ({ success: true }),
       };
 
-      await renderSettled(
-        <EventTimelinePremium
-          resources={baseResources}
-          dataSource={dataSource}
-          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          defaultPreset="dayAndMonth"
-        />,
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('500 Internal Server Error')).not.to.equal(null);
-      });
-    });
-
-    it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
-      const sharedError = new Error('Shared error');
-      const store = new EventTimelinePremiumStore(
-        { events: [], resources: baseResources },
-        adapter,
-      );
-      store.set('errors', [{ error: sharedError, key: '1' }]);
-
-      function Test() {
-        const styledContextValue = React.useMemo(
-          () => ({ classes: eventTimelinePremiumClasses }),
-          [],
+      await expect(async () => {
+        await renderSettled(
+          <EventTimelinePremium
+            resources={baseResources}
+            dataSource={dataSource}
+            defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            defaultPreset="dayAndMonth"
+            localeText={{ somethingWentWrongError: 'Algo salió mal.' }}
+          />,
         );
-
-        return (
-          <SchedulerStoreContext.Provider value={store as any}>
-            <SharedComponentsStyledContext.Provider value={styledContextValue}>
-              <ErrorContainer />
-            </SharedComponentsStyledContext.Provider>
-          </SchedulerStoreContext.Provider>
-        );
-      }
-
-      const { user } = render(<Test />);
-
-      await user.click(screen.getByRole('button', { name: /close/i }));
-      await waitFor(() => {
-        expect(screen.queryByText('Shared error')).to.equal(null);
-      });
-
-      // Simulate the plugin re-pushing the same Error instance under a new key.
-      await act(async () => {
-        store.set('errors', [{ error: sharedError, key: '2' }]);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText('Shared error')).not.to.equal(null);
-      });
+        await waitFor(() => {
+          expect(screen.getByText('Algo salió mal.')).not.to.equal(null);
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network error',
+      ]);
     });
   });
 
   describe('presets', () => {
-    it('should set --unit-width to the preset tickWidth and render one row per header level', async () => {
+    it('should show the days of the visible date in the display timezone', async () => {
       await renderTimeline({
         preset: 'dayAndHour',
-        presets: ['dayAndMonth', 'dayAndHour'],
+        // July 1st at midnight in UTC is June 30th at 20:00 in New York.
+        visibleDate: createDate('2025-07-01T00:00:00', 'UTC'),
+        displayTimezone: 'America/New_York',
       });
 
-      let rootElement = screen.getByRole('grid');
-      let containerElement = rootElement.closest('section')!;
-      // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
-      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('64px');
-      expect(
-        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
-      ).to.equal(2);
-
-      await renderTimeline({
-        preset: 'dayAndMonth',
-        presets: ['dayAndMonth', 'dayAndHour'],
-      });
-
-      rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
-      containerElement = rootElement.closest('section')!;
-      // day: tickWidth = 120px, 2 header rows (month + day).
-      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('120px');
-      expect(
-        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
-      ).to.equal(2);
+      // The four days start on June 30th, not on July 1st, the day of the visible date in UTC.
+      expect(screen.queryByText('Mon, Jun 30')).not.to.equal(null);
+      expect(screen.queryByText('Fri, Jul 4')).to.equal(null);
     });
   });
 
@@ -1083,6 +1316,181 @@ describe('<EventTimelinePremium />', () => {
       expect(onEventEditingStart.mock.lastCall?.[1].trigger.isConnected).to.equal(false);
       expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(row);
       expect(row.isConnected).to.equal(true);
+    });
+
+    it.each([
+      // Without a display timezone, the creation keeps the `'default'` timezone of the occurrences.
+      { displayTimezone: undefined, timezone: 'default' },
+      { displayTimezone: 'America/New_York', timezone: 'America/New_York' },
+    ])(
+      'should pass a creation to `onEventEditingStart` in the display timezone ($timezone)',
+      async ({ displayTimezone }) => {
+        const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+        const { user } = await renderTimeline({
+          events: [],
+          visibleDate: createDate('2025-07-03T12:00:00Z'),
+          displayTimezone,
+          onEventEditingStart,
+        });
+
+        const row = document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement;
+        await act(async () => row.focus());
+        await user.keyboard('{Enter}');
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        const occurrence = onEventEditingStart.mock.lastCall![0];
+        // The creation starts at the first instant of the preset, at midnight.
+        expect(getMinutesInDay(occurrence.start)).to.equal(0);
+      },
+    );
+  });
+
+  describe('accessible name', () => {
+    it('should name each event with its title, time range, date and the resource of its row', async () => {
+      const team = ResourceBuilder.new().id('team').title('Team').build();
+      const standup = EventBuilder.new()
+        .title('Standup')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(team)
+        .build();
+
+      await renderTimeline({ resources: [team], events: [standup] });
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Standup, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: Team',
+        }),
+      ).not.to.equal(null);
+    });
+
+    it('should announce the resource of the row an event is rendered in', async () => {
+      const shared = EventBuilder.new()
+        .title('Shared')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([engineering, design])
+        .build();
+
+      await renderTimeline({ events: [shared] });
+
+      const inEngineering = within(
+        document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement,
+      ).getByRole('button');
+      const inDesign = within(
+        document.querySelector(`[data-resource-id="${design.id}"]`) as HTMLElement,
+      ).getByRole('button');
+
+      expect(inEngineering).toHaveAccessibleName(
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: ${engineering.title}`,
+      );
+      expect(inDesign).toHaveAccessibleName(
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: ${design.title}`,
+      );
+    });
+
+    it('should name a multi-day event with a single date and time range', async () => {
+      const trip = EventBuilder.new()
+        .title('Trip')
+        .span('2025-07-03T07:30:00Z', '2025-07-05T17:00:00Z')
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [trip], preset: 'dayAndMonth' });
+
+      expect(getEventByTitle('Trip')).toHaveAccessibleName(
+        `Trip, From Thursday, July 3, 2025 7:30 AM to Saturday, July 5, 2025 5:00 PM, Resource: ${engineering.title}`,
+      );
+    });
+
+    it('should name an all-day event with its date range instead of a time range', async () => {
+      const conference = EventBuilder.new()
+        .title('Conference')
+        .span('2025-07-03', '2025-07-06', { allDay: true })
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [conference], preset: 'dayAndMonth' });
+
+      expect(getEventByTitle('Conference')).toHaveAccessibleName(
+        `Conference, All day, From Thursday, July 3, 2025 to Saturday, July 5, 2025, Resource: ${engineering.title}`,
+      );
+    });
+
+    it('should name events with the locale text of the timeline', async () => {
+      const standup = EventBuilder.new()
+        .title('Reunión')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({
+        events: [standup],
+        localeText: { eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}` },
+      });
+
+      expect(getEventByTitle('Reunión')).toHaveAccessibleName(
+        `Reunión, de 9:00 AM a 10:00 AM, Thursday, July 3, 2025, Resource: ${engineering.title}`,
+      );
+    });
+
+    it('should name events with getEventAriaLabel, given the occurrence, the row resource and the default name', async () => {
+      const shared = EventBuilder.new()
+        .id('ticket-1')
+        .title('Shared')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([engineering, design])
+        .build();
+
+      await renderTimeline({
+        events: [shared],
+        getEventAriaLabel: ({ occurrence, resource, defaultAriaLabel }) =>
+          `${defaultAriaLabel}, ${occurrence.id} in ${resource.title}`,
+      });
+
+      const defaultName = 'Shared, 9:00 AM to 10:00 AM, Thursday, July 3, 2025';
+      const inEngineering = within(
+        document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement,
+      ).getByRole('button');
+      const inDesign = within(
+        document.querySelector(`[data-resource-id="${design.id}"]`) as HTMLElement,
+      ).getByRole('button');
+
+      expect(inEngineering).toHaveAccessibleName(
+        `${defaultName}, Resource: ${engineering.title}, ticket-1 in ${engineering.title}`,
+      );
+      expect(inDesign).toHaveAccessibleName(
+        `${defaultName}, Resource: ${design.title}, ticket-1 in ${design.title}`,
+      );
+    });
+
+    it('should append "Recurring" to the name of a recurring event only', async () => {
+      const recurringEvent = EventBuilder.new()
+        .title('Recurring timeline event')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .recurrent('DAILY')
+        .build();
+      const singleEvent = EventBuilder.new()
+        .title('Single timeline event')
+        .singleDay('2025-07-03T11:00:00Z')
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
+
+      expect(
+        screen.getByRole('button', {
+          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: ${engineering.title}, Recurring`,
+        }),
+      ).not.to.equal(null);
+      expect(getEventByTitle(singleEvent.title)).toHaveAccessibleName(
+        `${singleEvent.title}, 11:00 AM to 12:00 PM, Thursday, July 3, 2025, Resource: ${engineering.title}`,
+      );
+      // Each occurrence announces its own date, not the date of the series.
+      expect(
+        screen.getByRole('button', {
+          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Friday, July 4, 2025, Resource: ${engineering.title}, Recurring`,
+        }),
+      ).not.to.equal(null);
     });
   });
 });

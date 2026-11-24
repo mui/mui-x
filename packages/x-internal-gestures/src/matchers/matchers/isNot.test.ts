@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Gesture } from '../../core';
-import { MatcherState } from '../Matcher.types';
+import type { MatcherState } from '../Matcher.types';
 import { toBeClonable } from './toBeClonable';
 import { toUpdateOptions } from './toUpdateOptions';
 import { toUpdateState } from './toUpdateState';
@@ -9,15 +9,15 @@ import { toUpdateState } from './toUpdateState';
 class TestGesture extends Gesture<string> {
   protected readonly state = {};
 
-  protected readonly isSinglePhase!: false;
+  declare public readonly isSinglePhase: false;
 
-  protected readonly eventType!: never;
+  declare public readonly eventType: never;
 
-  protected readonly optionsType!: never;
+  declare protected readonly optionsType: never;
 
-  protected readonly mutableOptionsType!: never;
+  declare public readonly mutableOptionsType: never;
 
-  protected readonly mutableStateType!: never;
+  declare public readonly mutableStateType: never;
 
   protected resetState(): void {}
 

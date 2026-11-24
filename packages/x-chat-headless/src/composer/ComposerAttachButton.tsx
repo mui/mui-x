@@ -9,12 +9,26 @@ import type { ComposerAttachButtonOwnerState } from './composer.types';
 import { matchesMimeType } from './internals/matchesMimeType';
 
 export interface ComposerAttachButtonSlots {
+  /**
+   * The component that renders the attach button.
+   * @default 'button'
+   */
   attachButton: React.ElementType;
+  /**
+   * The component that renders the attach input.
+   * @default 'input'
+   */
   attachInput: React.ElementType;
 }
 
 export interface ComposerAttachButtonSlotProps {
+  /**
+   * The props used for the attach button slot.
+   */
   attachButton?: SlotComponentProps<'button', {}, ComposerAttachButtonOwnerState>;
+  /**
+   * The props used for the attach input slot.
+   */
   attachInput?: SlotComponentProps<'input', {}, ComposerAttachButtonOwnerState>;
 }
 
@@ -22,7 +36,15 @@ export interface ComposerAttachButtonProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   'type'
 > {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ComposerAttachButtonSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ComposerAttachButtonSlotProps;
 }
 

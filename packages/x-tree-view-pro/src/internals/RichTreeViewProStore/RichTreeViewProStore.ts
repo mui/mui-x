@@ -17,7 +17,7 @@ export class RichTreeViewProStore<
   RichTreeViewProState<R, Multiple>,
   RichTreeViewProStoreParameters<R, Multiple>
 > {
-  public lazyLoading: TreeViewLazyLoadingPlugin<R>;
+  declare public lazyLoading: TreeViewLazyLoadingPlugin<R>;
 
   public itemsReordering = new TreeViewItemsReorderingPlugin(this);
 

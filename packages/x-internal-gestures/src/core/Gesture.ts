@@ -2,11 +2,11 @@
  * Base Gesture module that provides common functionality for all gesture implementations
  */
 
-import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
-import { KeyboardKey, KeyboardManager } from './KeyboardManager';
-import { PointerData, PointerManager } from './PointerManager';
-import { CustomEventListener } from './types/CustomEventListener';
-import { TargetElement } from './types/TargetElement';
+import type { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
+import type { KeyboardKey, KeyboardManager } from './KeyboardManager';
+import type { PointerData, PointerManager } from './PointerManager';
+import type { CustomEventListener } from './types/CustomEventListener';
+import type { TargetElement } from './types/TargetElement';
 import { eventList } from './utils/eventList';
 
 /**
@@ -164,39 +164,39 @@ export type GestureState = {
  */
 export abstract class Gesture<GestureName extends string> {
   /** Unique name identifying this gesture type */
-  public readonly name: GestureName;
+  declare public readonly name: GestureName;
 
   /** Whether to prevent default browser action for gesture events */
-  protected preventDefault: boolean;
+  declare protected preventDefault: boolean;
 
   /** Whether to stop propagation of gesture events */
-  protected stopPropagation: boolean;
+  declare protected stopPropagation: boolean;
 
   /**
    * List of gesture names that should prevent this gesture from activating when they are active.
    */
-  protected preventIf: string[];
+  declare protected preventIf: string[];
 
   /**
    * Array of keyboard keys that must be pressed for the gesture to be recognized.
    */
-  protected requiredKeys: KeyboardKey[];
+  declare protected requiredKeys: KeyboardKey[];
 
   /**
    * KeyboardManager instance for tracking key presses
    */
-  protected keyboardManager!: KeyboardManager;
+  declare protected keyboardManager: KeyboardManager;
 
   /**
    * List of pointer types that can trigger this gesture.
    * If undefined, all pointer types are allowed.
    */
-  protected pointerMode: PointerMode[];
+  declare protected pointerMode: PointerMode[];
 
   /**
    * Pointer mode-specific configuration overrides.
    */
-  protected pointerOptions: Partial<Record<PointerMode, BaseGestureOptions>>;
+  declare protected pointerOptions: Partial<Record<PointerMode, BaseGestureOptions>>;
 
   /**
    * User-mutable data object for sharing state between gesture events
@@ -205,31 +205,31 @@ export abstract class Gesture<GestureName extends string> {
   protected customData: Record<string, unknown> = {};
 
   /** Reference to the singleton PointerManager instance */
-  protected pointerManager!: PointerManager;
+  declare protected pointerManager: PointerManager;
 
   /** Reference to the singleton ActiveGesturesRegistry instance */
-  protected gesturesRegistry!: ActiveGesturesRegistry<GestureName>;
+  declare protected gesturesRegistry: ActiveGesturesRegistry<GestureName>;
 
   /** The DOM element this gesture is attached to */
-  protected element!: TargetElement;
+  declare protected element: TargetElement;
 
   /** Stores the active gesture state */
   protected abstract state: GestureState;
 
   /** @internal For types. If false enables phases (xStart, x, xEnd) */
-  protected abstract readonly isSinglePhase: boolean;
+  public abstract readonly isSinglePhase: boolean;
 
   /** @internal For types. The event type this gesture is associated with */
-  protected abstract readonly eventType: CustomEvent;
+  public abstract readonly eventType: CustomEvent;
 
   /** @internal For types. The options type for this gesture */
   protected abstract readonly optionsType: GestureOptions<GestureName>;
 
   /** @internal For types. The options that can be changed at runtime */
-  protected abstract readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  public abstract readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
   /** @internal For types. The state that can be changed at runtime */
-  protected abstract readonly mutableStateType: Partial<typeof this.state>;
+  public abstract readonly mutableStateType: Partial<typeof this.state>;
 
   /**
    * Create a new gesture instance with the specified options

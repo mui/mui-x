@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import {
   MessageContextProvider,
   chatSelectors,
@@ -22,7 +22,13 @@ export interface ChatStreamingIndicatorRowProps {
   mode?: StreamingIndicatorMode;
   /** Row contract shared with the divider slots. */
   messageId: string;
+  /**
+   * The index of the row in `items`.
+   */
   index?: number;
+  /**
+   * The ids of the messages in the list, in order.
+   */
   items?: string[];
   /** Whether the `messageAvatar` slot is enabled for the surrounding list. */
   hasAvatar?: boolean;

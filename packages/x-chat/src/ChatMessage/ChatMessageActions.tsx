@@ -7,7 +7,12 @@ import type { SxProps, Theme } from '@mui/system';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { MessageActions, useChatActions } from '@mui/x-chat-headless';
-import type { ChatMessage, ChatRuntimeActions, MessageActionsProps } from '@mui/x-chat-headless';
+import type {
+  ChatMessage,
+  ChatRuntimeActions,
+  MessageActionsProps,
+  MessageActionsSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
@@ -34,8 +39,13 @@ export interface ChatMessageExtraAction {
   ) => void;
 }
 
+export interface ChatMessageActionsSlots extends MessageActionsSlots {}
+
 export interface ChatMessageActionsProps extends MessageActionsProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
   /**
    * Declarative action buttons appended after `children`. Lets consumers add
@@ -123,11 +133,13 @@ const ChatMessageActions = React.forwardRef<HTMLDivElement, ChatMessageActionsPr
     const hasExtraActions = (extraActions?.length ?? 0) > 0;
 
     if (process.env.NODE_ENV !== 'production' && hasExtraActions && chat == null) {
-      warnOnce([
-        'MUI X Chat: `extraActions` on the message actions bar require a `<ChatProvider>` (or `<ChatBox>`/`<ChatRoot>`).',
-        'Without a runtime the action buttons cannot drive `chat.regenerate`/`chat.retry`, so they render disabled.',
-        'Render the actions inside a chat provider to enable them.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Chat: `extraActions` on the message actions bar require a `<ChatProvider>` (or `<ChatBox>`/`<ChatRoot>`).',
+          'Without a runtime the action buttons cannot drive `chat.regenerate`/`chat.retry`, so they render disabled.',
+          'Render the actions inside a chat provider to enable them.',
+        ].join('\n'),
+      );
     }
 
     return (
@@ -333,8 +345,19 @@ ChatMessageActions.propTypes /* remove-proptypes */ = {
     ]),
     updatedAt: PropTypes.string,
   }),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

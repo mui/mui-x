@@ -17,13 +17,28 @@ declare module '@mui/x-scheduler-internals/models' {
 }
 
 /**
- * The other PDM types (`StartToStart`, `FinishToFinish`, `StartToFinish`) will widen this union when implemented.
+ * The dependency types: which edge of the predecessor constrains which edge of the
+ * successor.
  */
-export type SchedulerDependencyType = 'FinishToStart';
+export type SchedulerDependencyType =
+  'FinishToStart' | 'StartToStart' | 'FinishToFinish' | 'StartToFinish';
+
+/**
+ * The units a dependency lag can be expressed in.
+ */
+export type SchedulerDependencyLagUnit = 'minute' | 'hour' | 'day' | 'week';
+
+/**
+ * The lag of a dependency once resolved, as the amount and unit the engine applies.
+ */
+export interface SchedulerResolvedDependencyLag {
+  amount: number;
+  unit: SchedulerDependencyLagUnit;
+}
 
 /**
  * A dependency between two events, referencing them by id.
- * For `"FinishToStart"`, `source` is the predecessor and `target` the successor.
+ * `source` is the predecessor and `target` the successor, whatever the type.
  */
 export interface SchedulerDependency {
   /**
@@ -31,17 +46,33 @@ export interface SchedulerDependency {
    */
   id: SchedulerDependencyId;
   /**
-   * The id of the event at the source end of the dependency.
+   * The id of the predecessor event.
    */
   source: SchedulerEventId;
   /**
-   * The id of the event at the target end of the dependency.
+   * The id of the successor event.
    */
   target: SchedulerEventId;
   /**
    * The type of the dependency.
    */
   type: SchedulerDependencyType;
+  /**
+   * The time the successor waits after the constraining edge of the predecessor, as a
+   * whole number of `lagUnit`.
+   * Days and weeks keep the time of day in the successor's timezone.
+   * Minutes and hours count elapsed time.
+   * For an all-day successor, the lag is rounded down to whole days, so a lag shorter
+   * than a day is ignored.
+   * An invalid lag is ignored with a warning.
+   * @default 0
+   */
+  lag?: number;
+  /**
+   * The unit of `lag`.
+   * @default 'day'
+   */
+  lagUnit?: SchedulerDependencyLagUnit;
 }
 
 /**
@@ -51,7 +82,8 @@ export interface SchedulerDependency {
 export type SchedulerDependencyCreationProperties = Omit<SchedulerDependency, 'id'>;
 
 /**
- * State of the pending create-dependency drag gesture, from a terminal to a target event.
+ * State of the pending create-dependency drag gesture, from a terminal to a target
+ * event or one of its terminals.
  */
 export interface SchedulerDependencyCreation {
   /**
@@ -87,13 +119,34 @@ export interface SchedulerDependencyCreation {
    * same way `sourceResourceId` qualifies the source.
    */
   targetResourceId: SchedulerResourceId | null;
+  /**
+   * The edge of the hovered target the drop would land on: the hovered terminal's, or
+   * the start edge on the event body. Together with `sourceSide`, it determines the
+   * created dependency's type.
+   */
+  targetSide: SchedulerEventSide | null;
 }
 
-export type SchedulerDependencyEventRejectionReason =
-  'recurringEvent' | 'unknownEvent' | 'readOnlyEvent';
+export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknownEvent';
 
 export type SchedulerDependencyRejectionReason =
-  SchedulerDependencyEventRejectionReason | 'duplicateDependency' | 'cyclicDependency';
+  | SchedulerDependencyEventRejectionReason
+  | 'readOnly'
+  | 'featureDisabled'
+  | 'duplicateDependency'
+  | 'cyclicDependency'
+  | 'cascadeBlocked'
+  | 'datesNotWritable';
+
+/**
+ * Restoring the created or stricter dependency would move `eventId`, which is read-only
+ * (`cascadeBlocked`) or has a date `eventModelStructure` can't write back (`datesNotWritable`).
+ */
+export type SchedulerDependencyCascadeRejection = {
+  status: 'rejected';
+  reason: 'cascadeBlocked' | 'datesNotWritable';
+  eventId: SchedulerEventId;
+};
 
 export type SchedulerAddDependencyResult =
   | { status: 'added'; id: SchedulerDependencyId }
@@ -103,7 +156,45 @@ export type SchedulerAddDependencyResult =
       eventId: SchedulerEventId;
     }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
-  | { status: 'rejected'; reason: 'cyclicDependency' };
+  | { status: 'rejected'; reason: 'cyclicDependency' }
+  | { status: 'rejected'; reason: 'readOnly' }
+  | { status: 'rejected'; reason: 'featureDisabled' }
+  | SchedulerDependencyCascadeRejection;
+
+/**
+ * Properties to change on an existing dependency with `updateDependency()`.
+ * A `lag` or `lagUnit` passed as `undefined` is removed from the dependency.
+ */
+export type SchedulerDependencyUpdatedProperties = Partial<
+  Pick<SchedulerDependency, 'type' | 'lag' | 'lagUnit'>
+>;
+
+export type SchedulerUpdateDependencyResult =
+  | { status: 'updated' }
+  | { status: 'rejected'; reason: 'unknownDependency' }
+  | { status: 'rejected'; reason: 'readOnly' }
+  | { status: 'rejected'; reason: 'featureDisabled' }
+  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
+  | SchedulerDependencyCascadeRejection;
+
+/**
+ * The dependency open in the dependency dialog, and where the dialog is anchored.
+ */
+export interface SchedulerDependencyEditor {
+  dependencyId: SchedulerDependencyId;
+  /**
+   * `x` from the start of the events area, `y` in absolute row-space.
+   */
+  anchor: { x: number; y: number };
+  /**
+   * The row the opened arrow leaves, for the colors. `undefined` uses the primary resource.
+   */
+  sourceResourceId?: SchedulerResourceId;
+  /**
+   * The row the opened arrow enters, for the colors. `undefined` uses the primary resource.
+   */
+  targetResourceId?: SchedulerResourceId;
+}
 
 /**
  * State slice holding the dependencies collection.
@@ -124,9 +215,10 @@ export interface SchedulerDependenciesState {
  */
 export interface SchedulerDependenciesParameters {
   /**
-   * The dependencies between events. Providing a value — even an empty array —
-   * enables the dependencies feature (terminals, arrows, selection); omitting it
-   * disables the feature entirely.
+   * The dependencies between events.
+   * Requires `dependenciesFeature` from `@mui/x-scheduler-premium/dependencies`.
+   * With it, any value, even an empty array, enables the dependencies.
+   * Pass `onDependenciesChange` to keep the changes users make.
    */
   dependencies?: readonly SchedulerDependency[];
   /**

@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-
 import { MUI_X_PRODUCTS } from '../../datasets/products';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {

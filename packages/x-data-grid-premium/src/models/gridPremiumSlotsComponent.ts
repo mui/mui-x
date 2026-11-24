@@ -1,5 +1,8 @@
+import type { GridOverlayProps } from '@mui/x-data-grid';
 import type { GridProSlotsComponent } from '@mui/x-data-grid-pro';
 import type { GridPremiumIconSlotsComponent } from './gridPremiumIconSlotsComponent';
+import type { GridChartsPanelPropsOverrides } from './gridPremiumSlotProps';
+import type { GridChartsPanelProps } from '../components/chartsPanel/GridChartsPanel';
 
 /**
  * Grid components React prop interface containing all the overridable components
@@ -12,16 +15,18 @@ export interface GridPremiumSlotsComponent
    * Pass `GridAiAssistantPanel` to render the default AI Assistant panel.
    * @default null
    */
-  aiAssistantPanel: React.JSXElementConstructor<any> | null;
+  aiAssistantPanel: React.JSXElementConstructor<{}> | null;
   /**
    * Component rendered when charts panel is open. Only needed when `chartsIntegration` prop is passed to the grid.
    * Pass `GridChartsPanel` to render the default charts panel.
    * @default null
    */
-  chartsPanel: React.JSXElementConstructor<any> | null;
+  chartsPanel: React.JSXElementConstructor<
+    GridChartsPanelProps & GridChartsPanelPropsOverrides
+  > | null;
   /**
    * Component rendered when pivot mode is enabled but no rows are defined.
    * @default GridEmptyPivotOverlay
    */
-  emptyPivotOverlay: React.JSXElementConstructor<any>;
+  emptyPivotOverlay: React.JSXElementConstructor<GridOverlayProps>;
 }

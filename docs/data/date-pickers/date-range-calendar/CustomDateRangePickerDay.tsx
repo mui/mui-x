@@ -5,10 +5,8 @@ import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
-import {
-  DateRangePickerDay as MuiDateRangePickerDay,
-  DateRangePickerDayProps,
-} from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import type { DateRangePickerDayProps } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import { DateRangePickerDay as MuiDateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(({ theme }) => ({
   '--PickerDay-horizontalMargin': 0,

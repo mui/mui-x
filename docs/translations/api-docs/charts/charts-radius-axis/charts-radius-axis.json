@@ -1,11 +1,11 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axis": { "description": "The direction of the axis." },
     "axisId": {
       "description": "The id of the axis to render. If undefined, it will be the first defined axis."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "className": { "description": "A CSS class name applied to the root element." },
     "disableLine": { "description": "If true, the axis line is disabled." },
     "disableTickLabel": { "description": "If true, the tick labels are not rendered." },
     "disableTicks": { "description": "If true, the ticks are disabled." },
@@ -19,6 +19,9 @@
     },
     "position": {
       "description": "The position of the axis in polar coordinates. It can be &#39;start&#39;, &#39;end&#39;, or a specific angle in degrees."
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "tickInterval": {
       "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has &quot;point&quot; scale. - an array containing the values where ticks should be displayed."

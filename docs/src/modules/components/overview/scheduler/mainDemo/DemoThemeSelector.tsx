@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { getSoftEdgesTheme } from '../theme/softEdgesTheme';
 import { getNeutralVibesTheme } from '../theme/neutralVibesTheme';
@@ -59,14 +60,15 @@ export function SchedulerDemoThemeProvider({
   selectedTheme,
 }: SchedulerDemoThemeProviderProps) {
   const brandingTheme = useTheme();
+  const { direction } = brandingTheme;
   const mode = brandingTheme.palette.mode;
   const demoThemes = React.useMemo(
     () => ({
-      default: createTheme(darkThemeManagement, { palette: { mode } }),
-      softEdges: getSoftEdgesTheme(mode),
-      neutralVibes: getNeutralVibesTheme(mode),
+      default: createTheme(darkThemeManagement, { direction, palette: { mode } }),
+      softEdges: getSoftEdgesTheme(mode, direction),
+      neutralVibes: getNeutralVibesTheme(mode, direction),
     }),
-    [mode],
+    [mode, direction],
   );
 
   return <ThemeProvider theme={demoThemes[selectedTheme]}>{children}</ThemeProvider>;

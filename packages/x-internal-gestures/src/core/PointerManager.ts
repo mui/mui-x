@@ -8,7 +8,7 @@
  * 4. Distributing events to registered gesture recognizers
  */
 
-import { TargetElement } from './types/TargetElement';
+import type { TargetElement } from './types/TargetElement';
 
 /**
  * Normalized representation of a pointer, containing all relevant information
@@ -117,16 +117,16 @@ export type PointerManagerOptions = {
  */
 export class PointerManager {
   /** Root element where pointer events are captured */
-  private root: HTMLElement;
+  declare private root: HTMLElement;
 
   /** CSS touch-action property value applied to the root element */
-  private touchAction: string;
+  declare private touchAction: string;
 
   /** Whether to use passive event listeners */
-  private passive: boolean;
+  declare private passive: boolean;
 
   /** Whether to prevent interrupt events like blur or contextmenu */
-  private preventEventInterruption: boolean = true;
+  declare private preventEventInterruption: boolean;
 
   /** Map of all currently active pointers by their pointerId */
   private pointers: Map<number, PointerData> = new Map();

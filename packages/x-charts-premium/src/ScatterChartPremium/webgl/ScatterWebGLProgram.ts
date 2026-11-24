@@ -13,14 +13,14 @@ import type { ScatterWebGLPlotData } from './useScatterWebGLPlotData';
 
 export class ScatterWebGLProgram {
   private readonly shaders: WebGLShader[] = [];
-  private readonly quadBuffer: WebGLBuffer;
+  declare private readonly quadBuffer: WebGLBuffer;
 
-  private readonly program: WebGLProgram;
-  private readonly vao: WebGLVertexArrayObject;
-  private readonly centers: InstancedAttribute;
-  private readonly sizes: InstancedAttribute;
+  declare private readonly program: WebGLProgram;
+  declare private readonly vao: WebGLVertexArrayObject;
+  declare private readonly centers: InstancedAttribute;
+  declare private readonly sizes: InstancedAttribute;
   /* Colors come in as Uint8 [0, 255]; normalized=true makes the GPU read them back as vec4 in [0, 1]. */
-  private readonly colors: InstancedAttribute;
+  declare private readonly colors: InstancedAttribute;
 
   constructor(private gl: WebGL2RenderingContext) {
     setupStandardBlending(gl);

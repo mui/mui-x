@@ -7,8 +7,10 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
-import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
+import type { Store } from '@base-ui/utils/store';
+import { useStore, createSelectorMemoized } from '@base-ui/utils/store';
+import type { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState } from '../models';
+import { Size } from '../models';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
@@ -62,17 +64,22 @@ const selectors = {
   minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
   rowPositions: (state: BaseState) => state.rowsMeta.positions,
-  columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
-    const positions: number[] = [];
-    let currentPosition = 0;
+  // Memoized on the columns alone.
+  // Without an input selector, the whole state is the memoization key.
+  columnPositions: createSelectorMemoized(
+    () => undefined,
+    (_, columns: ColumnWithWidth[]) => {
+      const positions: number[] = [];
+      let currentPosition = 0;
 
-    for (let i = 0; i < columns.length; i += 1) {
-      positions.push(currentPosition);
-      currentPosition += columns[i].computedWidth;
-    }
+      for (let i = 0; i < columns.length; i += 1) {
+        positions.push(currentPosition);
+        currentPosition += columns[i].computedWidth;
+      }
 
-    return positions;
-  }),
+      return positions;
+    },
+  ),
   needsHorizontalScrollbar: (state: BaseState) =>
     state.dimensions.viewportInnerSize.width > 0 &&
     state.dimensions.columnsTotalWidth > state.dimensions.viewportInnerSize.width,
@@ -177,6 +184,29 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
     lastFlipTimestamp: 0,
   });
+
+  // In a layout that grows with its content, the root takes the height of the
+  // rows, the pinned rows and the scrollbar fillers, so an update that follows
+  // a content change is computed against a root size the browser has not laid
+  // out yet. It may then reserve a vertical scrollbar the grown root does not
+  // need. The ResizeObserver reports the grown root only after this frame's
+  // layout, and its throttled update paints that reservation for the whole
+  // throttle window, visible as a flex column jump. After an update that
+  // changed a scrollbar reservation, the root is therefore re-measured in the
+  // next animation frame, where the laid-out size is available before paint,
+  // and the dimensions are updated there, ahead of the throttled update.
+  // https://github.com/mui/mui-x/issues/23573
+  const rootRemeasureId = React.useRef(0);
+  const remeasureRootRef = React.useRef<() => void>(() => {});
+  const scheduleRootRemeasure = React.useCallback(() => {
+    if (rootRemeasureId.current !== 0 || typeof requestAnimationFrame === 'undefined') {
+      return;
+    }
+    rootRemeasureId.current = requestAnimationFrame(() => {
+      rootRemeasureId.current = 0;
+      remeasureRootRef.current();
+    });
+  }, []);
 
   const {
     layout,
@@ -367,9 +397,17 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
 
       store.update({ dimensions: newDimensions });
       onResize?.(newDimensions.root);
+
+      if (
+        newDimensions.hasScrollX !== prevDimensions.hasScrollX ||
+        newDimensions.hasScrollY !== prevDimensions.hasScrollY
+      ) {
+        scheduleRootRemeasure();
+      }
     },
     [
       store,
+      scheduleRootRemeasure,
       layout.refs.container,
       layout.refs.scrollbarHorizontal,
       layout.refs.scrollbarVertical,
@@ -395,6 +433,38 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     [resizeThrottleMs, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
+
+  const remeasureRoot = useEventCallback(() => {
+    const node = layout.refs.container.current;
+    if (!node || isFirstSizing.current) {
+      return;
+    }
+    const bounds = node.getBoundingClientRect();
+    const rootSize = {
+      width: roundToDecimalPlaces(bounds.width, 1),
+      height: roundToDecimalPlaces(bounds.height, 1),
+    };
+    if (rootSize.width === 0 && rootSize.height === 0) {
+      // The root collapsed (for example `display: none`): keep the last dimensions.
+      return;
+    }
+    store.state.rootSize = rootSize;
+    // The observer may have stored this size already, with its update still
+    // pending in the throttle. This update supersedes it.
+    debouncedUpdateDimensions?.clear();
+    updateDimensionCallback();
+  });
+  remeasureRootRef.current = remeasureRoot;
+
+  useLayoutEffect(
+    () => () => {
+      if (rootRemeasureId.current !== 0) {
+        cancelAnimationFrame(rootRemeasureId.current);
+        rootRemeasureId.current = 0;
+      }
+    },
+    [],
+  );
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
@@ -512,6 +582,12 @@ function useRowsMeta(
 
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
+    // Without per-row heights, every row has the base height and needs no height entry. Entries
+    // left from earlier per-row heights no longer apply.
+    const hasPerRowHeights = Boolean(getRowHeightProp || getRowSpacing || applyRowHeight);
+    if (!hasPerRowHeights) {
+      heightCache.clear();
+    }
 
     const pinnedTopRowsTotalHeight =
       pinnedRows?.top.reduce((acc, row) => {
@@ -526,14 +602,19 @@ function useRowsMeta(
       }, 0) ?? 0;
 
     const positions: number[] = [];
-    const currentPageTotalHeight = rows.reduce((acc, row) => {
-      positions.push(acc);
-
-      const entry = processHeightEntry(row);
-      const total = entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
-
-      return acc + total;
-    }, 0);
+    const baseRowHeight = selectors.dimensions(store.state).rowHeight;
+    let currentPageTotalHeight = 0;
+    for (let i = 0; i < rows.length; i += 1) {
+      positions.push(currentPageTotalHeight);
+      let rowHeight = 0;
+      if (hasPerRowHeights) {
+        const entry = processHeightEntry(rows[i]);
+        rowHeight = entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+      } else {
+        rowHeight = baseRowHeight;
+      }
+      currentPageTotalHeight += rowHeight;
+    }
 
     if (!hasRowWithAutoHeight.current) {
       // No row has height=auto, so all rows are already measured
@@ -558,7 +639,17 @@ function useRowsMeta(
     }
 
     isHeightMetaValid.current = true;
-  }, [store, pinnedRows, rows, processHeightEntry, updateDimensions]);
+  }, [
+    store,
+    heightCache,
+    getRowHeightProp,
+    getRowSpacing,
+    applyRowHeight,
+    pinnedRows,
+    rows,
+    processHeightEntry,
+    updateDimensions,
+  ]);
   const hydrateRowsMetaLatest = useEventCallback(hydrateRowsMeta);
 
   const getRowHeight = (rowId: RowId) => {

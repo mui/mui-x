@@ -1,16 +1,13 @@
 import { platform } from 'node:os';
-import {
-  chromium,
-  webkit,
-  firefox,
-  devices,
-  type Page,
-  type Browser,
-  type BrowserContext,
-  type BrowserContextOptions,
-  type BrowserType,
-  type WebError,
-  type Locator,
+import { chromium, webkit, firefox, devices } from '@playwright/test';
+import type {
+  Page,
+  Browser,
+  BrowserContext,
+  BrowserContextOptions,
+  BrowserType,
+  WebError,
+  Locator,
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersOutlinedInputClasses } from '@mui/x-date-pickers/PickersTextField';
@@ -49,32 +46,6 @@ function waitFor(callback: () => Promise<void>): Promise<void> {
     timeoutId = setTimeout(handleTimeout, 1000);
     intervalId = setTimeout(checkCallback, 50);
   });
-}
-
-/**
- * Attempts page.goto with retries
- *
- * @remarks The server and runner can be started up simultaneously
- * @param page
- * @param url
- */
-async function attemptGoto(page: Page, url: string): Promise<boolean> {
-  const maxAttempts = 10;
-  const retryTimeoutMS = 250;
-
-  let didNavigate = false;
-  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-    try {
-      // eslint-disable-next-line no-await-in-loop
-      await page.goto(url);
-      didNavigate = true;
-    } catch (error) {
-      // eslint-disable-next-line no-await-in-loop
-      await sleep(retryTimeoutMS);
-    }
-  }
-
-  return didNavigate;
 }
 
 // Pick the new/fake "now" for you test pages.
@@ -130,12 +101,7 @@ async function initializeEnvironment(
     const __DateNow = Date.now;
     Date.now = () => __DateNow() + __DateNowOffset;
   }`);
-  const isServerRunning = await attemptGoto(page, `${baseUrl}#no-dev`);
-  if (!isServerRunning) {
-    throw new Error(
-      `Unable to navigate to ${baseUrl} after multiple attempts. Did you forget to run \`pnpm test:e2e:server\` and \`pnpm test:e2e:build\`?`,
-    );
-  }
+  await page.goto(`${baseUrl}#no-dev`);
   return { browser, context, page };
 }
 
@@ -568,6 +534,7 @@ async function initializeEnvironment(
           'div[role="columnheader"][data-field="birthday"] button[aria-label="birthday column menu"]',
         );
         await page.click('"Filter"');
+        await page.getByLabel('Value').focus();
         await page.keyboard.type('08/04/2024', { delay: 10 });
 
         let thrownError: Error | null = null;
@@ -585,6 +552,7 @@ async function initializeEnvironment(
       // https://github.com/mui/mui-x/issues/12290
       it('should properly set the width of a group header if the resize happened in a group with fluid columns', async () => {
         await renderFixture('DataGrid/ResizeWithFlex');
+        await page.locator('.MuiDataGrid-columnSeparator--resizable').first().waitFor();
 
         const headers = await page.locator('.MuiDataGrid-columnHeaders > div').all();
         const columnHeader = headers.pop()!;
@@ -655,7 +623,7 @@ async function initializeEnvironment(
         await page.evaluate(() => {
           const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
           virtualScroller.addEventListener('scroll', () => {
-            // @ts-ignore
+            // @ts-expect-error Playwright exposes storeScrollPosition on the browser window for this test.
             window.storeScrollPosition(virtualScroller.scrollTop);
           });
         });

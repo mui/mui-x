@@ -2,5 +2,5 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "input": "" }
+  "slotDescriptions": { "input": "The component that renders the input." }
 }

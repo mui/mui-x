@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import type { TreeViewItemId } from '@mui/x-tree-view/models';
 import type { RichTreeViewProState } from '../../RichTreeViewProStore';
@@ -40,6 +40,11 @@ export const itemsReorderingSelectors = {
    * Checks whether an item is being dragged.
    */
   isDragging: (state: RichTreeViewProState<any, any>) => !!state.currentReorder?.draggedItemId,
+  /**
+   * Gets the id of the dragged item.
+   */
+  draggedItemId: (state: RichTreeViewProState<any, any>) =>
+    state.currentReorder?.draggedItemId ?? null,
   /**
    * Checks whether an item can be reordered.
    */

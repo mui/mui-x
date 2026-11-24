@@ -1,14 +1,20 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import reactMajor from '@mui/x-internals/reactMajor';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import type { SeriesId } from '../models/seriesType/common';
 import { getSymbol } from '../internals/getSymbol';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 interface LineHighlightElementCommonProps {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
+  /**
+   * The color of the element.
+   */
   color: string;
   x: number;
   y: number;
@@ -20,6 +26,9 @@ export type LineHighlightElementProps =
         'ref'
       >)
   | (LineHighlightElementCommonProps & {
+      /**
+       * The shape of the marker.
+       */
       shape: 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
     } & Omit<React.SVGProps<SVGPathElement>, 'ref'>);
 
@@ -48,8 +57,9 @@ function LineHighlightElement(props: LineHighlightElementProps) {
         };
 
   // React 18 does not recognize `transformOrigin` and React 19 does not recognize `transform-origin`
-  const transformOrigin =
-    reactMajor > 18 ? { transformOrigin: `${x} ${y}` } : { 'transform-origin': `${x} ${y}` };
+  const transformOrigin = isReactVersionAtLeast(19)
+    ? { transformOrigin: `${x} ${y}` }
+    : { 'transform-origin': `${x} ${y}` };
 
   return (
     <Element
@@ -69,7 +79,13 @@ LineHighlightElement.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: PropTypes.string.isRequired,
+  /**
+   * The shape of the marker.
+   */
   shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
     .isRequired,
 } as any;

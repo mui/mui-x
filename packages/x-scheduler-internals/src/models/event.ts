@@ -1,12 +1,10 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
-
-export type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
 
 /**
  * Base shape for processed scheduler events.
@@ -27,36 +25,17 @@ interface SchedulerProcessedEventBase {
   title: string;
 
   /**
-   * Values prepared for rendering and user interaction.
-   * Always expressed in the display timezone.
+   * The start date and time of the event, as rendered in the display timezone.
+   * For all-day events, the first instant of their first day in the display timezone.
    */
-  displayTimezone: {
-    /**
-     * The start date and time of the event.
-     * For all day events, this value is normalized to the start of the day in the display timezone.
-     */
-    start: SchedulerProcessedDate;
-    /**
-     * The end date and time of the event.
-     * For all day events, this value is normalized to the end of the day in the display timezone.
-     */
-    end: SchedulerProcessedDate;
-    /**
-     * The timezone of the event dates.
-     * */
-    timezone: TemporalTimezone;
-    /**
-     * Recurrence projected to the display timezone so the UI reflects
-     * what the user actually experiences (e.g. displayed weekdays).
-     * Must be converted back to the dataTimezone representation when persisted.
-     */
-    rrule?: SchedulerProcessedEventRecurrenceRule;
-    /**
-     * Exception dates projected to the display timezone for UI purposes.
-     * Must be converted back to the dataTimezone representation when persisted.
-     */
-    exDates?: TemporalSupportedObject[];
-  };
+  start: BaseTemporal.ZonedDateTime;
+
+  /**
+   * The end date and time of the event, as rendered in the display timezone.
+   * For all-day events, this value is exclusive: the start of the day after the last day,
+   * in the display timezone.
+   */
+  end: BaseTemporal.ZonedDateTime;
 
   /**
    * Whether the event is an all-day event.
@@ -81,8 +60,9 @@ interface SchedulerProcessedEventBase {
  * This represents a real event that exists in the calendar and is fully
  * normalized by the store for rendering and interactions.
  *
- * - Uses `displayTimezone` values for UI rendering.
- * - Uses `dataTimezone` values for canonical logic (comparisons, recurrence expansion, etc.).
+ * - `start` and `end` are read in the display timezone, for rendering.
+ * - `timezone`, `rrule` and `exDates` are the event's own data, read in its timezone for a timed
+ *   event and on its dates for an all-day one, the same in every display timezone.
  * - Always includes `modelInBuiltInFormat` (unlike drafts/placeholders).
  */
 export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
@@ -92,34 +72,23 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
   description?: string;
 
   /**
-   * Canonical data used for logic (recurrence expansion, comparisons, etc.)
-   * Always expressed in the event data timezone.
+   * The timezone of the event, which its recurrence rule and exception dates are read in.
+   * An all-day event only uses it to read a date-time `until` as its date.
    */
+  timezone: string;
 
-  dataTimezone: {
-    /**
-     * The start date and time of the event.
-     */
-    start: SchedulerProcessedDate;
-    /**
-     * The end date and time of the event.
-     */
-    end: SchedulerProcessedDate;
-    /**
-     * The timezone of the event dates.
-     * */
-    timezone: TemporalTimezone;
-    /**
-     * The recurrence rule for the event.
-     * If not defined, the event will have only one occurrence.
-     */
-    rrule?: SchedulerProcessedEventRecurrenceRule;
-    /**
-     * Exception dates for the event.
-     * These dates will be excluded from the recurrence.
-     */
-    exDates?: TemporalSupportedObject[];
-  };
+  /**
+   * The recurrence rule for the event, expressed in the event's timezone (RFC 5545 evaluates
+   * it as local time in the DTSTART timezone). The event dialog reads and writes it there.
+   * If not defined, the event will have only one occurrence.
+   */
+  rrule?: SchedulerProcessedEventRecurrenceRule;
+
+  /**
+   * Exception dates for the event: in its timezone for a timed event, days for an all-day one.
+   * These dates will be excluded from the recurrence.
+   */
+  exDates?: BaseTemporal.PlainDateTime[];
 
   /**
    * The event model in the `SchedulerEvent` format.
@@ -169,7 +138,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
  *
  * This represents transient data such as placeholders and drag/resize previews.
  * It shares the same base shape as processed events for rendering, but it is not
- * a persisted calendar event and does not include canonical data (`dataTimezone`)
+ * a persisted calendar event and does not include the event's own data (`timezone`, `rrule`)
  * nor a `modelInBuiltInFormat`.
  */
 export interface SchedulerProcessedEventDraft extends SchedulerProcessedEventBase {}
@@ -190,21 +159,31 @@ export interface SchedulerEvent {
   /**
    * The start date and time of the event.
    *
-   * Strings ending with `"Z"` are instants (UTC);
-   * strings without `"Z"` are wall-time (interpreted in `event.timezone` or `"default"`).
+   * Strings ending with `"Z"` or an offset are instants;
+   * other strings are wall-time (interpreted in `event.timezone` or `"default"`).
+   * For all-day events, a `YYYY-MM-DD` date, like `"2025-07-04"`.
    */
   start: string;
   /**
    * The end date and time of the event.
    *
-   * Strings ending with `"Z"` are instants (UTC);
-   * strings without `"Z"` are wall-time (interpreted in `event.timezone` or `"default"`).
+   * Strings ending with `"Z"` or an offset are instants;
+   * other strings are wall-time (interpreted in `event.timezone` or `"default"`).
+   * For all-day events, a `YYYY-MM-DD` date, exclusive: the day after the last day,
+   * like `"2025-07-05"` for an event on July 4th.
    */
   end: string;
   /**
    * The timezone of the event dates.
+   *
+   * Accepts any valid IANA timezone name
+   * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
+   * "default" (the timezone of the system), or "UTC".
+   * All-day events cover the same days in every timezone: they only use it to read a date-time
+   * `until` as its date. An all-day event made timed takes the display timezone.
+   * @default "default"
    */
-  timezone?: TemporalTimezone;
+  timezone?: string;
   /**
    * The id(s) of the resource(s) this event is associated with.
    * @default null
@@ -213,7 +192,7 @@ export interface SchedulerEvent {
   /**
    * The recurrence rule for the event.
    * It can be provided either as a string (RFC5545 RRULE format)
-   * or as a SchedulerProcessedEventRecurrenceRule object.
+   * or as a SchedulerEventRecurrenceRule object.
    * If not defined, the event will have only one occurrence.
    */
   rrule?: SchedulerEventRecurrenceRule | string;
@@ -221,11 +200,11 @@ export interface SchedulerEvent {
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
    *
-   * Same string semantics as `start`/`end`.
+   * Same string semantics as `start`/`end`: `YYYY-MM-DD` dates for all-day events.
    */
   exDates?: string[];
   /**
-   * Whether the event is an all-day event.
+   * Whether the event is an all-day event: a span of dates with no time or timezone.
    * @default false
    */
   allDay?: boolean;
@@ -266,7 +245,7 @@ export interface SchedulerEvent {
 /**
  *  A concrete occurrence derived from a `SchedulerEvent` (recurring or single).
  */
-export interface SchedulerEventOccurrence extends SchedulerProcessedEvent {
+export interface SchedulerEventOccurrence extends Omit<SchedulerProcessedEvent, 'exDates'> {
   /**
    * Unique key that can be passed to the React `key` property when looping through events.
    */
@@ -316,13 +295,15 @@ interface SchedulerOccurrencePlaceholderBase {
    */
   surfaceType: EventSurfaceType;
   /**
-   * The new start date and time of the event occurrence.
+   * The new start of the event occurrence, as a timestamp in milliseconds.
+   * Its date and time are read in the display timezone.
    */
-  start: TemporalSupportedObject;
+  start: number;
   /**
-   * The new end date and time of the event occurrence.
+   * The new end of the event occurrence, as a timestamp in milliseconds.
+   * Its date and time are read in the display timezone.
    */
-  end: TemporalSupportedObject;
+  end: number;
   /**
    * The id of the resource onto which to drop the event.
    * If null, the event will be dropped outside of any resource.
@@ -352,6 +333,10 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends Sche
    * The type of placeholder.
    */
   type: 'internal-drag' | 'internal-resize';
+  /**
+   * Whether the occurrence is all-day where it is dropped.
+   */
+  allDay: boolean;
   /**
    * The id of the event being changed.
    */
@@ -396,30 +381,6 @@ export type SchedulerOccurrencePlaceholder =
   | SchedulerOccurrencePlaceholderInternalDragOrResize
   | SchedulerOccurrencePlaceholderExternalDrag;
 
-export interface SchedulerProcessedDate {
-  /**
-   * The date object.
-   */
-  value: TemporalSupportedObject;
-  /**
-   * String representation of the date.
-   * It can be used as key in Maps or passed to the React `key` property when looping through days.
-   * It only contains date information, two dates representing the same day but with different time will have the same key.
-   */
-  key: string;
-  /**
-   * The timestamp of the date.
-   */
-  timestamp: number;
-  /**
-   * Number of minutes since local midnight (0–1439).
-   *
-   * This value represents a visual position within a fixed 24h timeline grid
-   * and is intentionally independent from real-time duration (e.g. DST shifts).
-   */
-  minutesInDay: number;
-}
-
 /**
  * Properties to pass to the methods that update an event (recurring or not).
  * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
@@ -430,9 +391,19 @@ export type SchedulerEventUpdatedProperties = Omit<
   'start' | 'end' | 'exDates' | 'rrule'
 > & {
   id: SchedulerEventId;
-  start?: TemporalSupportedObject;
-  end?: TemporalSupportedObject;
-  exDates?: TemporalSupportedObject[];
+  /**
+   * For an all-day event, the first instant of its first day in the display timezone.
+   */
+  start?: Date;
+  /**
+   * For an all-day event, the first instant of the day after its last day in the display timezone.
+   */
+  end?: Date;
+  /**
+   * For an all-day event, the first instants of its days in the display timezone, or its
+   * `YYYY-MM-DD` dates. A string is written as is.
+   */
+  exDates?: (string | Date)[];
   rrule?: SchedulerProcessedEventRecurrenceRule | string;
 };
 
@@ -444,17 +415,30 @@ export type SchedulerEventCreationProperties = Omit<
   SchedulerEvent,
   'id' | 'start' | 'end' | 'exDates' | 'rrule'
 > & {
-  start: string | TemporalSupportedObject;
-  end: string | TemporalSupportedObject;
-  exDates?: (string | TemporalSupportedObject)[];
+  /**
+   * For an all-day event, a `YYYY-MM-DD` date or the first instant of its first day in the
+   * display timezone.
+   */
+  start: string | Date;
+  /**
+   * For an all-day event, a `YYYY-MM-DD` date or the first instant of the day after its last day
+   * in the display timezone.
+   */
+  end: string | Date;
+  /**
+   * For an all-day event, `YYYY-MM-DD` dates or the first instants of its days in the display
+   * timezone.
+   */
+  exDates?: (string | Date)[];
   rrule?: SchedulerEventRecurrenceRule | SchedulerProcessedEventRecurrenceRule | string;
 };
 
 /**
  * Properties to pass to the methods that paste an event.
+ * For an all-day event, `start` is the first instant of its first day in the display timezone.
  */
 export type SchedulerEventPasteProperties = Partial<
-  Pick<SchedulerEvent, 'resource' | 'allDay'> & { start: TemporalSupportedObject }
+  Pick<SchedulerEvent, 'resource' | 'allDay'> & { start: Date }
 >;
 
 // TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Event Timeline Premium.
@@ -501,4 +485,13 @@ export interface SchedulerEventCreationConfig {
    * data with no resource at all defaults to multiple.
    */
   canHaveMultipleResources?: boolean;
+}
+
+export interface SchedulerEventDeletionConfig {
+  /**
+   * Whether a confirmation dialog is shown before deleting an event.
+   * Recurring events handled by the recurring scope dialog are not asked twice.
+   * @default true
+   */
+  confirmation: boolean;
 }

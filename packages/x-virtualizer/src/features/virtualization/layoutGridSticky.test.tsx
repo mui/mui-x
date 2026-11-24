@@ -2,6 +2,7 @@ import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { useVirtualizer, Virtualization, LayoutGridSticky, Dimensions } from '@mui/x-virtualizer';
+import type { Virtualizer } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect, vi } from 'vitest';
 
@@ -141,7 +142,27 @@ const Scrollbar = React.forwardRef<
   );
 });
 
-function StickyGrid(props: { width?: number; scrollbarSize?: number; tall?: boolean }) {
+const HorizontalPropsProbe = React.memo(function HorizontalPropsProbe(props: {
+  store: Virtualizer['store'];
+  onRender: () => void;
+}) {
+  const { store, onRender } = props;
+  store.use(LayoutGridSticky.selectors.spacerLeftProps, columns);
+  store.use(LayoutGridSticky.selectors.innerContainerProps, columns);
+  store.use(LayoutGridSticky.selectors.innerWindowProps, columns);
+  onRender();
+  return null;
+});
+
+type StickyGridProps = {
+  apiRef?: React.RefObject<Virtualizer | null>;
+  width?: number;
+  scrollbarSize?: number;
+  tall?: boolean;
+  onHorizontalPropsRender?: () => void;
+};
+
+function StickyGrid(props: StickyGridProps) {
   const gridRows = props.tall ? tallRows : rows;
   const gridRange = props.tall ? tallRange : range;
   const refs = {
@@ -180,6 +201,12 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number; tall?: bool
       />
     ),
   });
+
+  React.useEffect(() => {
+    if (props.apiRef) {
+      props.apiRef.current = virtualizer;
+    }
+  }, [props.apiRef, virtualizer]);
 
   const renderContext = virtualizer.store.use(Virtualization.selectors.renderContext);
 
@@ -294,6 +321,9 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number; tall?: bool
         dimensions={dimensions}
         {...scrollbarHorizontalProps}
       />
+      {props.onHorizontalPropsRender ? (
+        <HorizontalPropsProbe store={virtualizer.store} onRender={props.onHorizontalPropsRender} />
+      ) : null}
     </div>
   );
 }
@@ -375,13 +405,42 @@ function middleColumnsOf(rowId: string | number) {
 describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
   const { render } = createRenderer();
 
-  async function renderGrid(props?: { width?: number; scrollbarSize?: number; tall?: boolean }) {
+  async function renderGrid(props?: StickyGridProps) {
     const view = render(<StickyGrid {...props} />);
     await waitFor(() => {
       expect(getWindowRowIds().length).to.be.greaterThan(0);
     });
     return view;
   }
+
+  it.each([false, true])(
+    'preserves a render-window adjustment when dimensions are unchanged (Strict Mode: %s)',
+    async (strict) => {
+      const apiRef = React.createRef<Virtualizer | null>();
+      render(<StickyGrid apiRef={apiRef} />, { strict });
+      const store = apiRef.current!.store;
+      const dimensions = Dimensions.selectors.dimensions(store.state);
+      expect(dimensions.isReady).toBe(true);
+      const { renderContext: initialContext } = store.state.virtualization;
+      expect(initialContext.lastColumnIndex).toBeLessThan(COLUMN_COUNT - 1);
+      const expandedContext = {
+        ...initialContext,
+        lastColumnIndex: initialContext.lastColumnIndex + 1,
+      };
+
+      // Like Mosaic when unpinning, retain an extra column by extending the window.
+      // This updates only the render context; dimensions and inputs stay unchanged.
+      await act(async () => {
+        store.set('virtualization', {
+          ...store.state.virtualization,
+          renderContext: expandedContext,
+        });
+      });
+
+      expect(Dimensions.selectors.dimensions(store.state)).toBe(dimensions);
+      expect(Virtualization.selectors.renderContext(store.state)).toEqual(expandedContext);
+    },
+  );
 
   it('renders only a window of rows and columns', async () => {
     await renderGrid();
@@ -688,8 +747,8 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     const heightAtRest = rect('outer-window').height;
 
-    // From rest each measured scroll reverses direction, so it commits immediately
-    // (direction changes are never frame-deferred) and the height is stable to read.
+    // From rest each measured scroll reverses direction, so it commits immediately and
+    // the height is stable to read.
     act(() => {
       scroller.scrollTop = 150 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
@@ -740,16 +799,35 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     expect(getWindowRowIds()).to.deep.equal(idsAfterDirectionChange);
 
-    // Past the rendered buffer: the context must advance. On a fast scroll the advance
-    // is deferred a few frames, so wait for it to land.
+    // Past the rendered buffer: the context must advance.
     act(() => {
       scroller.scrollTop = 30 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
-    await waitFor(() => {
-      expect(getWindowRowIds()).to.include(30);
-    });
+    expect(getWindowRowIds()).to.include(30);
     expect(getWindowRowIds()).not.to.deep.equal(idsAfterDirectionChange);
+  });
+
+  it('keeps the horizontal props across scroll events that keep the render context', async () => {
+    const onRender = vi.fn();
+    await renderGrid({ onHorizontalPropsRender: onRender });
+    const scroller = screen.getByTestId('scroller');
+
+    // Establish the DOWN direction: a direction change always updates the context.
+    act(() => {
+      scroller.scrollTop = ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    const idsAfterDirectionChange = getWindowRowIds();
+    const renderCount = onRender.mock.calls.length;
+
+    // Within half of the leading buffer: the render context is kept.
+    act(() => {
+      scroller.scrollTop = 6 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getWindowRowIds()).to.deep.equal(idsAfterDirectionChange);
+    expect(onRender.mock.calls.length).to.equal(renderCount);
   });
 
   it('keeps retained rows at identical content-local offsets across context updates', async () => {
@@ -789,11 +867,6 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     await act(async () => {
       scroller.scrollTop = nextFirstRow * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
-    });
-    // On a fast scroll the advance is deferred a few frames, so wait for the rendered
-    // set to actually change rather than for a row the leading buffer already holds.
-    await waitFor(() => {
-      expect([...localOffsets().keys()]).to.not.deep.equal(beforeKeys);
     });
     const after = localOffsets();
 
@@ -894,12 +967,8 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
         scroller.scrollTop = top;
         scroller.dispatchEvent(new Event('scroll'));
       });
-      // A fast scroll defers the advance a few frames; wait for it to land so the pad
-      // reflects the new context before measuring.
-      // eslint-disable-next-line no-await-in-loop
-      await waitFor(() => {
-        expect(getWindowRowIds()).to.include(Math.floor(top / ROW_HEIGHT));
-      });
+      // The context advanced, so the pad reflects it.
+      expect(getWindowRowIds()).to.include(Math.floor(top / ROW_HEIGHT));
       maxPad = Math.max(maxPad, padTop());
     }
 

@@ -2,6 +2,7 @@ import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   absorbObserverFrames,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
@@ -15,6 +16,7 @@ import {
   createDependencyTimelineRenderer,
   getArrowPaths,
   getEventElement,
+  getPathCoordinates,
   getRecurringEventElement,
   resource1,
   resource2,
@@ -42,7 +44,7 @@ const recurringEvent = EventBuilder.new()
   .resource(resource1)
   .build();
 
-function getTerminal(title: string, resourceId?: string) {
+function getTerminal(title: string, resourceId?: string, side: 'start' | 'end' = 'end') {
   // The terminals render in an overlay outside the event elements, tied to their
   // event by the occurrence key — qualified by the resource for events appearing on
   // several rows. The key is appearance-invariant, so any rendered appearance serves
@@ -54,7 +56,7 @@ function getTerminal(title: string, resourceId?: string) {
   const resourceSelector =
     resourceId === undefined ? '' : `[data-resource-id="${CSS.escape(resourceId)}"]`;
   return document.querySelector<HTMLElement>(
-    `[data-dependency-terminal="${CSS.escape(occurrenceKey!)}"]${resourceSelector}`,
+    `[data-dependency-terminal="${CSS.escape(occurrenceKey!)}"]${resourceSelector}[data-side="${side}"]`,
   );
 }
 
@@ -70,13 +72,32 @@ function getAppearanceElement(title: string, resourceId: string) {
     )!;
 }
 
-function simulateTerminalDrag(sourceTitle: string, targetElement: Element) {
+function simulateTerminalDrag(
+  sourceTitle: string,
+  targetElement: Element,
+  sourceSide: 'start' | 'end' = 'end',
+) {
   act(() => {
     simulateDragAndDrop({
-      source: getTerminal(sourceTitle)!,
+      source: getTerminal(sourceTitle, undefined, sourceSide)!,
       target: targetElement,
     });
   });
+}
+
+/**
+ * The point where a drawn path ends, parsed from its last `L` command.
+ */
+function getLineEnd(path: Element) {
+  const match = path.getAttribute('d')!.match(/L ([\d.-]+) ([\d.-]+)$/)!;
+  return { x: Number(match[1]), y: Number(match[2]) };
+}
+
+/**
+ * The x where a drawn path starts, parsed from its `M` command.
+ */
+function getLineStartX(path: Element): number {
+  return Number(path.getAttribute('d')!.match(/^M ([\d.-]+)/)![1]);
 }
 
 describe('<EventTimelinePremium /> dependency terminals', () => {
@@ -94,11 +115,46 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
   });
 
   describe('terminal rendering', () => {
-    it('should render a terminal on the end edge when the dependencies feature is enabled', async () => {
+    it('should not render a start terminal on an event starting before the collection start', async () => {
+      // Starts a month early and ends inside the initial viewport: the end edge can
+      // anchor a gesture, the start edge cannot — same rule as the resize handles.
+      const clippedEvent = EventBuilder.new()
+        .id('event-clipped')
+        .title('Clipped event')
+        .singleDay('2025-06-01T09:00:00Z', 32 * 24 * 60 + 60)
+        .resource(resource1)
+        .build();
+      await renderTimeline({ events: [eventA, clippedEvent], dependencies: [] });
+
+      expect(getTerminal('Clipped event', undefined, 'end')).not.to.equal(null);
+      expect(getTerminal('Clipped event', undefined, 'start')).to.equal(null);
+    });
+
+    it('should slide the start terminal over the event at the collection start', async () => {
+      // Starts exactly on the collection start: the edge is inside the collection, but
+      // the outside circle would overflow the events area.
+      const edgeEvent = EventBuilder.new()
+        .id('event-edge')
+        .title('Edge event')
+        .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+        .resource(resource1)
+        .build();
+      await renderTimeline({ events: [edgeEvent], dependencies: [] });
+
+      expect(getTerminal('Edge event', undefined, 'start')!.style.insetInlineStart).to.equal(
+        '10px',
+      );
+    });
+
+    it('should reveal both terminals while its event is hovered', async () => {
       await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
-      expect(getTerminal('Event A')).not.to.equal(null);
-      expect(getTerminal('Event B')).not.to.equal(null);
+      fireEvent.pointerOver(getEventElement('Event A'));
+
+      expect(getTerminal('Event A', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
+        true,
+      );
+      expect(getTerminal('Event A', undefined, 'end')!.hasAttribute('data-visible')).to.equal(true);
     });
 
     it('should not render terminals when the dependencies feature is not enabled', async () => {
@@ -114,10 +170,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(getTerminal('Recurring event')).to.equal(null);
     });
 
-    it('should not render a terminal on an event ending after the collection end', async () => {
-      // ~20 days: overflows the dayAndHour preset range, so the end edge (the
-      // gesture's anchor) is outside the collection — same rule as the end resize
-      // handle.
+    it('should not render an end terminal on an event ending after the collection end', async () => {
+      // ~20 days: overflows the dayAndHour preset range, so the end edge is outside
+      // the collection — same rule as the end resize handle.
       const overflowingEvent = EventBuilder.new()
         .id('event-overflow')
         .title('Overflowing event')
@@ -128,6 +183,36 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(getTerminal('Event A')).not.to.equal(null);
       expect(getTerminal('Overflowing event')).to.equal(null);
+    });
+
+    it('should reveal a terminal that appears while its event stays hovered', async () => {
+      // The two terminals of an appearance come and go separately: an end edge
+      // pulled back inside the collection mounts its terminal under a pointer that
+      // already revealed the start one.
+      const overflowingEvent = EventBuilder.new()
+        .id('event-overflow')
+        .title('Overflowing event')
+        .singleDay('2025-07-03T09:00:00Z', 20 * 24 * 60)
+        .resource(resource1)
+        .build();
+      const { store } = await renderTimeline({ events: [overflowingEvent], dependencies: [] });
+
+      fireEvent.pointerOver(getEventElement('Overflowing event'));
+      expect(
+        getTerminal('Overflowing event', undefined, 'start')!.hasAttribute('data-visible'),
+      ).to.equal(true);
+
+      act(() => {
+        store.updateEvent({
+          id: 'event-overflow',
+          end: createDate('2025-07-03T11:00:00Z'),
+        });
+      });
+      fireEvent.pointerOver(getEventElement('Overflowing event'));
+
+      expect(
+        getTerminal('Overflowing event', undefined, 'end')!.hasAttribute('data-visible'),
+      ).to.equal(true);
     });
 
     it('should reveal the terminal while its event is hovered', async () => {
@@ -237,7 +322,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
           .build();
         await renderTimeline({ events: [eventA, edgeEvent], dependencies: [] });
 
-        expect(getTerminal('Edge event')!.style.left).to.equal('6134px');
+        expect(getTerminal('Edge event')!.style.insetInlineStart).to.equal('6134px');
       },
     );
   });
@@ -278,6 +363,69 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(beyondCircle.closest('[data-dependency-terminal]')).not.to.equal(null);
       const aboveCircle = document.elementFromPoint(adjacentRect.left + 4, centerY - 10)!;
       expect(aboveCircle.closest('[data-dependency-terminal]')).not.to.equal(null);
+    });
+
+    it('should sit outside the start edge, leaving the start resize strip free', async () => {
+      await renderTimeline({ events: [eventA, adjacentEvent], dependencies: [] });
+
+      fireEvent.pointerOver(getEventElement('Adjacent event'));
+      await waitFor(() => {
+        expect(
+          getTerminal('Adjacent event', undefined, 'start')!.hasAttribute('data-visible'),
+        ).to.equal(true);
+      });
+
+      const adjacentRect = getEventElement('Adjacent event').getBoundingClientRect();
+      const centerY = adjacentRect.top + adjacentRect.height / 2;
+
+      // Just inside the hovered event's head: its own surface, so the start resize
+      // strip stays a resize grab.
+      const onHead = document.elementFromPoint(adjacentRect.left + 3, centerY)!;
+      expect(onHead.closest('[data-dependency-terminal]')).to.equal(null);
+
+      // Just outside the start edge, over the preceding event's tail: the start terminal.
+      const outside = document.elementFromPoint(adjacentRect.left - 2, centerY)!;
+      expect(outside.closest('[data-dependency-terminal]')?.getAttribute('data-side')).to.equal(
+        'start',
+      );
+
+      // The halo mirrors the end terminal's: outward to the left, and vertically.
+      const beyondCircle = document.elementFromPoint(adjacentRect.left - 14, centerY)!;
+      expect(beyondCircle.closest('[data-dependency-terminal]')).not.to.equal(null);
+      const aboveCircle = document.elementFromPoint(adjacentRect.left - 4, centerY - 10)!;
+      expect(aboveCircle.closest('[data-dependency-terminal]')).not.to.equal(null);
+    });
+
+    it('should keep the delete button of a selected arrow reachable while the target terminals are revealed', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      const getButton = () =>
+        document.querySelector<SVGGElement>('[data-dependency-delete-button]')!;
+      await waitFor(() => {
+        expect(getButton()).not.to.equal(null);
+      });
+
+      // The pointer brushes the target on its way to the button, revealing the
+      // target's terminals — the start one sits exactly where the button is.
+      fireEvent.pointerOver(getEventElement('Event B'));
+      await waitFor(() => {
+        expect(getTerminal('Event B', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
+          true,
+        );
+      });
+
+      await waitFor(() => {
+        const rect = getButton().getBoundingClientRect();
+        const atButton = document.elementFromPoint(
+          rect.left + rect.width / 2,
+          rect.top + rect.height / 2,
+        )!;
+        expect(atButton.closest('[data-dependency-delete-button]')).not.to.equal(null);
+      });
     });
 
     it('should keep the revealed terminal reachable under a crossing arrow', async () => {
@@ -361,6 +509,205 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(dependencies[0].type).to.equal('FinishToStart');
       // The harness closes the controlled loop, so the created arrow actually renders.
       expect(getArrowPaths()).to.have.length(1);
+    });
+
+    it('should create a StartToStart dependency when dragging the start terminal onto another event', async () => {
+      // Dropping on the event body targets its start edge: the dragged edge alone
+      // picks the type.
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getEventElement('Event B'), 'start');
+
+      const [dependency] = handleDependenciesChange.mock.calls[0][0];
+      expect(dependency.source).to.equal('event-a');
+      expect(dependency.target).to.equal('event-b');
+      expect(dependency.type).to.equal('StartToStart');
+    });
+
+    it('should create a FinishToFinish dependency when dropping the end terminal on the end terminal of another event', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getTerminal('Event B', undefined, 'end')!, 'end');
+
+      const [dependency] = handleDependenciesChange.mock.calls[0][0];
+      expect(dependency.type).to.equal('FinishToFinish');
+    });
+
+    it('should create a StartToFinish dependency when dropping the start terminal on the end terminal of another event', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getTerminal('Event B', undefined, 'end')!, 'start');
+
+      const [dependency] = handleDependenciesChange.mock.calls[0][0];
+      expect(dependency.type).to.equal('StartToFinish');
+    });
+
+    it('should create a FinishToStart dependency when dropping the end terminal on the start terminal of another event', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getTerminal('Event B', undefined, 'start')!, 'end');
+
+      const [dependency] = handleDependenciesChange.mock.calls[0][0];
+      expect(dependency.type).to.equal('FinishToStart');
+    });
+
+    it('should create a second dependency of another type between the same events', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getTerminal('Event B', undefined, 'end')!, 'end');
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      expect(store.state.errors).to.have.length(0);
+      expect(getArrowPaths()).to.have.length(2);
+    });
+
+    it('should reveal the terminals of the hovered target during the gesture', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      // A real drag starts from a hovered event, which has both terminals revealed.
+      fireEvent.pointerOver(getEventElement('Event A'));
+      expect(getTerminal('Event A', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
+        true,
+      );
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const target = getEventElement('Event B');
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+
+      // A native drag suppresses the hover: the target's terminals must show by state
+      // so the user can drop on the edge they want.
+      await waitFor(() => {
+        expect(getTerminal('Event B', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
+          true,
+        );
+      });
+      expect(getTerminal('Event B', undefined, 'end')!.hasAttribute('data-visible')).to.equal(true);
+      // The source only keeps the dragged edge revealed.
+      expect(getTerminal('Event A', undefined, 'end')!.hasAttribute('data-visible')).to.equal(true);
+      expect(getTerminal('Event A', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
+        false,
+      );
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+    });
+
+    it('should mark the terminal of the edge the gesture would drop on', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const target = getEventElement('Event B');
+      const startTerminal = getTerminal('Event B', undefined, 'start')!;
+      const endTerminal = getTerminal('Event B', undefined, 'end')!;
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+
+      // Over the body the drop targets the start edge: its terminal reads as acquired,
+      // the other one only as available.
+      await waitFor(() => {
+        expect(startTerminal.hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+      expect(endTerminal.hasAttribute('data-dependency-drop-target')).to.equal(false);
+
+      fireEvent.dragEnter(endTerminal, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(endTerminal, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(endTerminal.hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+      expect(startTerminal.hasAttribute('data-dependency-drop-target')).to.equal(false);
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+    });
+
+    it('should anchor the provisional line on the dragged edge', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      const startSource = getTerminal('Event A', undefined, 'start')!.closest(
+        '[draggable="true"]',
+      )!;
+      const target = getEventElement('Event B');
+      fireEvent.dragStart(startSource, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      await waitFor(() => {
+        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+      });
+      const fromStartX = getLineStartX(document.querySelector('[data-dependency-drag-line]')!);
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(startSource, { dataTransfer: new DataTransfer() });
+      await waitFor(() => {
+        expect(document.querySelector('[data-dependency-drag-line]')).to.equal(null);
+      });
+
+      const endSource = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      fireEvent.dragStart(endSource, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      await waitFor(() => {
+        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+      });
+      const fromEndX = getLineStartX(document.querySelector('[data-dependency-drag-line]')!);
+
+      expect(fromStartX).to.be.lessThan(fromEndX);
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(endSource, { dataTransfer: new DataTransfer() });
+    });
+
+    it('should snap the provisional line to the hovered terminal edge', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const target = getEventElement('Event B');
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      await waitFor(() => {
+        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+      });
+      const snappedToStartX = getLineEnd(document.querySelector('[data-dependency-drag-line]')!).x;
+
+      const endTerminal = getTerminal('Event B', undefined, 'end')!;
+      fireEvent.dragEnter(endTerminal, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(endTerminal, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(
+          getLineEnd(document.querySelector('[data-dependency-drag-line]')!).x,
+        ).to.be.greaterThan(snappedToStartX);
+      });
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
 
     it('should ignore dropping a terminal on its own event', async () => {
@@ -577,20 +924,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.contain('recurring');
-    });
-
-    it('should replace an identical rejection toast instead of stacking it', async () => {
-      const { store } = await renderTimeline({
-        events: [eventA, recurringEvent],
-        dependencies: [],
-      });
-
-      simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
-      simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
-
-      expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.contain('recurring');
+      expect(store.state.errors[0].code).to.equal('dependencyRecurringEventError');
     });
 
     it('should auto-dismiss a rejection toast', async () => {
@@ -702,10 +1036,6 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       // The free end tracks the cursor 1:1: a further move shifts the line's tail by
       // exactly the cursor delta, pinning the client → viewBox mapping.
-      const parseLineEnd = (d: string) => {
-        const match = d.match(/L ([\d.-]+) ([\d.-]+)$/)!;
-        return { x: Number(match[1]), y: Number(match[2]) };
-      };
       // Every drag frame overwrites the path, so a sample must wait for the frame its
       // own move produced: the previous cursor position also matches "a line is drawn"
       // and would be measured instead. The x the move maps to is read against the
@@ -713,14 +1043,10 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       const sampleLineEnd = async (clientX: number) => {
         const svg = document.querySelector('[data-dependency-arrows]')!;
         await waitFor(() => {
-          const end = parseLineEnd(
-            document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')!,
-          );
+          const end = getLineEnd(document.querySelector('[data-dependency-drag-line]')!);
           expect(end.x).to.equal(clientX - svg.getBoundingClientRect().left);
         });
-        return parseLineEnd(
-          document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')!,
-        );
+        return getLineEnd(document.querySelector('[data-dependency-drag-line]')!);
       };
 
       const firstEnd = await sampleLineEnd(140);
@@ -751,6 +1077,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
       expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].code).to.equal('dependencyDuplicateError');
       expect(
         document.querySelector('[data-dependency-id="dep-1"]')!.hasAttribute('data-selected'),
       ).to.equal(true);
@@ -769,7 +1096,23 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.selection).to.equal(null);
       expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.include('cycle');
+      expect(store.state.errors[0].code).to.equal('dependencyCycleError');
+    });
+
+    it('should reject a reversed link of another type as a cycle', async () => {
+      // The graph is what matters, not the type.
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event B', getTerminal('Event A', undefined, 'end')!, 'end');
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].code).to.equal('dependencyCycleError');
     });
   });
 
@@ -792,6 +1135,75 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(handleDependenciesChange.mock.calls.length).to.equal(1);
       expect(handleDependenciesChange.mock.calls[0][0]).to.deep.equal([]);
       expect(getArrowPaths()).to.have.length(0);
+    });
+
+    it('should place the delete button past the target end edge of a FinishToFinish arrow', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b', 'FinishToFinish')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // The arrow enters the target from the right, so the button sits on that side
+      // of the tip instead of covering the event's tail.
+      const tipX = getLineEnd(document.querySelector('[data-dependency-id="dep-1"]')!).x;
+      const button = document.querySelector('[data-dependency-delete-button] circle')!;
+      expect(Number(button.getAttribute('cx'))).to.be.greaterThan(tipX);
+    });
+
+    it.skipIf(!isJSDOM)(
+      'should keep the delete button inside the events area when the target ends at the collection end',
+      async () => {
+        // Far columns are not rendered in the browser (virtualization), so the arrow
+        // only exists in jsdom.
+        const edgeEvent = EventBuilder.new()
+          .id('event-edge')
+          .title('Edge event')
+          .singleDay('2025-07-06T23:00:00Z', 59)
+          .resource(resource1)
+          .build();
+        await renderTimeline({
+          events: [eventA, edgeEvent],
+          dependencies: [buildDependency('dep-1', 'event-a', 'event-edge', 'FinishToFinish')],
+        });
+
+        fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+        const eventsWidth = Number(
+          document.querySelector('[data-dependency-interactions]')!.getAttribute('width'),
+        );
+        const button = document.querySelector('[data-dependency-delete-button] circle')!;
+        expect(Number(button.getAttribute('cx')) + Number(button.getAttribute('r'))).to.be.at.most(
+          eventsWidth,
+        );
+      },
+    );
+
+    it('should hide the terminal under the delete button of the selected arrow', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // Only the target's edge terminal, where the button sits, steps aside.
+      expect(
+        getTerminal('Event B', undefined, 'start')!.hasAttribute('data-dependency-muted'),
+      ).to.equal(true);
+      expect(
+        getTerminal('Event B', undefined, 'end')!.hasAttribute('data-dependency-muted'),
+      ).to.equal(false);
+      expect(
+        getTerminal('Event A', undefined, 'end')!.hasAttribute('data-dependency-muted'),
+      ).to.equal(false);
+
+      fireEvent.keyDown(document.body, { key: 'Escape' });
+
+      expect(
+        getTerminal('Event B', undefined, 'start')!.hasAttribute('data-dependency-muted'),
+      ).to.equal(false);
     });
 
     it('should delete the selected arrow with the Delete key', async () => {
@@ -1214,6 +1626,26 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.selection).to.equal(null);
     });
 
+    it('should clear the selection when the type of the selected dependency becomes unknown', async () => {
+      const dependency = buildDependency('dep-1', 'event-a', 'event-b');
+      const view = await renderTimeline({ events: [eventA, eventB], dependencies: [dependency] });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      expect(view.store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+
+      // Same id, unsupported type: the arrows drop it and the terminals must not
+      // resolve the edges of a type they cannot draw.
+      expect(() => {
+        view.setProps({ dependencies: [{ ...dependency, type: 'FS' as any }] });
+      }).toWarnDev(['MUI X Scheduler: The dependency "dep-1" has the unknown type "FS".']);
+
+      await waitFor(() => {
+        expect(getArrowPaths()).to.have.length(0);
+      });
+      expect(document.querySelector('[data-dependency-delete-button]')).to.equal(null);
+      expect(view.store.state.selection).to.equal(null);
+    });
+
     it('should discard the creation gesture when the timeline unmounts mid-drag', async () => {
       const { store, unmount } = await renderTimeline({
         events: [eventA, eventB],
@@ -1259,14 +1691,14 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(getTerminal('Event B')).to.equal(null);
     });
 
-    it('should not render a terminal on a read-only event', async () => {
+    it('should render the terminals of a read-only event', async () => {
       await renderTimeline({ events: [eventA, readOnlyEvent], dependencies: [] });
 
       expect(getTerminal('Event A')).not.to.equal(null);
-      expect(getTerminal('Read-only event')).to.equal(null);
+      expect(getTerminal('Read-only event')).not.to.equal(null);
     });
 
-    it('should not render terminals on the events of a resource with read-only events', async () => {
+    it('should render the terminals on the events of a resource with read-only events', async () => {
       const readOnlyResource = ResourceBuilder.new()
         .id('r1')
         .title('Resource 1')
@@ -1278,14 +1710,38 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         dependencies: [],
       });
 
-      expect(getTerminal('Event A')).to.equal(null);
-      expect(getTerminal('Event B')).to.equal(null);
+      expect(getTerminal('Event A')).not.to.equal(null);
+      expect(getTerminal('Event B')).not.to.equal(null);
     });
 
-    it('should reject the drop on a read-only event and surface an error', async () => {
+    it('should create a dependency to a read-only event that does not need to move', async () => {
       const handleDependenciesChange = vi.fn();
-      const { store } = await renderTimeline({
+      await renderTimeline({
         events: [eventA, readOnlyEvent],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getEventElement('Read-only event'));
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.include({
+        source: 'event-a',
+        target: 'event-ro',
+      });
+    });
+
+    it('should reject the drop when the read-only event would need to move, and surface an error', async () => {
+      const handleDependenciesChange = vi.fn();
+      const earlyReadOnlyEvent = EventBuilder.new()
+        .id('event-ro')
+        .title('Read-only event')
+        .singleDay('2025-07-03T09:30:00Z')
+        .readOnly()
+        .resource(resource1)
+        .build();
+      const { store } = await renderTimeline({
+        events: [eventA, earlyReadOnlyEvent],
         dependencies: [],
         onDependenciesChange: handleDependenciesChange,
       });
@@ -1294,7 +1750,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.contain('read-only');
+      expect(store.state.errors[0].code).to.equal('dependencyCascadeBlockedError');
     });
 
     it('should reject addDependency when the component is read-only', async () => {
@@ -1315,19 +1771,31 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         });
       });
 
-      expect(result).to.deep.equal({
-        status: 'rejected',
-        reason: 'readOnlyEvent',
-        eventId: 'event-a',
-      });
+      expect(result).to.deep.equal({ status: 'rejected', reason: 'readOnly' });
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
-    it('should ignore deleteDependency when an event of the dependency is read-only', async () => {
+    it('should delete a dependency of a read-only event', async () => {
       const handleDependenciesChange = vi.fn();
       const { store } = await renderTimeline({
         events: [eventA, readOnlyEvent],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-ro')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      act(() => {
+        store.deleteDependency('dep-1');
+      });
+
+      expect(handleDependenciesChange.mock.lastCall![0]).to.deep.equal([]);
+    });
+
+    it('should ignore deleteDependency when the component is read-only', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        readOnly: true,
         onDependenciesChange: handleDependenciesChange,
       });
 
@@ -1377,6 +1845,37 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(getArrowPaths()).to.have.length(1);
+    });
+  });
+
+  describe('unwritable date', () => {
+    // Outside the test: the store compares `eventModelStructure` by reference.
+    const getterOnlyStart = { start: { getter: (event: any) => event.start } };
+
+    it('should reject the drop when the target would need a date that cannot be written back, and surface an error', async () => {
+      const handleDependenciesChange = vi.fn();
+      const overlappingEvent = EventBuilder.new()
+        .id('event-o')
+        .title('Overlapping event')
+        .singleDay('2025-07-03T09:30:00Z')
+        .resource(resource1)
+        .build();
+      const { store } = await renderTimeline({
+        events: [eventA, overlappingEvent],
+        dependencies: [],
+        eventModelStructure: getterOnlyStart,
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      expect(() => simulateTerminalDrag('Event A', getEventElement('Overlapping event'))).toWarnDev(
+        [
+          'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.',
+        ],
+      );
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].code).to.equal('dependencyDatesNotWritableError');
     });
   });
 
@@ -1475,6 +1974,17 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(
         getAppearanceElement('Shared event', 'r2').hasAttribute('data-dependency-drop-target'),
       ).to.equal(false);
+      // Only the hovered appearance's terminals are offered, the drop edge marked.
+      expect(
+        getTerminal('Shared event', 'r1', 'start')!.hasAttribute('data-dependency-drop-target'),
+      ).to.equal(true);
+      expect(getTerminal('Shared event', 'r1', 'end')!.hasAttribute('data-visible')).to.equal(true);
+      expect(getTerminal('Shared event', 'r2', 'start')!.hasAttribute('data-visible')).to.equal(
+        false,
+      );
+      expect(getTerminal('Shared event', 'r2', 'end')!.hasAttribute('data-visible')).to.equal(
+        false,
+      );
 
       fireEvent.drop(r1Appearance, { dataTransfer: new DataTransfer() });
       fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
@@ -1675,6 +2185,152 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(handleDependenciesChangeB.mock.calls.length).to.equal(0);
       expect(storeA.state.errors).to.have.length(0);
       expect(storeB.state.errors).to.have.length(0);
+    });
+  });
+
+  // Reads the laid out overlays, so this only runs in the browser.
+  describe.skipIf(isJSDOM).each(['ltr', 'rtl'] as const)('%s', (direction) => {
+    const getInlineStart = (rect: DOMRect) => (direction === 'rtl' ? rect.right : rect.left);
+    const getInlineEnd = (rect: DOMRect) => (direction === 'rtl' ? rect.left : rect.right);
+    // A point the given distance outside the inline edge of a rect.
+    const pastInlineEnd = (rect: DOMRect, distance: number) =>
+      direction === 'rtl' ? rect.left - distance : rect.right + distance;
+    const pastInlineStart = (rect: DOMRect, distance: number) =>
+      direction === 'rtl' ? rect.right + distance : rect.left - distance;
+
+    // The client coordinates of a point of an overlay path, so the overlay transform counts.
+    const toClientPoint = (path: SVGGraphicsElement, x: number, y: number) =>
+      new DOMPoint(x, y).matrixTransform(path.getScreenCTM()!);
+
+    it('should draw the arrow from the inline end of the source to the inline start of the target', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        direction,
+      });
+
+      await waitFor(() => {
+        expect(getArrowPaths()).to.have.length(1);
+      });
+
+      const path = getArrowPaths()[0];
+      const coordinates = getPathCoordinates(path);
+      const start = toClientPoint(path, coordinates[0], coordinates[1]);
+      const end = toClientPoint(path, coordinates.at(-2)!, coordinates.at(-1)!);
+
+      expect(start.x).to.be.closeTo(
+        getInlineEnd(getEventElement('Event A').getBoundingClientRect()),
+        1,
+      );
+      expect(end.x).to.be.closeTo(
+        getInlineStart(getEventElement('Event B').getBoundingClientRect()),
+        1,
+      );
+    });
+
+    it('should place the terminals past the inline edges of their event, leaving the resize strips free', async () => {
+      await renderTimeline({ events: [eventA], dependencies: [], direction });
+
+      fireEvent.pointerOver(getEventElement('Event A'));
+      await waitFor(() => {
+        expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
+      });
+
+      const rect = getEventElement('Event A').getBoundingClientRect();
+      const centerY = rect.top + rect.height / 2;
+      const getTerminalSideAt = (x: number, y: number) =>
+        document
+          .elementFromPoint(x, y)!
+          .closest('[data-dependency-terminal]')
+          ?.getAttribute('data-side') ?? null;
+
+      for (const [side, getPointPast] of [
+        ['end', pastInlineEnd],
+        ['start', pastInlineStart],
+      ] as const) {
+        // Just inside the edge: the event's own resize strip.
+        expect(getTerminalSideAt(getPointPast(rect, -3), centerY)).to.equal(null);
+        // Just outside the edge, and on the halo beyond the circle and above it.
+        expect(getTerminalSideAt(getPointPast(rect, 2), centerY)).to.equal(side);
+        expect(getTerminalSideAt(getPointPast(rect, 14), centerY)).to.equal(side);
+        expect(getTerminalSideAt(getPointPast(rect, 4), centerY - 10)).to.equal(side);
+      }
+    });
+
+    it('should draw the provisional line to the cursor', async () => {
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        direction,
+      });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 300,
+        clientY: 60,
+      });
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).not.to.equal(null);
+      });
+
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 320,
+        clientY: 80,
+      });
+
+      await waitFor(() => {
+        const line = document.querySelector<SVGPathElement>('[data-dependency-drag-line]');
+        expect(line?.getAttribute('d')).to.match(/^M /);
+        const { x, y } = getLineEnd(line!);
+        expect(toClientPoint(line!, x, y).x).to.be.closeTo(320, 1);
+      });
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+    });
+
+    it('should open the dependency editor at the double-clicked point of the arrow', async () => {
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        direction,
+      });
+
+      await waitFor(() => {
+        expect(getArrowPaths()).to.have.length(1);
+      });
+
+      // The middle of the drawn arrow, which is straight.
+      const path = getArrowPaths()[0];
+      const coordinates = getPathCoordinates(path);
+      const start = toClientPoint(path, coordinates[0], coordinates[1]);
+      const end = toClientPoint(path, coordinates.at(-2)!, coordinates.at(-1)!);
+      const clientX = (start.x + end.x) / 2;
+      const clientY = (start.y + end.y) / 2;
+
+      // The hit-area lies under the drawn arrow.
+      const hitArea = document.elementFromPoint(clientX, clientY)!;
+      expect(hitArea.getAttribute('data-dependency-hit')).to.equal('dep-1');
+
+      fireEvent.doubleClick(hitArea, { clientX, clientY });
+
+      // The editor anchor is measured from the inline start of the overlay.
+      const overlayRect = document
+        .querySelector('[data-dependency-interactions]')!
+        .getBoundingClientRect();
+      expect(store.state.dependencyEditor?.anchor.x).to.be.closeTo(
+        direction === 'rtl' ? overlayRect.right - clientX : clientX - overlayRect.left,
+        1,
+      );
+      await waitFor(() => {
+        expect(document.querySelector('[data-dependency-dialog-anchor]')).not.to.equal(null);
+      });
+      expect(
+        document.querySelector('[data-dependency-dialog-anchor]')!.getBoundingClientRect().left,
+      ).to.be.closeTo(clientX, 1);
     });
   });
 });

@@ -2,5 +2,5 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "subtitle": "" }
+  "slotDescriptions": { "subtitle": "The component that renders the subtitle." }
 }

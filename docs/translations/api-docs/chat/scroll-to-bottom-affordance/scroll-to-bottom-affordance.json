@@ -2,5 +2,9 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "badge": "", "icon": "", "root": "" }
+  "slotDescriptions": {
+    "badge": "The component that renders the badge.",
+    "icon": "The component that renders the icon.",
+    "root": "The component that renders the root."
+  }
 }

@@ -4,7 +4,14 @@
       "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
       "required": true
     },
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "area": { "type": { "name": "bool" }, "default": "false" },
+    "axisHighlight": {
+      "type": {
+        "name": "shape",
+        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
+      }
+    },
     "baseline": {
       "type": {
         "name": "union",
@@ -18,6 +25,7 @@
         "description": "{ enabled?: bool, preventHighlight?: bool, preventTooltip?: bool }"
       }
     },
+    "children": { "type": { "name": "node" } },
     "clipAreaOffset": {
       "type": {
         "name": "shape",
@@ -28,6 +36,13 @@
     "color": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
       "default": "rainbowSurgePalette[0]"
+    },
+    "curve": {
+      "type": {
+        "name": "enum",
+        "description": "'bumpX'<br>&#124;&nbsp;'bumpY'<br>&#124;&nbsp;'catmullRom'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'monotoneX'<br>&#124;&nbsp;'monotoneY'<br>&#124;&nbsp;'natural'<br>&#124;&nbsp;'step'<br>&#124;&nbsp;'stepAfter'<br>&#124;&nbsp;'stepBefore'"
+      },
+      "default": "'linear'"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "desc": { "type": { "name": "string" } },
@@ -139,6 +154,14 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "theme": { "type": { "name": "enum", "description": "'dark'<br>&#124;&nbsp;'light'" } },
     "title": { "type": { "name": "string" } },
     "tooltipAxis": {
       "type": {
@@ -191,8 +214,18 @@
       "default": "LineElementPath",
       "class": null
     },
-    { "name": "lineHighlight", "description": "", "class": null },
-    { "name": "mark", "description": "", "class": null },
+    {
+      "name": "lineHighlight",
+      "description": "The component that renders the line highlight.",
+      "default": "LineHighlightElement",
+      "class": null
+    },
+    {
+      "name": "mark",
+      "description": "The component that renders the marks.",
+      "default": "MarkElement",
+      "class": null
+    },
     {
       "name": "tooltip",
       "description": "Custom component for the tooltip popper.",

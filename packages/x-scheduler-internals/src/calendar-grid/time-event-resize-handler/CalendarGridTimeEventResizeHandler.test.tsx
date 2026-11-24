@@ -1,14 +1,14 @@
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { describe } from 'vitest';
 
 describe('<CalendarGrid.TimeEventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(adapter.now('default'), adapter);
-  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
+  const eventStart = toZonedDateTime(Date.now(), 'default');
+  const eventEnd = toZonedDateTime(eventStart.epochMilliseconds + 3_600_000, 'default');
 
   describeConformance(<CalendarGrid.TimeEventResizeHandler side="start" />, () => ({
     refInstanceof: window.HTMLDivElement,
@@ -16,7 +16,7 @@ describe('<CalendarGrid.TimeEventResizeHandler />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn start={eventStart.value} end={eventEnd.value}>
+            <CalendarGrid.TimeColumn value={eventStart.toPlainDate()}>
               <CalendarGrid.TimeEvent
                 eventId="fake-id"
                 occurrenceKey="fake-key"

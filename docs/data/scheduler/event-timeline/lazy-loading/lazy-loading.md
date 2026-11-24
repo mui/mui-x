@@ -19,6 +19,9 @@ The `dataSource.getEvents(start, end)` method is called whenever the visible dat
 
 To enable lazy loading, pass a `dataSource` object with a `getEvents` method to the Event Timeline.
 The `getEvents` method receives a date range and should return a promise that resolves with the events for that range.
+The `start` and `end` of the range are instants that bound the visible days of `displayTimezone`.
+Compare them with the instants of your events, or read their days in `displayTimezone`, as the timezone of the browser can put them on other days.
+The `start` and `end` of an all-day event are `YYYY-MM-DD` dates, `end` being the day after its last day: compare them with the dates of the range in `displayTimezone`.
 
 When `dataSource` is provided, the `events` prop is not needed because all events are fetched through the data source.
 
@@ -36,6 +39,8 @@ When `dataSource` is provided, the `events` prop is not needed because all event
 
 The `persistEvents` method is called whenever events are created, updated, or deleted, letting you persist the changes back to the server.
 
+Fetched ranges are cached, so navigating to a range that is already loaded doesn't call `getEvents` again, and moving to a range that extends a loaded one only requests the new days.
+
 {{"demo": "BasicDataSource.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
@@ -46,6 +51,8 @@ In a real-world scenario, you would replace it with your own server-side data fe
 ## Error handling
 
 When the `dataSource.getEvents` method rejects, the Event Timeline displays an error state.
+It shows a generic message, which you can translate with the `somethingWentWrongError` key of the `localeText` prop, and logs the original error to the console.
+The same happens when `dataSource.persistEvents` throws or returns `{ success: false }`.
 Use the toggle button to simulate a server error.
 
 {{"demo": "ErrorHandling.js", "bg": "inline", "defaultCodeOpen": false}}

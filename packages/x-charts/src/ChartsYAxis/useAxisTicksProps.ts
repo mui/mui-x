@@ -8,6 +8,7 @@ import type { ChartsTextProps } from '../ChartsText';
 import { useYAxes } from '../hooks/useAxis';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
+import { getInlineTypographyStyle } from '../internals/getInlineTypographyStyle';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { DEFAULT_TICK_LABEL_FONT_SIZE } from '../constants';
 
@@ -53,7 +54,7 @@ export function useAxisTicksProps(inProps: ChartsYAxisProps) {
     // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     additionalProps: {
       style: {
-        ...theme.typography.caption,
+        ...getInlineTypographyStyle(theme.typography.caption),
         fontSize: tickFontSize,
         textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
         dominantBaseline: defaultDominantBaseline,

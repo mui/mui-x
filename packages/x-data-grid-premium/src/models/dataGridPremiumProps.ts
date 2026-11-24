@@ -45,7 +45,13 @@ import type {
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 import type { GridFormulaFunctionDefinition } from '../hooks/features/formula/gridFormulaInterfaces';
+import type {
+  GridComputedColDefOverrides,
+  GridComputedColumnDefinition,
+  GridComputedColumnsModel,
+} from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
 import type { GridPremiumFeatureDependencies } from './gridFeatureDependencies';
+import type { GridClipboardPasteOptions } from './gridClipboardPasteOptions';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -144,11 +150,28 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    */
   formulaA1Notation: boolean;
   /**
+   * If `true`, clicking a cell while a formula is being edited writes a reference to that cell
+   * into the formula instead of ending the edit, when the caret is where a reference is expected
+   * (after `=`, an operator, `(` or `,`) or on a reference, which is then replaced.
+   * Dragging over cells, or clicking with the Shift key pressed, writes a range.
+   * Clicking with the Ctrl key pressed (Command on macOS) adds the reference as another argument
+   * of the function call the caret is in.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  formulaReferencePicking: boolean;
+  /**
    * If `true`, the suggestion dropdown shown while editing a formula cell is disabled.
    * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
    * @default false
    */
   disableFormulaAutocomplete: boolean;
+  /**
+   * If `true`, the computed columns are disabled: the columns of the `computedColumns` model are
+   * not added to the grid and the UI to manage them is hidden.
+   * @default false
+   */
+  disableComputedColumns: boolean;
   /**
    * If `true`, the clipboard paste is disabled.
    * @default false
@@ -238,6 +261,29 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    */
   formulaFunctions?: Record<string, GridFormulaFunctionDefinition>;
   /**
+   * Set the computed columns of the grid: read-only columns whose value is a formula
+   * evaluated for every row from the other fields of the same row.
+   * Has no effect unless the formula feature is provided through `featureDependencies`.
+   */
+  computedColumns?: GridComputedColumnsModel;
+  /**
+   * Callback fired when the computed columns model changes.
+   * @param {GridComputedColumnsModel} model The new computed columns model.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onComputedColumnsChange?: (
+    model: GridComputedColumnsModel,
+    details: GridCallbackDetailsPremium,
+  ) => void;
+  /**
+   * The column definition properties applied to the columns generated from the `computedColumns` model.
+   * Pass a function to return different properties for each computed column.
+   * Keep the reference stable between renders when it holds functions, arrays, or objects: the overrides are compared property by property, so a new one re-creates the computed columns on every render, and loops when the parent re-renders on grid state.
+   */
+  computedColDef?:
+    | GridComputedColDefOverrides
+    | ((definition: GridComputedColumnDefinition) => GridComputedColDefOverrides);
+  /**
    * Set the row grouping model of the grid.
    */
   rowGroupingModel?: GridRowGroupingModel;
@@ -297,6 +343,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * Callback fired when the clipboard paste operation ends.
    */
   onClipboardPasteEnd?: GridEventListener<'clipboardPasteEnd', GridApiPremium>;
+  /**
+   * Options for the clipboard paste.
+   */
+  clipboardPasteOptions?: GridClipboardPasteOptions<R>;
   /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.

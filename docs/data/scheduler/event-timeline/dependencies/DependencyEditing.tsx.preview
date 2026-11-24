@@ -1,0 +1,10 @@
+<EventTimelinePremium
+  events={events}
+  onEventsChange={setEvents}
+  resources={resources}
+  dependencies={dependencies}
+  onDependenciesChange={setDependencies}
+  features={features}
+  defaultVisibleDate={defaultVisibleDate}
+  defaultPreset="dayAndWeek"
+/>

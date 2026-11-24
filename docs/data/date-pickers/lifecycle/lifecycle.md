@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers'
 
 # Components lifecycle
 
-<p class="description">This page explains when the onChange, onAccept, and onClose callbacks are called.</p>
+<p class="description">This page explains when the onChange, onAccept, onClose, and onCancel callbacks are called.</p>
 
 ## Lifecycle on simple fields
 
@@ -343,6 +343,50 @@ If the component is not controlled, the behavior is the same, except for the _Cl
 
 Clicking on a shortcut will call `onAccept`, except if the `changeImportance` property has been set to `"set"` instead of `"accept"`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
+
+## Lifecycle on pickers: "onCancel"
+
+### Usage
+
+The `onCancel` callback is called when the user triggers the Cancel action.
+Use it to react to an explicit cancellation, for example to close a dialog that wraps the picker.
+
+```tsx
+<DatePicker closeOnSelect={false} onCancel={() => trackCancellation()} />
+```
+
+The callback takes no arguments. The picker resets the value to the last accepted value (which can trigger `onChange`), then calls `onCancel`, then closes (which triggers `onClose`).
+
+### When is "onCancel" called?
+
+#### When clicking the "Cancel" action
+
+`onCancel` is called when the user clicks the _Cancel_ button of the built-in action bar.
+
+It is also called whenever the `cancelValueChanges` action is triggered, which `usePickerActionsContext` exposes for a custom `actionBar` slot.
+See the [custom layout doc](/x/react-date-pickers/custom-layout/) for more information about replacing the action bar.
+
+The action bar does not show a _Cancel_ button by default on pickers that close on select. Set `closeOnSelect` to `false` to enable it:
+
+```tsx
+<DesktopDatePicker closeOnSelect={false} />
+```
+
+`onCancel` is available on every picker, including the `Static` variants:
+
+```tsx
+<StaticDatePicker onCancel={() => trackCancellation()} />
+```
+
+:::warning
+Static pickers also have a deprecated `onClose` callback, which still fires on every Cancel click (as well as on Clear, Today, and OK).
+Use `onCancel` for cancellations and `onAccept` for confirmed value changes instead.
+:::
+
+#### When the picker is dismissed without clicking "Cancel"
+
+Pressing <kbd class="key">Escape</kbd>, clicking outside the picker, or completing a selection that closes the picker automatically does not call `onCancel`.
+Use `onClose` to react to those cases instead. See the [dedicated section above](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-onclose).
 
 ## Classic scenarios
 

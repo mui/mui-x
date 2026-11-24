@@ -287,7 +287,6 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
       input?.focus({ preventScroll: true });
     } else if (autoFocus === false && rippleRef.current) {
       // Only available in @mui/material v5.4.1 or later
-      // @ts-ignore
       rippleRef.current.stop({});
     }
   }, [autoFocus]);
@@ -603,6 +602,8 @@ const BasePopper = forwardRef<any, P['basePopper']>(function BasePopper(props, r
     target,
     transition,
     placement,
+    // Destructured so MUI Popper's default `role="tooltip"` is not applied unless explicitly requested
+    role,
     material,
     ...other
   } = props;
@@ -674,6 +675,7 @@ const BasePopper = forwardRef<any, P['basePopper']>(function BasePopper(props, r
       transition={transition}
       placement={placement}
       modifiers={modifiers}
+      role={role}
       {...other}
       {...material}
       ref={ref}

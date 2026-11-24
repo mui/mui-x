@@ -61,6 +61,7 @@
         "describedArgs": ["value", "context"]
       }
     },
+    "onCancel": { "type": { "name": "func" } },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
@@ -258,6 +259,7 @@
     {
       "name": "field",
       "description": "Component used to enter the date with the keyboard.",
+      "default": "SingleInputDateRangeField, SingleInputTimeRangeField, or SingleInputDateTimeRangeField, depending on the Picker.",
       "class": null
     },
     {
@@ -269,6 +271,7 @@
     {
       "name": "layout",
       "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "default": "PickersLayout",
       "class": null
     },
     {
@@ -304,6 +307,7 @@
     {
       "name": "openPickerIcon",
       "description": "Icon to display in the button used to open the Picker.",
+      "default": "CalendarIcon, ClockIcon, or DateRangeIcon, depending on the field.",
       "class": null
     },
     {

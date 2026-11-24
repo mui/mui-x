@@ -2,5 +2,5 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "sendButton": "" }
+  "slotDescriptions": { "sendButton": "The component that renders the send button." }
 }

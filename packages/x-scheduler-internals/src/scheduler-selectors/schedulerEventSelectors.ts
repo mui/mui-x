@@ -10,6 +10,7 @@ import type { SchedulerState as State } from '../internals/utils/SchedulerStore/
 import { resolveResourceProperty } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 import { getPrimaryResourceId } from '../internals/utils/event-utils';
+import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 /**
  * Scans the events in order and returns whether the first one with a defined `resource`
@@ -35,6 +36,12 @@ function inferCanHaveMultipleResourcesFromEvents(
 const processedEventSelector = (state: State, eventId: SchedulerEventId | null | undefined) =>
   eventId == null ? null : state.processedEventLookup.get(eventId);
 
+const processedEventListSelector = createSelectorMemoized(
+  (state: State) => state.eventIdList,
+  (state: State) => state.processedEventLookup,
+  (eventIds, processedEventLookup) => eventIds.map((id) => processedEventLookup.get(id)!),
+);
+
 const isEventReadOnlySelector = (state: State, eventId: SchedulerEventId) => {
   const processedEvent = processedEventSelector(state, eventId);
   if (!processedEvent) {
@@ -50,12 +57,44 @@ const isEventReadOnlySelector = (state: State, eventId: SchedulerEventId) => {
   });
 };
 
+const isPropertyMissingSetter = (
+  eventModelStructure: State['eventModelStructure'],
+  property: keyof SchedulerEvent,
+) => Boolean(eventModelStructure?.[property] && !eventModelStructure[property].setter);
+
+/**
+ * Whether `eventModelStructure` can write both `start` and `end` back to the model. A date
+ * declared with a getter but no setter is unrepresentable in the consumer's model — independent
+ * of any particular event, so it also gates creating a brand new one.
+ */
+const canWriteEventDatesSelector = (eventModelStructure: State['eventModelStructure']) =>
+  !isPropertyMissingSetter(eventModelStructure, 'start') &&
+  !isPropertyMissingSetter(eventModelStructure, 'end');
+
+/**
+ * Whether an event's dates can be moved: the event, its resources and the scheduler are all
+ * editable, and `eventModelStructure` can write both `start` and `end` back to the model.
+ * All-or-nothing because a drag commits both dates together (`{ id, start, end }`) — used by
+ * `isDraggable`. A resize, which only touches one side, uses the per-property check on
+ * `isResizable` instead; a paste re-derives the same all-or-nothing rule inline, since it also
+ * needs the event's own `readOnly` folded in only when the paste actually moves a date.
+ */
+const canMoveDatesSelector = (state: State, eventId: SchedulerEventId) =>
+  !isEventReadOnlySelector(state, eventId) && canWriteEventDatesSelector(state.eventModelStructure);
+
 export const schedulerEventSelectors = {
   creationConfig: createSelectorMemoized(
     (state: State) => state.readOnly,
     (state: State) => state.eventCreation,
-    (isSchedulerReadOnly, creationConfig) => {
+    // Keyed on the boolean it derives, not the `eventModelStructure` reference: an inline prop is
+    // a new object every render, which would otherwise invalidate the memo on every render.
+    (state: State) => canWriteEventDatesSelector(state.eventModelStructure),
+    (isSchedulerReadOnly, creationConfig, canWriteEventDates) => {
       if (isSchedulerReadOnly) {
+        return false;
+      }
+      // Unlike an update, a creation has no old date to fall back to, so it's refused entirely.
+      if (!canWriteEventDates) {
         return false;
       }
       if (creationConfig === false) {
@@ -82,6 +121,11 @@ export const schedulerEventSelectors = {
 
     return eventCreation?.duration ?? DEFAULT_EVENT_CREATION_CONFIG.duration;
   },
+  /**
+   * The deletion config, or `false` when deleting from the UI is disabled (`eventDeletion={false}`
+   * or a read-only scheduler). Programmatic deletion through the store ignores it.
+   */
+  deletionConfig: (state: State) => (state.readOnly ? false : state.eventDeletion),
   /**
    * Whether an occurrence whose own `resource` carries no shape (`null`/`undefined`) should
    * be edited/created as multi-resource. Reads `eventCreation.canHaveMultipleResources`
@@ -117,6 +161,18 @@ export const schedulerEventSelectors = {
     return event;
   },
   isReadOnly: isEventReadOnlySelector,
+  /** Used by writers where no event exists yet (a creation), or that write the whole model into a new one (a copy). */
+  canWriteEventDates: (state: State) => canWriteEventDatesSelector(state.eventModelStructure),
+  /**
+   * The dates `eventModelStructure` declares with a getter but no setter, so they can't be
+   * written back to the model. `removeUnwritableDates` drops them from a resize-style change,
+   * the scheduling plugin refuses a cascade carrying one, and every refusal names them in its
+   * dev warning (`datesNotWritableReason`).
+   */
+  unwritableDates: (state: State): SchedulerEventSide[] =>
+    (['start', 'end'] as const).filter((property) =>
+      isPropertyMissingSetter(state.eventModelStructure, property),
+    ),
   /**
    * Resolves an event's color. `resourceId` picks which resource's `eventColor` counts when the
    * event itself has none — pass the row's resource id on a resource-row surface (the Event
@@ -152,37 +208,24 @@ export const schedulerEventSelectors = {
         return () => true;
       }
 
-      return (property: keyof SchedulerEvent) => {
-        if (eventModelStructure?.[property] && !eventModelStructure?.[property].setter) {
-          return true;
-        }
-
-        return false;
-      };
+      return (property: keyof SchedulerEvent) =>
+        isPropertyMissingSetter(eventModelStructure, property);
     },
   ),
-  processedEventList: createSelectorMemoized(
-    (state: State) => state.eventIdList,
-    (state: State) => state.processedEventLookup,
-    (eventIds, processedEventLookup) => eventIds.map((id) => processedEventLookup.get(id)!),
+  processedEventRangeIndex: createSelectorMemoized(
+    processedEventListSelector,
+    (state: State) => state.recurringEventsPlugin,
+    (events, recurringEventsPlugin) => createEventRangeIndex(events, recurringEventsPlugin != null),
   ),
   idList: (state: State) => state.eventIdList,
   modelList: (state: State) => state.eventModelList,
   modelLookup: (state: State) => state.eventModelLookup,
+  processedEventLookup: (state: State) => state.processedEventLookup,
   canDragEventsFromTheOutside: (state: State) =>
     state.canDragEventsFromTheOutside && !state.readOnly,
   canDropEventsToTheOutside: (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
   isDraggable: (state: State, eventId: SchedulerEventId) => {
-    if (isEventReadOnlySelector(state, eventId)) {
-      return false;
-    }
-
-    const eventModelStructure = state.eventModelStructure;
-    if (eventModelStructure?.start && !eventModelStructure?.start.setter) {
-      return false;
-    }
-
-    if (eventModelStructure?.end && !eventModelStructure?.end.setter) {
+    if (!canMoveDatesSelector(state, eventId)) {
       return false;
     }
 
@@ -204,12 +247,9 @@ export const schedulerEventSelectors = {
       return false;
     }
 
-    const eventModelStructure = state.eventModelStructure;
-    if (side === 'start' && eventModelStructure?.start && !eventModelStructure?.start.setter) {
-      return false;
-    }
-
-    if (side === 'end' && eventModelStructure?.end && !eventModelStructure?.end.setter) {
+    // Per-side, unlike a drag: only the handle for an unwritable side is disabled, so a
+    // getter-only `start` blocks the "start" handle but leaves a writable "end" resizable.
+    if (isPropertyMissingSetter(state.eventModelStructure, side)) {
       return false;
     }
 
@@ -228,8 +268,7 @@ export const schedulerEventSelectors = {
     });
   },
   isRecurring: (state: State, eventId: SchedulerEventId) =>
-    state.recurringEventsPlugin != null &&
-    Boolean(processedEventSelector(state, eventId)?.dataTimezone.rrule),
+    state.recurringEventsPlugin != null && Boolean(processedEventSelector(state, eventId)?.rrule),
 };
 
 function getIsResizableFromProperty(

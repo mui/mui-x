@@ -1,8 +1,10 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { PieChart, PieChartProps } from '@mui/x-charts/PieChart';
-import { HighlightItemIdentifier } from '@mui/x-charts/models';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
+import type { PieChartProps } from '@mui/x-charts/PieChart';
+import { PieChart } from '@mui/x-charts/PieChart';
+import type { HighlightItemIdentifier } from '@mui/x-charts/models';
 
 export default function SyncHighlight() {
   const [highlightedItem, setHighlightedItem] =

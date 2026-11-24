@@ -15,6 +15,8 @@ import {
   filterStateInitializer,
   useGridFocus,
   useGridKeyboardNavigation,
+  useGridKeyboardUse,
+  keyboardUseStateInitializer,
   useGridPagination,
   paginationStateInitializer,
   useGridPreferencesPanel,
@@ -53,8 +55,8 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
-  useFirstRender,
 } from '@mui/x-data-grid/internals';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -64,6 +66,7 @@ import {
   useGridColumnReorder,
   columnReorderStateInitializer,
 } from '../hooks/features/columnReorder/useGridColumnReorder';
+import { useGridColumnReorderPointer } from '../hooks/features/columnReorder/useGridColumnReorderPointer';
 import { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 import { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 import { useGridDataSourceTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridDataSourceTreeDataPreProcessors';
@@ -82,6 +85,8 @@ import {
   rowReorderStateInitializer,
 } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+import { useGridRowReorderPointer } from '../hooks/features/rowReorder/useGridRowReorderPointer';
+import { useGridKeyboardReorder } from '../hooks/features/keyboardReorder/useGridKeyboardReorder';
 import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 import {
@@ -141,6 +146,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
+  useGridInitializeState(keyboardUseStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
@@ -159,6 +165,7 @@ export const useDataGridProComponent = (
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
+  useGridKeyboardUse(apiRef);
   useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
@@ -176,10 +183,13 @@ export const useDataGridProComponent = (
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
+  useGridColumnReorderPointer(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);
-  useGridScroll(apiRef, props);
+  useGridRowReorderPointer(apiRef, props);
+  useGridKeyboardReorder(apiRef, props);
+  useGridScroll(apiRef);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
   useGridDataSourceLazyLoader(apiRef, props);
@@ -197,7 +207,7 @@ export const useDataGridProComponent = (
   useGridListView(apiRef, props);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });
   React.useEffect(() => {

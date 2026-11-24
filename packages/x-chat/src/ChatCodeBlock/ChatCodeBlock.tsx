@@ -28,7 +28,13 @@ export interface ChatCodeBlockProps {
    */
   highlighter?: (code: string, language: string) => React.ReactNode;
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatCodeBlockClasses>;
 }
 
@@ -195,6 +201,9 @@ ChatCodeBlock.propTypes /* remove-proptypes */ = {
    * The code string to display.
    */
   children: PropTypes.string.isRequired,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -209,6 +218,9 @@ ChatCodeBlock.propTypes /* remove-proptypes */ = {
    * Language identifier shown in the header (e.g. "typescript", "python").
    */
   language: PropTypes.string,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

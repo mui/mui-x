@@ -1,0 +1,680 @@
+import { warnOnce } from '@mui/x-internals/warning';
+import type {
+  SchedulerEvent,
+  SchedulerEventId,
+  SchedulerEventSide,
+  SchedulerEventUpdatedProperties,
+  SchedulerProcessedEvent,
+} from '@mui/x-scheduler-internals/models';
+import {
+  getDayTimezone,
+  getLastInstant,
+  timestampToEventString,
+  localToEpochMs,
+  MS_PER_DAY,
+  snapAllDayBounds,
+  snapToOwnDays,
+  toLocalDayNumber,
+  toLocalMs,
+} from '@mui/x-scheduler-internals/internals';
+import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
+import type { SchedulerDependency } from '../../models';
+import {
+  addDependencyLag,
+  getDependencyEdges,
+  getEffectiveDependencyLag,
+  isDependencyActive,
+} from './dependency-utils';
+
+export interface ComputeAutoSchedulingCascadeParameters {
+  /**
+   * The processed events currently in the store, keyed by id.
+   */
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>;
+  /**
+   * The active dependencies grouped by `source`
+   * (`eventTimelinePremiumDependencySelectors.activeModelListBySource`).
+   */
+  activeDependenciesBySource: Map<SchedulerEventId, SchedulerDependency[]>;
+  /**
+   * The active dependencies grouped by `target`
+   * (`eventTimelinePremiumDependencySelectors.activeModelListByTarget`).
+   */
+  activeDependenciesByTarget: Map<SchedulerEventId, SchedulerDependency[]>;
+  isEventReadOnly: (eventId: SchedulerEventId) => boolean;
+  /**
+   * The `updated` entries of the `updateEvents` batch being applied.
+   */
+  updated: readonly SchedulerEventUpdatedProperties[];
+  /**
+   * The ids deleted in the same batch. Deleted events are never cascaded into.
+   */
+  deleted: ReadonlySet<SchedulerEventId>;
+  /**
+   * Dependencies just created or made stricter: their target is pushed even though no
+   * predecessor moved.
+   */
+  enforcedDependencies?: readonly SchedulerDependency[];
+  /**
+   * The display timezone as the `displayTimezone` parameter gives it, `"default"` included: the
+   * `Date`s of all-day entries are read and written in it, and an all-day event made timed takes
+   * it. Between an all-day event and a timed event, the dates of the all-day event are read in it
+   * only when the timed event has no timezone.
+   */
+  displayTimezone: string;
+}
+
+/**
+ * The dates of an event as the engine works on them: instants, with the timezone its days and
+ * its wall-clock times are read in. The end of an all-day event is its last instant, where its
+ * occurrences end exclusively.
+ */
+interface ResolvedDates {
+  start: number;
+  end: number;
+  timezone: string;
+  allDay: boolean;
+}
+
+export interface AutoSchedulingCascadeResult {
+  /**
+   * The extra `{ id, start, end }` updates restoring the dependency constraints.
+   */
+  updated: SchedulerEventUpdatedProperties[];
+  /**
+   * Read-only events the cascade would have moved: the constraint cannot be restored,
+   * so the caller should reject the batch.
+   */
+  blocked: SchedulerEventId[];
+}
+
+/**
+ * The dates of an event from its instants. An all-day event spans whole days of `timezone`.
+ */
+function resolveDates(
+  start: number,
+  end: number,
+  timezone: string,
+  allDay: boolean,
+): ResolvedDates {
+  if (!allDay) {
+    return { start, end, timezone, allDay };
+  }
+  const bounds = snapAllDayBounds(start, end, timezone);
+  return { start: bounds.start, end: getLastInstant(bounds.end, true), timezone, allDay };
+}
+
+function resolveProcessedEventDates(
+  processedEvent: SchedulerProcessedEvent,
+  displayTimezone: string,
+): ResolvedDates {
+  // An all-day event spans whole days of the display timezone, up to the last instant of its last
+  // day.
+  const allDay = !!processedEvent.allDay;
+  return {
+    start: processedEvent.start.epochMilliseconds,
+    end: getLastInstant(processedEvent.end.epochMilliseconds, allDay),
+    timezone: getDayTimezone(processedEvent, displayTimezone),
+    allDay,
+  };
+}
+
+// The range of `Date`.
+const MAX_TIMESTAMP = 8.64e15;
+
+/**
+ * The earliest instant `dependency` allows for the successor's bounded edge, or `null` when
+ * the lag runs past the supported date range. The lag is added in the timezone the bound is read
+ * in: the successor's, or the display timezone for a successor without one after an all-day
+ * predecessor.
+ */
+function getDependencyBound(
+  dependency: SchedulerDependency,
+  sourceDates: ResolvedDates,
+  targetDates: ResolvedDates,
+  displayTimezone: string,
+): number | null {
+  const edges = getDependencyEdges(dependency.type);
+  let sourceEdge = sourceDates[edges.source];
+  let lagTimezone = targetDates.timezone;
+  if (sourceDates.allDay !== targetDates.allDay) {
+    // Between an all-day and a timed event, the dates of the all-day event are read in the
+    // timezone of the timed one, or in the display timezone when it has none, like a calendar
+    // reads its floating dates (RFC 4791): the same edge of its date there, or the wall time of
+    // the timed predecessor on the days of the all-day successor.
+    const timedTimezone = sourceDates.allDay ? targetDates.timezone : sourceDates.timezone;
+    const timezone = timedTimezone === 'default' ? displayTimezone : timedTimezone;
+    if (sourceDates.allDay) {
+      sourceEdge = getAllDayEdgeMs(
+        toLocalDayNumber(sourceEdge, sourceDates.timezone),
+        edges.source,
+        timezone,
+      );
+      lagTimezone = timezone;
+    } else {
+      sourceEdge = localToEpochMs(toLocalMs(sourceEdge, timezone), targetDates.timezone);
+    }
+  }
+  const timestamp = addDependencyLag(
+    sourceEdge,
+    getEffectiveDependencyLag(dependency, targetDates.allDay),
+    lagTimezone,
+  );
+  // `NaN` fails the comparison too.
+  return Math.abs(timestamp) <= MAX_TIMESTAMP ? timestamp : null;
+}
+
+// The cascade shifts the all-day events with day numbers rather than plain dates: it can move
+// hundreds of events, and creating plain dates would make it noticeably slower.
+
+/**
+ * The `side` of an all-day event on the day `dayNumber`: the first instant of the day for its
+ * start, or the last instant before the next day for its end. A day whose midnight a DST
+ * transition skips starts at the end of the gap. Both edges of a day the timezone skips, like
+ * December 30th, 2011 in Pacific/Apia, are on the next day.
+ */
+function getAllDayEdgeMs(dayNumber: number, side: SchedulerEventSide, timezone: string): number {
+  if (side === 'start') {
+    return localToEpochMs(dayNumber * MS_PER_DAY, timezone);
+  }
+  const endMs = localToEpochMs((dayNumber + 1) * MS_PER_DAY, timezone) - 1;
+  // The instant before the next day is on the previous day when the timezone skips this one.
+  return toLocalDayNumber(endMs, timezone) < dayNumber
+    ? getAllDayEdgeMs(dayNumber + 1, 'end', timezone)
+    : endMs;
+}
+
+// Minimal whole-day shift bringing the `side` of an all-day event, on the day `edgeDay`, to `bound`.
+function minimalDayShift(
+  edgeDay: number,
+  side: SchedulerEventSide,
+  bound: number,
+  timezone: string,
+): number {
+  let dayCount = Math.max(0, toLocalDayNumber(bound, timezone) - edgeDay - 1);
+  while (getAllDayEdgeMs(edgeDay + dayCount, side, timezone) < bound) {
+    dayCount += 1;
+  }
+  return dayCount;
+}
+
+/**
+ * How far the target of `dependency` has to move for the dependency to hold with the
+ * current event dates: in milliseconds, or in whole days for an all-day target (the
+ * cascade shifts those by days). `0` when it already holds or the engine ignores it.
+ */
+export function getDependencyViolation(
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
+  dependency: SchedulerDependency,
+  displayTimezone: string,
+): number {
+  // The engine never constrains an event by itself.
+  if (
+    dependency.source === dependency.target ||
+    !isDependencyActive(processedEventLookup, dependency)
+  ) {
+    return 0;
+  }
+  const targetDates = resolveProcessedEventDates(
+    processedEventLookup.get(dependency.target)!,
+    displayTimezone,
+  );
+  const bound = getDependencyBound(
+    dependency,
+    resolveProcessedEventDates(processedEventLookup.get(dependency.source)!, displayTimezone),
+    targetDates,
+    displayTimezone,
+  );
+  if (bound === null) {
+    return 0;
+  }
+  const targetSide = getDependencyEdges(dependency.type).target;
+  if (targetDates.allDay) {
+    const { timezone } = targetDates;
+    const edgeDay = toLocalDayNumber(targetDates[targetSide], timezone);
+    return minimalDayShift(edgeDay, targetSide, bound, timezone);
+  }
+  return Math.max(0, bound - targetDates[targetSide]);
+}
+
+/**
+ * Computes the dependency cascade for an `updateEvents` batch or a created/edited
+ * dependency: the extra `{ id, start, end }` updates restoring the constraints,
+ * transitively.
+ *
+ * Each dependency bounds one edge of the successor by one edge of the predecessor plus
+ * the lag (FS: `start >= pred.end`, SS: `start >= pred.start`, FF: `end >= pred.end`,
+ * SF: `end >= pred.start`), the lag being added in the successor's timezone. Between an all-day
+ * and a timed event, the dates of the all-day event are read in the timezone of the timed one, or
+ * in the display timezone when it has none.
+ *
+ * Push-only: events only move later, and pre-existing violations stay as-is unless their
+ * dependency is enforced. A seed whose entry moves `start` is being placed by the user and
+ * is clamped forward by all its predecessors; a seed whose entry only moves `end` is
+ * clamped by the predecessors bounding its end; everything else is pushed only by
+ * predecessors whose lagged bound advances in the same batch, or by an enforced
+ * dependency. A `timezone` change moves the effective dates of wall-time events.
+ * Timed events keep their duration, except that a resize keeps the edge it did not touch
+ * as long as that edge is not the violated one. All-day events shift by whole days, and a
+ * read-only event that would need to move is reported in `blocked` so the caller rejects
+ * the batch.
+ *
+ * Kahn pass over the subgraph reachable from the seeds and the enforced targets. Cycles in
+ * the props data warn in dev: a cycle through either is broken there, any other stays unmoved.
+ * Only loaded events take part: with lazy loading, an unfetched successor is not pushed.
+ */
+export function computeAutoSchedulingCascade(
+  parameters: ComputeAutoSchedulingCascadeParameters,
+): AutoSchedulingCascadeResult {
+  const {
+    processedEventLookup,
+    activeDependenciesBySource,
+    activeDependenciesByTarget,
+    isEventReadOnly,
+    deleted,
+    enforcedDependencies = [],
+    displayTimezone,
+  } = parameters;
+
+  const newDates = new Map<SchedulerEventId, ResolvedDates>();
+  // The dates of the events before the batch, read once per event.
+  const currentDatesById = new Map<SchedulerEventId, ResolvedDates | null>();
+  // Turning recurring in this batch: the active index predates the update and still
+  // lists the event.
+  const becomesRecurring = new Set<SchedulerEventId>();
+  // Seeds whose effective start actually moves: the user is placing them, so they are
+  // the ones clamped. Checked against the current start: an entry can carry the same
+  // dates (a drop released in place, an API call) and those place nothing, while an
+  // `allDay` flip moves the start without carrying it.
+  const repositionedSeeds = new Set<SchedulerEventId>();
+  // Repositioned seeds whose entry left `end` where it is (a start resize): the clamp
+  // keeps their end when it can.
+  const startResizedSeeds = new Set<SchedulerEventId>();
+  // Seeds whose entry only moves `end` (an end resize): clamped by their end bounds,
+  // keeping their start when it can.
+  const endResizedSeeds = new Set<SchedulerEventId>();
+  // Seeds whose entry changes the data timezone: their emitted dates go through the
+  // store's serialization in the old timezone.
+  const timezoneChanges = new Map<
+    SchedulerEventId,
+    { model: SchedulerEvent; dataTimezone: string; nextTimezone: string }
+  >();
+
+  // Whole-entry last-wins per id, mirroring the store's fold.
+  const lastEntryById = new Map<SchedulerEventId, SchedulerEventUpdatedProperties>();
+  for (const entry of parameters.updated) {
+    lastEntryById.set(entry.id, entry);
+  }
+
+  for (const entry of lastEntryById.values()) {
+    if (deleted.has(entry.id)) {
+      continue;
+    }
+    if (entry.rrule != null) {
+      becomesRecurring.add(entry.id);
+      continue;
+    }
+    const processedEvent = processedEventLookup.get(entry.id);
+    if (processedEvent === undefined) {
+      // Not loaded (lazy loading): its dependencies are inactive anyway.
+      continue;
+    }
+    const model = processedEvent.modelInBuiltInFormat;
+    const allDay = entry.allDay ?? processedEvent.allDay ?? false;
+    // Like the store, an all-day event made timed is written in the display timezone, where it
+    // moves unless the entry gives its own timezone.
+    const becomesTimed = !!processedEvent.allDay && !allDay;
+    const dataTimezone = becomesTimed ? displayTimezone : (model.timezone ?? 'default');
+    // An explicit `undefined` clears the property in the store (back to 'default').
+    const nextTimezone = 'timezone' in entry ? (entry.timezone ?? 'default') : dataTimezone;
+    // The days of an all-day event do not depend on its timezone.
+    const changesTimezone = nextTimezone !== dataTimezone && !allDay;
+    if (entry.start == null && entry.end == null && entry.allDay == null && !changesTimezone) {
+      continue;
+    }
+    if (changesTimezone) {
+      timezoneChanges.set(entry.id, { model, dataTimezone, nextTimezone });
+    }
+    // Mirrors the store: the entries of a timed event are serialized in the data timezone
+    // (`timestampToEventString`) and the model is then read in the (new) timezone.
+    const resolveEntryTimestamp = (
+      value: Date | undefined,
+      modelString: string,
+      currentTimestamp: number,
+    ) => {
+      if (!changesTimezone) {
+        return value == null ? currentTimestamp : value.getTime();
+      }
+      const nextString =
+        value == null
+          ? modelString
+          : timestampToEventString(value.getTime(), modelString, dataTimezone);
+      return resolveEventTimestamp(nextString, nextTimezone, entry.id);
+    };
+    let entryStart = resolveEntryTimestamp(
+      entry.start,
+      model.start,
+      processedEvent.start.epochMilliseconds,
+    );
+    let entryEnd = resolveEntryTimestamp(
+      entry.end,
+      model.end,
+      processedEvent.end.epochMilliseconds,
+    );
+    if (allDay && !processedEvent.allDay && entry.start == null && entry.end == null) {
+      // Like the store, a timed event made all-day without bounds keeps the dates of its timezone.
+      const ownDays = snapToOwnDays(entryStart, entryEnd, dataTimezone, displayTimezone);
+      entryStart = ownDays.start;
+      entryEnd = ownDays.end;
+    }
+    const dates = resolveDates(
+      entryStart,
+      entryEnd,
+      allDay ? displayTimezone : nextTimezone,
+      allDay,
+    );
+    const { start: startTimestamp, end: endTimestamp } = dates;
+    newDates.set(entry.id, dates);
+
+    const current = resolveCurrentDates(entry.id)!;
+    const startMoved = startTimestamp !== current.start;
+    if (startMoved) {
+      repositionedSeeds.add(entry.id);
+      if (endTimestamp === current.end) {
+        startResizedSeeds.add(entry.id);
+      }
+    } else if (endTimestamp !== current.end) {
+      endResizedSeeds.add(entry.id);
+    }
+  }
+
+  const blocked: SchedulerEventId[] = [];
+
+  const enforcedIds = new Set<SchedulerDependency['id']>();
+  // The seeds plus the targets of the enforced dependencies: where the cascade starts.
+  const roots = new Set(newDates.keys());
+  for (const dependency of enforcedDependencies) {
+    if (!deleted.has(dependency.target) && !becomesRecurring.has(dependency.target)) {
+      enforcedIds.add(dependency.id);
+      roots.add(dependency.target);
+    }
+  }
+
+  if (roots.size === 0) {
+    return { updated: [], blocked };
+  }
+
+  // Subgraph reachable from the roots, visiting each node and edge once.
+  const members = new Set<SchedulerEventId>(roots);
+  const inDegree = new Map<SchedulerEventId, number>();
+  const discovery = [...roots];
+  while (discovery.length > 0) {
+    const eventId = discovery.pop()!;
+    for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
+      const { target } = dependency;
+      if (deleted.has(target) || becomesRecurring.has(target)) {
+        continue;
+      }
+      inDegree.set(target, (inDegree.get(target) ?? 0) + 1);
+      if (!members.has(target)) {
+        members.add(target);
+        discovery.push(target);
+      }
+    }
+  }
+
+  const ready: SchedulerEventId[] = [];
+  for (const rootId of roots) {
+    if ((inDegree.get(rootId) ?? 0) === 0) {
+      ready.push(rootId);
+    }
+  }
+  const processed = new Set<SchedulerEventId>();
+  const cascaded: SchedulerEventUpdatedProperties[] = [];
+  while (processed.size < members.size) {
+    if (ready.length === 0) {
+      // Every remaining member waits on a cycle. A root on it can still settle (its
+      // dates are the user's, or its constraint is enforced), so the stall breaks there;
+      // a rootless cycle stays unmoved.
+      const stalledRoot = [...roots].find((rootId) => !processed.has(rootId));
+      if (stalledRoot === undefined) {
+        break;
+      }
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce(
+          [
+            'MUI X Scheduler: The dependencies provided via props contain a cycle through a rescheduled event.',
+            'Auto-scheduling processed that event with the cycle unresolved, so its members may keep violating each other.',
+            'Fix the `dependencies` data — `addDependency()` rejects dependencies that would create a cycle.',
+          ].join('\n'),
+        );
+      }
+      ready.push(stalledRoot);
+    }
+    const eventId = ready.pop()!;
+    if (processed.has(eventId)) {
+      // A force-broken root can still reach in-degree 0 afterwards.
+      continue;
+    }
+    processed.add(eventId);
+
+    const shifted = computeShift(eventId);
+    if (shifted !== null) {
+      // Report only the edge(s) that actually differ from `base` (captured before `newDates`
+      // below moves it): `keepsEnd` / `keptStartBound` can leave one edge untouched, and
+      // reporting it anyway would turn a resize into a move `updateEvents` refuses wholesale.
+      const base = newDates.get(eventId) ?? resolveCurrentDates(eventId)!;
+      const startChanged = shifted.start !== base.start;
+      const endChanged = shifted.end !== base.end;
+      newDates.set(eventId, shifted);
+      if (startChanged || endChanged) {
+        const dates = toEntryDates(eventId, shifted);
+        cascaded.push({
+          id: eventId,
+          ...(startChanged ? { start: dates.start } : {}),
+          ...(endChanged ? { end: dates.end } : {}),
+        });
+      }
+    }
+
+    for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
+      const { target } = dependency;
+      if (!members.has(target)) {
+        continue;
+      }
+      const remaining = inDegree.get(target)! - 1;
+      inDegree.set(target, remaining);
+      if (remaining === 0 && !processed.has(target)) {
+        ready.push(target);
+      }
+    }
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (processed.size < members.size) {
+      warnOnce(
+        [
+          'MUI X Scheduler: The dependencies provided via props contain a cycle.',
+          'Auto-scheduling left the events on the cycle (and the ones behind it) unmoved.',
+          'Fix the `dependencies` data — `addDependency()` rejects dependencies that would create a cycle.',
+        ].join('\n'),
+      );
+    }
+  }
+
+  return { updated: cascaded, blocked };
+
+  // Inverse of `resolveEntryTimestamp` for a seed changing timezone: the store serializes the
+  // entry in the old timezone and the model is then read in the new one, so the entry
+  // carries the instant whose old-zone wall time is the intended new-zone wall time.
+  function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
+    if (dates.allDay) {
+      // The exclusive end of the occurrences, which the store writes as a date.
+      return { start: new Date(dates.start), end: new Date(dates.end + 1) };
+    }
+    const timezoneChange = timezoneChanges.get(eventId);
+    if (timezoneChange === undefined) {
+      return { start: new Date(dates.start), end: new Date(dates.end) };
+    }
+    const { model, dataTimezone, nextTimezone } = timezoneChange;
+    const encode = (epochMs: number, modelString: string) =>
+      new Date(
+        resolveEventTimestamp(
+          timestampToEventString(epochMs, modelString, nextTimezone),
+          dataTimezone,
+          eventId,
+        ),
+      );
+    return { start: encode(dates.start, model.start), end: encode(dates.end, model.end) };
+  }
+
+  function resolveCurrentDates(eventId: SchedulerEventId): ResolvedDates | null {
+    let dates = currentDatesById.get(eventId);
+    if (dates === undefined) {
+      const processedEvent = processedEventLookup.get(eventId);
+      dates =
+        processedEvent === undefined
+          ? null
+          : resolveProcessedEventDates(processedEvent, displayTimezone);
+      currentDatesById.set(eventId, dates);
+    }
+    return dates;
+  }
+
+  // The earliest start and end the predecessors of `eventId` allow, in the timezone of
+  // `base`. A repositioned seed is being placed by the user: every active predecessor
+  // constrains it. An end-resized seed is constrained by the predecessors bounding its
+  // end. Anything else is pushed only by the predecessors whose lagged bound advanced,
+  // comparing the bound before the batch (current dates and settings) with the bound after
+  // it. An enforced dependency constrains it whether or not its predecessor moved. A lag
+  // in days is added on the wall clock, so the bound can advance while the predecessor
+  // moves earlier (DST fall-back), or when only the successor's timezone or `allDay`
+  // changes.
+  function collectBounds(
+    eventId: SchedulerEventId,
+    base: ResolvedDates,
+  ): Record<SchedulerEventSide, number | null> {
+    const constrainedByAll = repositionedSeeds.has(eventId);
+    const constrainedOnEnd = endResizedSeeds.has(eventId);
+    const current = resolveCurrentDates(eventId);
+    const required: Record<SchedulerEventSide, number | null> = { start: null, end: null };
+    for (const dependency of activeDependenciesByTarget.get(eventId) ?? []) {
+      const sourceId = dependency.source;
+      if (sourceId === eventId || deleted.has(sourceId) || becomesRecurring.has(sourceId)) {
+        continue;
+      }
+      const edges = getDependencyEdges(dependency.type);
+      const currentDates = resolveCurrentDates(sourceId);
+      let bound: number | null = null;
+      if (
+        constrainedByAll ||
+        (constrainedOnEnd && edges.target === 'end') ||
+        enforcedIds.has(dependency.id)
+      ) {
+        const sourceDates = newDates.get(sourceId) ?? currentDates;
+        bound =
+          sourceDates === null
+            ? null
+            : getDependencyBound(dependency, sourceDates, base, displayTimezone);
+      } else {
+        const sourceDates =
+          (processed.has(sourceId) ? newDates.get(sourceId) : undefined) ?? currentDates;
+        // Neither event moved, so the bound didn't advance.
+        if (sourceDates === currentDates && base === current) {
+          continue;
+        }
+        if (sourceDates !== null) {
+          const nextBound = getDependencyBound(dependency, sourceDates, base, displayTimezone);
+          const previousBound =
+            currentDates === null || current === null
+              ? null
+              : getDependencyBound(dependency, currentDates, current, displayTimezone);
+          if (nextBound !== null && (previousBound === null || nextBound > previousBound)) {
+            bound = nextBound;
+          }
+        }
+      }
+      if (bound !== null) {
+        required[edges.target] = later(required[edges.target], bound);
+      }
+    }
+    return required;
+  }
+
+  function computeShift(eventId: SchedulerEventId): ResolvedDates | null {
+    const base = newDates.get(eventId) ?? resolveCurrentDates(eventId);
+    if (base === null) {
+      // Not loaded (lazy loading): nothing to move.
+      return null;
+    }
+    const required = collectBounds(eventId, base);
+
+    const startViolated = required.start !== null && base.start < required.start;
+    const endViolated = required.end !== null && base.end < required.end;
+    if (!startViolated && !endViolated) {
+      return null;
+    }
+    if (isEventReadOnly(eventId)) {
+      blocked.push(eventId);
+      return null;
+    }
+
+    // A resize keeps the edge it did not touch, as long as that edge is not the violated
+    // one. Keeping the end also requires the clamp not to run past it. Keeping the start
+    // leaves the end as the only violated edge, so its bound is always set here.
+    const keptStartBound = endResizedSeeds.has(eventId) && !startViolated ? required.end : null;
+    const keepsEnd = (newStartTimestamp: number) =>
+      startResizedSeeds.has(eventId) && newStartTimestamp < base.end && !endViolated;
+
+    if (base.allDay) {
+      const { timezone } = base;
+      const startDay = toLocalDayNumber(base.start, timezone);
+      const endDay = toLocalDayNumber(base.end, timezone);
+      if (keptStartBound !== null) {
+        const dayCount = minimalDayShift(endDay, 'end', keptStartBound, timezone);
+        return { ...base, end: getAllDayEdgeMs(endDay + dayCount, 'end', timezone) };
+      }
+      const dayCount = Math.max(
+        required.start === null ? 0 : minimalDayShift(startDay, 'start', required.start, timezone),
+        required.end === null ? 0 : minimalDayShift(endDay, 'end', required.end, timezone),
+      );
+      const newStartTimestamp = getAllDayEdgeMs(startDay + dayCount, 'start', timezone);
+      return {
+        ...base,
+        start: newStartTimestamp,
+        end: keepsEnd(newStartTimestamp)
+          ? base.end
+          : getAllDayEdgeMs(endDay + dayCount, 'end', timezone),
+      };
+    }
+
+    if (keptStartBound !== null) {
+      return { ...base, end: roundUpToSecond(keptStartBound) };
+    }
+    const duration = base.end - base.start;
+    let candidate = required.start;
+    if (required.end !== null) {
+      // Rounded first: the end is written at second resolution too.
+      candidate = later(candidate, roundUpToSecond(required.end) - duration);
+    }
+    // A violated edge always leaves a candidate.
+    const newStartTimestamp = roundUpToSecond(candidate!);
+    return {
+      ...base,
+      start: newStartTimestamp,
+      end: keepsEnd(newStartTimestamp) ? base.end : newStartTimestamp + duration,
+    };
+  }
+
+  function later(current: number | null, bound: number): number {
+    return current === null || bound > current ? bound : current;
+  }
+
+  // Wall-time serialization is second-resolution: a fractional bound (inherited from the
+  // inclusive 23:59:59.999 of an all-day predecessor, or from milliseconds in the data)
+  // would write the successor early, so land on the next whole second.
+  function roundUpToSecond(timestamp: number): number {
+    // Offsets are whole seconds, so the milliseconds are the same on every wall clock.
+    return Math.ceil(timestamp / 1000) * 1000;
+  }
+}

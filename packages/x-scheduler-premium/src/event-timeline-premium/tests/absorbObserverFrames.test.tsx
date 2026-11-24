@@ -23,14 +23,19 @@ function ResizingBox({
   const [width, setWidth] = React.useState(100);
 
   React.useLayoutEffect(() => {
+    let frame = 0;
     const observer = new ResizeObserver(([entry]) => {
       onResize?.(entry.contentRect.width);
       if (entry.contentRect.width < maximumWidth) {
-        setWidth(entry.contentRect.width + 100);
+        // Next frame: React 17 renders synchronously and would resize inside the delivery.
+        frame = requestAnimationFrame(() => setWidth(entry.contentRect.width + 100));
       }
     });
     observer.observe(ref.current!);
-    return () => observer.disconnect();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, [maximumWidth, onResize]);
 
   return <div ref={ref} style={{ width, height: 20 }} />;
@@ -80,9 +85,22 @@ describe('absorbObserverFrames', () => {
     }
   });
 
-  it.skipIf(isJSDOM)('should resolve while fake timers are installed', async () => {
-    // Fake timers replace the global rAF; the absorb must ride the capture instead.
+  it.skipIf(isJSDOM)('should settle observer-driven resizes while time is frozen', async () => {
+    const widths: number[] = [];
     vi.useFakeTimers();
+    try {
+      const now = Date.now();
+      await renderSettled(<ResizingBox maximumWidth={200} onResize={(w) => widths.push(w)} />);
+      expect(widths).to.deep.equal([100, 200]);
+      expect(Date.now()).to.equal(now);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it.skipIf(isJSDOM)('should resolve while requestAnimationFrame is faked', async () => {
+    // The package config keeps rAF native, so fake it here: the absorb must ride the capture.
+    vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame'] });
     try {
       await absorbObserverFrames();
     } finally {

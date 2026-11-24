@@ -167,17 +167,17 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase> impleme
 
   public isTimezoneCompatible = false;
 
-  public lib: string;
+  declare public lib: string;
 
-  public locale: DateFnsLocale;
+  declare public locale: DateFnsLocale;
 
-  public formats: AdapterFormats;
+  declare public formats: AdapterFormats;
 
   public formatTokenMap = formatTokenMap;
 
   public escapedCharacters = { start: "'", end: "'" };
 
-  public longFormatters: DateFnsAdapterBaseOptions<DateFnsLocale>['longFormatters'];
+  declare public longFormatters: DateFnsAdapterBaseOptions<DateFnsLocale>['longFormatters'];
 
   constructor(props: DateFnsAdapterBaseOptions<DateFnsLocale>) {
     const { locale, formats, longFormatters, lib } = props;

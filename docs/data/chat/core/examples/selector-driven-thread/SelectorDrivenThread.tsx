@@ -5,9 +5,11 @@ import {
   useConversations,
   useMessage,
   useMessageIds,
-  type ChatAdapter,
-  type ChatConversation,
-  type ChatMessage,
+} from '@mui/x-chat/headless';
+import type {
+  ChatAdapter,
+  ChatConversation,
+  ChatMessage,
 } from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

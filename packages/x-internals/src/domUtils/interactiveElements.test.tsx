@@ -1,0 +1,78 @@
+import * as React from 'react';
+import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { describe, it, expect, vi } from 'vitest';
+import { isEventFromNestedInteractiveElement } from './interactiveElements';
+
+describe('isEventFromNestedInteractiveElement', () => {
+  const { render } = createRenderer();
+
+  function setupProbe(children?: React.ReactNode) {
+    const results: boolean[] = [];
+    render(
+      <div tabIndex={0} data-testid="focusable-ancestor">
+        <div
+          role="button"
+          tabIndex={-1}
+          data-testid="trigger"
+          onClick={(event) => results.push(isEventFromNestedInteractiveElement(event))}
+        >
+          <span data-testid="text">text</span>
+          {children}
+        </div>
+      </div>,
+    );
+    return results;
+  }
+
+  it('should return false when the trigger itself is clicked, even inside a focusable ancestor', () => {
+    const results = setupProbe();
+    fireEvent.click(screen.getByTestId('trigger'));
+    expect(results).to.deep.equal([false]);
+  });
+
+  it('should return false when a non-interactive descendant is clicked', () => {
+    const results = setupProbe();
+    fireEvent.click(screen.getByTestId('text'));
+    expect(results).to.deep.equal([false]);
+  });
+
+  it('should return true when a nested button is clicked', () => {
+    const onButtonClick = vi.fn();
+    const results = setupProbe(
+      <button type="button" data-testid="nested" onClick={onButtonClick}>
+        nested
+      </button>,
+    );
+    fireEvent.click(screen.getByTestId('nested'));
+    expect(results).to.deep.equal([true]);
+    expect(onButtonClick.mock.calls).to.have.length(1);
+  });
+
+  it('should return true when a descendant of a nested link is clicked', () => {
+    const results = setupProbe(
+      <a href="#nested">
+        <span data-testid="link-text">link</span>
+      </a>,
+    );
+    fireEvent.click(screen.getByTestId('link-text'));
+    expect(results).to.deep.equal([true]);
+  });
+
+  it('should return true when the nested button belongs to another document', () => {
+    const results = setupProbe();
+    const trigger = screen.getByTestId('trigger');
+
+    // A button portaled into an iframe: its constructors belong to that realm, so it fails
+    // an `instanceof Element` guard while behaving like any other element. Standing one in
+    // avoids mounting a second document just to prove the guard does not depend on the realm.
+    const foreignButton = {
+      nodeType: 1,
+      matches: (selector: string) => selector.includes('button'),
+    };
+    const event = new MouseEvent('click', { bubbles: true });
+    Object.defineProperty(event, 'composedPath', { value: () => [foreignButton, trigger] });
+    trigger.dispatchEvent(event);
+
+    expect(results).to.deep.equal([true]);
+  });
+});

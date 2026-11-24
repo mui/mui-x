@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
@@ -31,6 +32,11 @@ const series = [
   { label: 'Series A', data: data.map((p) => p.y1), highlightScope },
   { label: 'Series B', data: data.map((p) => p.y2), highlightScope },
 ];
+
+const lineSeries = series.map((s) => ({
+  ...s,
+  highlightScope: { highlight: 'series', fade: 'global' } as const,
+}));
 
 type ChartType = 'scatter' | 'line' | 'bar' | 'pie';
 
@@ -119,8 +125,9 @@ function Chart<T extends ChartType = ChartType>({
           ref={chartRef}
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
-          series={series}
+          series={lineSeries}
           slotProps={{ tooltip: { trigger: 'item' } }}
+          experimentalFeatures={{ enablePositionBasedPointerInteraction: true }}
           focusItemOnClick={focusItemOnClick}
         />
       );

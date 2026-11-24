@@ -11,6 +11,7 @@ import {
   gridColumnDefinitionsSelector,
   gridFilterModelSelector,
   useGridApiContext,
+  useGridSelector,
 } from '@mui/x-data-grid-pro';
 import type {
   GridColDef,
@@ -114,8 +115,9 @@ function CustomFilterPanelFooter(props: CustomFilterPanelFooterProps) {
 // discards the draft: it is re-initialized from the active filter model the next time it opens.
 function DeferredFilterPanel(props: GridFilterPanelProps) {
   const apiRef = useGridApiContext();
+  const activeFilterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const [draftFilterModel, setDraftFilterModel] = React.useState<GridFilterModel>(
-    () => gridFilterModelSelector(apiRef),
+    () => activeFilterModel,
   );
   const [isDirty, setIsDirty] = React.useState(false);
 

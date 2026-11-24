@@ -1,6 +1,8 @@
 {
   "componentDescription": "Orchestrates the data providers for the sankey chart components and hooks.\n\nUse this component if you have custom HTML components that need to access the chart data.",
   "propDescriptions": {
+    "apiRef": { "description": "The ref object that exposes the chart API methods." },
+    "children": { "description": "The content of the component." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "desc": {
       "description": "The description of the chart. Used to provide an accessible description for the chart."
@@ -42,8 +44,15 @@
         "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
       }
     },
+    "series": { "description": "The series to display in the Sankey chart." },
     "seriesConfig": {
       "description": "The configuration for the series types. This is used to define how each series type should be processed, colored, and displayed."
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "theme": {
+      "description": "The color mode passed to <code>colors</code> when it is a function. Defaults to the mode of the Material UI theme."
     },
     "title": {
       "description": "The title of the chart. Used to provide an accessible label for the chart."

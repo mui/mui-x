@@ -2,5 +2,5 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "actions": "" }
+  "slotDescriptions": { "actions": "The component that renders the actions." }
 }

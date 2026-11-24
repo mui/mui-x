@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { GridColDef, DataGrid, GridComparatorFn } from '@mui/x-data-grid';
+import type { GridColDef, GridComparatorFn } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'isAdmin'];
