@@ -553,7 +553,7 @@ export const useGridRowEditing = (
     async (params) => {
       const { id, ignoreModifications, field: focusedField, cellToFocusAfter = 'none' } = params;
 
-      apiRef.current.runPendingEditCellValueMutation(id);
+      const flushedMutation = apiRef.current.runPendingEditCellValueMutation(id);
 
       const finishRowEditMode = () => {
         if (cellToFocusAfter !== 'none' && focusedField) {
@@ -569,17 +569,6 @@ export const useGridRowEditing = (
         return;
       }
 
-      const isSomeFieldProcessingProps = () =>
-        Object.values(gridEditRowsStateSelector(apiRef)[id] ?? {}).some(
-          (fieldProps) => fieldProps.isProcessingProps,
-        );
-
-      // The stop can render before the validation of the values that it flushed ends.
-      // A synchronous validation ends in the next microtask, so wait for it.
-      if (isSomeFieldProcessingProps()) {
-        await Promise.resolve();
-      }
-
       const editingState = gridEditRowsStateSelector(apiRef);
       if (!editingState[id]) {
         finishRowEditMode();
@@ -587,8 +576,20 @@ export const useGridRowEditing = (
       }
       const row = prevRowValuesLookup.current[id];
 
-      if (isSomeFieldProcessingProps()) {
+      const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
+        (fieldProps) => fieldProps.isProcessingProps,
+      );
+
+      if (isSomeFieldProcessingProps) {
         prevRowModesModel.current[id].mode = GridRowModes.Edit;
+        // The validation of the debounced values that the stop ran can end later, so stop again then.
+        if (flushedMutation) {
+          flushedMutation.then(() => {
+            if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
+              apiRef.current.stopRowEditMode(params);
+            }
+          });
+        }
         return;
       }
 
@@ -769,7 +770,10 @@ export const useGridRowEditing = (
               return;
             }
 
+            editingState = gridEditRowsStateSelector(apiRef);
             processedProps = { ...processedProps, isProcessingProps: false };
+            // Keep the latest value, because the field can change while its props are processed.
+            processedProps.value = editingState[id][thisField].value;
             updateOrDeleteFieldState(id, thisField, processedProps);
           });
 

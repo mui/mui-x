@@ -7,6 +7,7 @@ import type {
   GridRenderEditCellParams,
   GridValueSetter,
   GridPreProcessEditCellProps,
+  GridRowModesModel,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
@@ -1340,8 +1341,9 @@ describe('<DataGridPro /> - Row editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
+        let isValid: Promise<boolean> | void;
         act(() => {
-          apiRef.current?.setEditCellValue({
+          isValid = apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD GBP',
@@ -1350,8 +1352,74 @@ describe('<DataGridPro /> - Row editing', () => {
         });
         // The stop validates the debounced value, and renders before the validation ends.
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
-        await act(() => Promise.resolve());
-        expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        await waitFor(() => {
+          expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        });
+        expect(apiRef.current?.getRow(0).currencyPair).to.equal('USD GBP');
+        expect(await isValid!).to.equal(true);
+      });
+
+      it('should commit the debounced values of two fields after their validation ends', async () => {
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column2Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+          apiRef.current?.setEditCellValue({ id: 0, field: 'price1M', value: 42, debounceMs: 100 });
+        });
+        // The currency change validates the old price again. That must not restore the old price.
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(processRowUpdate.mock.lastCall?.[0]).to.include({
+          currencyPair: 'USD GBP',
+          price1M: 42,
+        });
+      });
+
+      it('should commit a debounced value after its validation ends with a controlled model', async () => {
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
+        function ControlledTestCase() {
+          const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+          return (
+            <TestCase
+              column1Props={{ preProcessEditCellProps }}
+              rowModesModel={rowModesModel}
+              onRowModesModelChange={setRowModesModel}
+            />
+          );
+        }
+        render(<ControlledTestCase />);
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        });
         expect(apiRef.current?.getRow(0).currencyPair).to.equal('USD GBP');
       });
     });

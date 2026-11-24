@@ -441,7 +441,7 @@ export const useGridCellEditing = (
 
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
-      apiRef.current.runPendingEditCellValueMutation(id, field);
+      const flushedMutation = apiRef.current.runPendingEditCellValueMutation(id, field);
 
       const finishCellEditMode = () => {
         updateOrDeleteFieldState(id, field, null);
@@ -456,12 +456,6 @@ export const useGridCellEditing = (
         return;
       }
 
-      // The stop can render before the validation of the value that it flushed ends.
-      // A synchronous validation ends in the next microtask, so wait for it.
-      if (gridEditRowsStateSelector(apiRef)[id][field].isProcessingProps) {
-        await Promise.resolve();
-      }
-
       const editingState = gridEditRowsStateSelector(apiRef);
       const { error, isProcessingProps } = editingState[id][field];
       const row = apiRef.current.getRow(id)!;
@@ -472,6 +466,14 @@ export const useGridCellEditing = (
         prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
         // Revert the mode in the cellModesModel prop back to "edit"
         updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+        // The validation of a debounced value that the stop ran can end later, so stop again then.
+        if (isProcessingProps && flushedMutation) {
+          flushedMutation.then(() => {
+            if (apiRef.current.getCellMode(id, field) === GridCellModes.Edit) {
+              apiRef.current.stopCellEditMode(params);
+            }
+          });
+        }
         return;
       }
 

@@ -61,8 +61,9 @@ export interface GridEditingSharedPrivateApi {
    * Immediately updates the value of the cell, without waiting for the debounce.
    * @param {GridRowId} id The row id.
    * @param {string} field The field to update. If not passed, updates all fields in the given row id.
+   * @returns {Promise<void> | null} A promise that settles when the updates that ran immediately end, or `null` if no update is in progress.
    */
-  runPendingEditCellValueMutation: (id: GridRowId, field?: string) => void;
+  runPendingEditCellValueMutation: (id: GridRowId, field?: string) => Promise<void> | null;
 }
 
 /**

@@ -35,8 +35,10 @@ export const useGridEditing = (
   useGridRowEditing(apiRef, props);
 
   const debounceMap = React.useRef<
-    Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => void]>>
+    Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => Promise<void>]>>
   >({});
+  // The updates that ran immediately and did not end, so that a stop can wait for them.
+  const flushedMutations = React.useRef<Record<GridRowId, Record<string, Promise<void>>>>({});
 
   const { isCellEditable: isCellEditableProp } = props;
 
@@ -87,8 +89,9 @@ export const useGridEditing = (
     const runImmediately = () => {
       const [timeout] = debounceMap.current[id][field];
       clearTimeout(timeout);
-      callback();
+      const mutation = callback();
       delete debounceMap.current[id][field];
+      return mutation;
     };
 
     const timeout = setTimeout(() => {
@@ -116,18 +119,37 @@ export const useGridEditing = (
   const runPendingEditCellValueMutation = React.useCallback<
     GridEditingPrivateApi['runPendingEditCellValueMutation']
   >((id, field) => {
-    if (!debounceMap.current[id]) {
-      return;
-    }
-    if (!field) {
-      Object.keys(debounceMap.current[id]).forEach((debouncedField) => {
-        const [, runCallback] = debounceMap.current[id][debouncedField];
-        runCallback();
+    const debounces = debounceMap.current[id] ?? {};
+    const fields = field ? [field] : Object.keys(debounces);
+    fields.forEach((debouncedField) => {
+      if (!debounces[debouncedField]) {
+        return;
+      }
+      const [, runCallback] = debounces[debouncedField];
+      const mutation = runCallback();
+      if (!flushedMutations.current[id]) {
+        flushedMutations.current[id] = {};
+      }
+      flushedMutations.current[id][debouncedField] = mutation;
+      // `finally()` keeps a rejection of the mutation unhandled, as before.
+      mutation.finally(() => {
+        if (flushedMutations.current[id]?.[debouncedField] === mutation) {
+          delete flushedMutations.current[id][debouncedField];
+        }
       });
-    } else if (debounceMap.current[id][field]) {
-      const [, runCallback] = debounceMap.current[id][field];
-      runCallback();
+    });
+
+    const inProgress = flushedMutations.current[id] ?? {};
+    const mutations = Object.keys(inProgress)
+      .filter((mutatedField) => !field || mutatedField === field)
+      .map((mutatedField) => inProgress[mutatedField]);
+    if (mutations.length === 0) {
+      return null;
     }
+    return Promise.all(mutations).then(
+      () => {},
+      () => {},
+    );
   }, []);
 
   const setEditCellValue = React.useCallback<GridEditingApi['setEditCellValue']>(
