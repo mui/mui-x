@@ -6,8 +6,8 @@ import { defaultVisibleDate } from '../../datasets/company-roadmap';
 const events: SchedulerEvent[] = [
   {
     id: 'order-1042',
-    start: '2025-07-02T00:00:00',
-    end: '2025-07-02T00:00:00',
+    start: '2025-07-02',
+    end: '2025-07-03',
     allDay: true,
     title: 'Order 1042',
     resource: 'line-1',
@@ -15,8 +15,8 @@ const events: SchedulerEvent[] = [
   },
   {
     id: 'order-1043',
-    start: '2025-07-02T00:00:00',
-    end: '2025-07-02T00:00:00',
+    start: '2025-07-02',
+    end: '2025-07-03',
     allDay: true,
     title: 'Order 1043',
     resource: 'line-2',
@@ -24,8 +24,8 @@ const events: SchedulerEvent[] = [
   },
   {
     id: 'order-1044',
-    start: '2025-07-04T00:00:00',
-    end: '2025-07-04T00:00:00',
+    start: '2025-07-04',
+    end: '2025-07-05',
     allDay: true,
     title: 'Order 1044',
     resource: 'line-1',

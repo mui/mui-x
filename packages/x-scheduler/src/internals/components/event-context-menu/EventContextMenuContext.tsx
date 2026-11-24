@@ -137,15 +137,31 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
  * Space fall through to their default behavior (arm/re-arm) here instead of also opening a
  * redundant menu whose own Edit item would otherwise just re-arm a no-op.
  *
- * A link event (a read-only event with an `href`) is rendered as is, so it keeps the native link
- * behavior.
+ * A link event (a read-only event with an `href`) keeps the native link behavior: it only moves
+ * focus out when it unmounts.
  */
 export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
+  const href = useEventHref(props.occurrence);
+
+  // Two components, so the effects run again when the event becomes a link or stops being one.
+  return href != null ? <EventLinkTrigger {...props} /> : <EventButtonTrigger {...props} />;
+}
+
+function EventLinkTrigger(props: EventContextMenuTriggerProps) {
+  const { occurrence, getFocusFallback, children } = props;
+  const ref = React.useRef<HTMLElement | null>(null);
+
+  // The "+N more" popover, which passes `getFocusFallback`, moves focus out of its own items.
+  useMoveFocusOutOnUnmount(ref, occurrence, getFocusFallback == null);
+
+  return React.cloneElement(children as React.ReactElement<any>, { ref });
+}
+
+function EventButtonTrigger(props: EventContextMenuTriggerProps) {
   const { occurrence, onClick, onEditingCanceled, stableAnchor, getFocusFallback, children } =
     props;
   const editing = useEventEditingTriggerProps(occurrence, { onEditingCanceled, stableAnchor });
   const menuContext = useEventContextMenuContext();
-  const href = useEventHref(occurrence);
 
   useIsoLayoutEffect(() => {
     const node = editing.ref.current;
@@ -153,15 +169,10 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
       return undefined;
     }
     return () => menuContext.closeMenuForAnchor(node);
-    // `href` swaps the element when the event becomes a link or stops being one.
-  }, [menuContext, editing.ref, href]);
+  }, [menuContext, editing.ref]);
 
   // The "+N more" popover, which passes `getFocusFallback`, moves focus out of its own items.
   useMoveFocusOutOnUnmount(editing.ref, occurrence, getFocusFallback == null);
-
-  if (href != null) {
-    return children;
-  }
 
   return React.cloneElement(children as React.ReactElement<any>, {
     ref: editing.ref,

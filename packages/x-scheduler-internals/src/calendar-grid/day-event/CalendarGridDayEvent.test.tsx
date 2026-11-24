@@ -141,7 +141,6 @@ describe('<CalendarGrid.DayEvent />', () => {
       <CalendarGrid.DayEvent
         eventId="fake-id"
         occurrenceKey="fake-key"
-        dataTimezone={undefined}
         start={eventStart}
         end={eventEnd}
         renderDragPreview={() => null}

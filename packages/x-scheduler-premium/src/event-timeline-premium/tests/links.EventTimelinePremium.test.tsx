@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
   createMatchMedia,
   createSchedulerRenderer,
@@ -108,6 +109,35 @@ describe('EventTimelinePremium - Event links', () => {
     expect(getLink()).to.have.attribute('href', HREF);
   });
 
+  it('should render every occurrence of a recurring event as a link', async () => {
+    const event = EventBuilder.new()
+      .title('Order 1042')
+      .singleDay('2025-07-01T09:00:00Z', 60)
+      .resource(engineering)
+      .recurrent('DAILY')
+      .readOnly()
+      .href(HREF)
+      .build();
+    await renderTimeline({
+      events: [event],
+      features: { recurringEvents: recurringEventsFeature },
+    });
+
+    const links = screen.getAllByRole('link', { name: getEventNamePattern('Order 1042') });
+    expect(links.length).to.be.greaterThan(1);
+    links.forEach((link) => expect(link).to.have.attribute('href', HREF));
+  });
+
+  it('should render an event with several resources as a link in each row', async () => {
+    const design = ResourceBuilder.new().build();
+    const event = { ...linkEvent, resource: [engineering.id, design.id] };
+    await renderTimeline({ resources: [engineering, design], events: [event] });
+
+    const links = screen.getAllByRole('link', { name: getEventNamePattern('Order 1042') });
+    expect(links).to.have.length(2);
+    links.forEach((link) => expect(link).to.have.attribute('href', HREF));
+  });
+
   it('should ignore the href of an editable event and warn', async () => {
     const event = EventBuilder.new()
       .title('Order 1042')
@@ -163,5 +193,20 @@ describe('EventTimelinePremium - Event links', () => {
     expect(onEventEditingStart.mock.calls.length).to.equal(0);
     expect(screen.queryByRole('menu')).to.equal(null);
     expect(screen.queryByRole('dialog')).to.equal(null);
+  });
+
+  it('should move focus to the event row when the focused link is removed', async () => {
+    const { setProps } = await renderTimeline();
+    const link = getLink();
+    const row = link.parentElement!.closest<HTMLElement>('[tabindex]')!;
+    await act(async () => {
+      link.focus();
+    });
+
+    setProps({ events: [] });
+
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(row);
+    });
   });
 });

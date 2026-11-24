@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, within } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import {
   createSchedulerRenderer,
@@ -32,7 +32,7 @@ describe('EventCalendar - Event links', () => {
 
   const allDayEvent = EventBuilder.new()
     .title('Order 1042')
-    .span('2025-05-26T00:00:00Z', '2025-05-27T00:00:00Z')
+    .span('2025-05-26', '2025-05-27')
     .allDay()
     .readOnly()
     .href(HREF)
@@ -67,7 +67,7 @@ describe('EventCalendar - Event links', () => {
     it('should render a multi-day event as a single link per row', () => {
       const event = EventBuilder.new()
         .title('Order 1042')
-        .span('2025-05-26T00:00:00Z', '2025-05-28T00:00:00Z')
+        .span('2025-05-26', '2025-05-28')
         .allDay()
         .readOnly()
         .href(HREF)
@@ -164,6 +164,24 @@ describe('EventCalendar - Event links', () => {
       expect(getLink()).to.have.attribute('href', HREF);
     });
 
+    it('should render the event as a button again when the scheduler stops being read-only', () => {
+      const event = EventBuilder.new()
+        .title('Order 1042')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .href(HREF)
+        .build();
+      const { setProps } = render(<EventCalendar events={[event]} readOnly />);
+      expect(getLink()).to.have.attribute('href', HREF);
+
+      clearWarningsCache();
+      expect(() => setProps({ readOnly: false })).toWarnDev([
+        'MUI X Scheduler: An event has an `href` but is editable',
+      ]);
+
+      expect(screen.queryByRole('link', { name: NAME })).to.equal(null);
+      expect(screen.getByRole('button', { name: NAME })).not.to.equal(null);
+    });
+
     it('should ignore the href of an editable event and warn', () => {
       const event = EventBuilder.new()
         .title('Order 1042')
@@ -251,6 +269,67 @@ describe('EventCalendar - Event links', () => {
       expect(onEventEditingStart.mock.calls.length).to.equal(0);
       expect(screen.queryByRole('menu')).to.equal(null);
       expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+  });
+
+  describe('focus', () => {
+    it('should move focus to the day cell when the focused link is removed', async () => {
+      const { setProps } = render(<EventCalendar events={[timedEvent]} defaultView="month" />);
+      const link = getLink();
+      const cell = link.closest<HTMLElement>('[role="gridcell"]')!;
+      await act(async () => {
+        link.focus();
+      });
+
+      setProps({ events: [] });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+    });
+
+    it('should move focus to the next link when the focused link is removed in the agenda view', async () => {
+      const nextEvent = EventBuilder.new()
+        .title('Order 1043')
+        .span('2025-05-27T07:30:00Z', '2025-05-27T08:15:00Z')
+        .readOnly()
+        .href('#order-1043')
+        .build();
+      const { setProps } = render(
+        <EventCalendar events={[timedEvent, nextEvent]} defaultView="agenda" />,
+      );
+      await act(async () => {
+        getLink().focus();
+      });
+
+      setProps({ events: [nextEvent] });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(
+          screen.getByRole('link', { name: getEventNamePattern('Order 1043') }),
+        );
+      });
+    });
+
+    it('should move focus to the day cell when the focused event becomes a link', async () => {
+      const event = EventBuilder.new()
+        .title('Order 1042')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .readOnly()
+        .build();
+      const { setProps } = render(<EventCalendar events={[event]} defaultView="month" />);
+      const button = screen.getByRole('button', { name: NAME });
+      const cell = button.closest<HTMLElement>('[role="gridcell"]')!;
+      await act(async () => {
+        button.focus();
+      });
+
+      setProps({ events: [{ ...event, href: HREF }] });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+      expect(getLink()).to.have.attribute('href', HREF);
     });
   });
 });
