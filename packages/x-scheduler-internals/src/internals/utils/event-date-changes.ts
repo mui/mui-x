@@ -149,8 +149,8 @@ export function stringifyEventDateChanges(
   const dataTimezone = model.timezone ?? 'default';
   const allDay = changes.allDay ?? model.allDay ?? false;
   const result: EventDateChangeStrings = {};
-  let start = changes.start?.getTime() ?? bounds?.start;
-  let end = changes.end?.getTime() ?? bounds?.end;
+  let start = changes.start?.epochMilliseconds ?? bounds?.start;
+  let end = changes.end?.epochMilliseconds ?? bounds?.end;
 
   if (!allDay) {
     const becomesTimed = model.allDay === true;
@@ -176,7 +176,7 @@ export function stringifyEventDateChanges(
         typeof exDate === 'string'
           ? exDate
           : timestampToEventString(
-              exDate.getTime(),
+              exDate.epochMilliseconds,
               model.exDates?.[index] ?? model.start,
               timezone,
             ),
@@ -223,8 +223,8 @@ export function stringifyEventDateChanges(
     if (becomesAllDay && (changes.start == null || changes.end == null)) {
       // With one bound given, the other is snapped to the displayed days like it.
       const snapped = snapAllDayBounds(ownStart, ownEnd, displayTimezone);
-      start = changes.start?.getTime() ?? snapped.start;
-      end = changes.end?.getTime() ?? snapped.end;
+      start = changes.start?.epochMilliseconds ?? snapped.start;
+      end = changes.end?.epochMilliseconds ?? snapped.end;
     }
     if (start != null) {
       result.start = allDayBoundToEventString(start, displayTimezone);
@@ -237,7 +237,7 @@ export function stringifyEventDateChanges(
     result.exDates = changes.exDates.map((exDate) =>
       typeof exDate === 'string'
         ? exDate
-        : allDayBoundToEventString(exDate.getTime(), displayTimezone),
+        : allDayBoundToEventString(exDate.epochMilliseconds, displayTimezone),
     );
   } else if (becomesAllDay && model.exDates != null) {
     // An exception date keeps its day in the event timezone.

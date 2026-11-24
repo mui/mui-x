@@ -2,8 +2,8 @@ import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   absorbObserverFrames,
-  createDate,
   createSchedulerRenderer,
+  createZonedDate,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
   ResourceBuilder,
@@ -292,8 +292,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     act(() => {
       store.updateEvent({
         id: 'event-a',
-        start: createDate('2025-07-03T09:30:00Z'),
-        end: createDate('2025-07-03T10:30:00Z'),
+        start: createZonedDate('2025-07-03T09:30:00Z'),
+        end: createZonedDate('2025-07-03T10:30:00Z'),
       });
     });
 

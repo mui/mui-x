@@ -4,10 +4,12 @@ import {
   addMinutes,
   createDate,
   createStoreOccurrence,
+  createZonedDate,
   EventBuilder,
   premiumStoreClasses,
   ResourceBuilder,
   storeClasses,
+  toZoned,
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
@@ -250,8 +252,8 @@ premiumStoreClasses.forEach((storeClass) => {
         occurrence: createStoreOccurrence(store, 'standup', dayB),
         changes: {
           id: 'standup',
-          start: addMinutes(dayB, 30),
-          end: addMinutes(dayB, 90),
+          start: toZoned(addMinutes(dayB, 30)),
+          end: toZoned(addMinutes(dayB, 90)),
         },
       });
       store.selectRecurringEventScope('this-and-following');
@@ -271,7 +273,7 @@ premiumStoreClasses.forEach((storeClass) => {
       // Resize occurrence A (the armed one), then confirm the scope.
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayA),
-        changes: { id: 'standup', start: resizedStart, end: resizedEnd },
+        changes: { id: 'standup', start: toZoned(resizedStart), end: toZoned(resizedEnd) },
       });
       store.selectRecurringEventScope('this-and-following');
 
@@ -291,7 +293,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const resizedEnd = addMinutes(dayA, 90);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayA),
-        changes: { id: 'standup', start: resizedStart, end: resizedEnd },
+        changes: { id: 'standup', start: toZoned(resizedStart), end: toZoned(resizedEnd) },
       });
       store.selectRecurringEventScope('this-and-following');
 
@@ -313,7 +315,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const movedEnd = addHours(movedStart, 1);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayB),
-        changes: { id: 'standup', start: movedStart, end: movedEnd },
+        changes: { id: 'standup', start: toZoned(movedStart), end: toZoned(movedEnd) },
       });
       store.selectRecurringEventScope('all');
 
@@ -329,7 +331,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const movedEnd = addHours(movedStart, 1);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayB),
-        changes: { id: 'standup', start: movedStart, end: movedEnd },
+        changes: { id: 'standup', start: toZoned(movedStart), end: toZoned(movedEnd) },
       });
       store.selectRecurringEventScope('all');
 
@@ -349,7 +351,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const extendedEnd = addHours(dayB, 3);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayB),
-        changes: { id: 'standup', end: extendedEnd },
+        changes: { id: 'standup', end: toZoned(extendedEnd) },
       });
       store.selectRecurringEventScope('all');
 
@@ -368,8 +370,8 @@ premiumStoreClasses.forEach((storeClass) => {
         changes: {
           id: 'standup',
           allDay: true,
-          start: createDate('2025-07-08T00:00:00Z'),
-          end: createDate('2025-07-09T00:00:00Z'),
+          start: createZonedDate('2025-07-08T00:00:00Z'),
+          end: createZonedDate('2025-07-09T00:00:00Z'),
         },
       });
       store.selectRecurringEventScope('all');
@@ -409,8 +411,8 @@ premiumStoreClasses.forEach((storeClass) => {
         changes: {
           id: 'gym',
           allDay: false,
-          start: createDate('2025-07-11T09:00:00', 'Asia/Tokyo'),
-          end: createDate('2025-07-11T10:00:00', 'Asia/Tokyo'),
+          start: createZonedDate('2025-07-11T09:00:00', 'Asia/Tokyo'),
+          end: createZonedDate('2025-07-11T10:00:00', 'Asia/Tokyo'),
         },
       });
       store.selectRecurringEventScope('all');
@@ -495,8 +497,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.setEditingOccurrenceTimes({
         allDay: false,
-        start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
-        end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+        start: createZonedDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
+        end: createZonedDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
       });
 
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
@@ -517,8 +519,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.setEditingOccurrenceTimes({
         allDay: false,
-        start: createDate('2025-07-04T09:00:00'),
-        end: createDate('2025-07-04T10:00:00'),
+        start: createZonedDate('2025-07-04T09:00:00'),
+        end: createZonedDate('2025-07-04T10:00:00'),
       });
 
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
@@ -532,7 +534,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayB),
-        changes: { id: 'standup', end: addHours(dayB, 25) },
+        changes: { id: 'standup', end: toZoned(addHours(dayB, 25)) },
       });
       store.selectRecurringEventScope('all');
 
@@ -568,8 +570,8 @@ premiumStoreClasses.forEach((storeClass) => {
         occurrence: createStoreOccurrence(store, 'standup', fourth),
         changes: {
           id: 'standup',
-          start: addMinutes(fourth, 30),
-          end: addMinutes(fourth, 90),
+          start: toZoned(addMinutes(fourth, 30)),
+          end: toZoned(addMinutes(fourth, 90)),
         },
       });
       store.selectRecurringEventScope('this-and-following');
@@ -598,7 +600,11 @@ premiumStoreClasses.forEach((storeClass) => {
       const movedStart = addDays(secondMonday, 1);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', secondMonday),
-        changes: { id: 'standup', start: movedStart, end: addHours(movedStart, 1) },
+        changes: {
+          id: 'standup',
+          start: toZoned(movedStart),
+          end: toZoned(addHours(movedStart, 1)),
+        },
       });
       store.selectRecurringEventScope('this-and-following');
       store.setEditingMode('edit');
@@ -656,8 +662,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: armed,
           changes: {
             id: 'late',
-            start: createDate(startInTokyo, 'Asia/Tokyo'),
-            end: createDate(endInTokyo, 'Asia/Tokyo'),
+            start: createZonedDate(startInTokyo, 'Asia/Tokyo'),
+            end: createZonedDate(endInTokyo, 'Asia/Tokyo'),
           },
         });
         store.selectRecurringEventScope('all');
@@ -841,7 +847,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const movedEnd = addHours(movedStart, 1);
         store.updateRecurringEvent({
           occurrence: createStoreOccurrence(store, 'standup', dayB),
-          changes: { id: 'standup', start: movedStart, end: movedEnd },
+          changes: { id: 'standup', start: toZoned(movedStart), end: toZoned(movedEnd) },
         });
 
         expect(() => {
@@ -868,7 +874,7 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(() => {
           store.updateRecurringEvent({
             occurrence: createStoreOccurrence(store, 'standup', dayA),
-            changes: { id: 'standup', end: addMinutes(dayA, 90) },
+            changes: { id: 'standup', end: toZoned(addMinutes(dayA, 90)) },
           });
           store.selectRecurringEventScope('all');
         }).not.toWarnDev();
@@ -897,7 +903,7 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(() => {
           store.updateRecurringEvent({
             occurrence: createStoreOccurrence(store, 'standup', dayB),
-            changes: { id: 'standup', start: addMinutes(dayB, 30) },
+            changes: { id: 'standup', start: toZoned(addMinutes(dayB, 30)) },
           });
           store.selectRecurringEventScope('all');
         }).not.toWarnDev();
@@ -932,7 +938,7 @@ premiumStoreClasses.forEach((storeClass) => {
           expect(() => {
             store.updateRecurringEvent({
               occurrence: createStoreOccurrence(store, 'standup', secondMonday),
-              changes: { id: 'standup', start: addDays(secondMonday, -1) },
+              changes: { id: 'standup', start: toZoned(addDays(secondMonday, -1)) },
             });
             store.selectRecurringEventScope('all');
           }).toWarnDev([
@@ -952,7 +958,7 @@ premiumStoreClasses.forEach((storeClass) => {
           expect(() => {
             store.updateRecurringEvent({
               occurrence: createStoreOccurrence(store, 'standup', secondMonday),
-              changes: { id: 'standup', start: addDays(secondMonday, -1) },
+              changes: { id: 'standup', start: toZoned(addDays(secondMonday, -1)) },
             });
             store.selectRecurringEventScope('all');
           }).toWarnDev([
@@ -994,8 +1000,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: createStoreOccurrence(store, 'standup', dayA),
           changes: {
             id: 'standup',
-            start: addMinutes(dayA, 30),
-            end: addMinutes(dayA, 90),
+            start: toZoned(addMinutes(dayA, 30)),
+            end: toZoned(addMinutes(dayA, 90)),
           },
         });
 
@@ -1045,8 +1051,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: createStoreOccurrence(store, 'standup', dayB),
           changes: {
             id: 'standup',
-            start: addMinutes(dayB, 30),
-            end: addMinutes(dayB, 90),
+            start: toZoned(addMinutes(dayB, 30)),
+            end: toZoned(addMinutes(dayB, 90)),
           },
         });
 
@@ -1073,8 +1079,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: createStoreOccurrence(store, 'standup', dayA),
           changes: {
             id: 'standup',
-            start: addMinutes(dayA, 30),
-            end: addMinutes(dayA, 90),
+            start: toZoned(addMinutes(dayA, 30)),
+            end: toZoned(addMinutes(dayA, 90)),
           },
         });
 
@@ -1099,8 +1105,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: createStoreOccurrence(store, 'standup', dayA),
           changes: {
             id: 'standup',
-            start: addMinutes(dayA, 30),
-            end: addMinutes(dayA, 90),
+            start: toZoned(addMinutes(dayA, 30)),
+            end: toZoned(addMinutes(dayA, 90)),
           },
         });
 

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   createDate,
   createStoreOccurrence,
+  createZonedDate,
   EventBuilder,
   EventTimelinePremiumStoreWithFeatures,
   ResourceBuilder,
@@ -46,6 +47,7 @@ const DEFAULT_PARAMS = {
 };
 
 const date = (value: string) => createDate(value);
+const zonedDate = (value: string) => createZonedDate(value);
 const timestampOf = (value: string | undefined) => new Date(value!).getTime();
 const cascadeNotWritableWarning = (property: 'start' | 'end') =>
   'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.\n' +
@@ -74,8 +76,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       // Moved to July 4th, the predecessor ends at 00:00 on July 5th in New York.
       store.updateEvent({
         id: 'a',
-        start: createDate('2025-07-04T00:00:00', 'Asia/Tokyo'),
-        end: createDate('2025-07-05T00:00:00', 'Asia/Tokyo'),
+        start: createZonedDate('2025-07-04T00:00:00', 'Asia/Tokyo'),
+        end: createZonedDate('2025-07-05T00:00:00', 'Asia/Tokyo'),
       });
 
       const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
@@ -95,8 +97,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       store.updateEvent({
         id: 'a',
-        start: date('2025-07-03T11:00:00Z'),
-        end: date('2025-07-03T12:00:00Z'),
+        start: zonedDate('2025-07-03T11:00:00Z'),
+        end: zonedDate('2025-07-03T12:00:00Z'),
       });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -117,8 +119,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       store.updateEvent({
         id: 'b',
-        start: date('2025-07-03T09:30:00Z'),
-        end: date('2025-07-03T10:30:00Z'),
+        start: zonedDate('2025-07-03T09:30:00Z'),
+        end: zonedDate('2025-07-03T10:30:00Z'),
         title: 'Moved b',
       });
 
@@ -139,7 +141,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       });
 
       // Resize: only the end moves, past the successor's start.
-      store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
+      store.updateEvent({ id: 'a', end: zonedDate('2025-07-03T10:30:00Z') });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
       const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
@@ -157,8 +159,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       store.updateEvent({
         id: 'a',
-        start: date('2025-07-03T08:00:00Z'),
-        end: date('2025-07-03T09:00:00Z'),
+        start: zonedDate('2025-07-03T08:00:00Z'),
+        end: zonedDate('2025-07-03T09:00:00Z'),
       });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -175,16 +177,16 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       const result = store.updateEvent({
         id: 'b',
-        start: date('2025-07-03T09:30:00Z'),
-        end: date('2025-07-03T10:30:00Z'),
+        start: zonedDate('2025-07-03T09:30:00Z'),
+        end: zonedDate('2025-07-03T10:30:00Z'),
         title: 'Moved b',
       });
 
       expect(result.applied).to.equal(true);
       const { changes } = result as Extract<typeof result, { applied: true }>;
       expect(changes.title).to.equal('Moved b');
-      expect(changes.start!.getTime()).to.equal(date('2025-07-03T10:00:00Z').getTime());
-      expect(changes.end!.getTime()).to.equal(date('2025-07-03T11:00:00Z').getTime());
+      expect(changes.start!.epochMilliseconds).to.equal(date('2025-07-03T10:00:00Z').getTime());
+      expect(changes.end!.epochMilliseconds).to.equal(date('2025-07-03T11:00:00Z').getTime());
     });
 
     // The cascade appends `b`'s entry to the batch regardless of where either id sits in the
@@ -199,8 +201,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       const result = store.updateEvent({
         id: 'a',
-        start: date('2025-07-03T11:00:00Z'),
-        end: date('2025-07-03T12:00:00Z'),
+        start: zonedDate('2025-07-03T11:00:00Z'),
+        end: zonedDate('2025-07-03T12:00:00Z'),
       });
 
       expect(result.applied).to.equal(true);
@@ -260,8 +262,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       store.updateEvent({
         id: 'a',
-        start: date('2025-07-05T00:00:00'),
-        end: date('2025-07-06T00:00:00'),
+        start: zonedDate('2025-07-05T00:00:00'),
+        end: zonedDate('2025-07-06T00:00:00'),
         allDay: true,
       });
 
@@ -397,8 +399,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       const result = store.updateEvent({
         id: 'a',
-        start: date('2025-07-03T11:00:00Z'),
-        end: date('2025-07-03T12:00:00Z'),
+        start: zonedDate('2025-07-03T11:00:00Z'),
+        end: zonedDate('2025-07-03T12:00:00Z'),
       });
 
       // Atomic veto: nothing applied, the rejection returned rather than pushed as a toast.
@@ -426,8 +428,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       const result = store.updateEvent({
         id: 'a',
-        start: date('2025-07-03T11:00:00Z'),
-        end: date('2025-07-03T12:00:00Z'),
+        start: zonedDate('2025-07-03T11:00:00Z'),
+        end: zonedDate('2025-07-03T12:00:00Z'),
       });
 
       // c could have been pushed, but the blocked b vetoes everything.
@@ -455,8 +457,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
         store.updateEvent({
           id: 'a',
-          start: date('2025-07-03T11:00:00Z'),
-          end: date('2025-07-03T12:00:00Z'),
+          start: zonedDate('2025-07-03T11:00:00Z'),
+          end: zonedDate('2025-07-03T12:00:00Z'),
         });
         await flushEffect();
         await flushDebounce();
@@ -484,7 +486,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const result = (store as any).updateEvents({
         deleted: ['d'],
         updated: [
-          { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+          {
+            id: 'a',
+            start: zonedDate('2025-07-03T11:00:00Z'),
+            end: zonedDate('2025-07-03T12:00:00Z'),
+          },
         ],
       });
 
@@ -516,7 +522,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         result = (store as any).updateEvents({
           deleted: ['d'],
           updated: [
-            { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+            {
+              id: 'a',
+              start: zonedDate('2025-07-03T11:00:00Z'),
+              end: zonedDate('2025-07-03T12:00:00Z'),
+            },
           ],
         });
       }).toWarnDev([
@@ -547,7 +557,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(() => {
         result = (store as any).updateEvents({
           deleted: ['d'],
-          updated: [{ id: 'a', end: date('2025-07-03T10:30:00Z') }],
+          updated: [{ id: 'a', end: zonedDate('2025-07-03T10:30:00Z') }],
         });
       }).toWarnDev([cascadeNotWritableWarning('start')]);
 
@@ -578,7 +588,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       // silently applying `a`'s resize while corrupting `b`.
       let result: ReturnType<typeof store.updateEvent>;
       expect(() => {
-        result = store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
+        result = store.updateEvent({ id: 'a', end: zonedDate('2025-07-03T10:30:00Z') });
       }).toWarnDev([cascadeNotWritableWarning('start')]);
 
       expect(result!).to.deep.equal({
@@ -616,8 +626,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(() => {
         result = store.updateEvent({
           id: changes.id,
-          start: date(changes.start),
-          end: date(changes.end),
+          start: zonedDate(changes.start),
+          end: zonedDate(changes.end),
         });
       }).toWarnDev([
         'MUI X Scheduler: An event was not moved because a date could not be written back.\n' +
@@ -649,7 +659,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(() => {
         result = store.updateEvent({
           id: 'a',
-          end: date('2025-07-03T10:30:00Z'),
+          end: zonedDate('2025-07-03T10:30:00Z'),
           title: 'x',
         });
       }).toWarnDev([
@@ -703,8 +713,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
           occurrence: createStoreOccurrence(store, 'standup', date('2025-07-03T09:00:00Z')),
           changes: {
             id: 'standup',
-            start: date('2025-07-03T09:30:00Z'),
-            end: date('2025-07-03T10:30:00Z'),
+            start: zonedDate('2025-07-03T09:30:00Z'),
+            end: zonedDate('2025-07-03T10:30:00Z'),
           },
         });
         store.selectRecurringEventScope('this-and-following');
@@ -732,11 +742,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         onEventsChange,
       });
 
-      const result = store.updateEvent({ id: 'b', start: date('2025-07-03T09:30:00Z') });
+      const result = store.updateEvent({ id: 'b', start: zonedDate('2025-07-03T09:30:00Z') });
 
       expect(result.applied).to.equal(true);
       const { changes } = result as Extract<typeof result, { applied: true }>;
-      expect(changes.start!.getTime()).to.equal(date('2025-07-03T10:00:00Z').getTime());
+      expect(changes.start!.epochMilliseconds).to.equal(date('2025-07-03T10:00:00Z').getTime());
       expect('end' in changes).to.equal(false);
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -763,11 +773,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         onEventsChange,
       });
 
-      const result = store.updateEvent({ id: 'b', end: date('2025-07-03T11:30:00Z') });
+      const result = store.updateEvent({ id: 'b', end: zonedDate('2025-07-03T11:30:00Z') });
 
       expect(result.applied).to.equal(true);
       const { changes } = result as Extract<typeof result, { applied: true }>;
-      expect(changes.end!.getTime()).to.equal(date('2025-07-03T12:00:00Z').getTime());
+      expect(changes.end!.epochMilliseconds).to.equal(date('2025-07-03T12:00:00Z').getTime());
       expect('start' in changes).to.equal(false);
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -934,7 +944,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       });
 
       store.cutEvent('a');
-      const result = store.pasteEvent({ start: date('2025-07-03T11:00:00Z') });
+      const result = store.pasteEvent({ start: zonedDate('2025-07-03T11:00:00Z') });
 
       // The paste has no surface of its own, so the rejection shows as a toast.
       expect(result).to.equal(null);
@@ -953,7 +963,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       });
 
       store.cutEvent('a');
-      const pastedId = store.pasteEvent({ start: date('2025-07-03T11:00:00Z') });
+      const pastedId = store.pasteEvent({ start: zonedDate('2025-07-03T11:00:00Z') });
 
       // The caller's entry stays first in the batch even though the cascade folded in b.
       expect(pastedId).to.equal('a');
@@ -981,7 +991,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       (store as any).updateEvents({
         deleted: ['d'],
         updated: [
-          { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+          {
+            id: 'a',
+            start: zonedDate('2025-07-03T11:00:00Z'),
+            end: zonedDate('2025-07-03T12:00:00Z'),
+          },
         ],
       });
 
@@ -1017,8 +1031,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
         store.updateEvent({
           id: 'a',
-          start: date('2025-07-03T11:00:00Z'),
-          end: date('2025-07-03T12:00:00Z'),
+          start: zonedDate('2025-07-03T11:00:00Z'),
+          end: zonedDate('2025-07-03T12:00:00Z'),
         });
         await flushEffect();
 
@@ -1434,8 +1448,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       onEventsChange.mockImplementationOnce(() => {
         store.updateEvent({
           id: 'b',
-          start: date('2025-07-03T14:30:00Z'),
-          end: date('2025-07-03T15:30:00Z'),
+          start: zonedDate('2025-07-03T14:30:00Z'),
+          end: zonedDate('2025-07-03T15:30:00Z'),
         });
       });
 
@@ -1468,8 +1482,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       store.updateEvent({
         id: 'a',
-        start: date('2025-07-03T11:00:00Z'),
-        end: date('2025-07-03T12:00:00Z'),
+        start: zonedDate('2025-07-03T11:00:00Z'),
+        end: zonedDate('2025-07-03T12:00:00Z'),
       });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);

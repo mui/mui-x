@@ -51,6 +51,7 @@ import {
   toPlainDate,
 } from '../plain-date-utils/timeZone';
 import { snapAllDayBounds, snapToOwnDays } from '../plain-date-utils/date';
+import type { BaseTemporal } from '../base-temporal';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
 import type {
@@ -1302,8 +1303,8 @@ export class SchedulerStore<
    */
   public duplicateEventOccurrence = (
     eventId: SchedulerEventId,
-    start: Date,
-    end: Date,
+    start: BaseTemporal.ZonedDateTime,
+    end: BaseTemporal.ZonedDateTime,
   ): SchedulerEventId | undefined => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const duplicatedEvent = extractStandaloneEvent(
@@ -1361,33 +1362,36 @@ export class SchedulerStore<
       // An all-day paste covers the days of an all-day source, or one day for a timed one, from
       // the pasted day, or from the own day of a timed source in its timezone.
       const start =
-        cleanChanges.start?.getTime() ??
+        cleanChanges.start?.epochMilliseconds ??
         toEpochMs(
           toPlainDate(original.start.epochMilliseconds, original.timezone),
           displayTimezone,
         );
-      cleanChanges.start = new Date(start);
-      cleanChanges.end = new Date(
+      cleanChanges.start = toZonedDateTime(start, displayTimezone);
+      cleanChanges.end = toZonedDateTime(
         addDaysToDayStart(
           start,
           original.allDay ? getAllDayDayCount(original) : 1,
           displayTimezone,
         ),
+        displayTimezone,
       );
     } else if (!allDay && original.allDay) {
       // An all-day source pasted as timed starts at the pasted instant, or at the first instant of
       // its first day, and lasts the default event duration.
-      const start = cleanChanges.start?.getTime() ?? original.start.epochMilliseconds;
-      cleanChanges.start = new Date(start);
-      cleanChanges.end = new Date(
-        start + schedulerEventSelectors.defaultEventDuration(this.state) * MS_PER_MINUTE,
+      cleanChanges.start ??= original.start;
+      cleanChanges.end = toZonedDateTime(
+        cleanChanges.start.epochMilliseconds +
+          schedulerEventSelectors.defaultEventDuration(this.state) * MS_PER_MINUTE,
+        displayTimezone,
       );
     } else if (cleanChanges.start != null) {
       // A timed source pasted as timed keeps its duration.
-      cleanChanges.end = new Date(
-        cleanChanges.start.getTime() +
+      cleanChanges.end = toZonedDateTime(
+        cleanChanges.start.epochMilliseconds +
           original.end.epochMilliseconds -
           original.start.epochMilliseconds,
+        displayTimezone,
       );
     }
     const isMovingDates = cleanChanges.start != null;
@@ -1659,8 +1663,8 @@ export class SchedulerStore<
     const allDay = changes.allDay ?? occurrence.allDay;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     const displayBounds = getEditedBounds(
-      start?.getTime(),
-      end?.getTime(),
+      start?.epochMilliseconds,
+      end?.epochMilliseconds,
       occurrence,
       allDay,
       isEventOccurrence(occurrence) ? occurrence.timezone : 'default',
@@ -1730,8 +1734,8 @@ export class SchedulerStore<
     // the occurrence on its own day can keep the surface armed.
     const allDay = changes.allDay ?? occurrence.allDay;
     const nextDayTimezone = getDayTimezone(original, displayTimezone, allDay);
-    const changedStart = changes.start?.getTime();
-    const changedEnd = changes.end?.getTime();
+    const changedStart = changes.start?.epochMilliseconds;
+    const changedEnd = changes.end?.epochMilliseconds;
     const bounds: [number | undefined, number][] = [
       [changedStart, occurrenceStart],
       [

@@ -1,3 +1,4 @@
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import {
   addToDate,
   createStartOfPlainDate,
@@ -7,6 +8,7 @@ import {
   localToEpochMs,
   toLocalDayNumber,
   toPlainDate,
+  toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
 
 // Builds and moves the dates of the tests: plain `Date` objects, read with the timezone helpers of
@@ -40,6 +42,21 @@ export function createDate(value: string, timezone = 'default'): Date {
     throw new Error(`createDate: "${value}" is not an ISO date.`);
   }
   return new Date(epochMs);
+}
+
+/**
+ * The zoned date-time of an ISO string read like `createDate()`, in `timezone`. The edit methods
+ * of the store take these.
+ */
+export function createZonedDate(value: string, timezone = 'default'): BaseTemporal.ZonedDateTime {
+  return toZonedDateTime(createDate(value, timezone).getTime(), timezone);
+}
+
+/**
+ * The zoned date-time of a date, in `timezone`.
+ */
+export function toZoned(date: Date, timezone = 'default'): BaseTemporal.ZonedDateTime {
+  return toZonedDateTime(date.getTime(), timezone);
 }
 
 function addMilliseconds(date: Date, amount: number): Date {

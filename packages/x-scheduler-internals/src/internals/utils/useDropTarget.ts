@@ -27,7 +27,7 @@ import type { StandaloneEvent } from '../../standalone-event';
 import { getPrimaryResourceId } from './event-utils';
 import { getAllDayDayCount } from './date-utils';
 import { snapAllDayBounds } from './plain-date-utils/date';
-import { addDaysToDayStart, getStartOfDayMs } from './plain-date-utils/timeZone';
+import { addDaysToDayStart, getStartOfDayMs, toZonedDateTime } from './plain-date-utils/timeZone';
 
 /**
  * The bounds of a drop as whole days of the display timezone when its result is all-day: a move
@@ -288,12 +288,13 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};
   const allDay = additionalChanges.allDay ?? originalOccurrence.allDay ?? false;
+  const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
   const { start, end } = snapDropBounds(
     placeholder.type,
     allDay,
     placeholder.start,
     placeholder.end,
-    schedulerOtherSelectors.displayTimezone(store.state),
+    displayTimezone,
     originalOccurrence,
   );
 
@@ -303,10 +304,10 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   const allDayToggled = allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
   if (allDayToggled || originalOccurrence.start.epochMilliseconds !== start) {
-    changes.start = new Date(start);
+    changes.start = toZonedDateTime(start, displayTimezone);
   }
   if (allDayToggled || originalOccurrence.end.epochMilliseconds !== end) {
-    changes.end = new Date(end);
+    changes.end = toZonedDateTime(end, displayTimezone);
   }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
@@ -387,16 +388,17 @@ export function applyExternalDragOccurrencePlaceholder(
 ) {
   const additionalProperties = addPropertiesToDroppedEvent?.() ?? {};
   const allDay = additionalProperties.allDay ?? placeholder.eventData.allDay ?? false;
+  const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
   const { start, end } = snapDropBounds(
     'external-drag',
     allDay,
     placeholder.start,
     placeholder.end,
-    schedulerOtherSelectors.displayTimezone(store.state),
+    displayTimezone,
   );
   const event = {
-    start: new Date(start),
-    end: new Date(end),
+    start: toZonedDateTime(start, displayTimezone),
+    end: toZonedDateTime(end, displayTimezone),
     ...placeholder.eventData,
   };
 

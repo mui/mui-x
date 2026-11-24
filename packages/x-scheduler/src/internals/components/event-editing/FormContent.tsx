@@ -32,6 +32,7 @@ import {
   isBuiltInEventProperty,
   isEventOccurrence,
   plainDateFromDayNumber,
+  toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -477,8 +478,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
 
       // The store receives the instants of the fields, read in the display timezone.
-      const start = new Date(range.start);
-      const end = new Date(range.end);
+      const start = toZonedDateTime(range.start, current.displayTimezone);
+      const end = toZonedDateTime(range.end, current.displayTimezone);
       if (isCreation) {
         store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
       } else if (current.showRecurrence && isEventOccurrence(occurrence) && occurrence.rrule) {

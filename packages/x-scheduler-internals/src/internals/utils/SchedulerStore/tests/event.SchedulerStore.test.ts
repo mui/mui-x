@@ -3,10 +3,12 @@ import {
   createDate,
   createOccurrence,
   createStoreOccurrence,
+  createZonedDate,
   EventBuilder,
   premiumStoreClasses,
   ResourceBuilder,
   storeClasses,
+  toZoned,
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type {
@@ -167,8 +169,8 @@ storeClasses.forEach((storeClass) => {
         store.updateEvent({
           id: '1',
           title: 'Event 1 updated',
-          start: createDate('2025-07-01T00:00:00.000Z'),
-          end: createDate('2025-07-02T00:00:00.000Z'),
+          start: createZonedDate('2025-07-01T00:00:00.000Z'),
+          end: createZonedDate('2025-07-02T00:00:00.000Z'),
           allDay: true,
         });
 
@@ -198,8 +200,8 @@ storeClasses.forEach((storeClass) => {
         });
         const createdId = store.createEvent({
           title: 'Event 1',
-          start: createDate('2025-07-01T09:00:00.000Z'),
-          end: createDate('2025-07-01T10:00:00.000Z'),
+          start: createZonedDate('2025-07-01T09:00:00.000Z'),
+          end: createZonedDate('2025-07-01T10:00:00.000Z'),
           allDay: false,
         });
 
@@ -238,7 +240,7 @@ storeClasses.forEach((storeClass) => {
 
         const start = createDate('2025-07-01T11:00:00.000Z');
         const end = createDate('2025-07-01T12:00:00.000Z');
-        const duplicatedId = store.duplicateEventOccurrence('1', start, end);
+        const duplicatedId = store.duplicateEventOccurrence('1', toZoned(start), toZoned(end));
 
         const duplicated = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.myId === duplicatedId,
@@ -277,8 +279,8 @@ storeClasses.forEach((storeClass) => {
             result = store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: createZonedDate('2025-07-02T09:00:00.000Z'),
+              end: createZonedDate('2025-07-02T10:00:00.000Z'),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -309,8 +311,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             store.updateEvent({
               id: '1',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: createZonedDate('2025-07-02T09:00:00.000Z'),
+              end: createZonedDate('2025-07-02T10:00:00.000Z'),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -320,8 +322,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             store.updateEvent({
               id: '2',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: createZonedDate('2025-07-02T09:00:00.000Z'),
+              end: createZonedDate('2025-07-02T10:00:00.000Z'),
             });
           }).not.toWarnDev();
         });
@@ -337,7 +339,7 @@ storeClasses.forEach((storeClass) => {
             result = store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              start: createDate('2025-07-02T09:00:00.000Z'),
+              start: createZonedDate('2025-07-02T09:00:00.000Z'),
             });
           }).toWarnDev([`${START_WARNING}\n${START_NOT_WRITABLE_REASON}`]);
 
@@ -363,7 +365,7 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             store.updateEvent({
               id: '1',
-              end: createDate('2025-07-01T11:00:00.000Z'),
+              end: createZonedDate('2025-07-01T11:00:00.000Z'),
             });
           }).not.toWarnDev();
 
@@ -391,8 +393,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             result = store.updateEvent({
               id: '1',
-              start,
-              end: addDays(start, 2),
+              start: toZoned(start),
+              end: toZoned(addDays(start, 2)),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -413,8 +415,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             result = store.updateEvent({
               id: '1',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: createZonedDate('2025-07-02T09:00:00.000Z'),
+              end: createZonedDate('2025-07-02T10:00:00.000Z'),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_END}`,
@@ -435,7 +437,7 @@ storeClasses.forEach((storeClass) => {
             store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              end: createZonedDate('2025-07-02T10:00:00.000Z'),
             });
           }).toWarnDev([
             "MUI X Scheduler: An event's `end` date was not updated.\n" +
@@ -456,8 +458,8 @@ storeClasses.forEach((storeClass) => {
             result = store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T11:00:00.000Z'),
+              start: createZonedDate('2025-07-02T09:00:00.000Z'),
+              end: createZonedDate('2025-07-02T11:00:00.000Z'),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_BOTH}`,
@@ -477,7 +479,7 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             result = store.updateEvent({
               id: '1',
-              start: createDate('2025-07-02T09:00:00.000Z'),
+              start: createZonedDate('2025-07-02T09:00:00.000Z'),
             });
           }).toWarnDev([`${START_WARNING}\n${START_NOT_WRITABLE_REASON}`]);
 
@@ -502,8 +504,8 @@ storeClasses.forEach((storeClass) => {
             result = store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              start: createDate('2025-07-01T09:00:00.000Z'),
-              end: createDate('2025-07-01T10:00:00.000Z'),
+              start: createZonedDate('2025-07-01T09:00:00.000Z'),
+              end: createZonedDate('2025-07-01T10:00:00.000Z'),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -519,9 +521,9 @@ storeClasses.forEach((storeClass) => {
           store.cutEvent('1');
 
           expect(() => {
-            expect(store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') })).to.equal(
-              null,
-            );
+            expect(
+              store.pasteEvent({ start: createZonedDate('2025-07-02T09:00:00.000Z') }),
+            ).to.equal(null);
           }).toWarnDev([`${PASTE_WARNING}\n${DATES_NOT_WRITABLE_REASON_START}`]);
 
           expect(onEventsChange.mock.calls.length).to.equal(0);
@@ -550,9 +552,9 @@ storeClasses.forEach((storeClass) => {
           store.copyEvent('1');
 
           expect(() => {
-            expect(store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') })).to.equal(
-              null,
-            );
+            expect(
+              store.pasteEvent({ start: createZonedDate('2025-07-02T09:00:00.000Z') }),
+            ).to.equal(null);
           }).toWarnDev([`${PASTE_WARNING}\n${DATES_NOT_WRITABLE_REASON_START}`]);
 
           expect(onEventsChange.mock.calls.length).to.equal(0);
@@ -580,8 +582,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             createdId = store.createEvent({
               title: 'New event',
-              start: createDate('2025-07-01T09:00:00.000Z'),
-              end: createDate('2025-07-01T10:00:00.000Z'),
+              start: createZonedDate('2025-07-01T09:00:00.000Z'),
+              end: createZonedDate('2025-07-01T10:00:00.000Z'),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -600,8 +602,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             duplicatedId = store.duplicateEventOccurrence(
               '1',
-              createDate('2025-07-01T11:00:00.000Z'),
-              createDate('2025-07-01T12:00:00.000Z'),
+              createZonedDate('2025-07-01T11:00:00.000Z'),
+              createZonedDate('2025-07-01T12:00:00.000Z'),
             );
           }).toWarnDev([
             `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -839,8 +841,8 @@ storeClasses.forEach((storeClass) => {
           title: 'Event 2 updated',
           description: 'Event 2 description',
           allDay: false,
-          start: createDate('2025-07-01T11:30:00Z'),
-          end: createDate('2025-07-01T12:30:00Z'),
+          start: createZonedDate('2025-07-01T11:30:00Z'),
+          end: createZonedDate('2025-07-01T12:30:00Z'),
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -881,8 +883,8 @@ storeClasses.forEach((storeClass) => {
         store.updateEvent({
           id: event.id,
           title: 'Updated title',
-          start: newStart,
-          end: newEnd,
+          start: toZoned(newStart),
+          end: toZoned(newEnd),
         });
 
         const updated = onEventsChange.mock.lastCall?.[0][0];
@@ -1553,7 +1555,7 @@ storeClasses.forEach((storeClass) => {
 
         const start = createDate('2025-07-01T09:00:00Z');
         const end = createDate('2025-07-01T10:00:00Z');
-        const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
+        const duplicatedId = store.duplicateEventOccurrence(event.id, toZoned(start), toZoned(end));
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
@@ -1582,7 +1584,11 @@ storeClasses.forEach((storeClass) => {
 
           const start = createDate('2025-07-01T09:00:00Z');
           const end = createDate('2025-07-01T10:00:00Z');
-          const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
+          const duplicatedId = store.duplicateEventOccurrence(
+            event.id,
+            toZoned(start),
+            toZoned(end),
+          );
 
           const originalEventWithoutRecurrence = { ...event };
           delete originalEventWithoutRecurrence.rrule;
@@ -1617,7 +1623,7 @@ storeClasses.forEach((storeClass) => {
 
         const start = createDate('2025-07-01T09:00:00Z');
         const end = createDate('2025-07-01T10:00:00Z');
-        const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
+        const duplicatedId = store.duplicateEventOccurrence(event.id, toZoned(start), toZoned(end));
 
         const duplicated = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.id === duplicatedId,
@@ -1631,7 +1637,7 @@ storeClasses.forEach((storeClass) => {
         const event = EventBuilder.new().build();
         const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] });
         const oldState = store.state;
-        store.pasteEvent({ start: createDate('2025-07-01T09:00:00Z') });
+        store.pasteEvent({ start: createZonedDate('2025-07-01T09:00:00Z') });
         expect(store.state).to.deep.equal(oldState);
       });
 
@@ -1647,7 +1653,7 @@ storeClasses.forEach((storeClass) => {
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          start: createDate('2025-07-01T09:00:00Z'),
+          start: createZonedDate('2025-07-01T09:00:00Z'),
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -1678,7 +1684,7 @@ storeClasses.forEach((storeClass) => {
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          start: createDate('2025-07-01T09:00:00Z'),
+          start: createZonedDate('2025-07-01T09:00:00Z'),
         });
 
         const pasted = onEventsChange.mock.lastCall?.[0].find(
@@ -1758,7 +1764,7 @@ storeClasses.forEach((storeClass) => {
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          start: createDate('2025-07-01T09:00:00Z'),
+          start: createZonedDate('2025-07-01T09:00:00Z'),
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -1838,13 +1844,13 @@ storeClasses.forEach((storeClass) => {
         });
         store.cutEvent(event.id);
 
-        store.pasteEvent({ start: createDate('2025-07-01T09:00:00Z') });
+        store.pasteEvent({ start: createZonedDate('2025-07-01T09:00:00Z') });
 
         expect(store.state.copiedEvent).to.equal(null);
         expect(onEventsChange.mock.calls.length).to.equal(1);
 
         const result = store.pasteEvent({
-          start: createDate('2025-07-02T09:00:00Z'),
+          start: createZonedDate('2025-07-02T09:00:00Z'),
         });
 
         expect(result).to.equal(null);
@@ -1863,10 +1869,10 @@ storeClasses.forEach((storeClass) => {
         store.copyEvent(event.id);
 
         const firstPastedId = store.pasteEvent({
-          start: createDate('2025-07-01T09:00:00Z'),
+          start: createZonedDate('2025-07-01T09:00:00Z'),
         });
         const secondPastedId = store.pasteEvent({
-          start: createDate('2025-07-02T09:00:00Z'),
+          start: createZonedDate('2025-07-02T09:00:00Z'),
         });
 
         expect(store.state.copiedEvent).to.deep.equal({ id: event.id, action: 'copy' });
@@ -1904,8 +1910,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             store.updateEvent({
               id: '1',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: createZonedDate('2025-07-02T09:00:00.000Z'),
+              end: createZonedDate('2025-07-02T10:00:00.000Z'),
             });
           }).not.toWarnDev();
 
@@ -1921,9 +1927,9 @@ storeClasses.forEach((storeClass) => {
           store.cutEvent('1');
 
           expect(() => {
-            expect(store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') })).to.equal(
-              null,
-            );
+            expect(
+              store.pasteEvent({ start: createZonedDate('2025-07-02T09:00:00.000Z') }),
+            ).to.equal(null);
           }).toWarnDev([
             `MUI X Scheduler: The event with id="1" was not pasted.\n${READ_ONLY_EVENT_REASON}`,
           ]);
@@ -1951,7 +1957,7 @@ storeClasses.forEach((storeClass) => {
           store.copyEvent('1');
 
           expect(() => {
-            store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') });
+            store.pasteEvent({ start: createZonedDate('2025-07-02T09:00:00.000Z') });
           }).not.toWarnDev();
 
           expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -2160,8 +2166,8 @@ storeClasses.forEach((storeClass) => {
 
         store.updateEvent({
           id: 'trip',
-          start: createDate('2025-07-10T00:00:00', 'Asia/Tokyo'),
-          end: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+          start: createZonedDate('2025-07-10T00:00:00', 'Asia/Tokyo'),
+          end: createZonedDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
         });
 
         const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
@@ -2184,8 +2190,8 @@ storeClasses.forEach((storeClass) => {
         store.createEvent({
           title: 'Trip',
           allDay: true,
-          start: createDate('2025-07-04T00:00:00', 'America/New_York'),
-          end: createDate('2025-07-05T00:00:00', 'America/New_York'),
+          start: createZonedDate('2025-07-04T00:00:00', 'America/New_York'),
+          end: createZonedDate('2025-07-05T00:00:00', 'America/New_York'),
         });
 
         const created: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
@@ -2222,8 +2228,8 @@ storeClasses.forEach((storeClass) => {
           store.createEvent({
             title: 'Trip',
             allDay: true,
-            start: new Date('2025-07-04'),
-            end: new Date('2025-07-06'),
+            start: toZoned(new Date('2025-07-04')),
+            end: toZoned(new Date('2025-07-06')),
           }),
         ).to.throw(/first instant of a day/);
       });
@@ -2241,7 +2247,7 @@ storeClasses.forEach((storeClass) => {
         });
 
         expect(() =>
-          store.updateEvent({ id: 'trip', end: createDate('2025-07-05T23:59:59.999Z') }),
+          store.updateEvent({ id: 'trip', end: createZonedDate('2025-07-05T23:59:59.999Z') }),
         ).to.throw(/first instant of a day/);
         expect(onEventsChange.mock.calls.length).to.equal(0);
       });
@@ -2259,7 +2265,7 @@ storeClasses.forEach((storeClass) => {
         });
         store.copyEvent('trip');
 
-        store.pasteEvent({ start: createDate('2025-07-20T00:00:00') });
+        store.pasteEvent({ start: createZonedDate('2025-07-20T00:00:00') });
 
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
         expect(pasted.start).to.equal('2025-07-20');
@@ -2280,7 +2286,7 @@ storeClasses.forEach((storeClass) => {
         });
         store.copyEvent('trip');
 
-        store.pasteEvent({ start: createDate('2025-07-20T00:00:00', 'Asia/Tokyo') });
+        store.pasteEvent({ start: createZonedDate('2025-07-20T00:00:00', 'Asia/Tokyo') });
 
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
         expect(pasted.start).to.equal('2025-07-20');
@@ -2297,7 +2303,7 @@ storeClasses.forEach((storeClass) => {
         });
         store.copyEvent('standup');
 
-        store.pasteEvent({ start: createDate('2025-07-20T00:00:00'), allDay: true });
+        store.pasteEvent({ start: createZonedDate('2025-07-20T00:00:00'), allDay: true });
 
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
         expect(pasted.allDay).to.equal(true);
@@ -2337,7 +2343,7 @@ storeClasses.forEach((storeClass) => {
         });
         store.copyEvent('trip');
 
-        store.pasteEvent({ start: createDate('2025-07-20T14:00:00'), allDay: false });
+        store.pasteEvent({ start: createZonedDate('2025-07-20T14:00:00'), allDay: false });
 
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
         expect(pasted.allDay).to.equal(false);
@@ -2450,8 +2456,8 @@ storeClasses.forEach((storeClass) => {
 
         store.duplicateEventOccurrence(
           'trip',
-          createDate('2025-07-20T00:00:00'),
-          createDate('2025-07-23T00:00:00'),
+          createZonedDate('2025-07-20T00:00:00'),
+          createZonedDate('2025-07-23T00:00:00'),
         );
 
         const duplicated: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
@@ -2552,7 +2558,7 @@ premiumStoreClasses.forEach((storeClass) => {
         });
         store.copyEvent('holiday');
 
-        store.pasteEvent({ allDay: false, start: createDate('2025-07-01T09:00:00') });
+        store.pasteEvent({ allDay: false, start: createZonedDate('2025-07-01T09:00:00') });
 
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
         expect(pasted.rrule).to.equal('FREQ=DAILY;COUNT=5');
@@ -2582,8 +2588,8 @@ premiumStoreClasses.forEach((storeClass) => {
             changes: {
               id: 'holiday',
               allDay: false,
-              start: createDate(`${day}T09:00:00`),
-              end: createDate(`${day}T09:30:00`),
+              start: createZonedDate(`${day}T09:00:00`),
+              end: createZonedDate(`${day}T09:30:00`),
             },
           });
           store.selectRecurringEventScope('all');
@@ -2616,8 +2622,8 @@ premiumStoreClasses.forEach((storeClass) => {
           changes: {
             id: 'standup',
             allDay: true,
-            start: createDate('2025-07-04T00:00:00', 'UTC'),
-            end: createDate('2025-07-05T00:00:00', 'UTC'),
+            start: createZonedDate('2025-07-04T00:00:00', 'UTC'),
+            end: createZonedDate('2025-07-05T00:00:00', 'UTC'),
           },
         });
         store.selectRecurringEventScope('all');
@@ -2688,8 +2694,8 @@ premiumStoreClasses.forEach((storeClass) => {
             changes: {
               id: 'holiday',
               allDay: false,
-              start: createDate('2025-07-03T09:00:00'),
-              end: createDate('2025-07-03T10:00:00'),
+              start: createZonedDate('2025-07-03T09:00:00'),
+              end: createZonedDate('2025-07-03T10:00:00'),
             },
           });
           store.selectRecurringEventScope(scope);
@@ -2733,8 +2739,8 @@ premiumStoreClasses.forEach((storeClass) => {
             changes: {
               id: 'standup',
               allDay: true,
-              start: createDate('2025-07-10T00:00:00', 'America/New_York'),
-              end: createDate('2025-07-11T00:00:00', 'America/New_York'),
+              start: createZonedDate('2025-07-10T00:00:00', 'America/New_York'),
+              end: createZonedDate('2025-07-11T00:00:00', 'America/New_York'),
             },
           });
           store.selectRecurringEventScope(scope);
@@ -2782,8 +2788,8 @@ premiumStoreClasses.forEach((storeClass) => {
               changes: {
                 id: 'standup',
                 allDay: true,
-                start: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
-                end: createDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
+                start: createZonedDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+                end: createZonedDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
               },
             });
             store.selectRecurringEventScope(scope);
@@ -2908,8 +2914,8 @@ premiumStoreClasses.forEach((storeClass) => {
               changes: {
                 id: 'standup',
                 allDay: true,
-                start: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
-                end: createDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
+                start: createZonedDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+                end: createZonedDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
               },
             });
             store.selectRecurringEventScope(scope);
@@ -2948,8 +2954,8 @@ premiumStoreClasses.forEach((storeClass) => {
             changes: {
               id: 'holiday',
               allDay: false,
-              start: createDate('2025-07-03T09:00:00', 'Asia/Tokyo'),
-              end: createDate('2025-07-03T10:00:00', 'Asia/Tokyo'),
+              start: createZonedDate('2025-07-03T09:00:00', 'Asia/Tokyo'),
+              end: createZonedDate('2025-07-03T10:00:00', 'Asia/Tokyo'),
             },
           });
           store.selectRecurringEventScope(scope);
@@ -2998,8 +3004,8 @@ premiumStoreClasses.forEach((storeClass) => {
           changes: {
             id: 'trip',
             allDay: false,
-            start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
-            end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+            start: createZonedDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
+            end: createZonedDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
           },
         });
         store.selectRecurringEventScope('all');
@@ -3044,8 +3050,8 @@ premiumStoreClasses.forEach((storeClass) => {
           changes: {
             id: 'review',
             allDay: false,
-            start: createDate('2025-07-11T18:00:00', 'America/Los_Angeles'),
-            end: createDate('2025-07-11T19:00:00', 'America/Los_Angeles'),
+            start: createZonedDate('2025-07-11T18:00:00', 'America/Los_Angeles'),
+            end: createZonedDate('2025-07-11T19:00:00', 'America/Los_Angeles'),
           },
         });
         store.selectRecurringEventScope('all');

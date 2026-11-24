@@ -2,10 +2,12 @@ import { getMinutesInDay, getTimezoneId, toMsInDay } from '@mui/x-scheduler-inte
 import {
   addDays,
   createDate,
+  createZonedDate,
   EventBuilder,
   ResourceBuilder,
   setSystemTimezone,
   startOfDay,
+  toZoned,
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -298,7 +300,7 @@ describe('Core - EventCalendarStore', () => {
         const start = createDate('2024-01-15T10:00:00');
         const end = createDate('2024-01-15T11:30:00');
 
-        store.setEditingOccurrenceTimes({ start, end });
+        store.setEditingOccurrenceTimes({ start: toZoned(start), end: toZoned(end) });
 
         const editing = store.state.editingOccurrence!;
         expect(editing.occurrence.start.toPlainDateTime().toString()).to.equal(
@@ -312,8 +314,8 @@ describe('Core - EventCalendarStore', () => {
         const store = new EventCalendarStore(DEFAULT_PARAMS);
 
         store.setEditingOccurrenceTimes({
-          start: createDate('2024-01-15T10:00:00'),
-          end: createDate('2024-01-15T11:30:00'),
+          start: createZonedDate('2024-01-15T10:00:00'),
+          end: createZonedDate('2024-01-15T11:30:00'),
         });
 
         expect(store.state.editingOccurrence).to.equal(null);
@@ -333,7 +335,7 @@ describe('Core - EventCalendarStore', () => {
         const start = createDate('2024-01-15T14:00:00Z');
         const end = createDate('2024-01-15T16:00:00Z');
 
-        store.setEditingOccurrenceTimes({ start, end });
+        store.setEditingOccurrenceTimes({ start: toZoned(start), end: toZoned(end) });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.start.epochMilliseconds).to.equal(start.getTime());
@@ -361,7 +363,7 @@ describe('Core - EventCalendarStore', () => {
         // One more day: the exclusive end moves from July 5th to July 6th.
         const end = addDays(new Date(edited.end.epochMilliseconds), 1);
 
-        store.setEditingOccurrenceTimes({ end });
+        store.setEditingOccurrenceTimes({ end: toZoned(end) });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.start).to.equal(edited.start);

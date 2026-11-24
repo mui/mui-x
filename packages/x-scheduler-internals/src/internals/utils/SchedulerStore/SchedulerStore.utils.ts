@@ -21,6 +21,7 @@ import {
   getUntilReferenceString,
 } from '../date-utils';
 import { stringifyEventDateChanges } from '../event-date-changes';
+import type { BaseTemporal } from '../base-temporal';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -198,13 +199,13 @@ export function createEventModel<TEvent extends object>(
 ) {
   const id = generateId('event');
 
-  const formatNewDate = (value: string | Date): string => {
+  const formatNewDate = (value: string | BaseTemporal.ZonedDateTime): string => {
     if (typeof value === 'string') {
       return value;
     }
     return event.allDay
-      ? allDayBoundToEventString(value.getTime(), displayTimezone)
-      : value.toISOString();
+      ? allDayBoundToEventString(value.epochMilliseconds, displayTimezone)
+      : new Date(value.epochMilliseconds).toISOString();
   };
   const start = formatNewDate(event.start);
 
