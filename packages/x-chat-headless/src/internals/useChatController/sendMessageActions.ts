@@ -82,14 +82,18 @@ export function createSendMessageActions<Cursor = string>(params: {
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
-      onFinish: async (payload: ChatOnFinishPayload) => {
-        onReplyMessageId?.(payload.message.id);
-        if (shouldDeferFinish) {
-          capturedFinishPayload = payload;
-        } else {
-          await onFinishAtStart?.(payload);
-        }
-      },
+      // Without a wrapper to run, pass the listener through so no unused payload is built.
+      onFinish:
+        shouldDeferFinish || onReplyMessageId
+          ? async (payload: ChatOnFinishPayload) => {
+              onReplyMessageId?.(payload.message.id);
+              if (shouldDeferFinish) {
+                capturedFinishPayload = payload;
+              } else {
+                await onFinishAtStart?.(payload);
+              }
+            }
+          : onFinishAtStart,
       onData: runtimeRef.current.onData,
       // Unique-per-run fallback the stream binds to when the adapter omits a
       // `messageId` on `start`. A backend-supplied id still overrides it (see
@@ -121,12 +125,13 @@ export function createSendMessageActions<Cursor = string>(params: {
         await runtimeRef.current.onFinish?.(capturedFinishPayload);
       } else {
         // The stream threw before finishing (e.g. a locked stream): still report the run once.
+        const isAbort = abortController.signal.aborted;
         await emitDeferredFinish({
           messageId: fallbackMessageId,
-          status: 'error',
-          isAbort: false,
+          status: isAbort ? 'cancelled' : 'error',
+          isAbort,
           isDisconnect: false,
-          isError: true,
+          isError: !isAbort,
         });
       }
       throw error;

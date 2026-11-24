@@ -450,6 +450,39 @@ describe('createSendMessageActions', () => {
       });
     });
 
+    it('calls onFinish once with isAbort when the run is stopped before an unreadable first stream', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn();
+      const lockedStream = createStream([{ type: 'start', messageId: 'a1' }]);
+      lockedStream.getReader();
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockImplementation(async () => {
+          store.state.activeStreamAbortController?.abort();
+          return lockedStream;
+        }),
+        reconnectToStream: vi.fn(),
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onFinish } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(onFinish.mock.calls[0][0]).toMatchObject({
+        isAbort: true,
+        isDisconnect: false,
+        isError: false,
+        message: { status: 'cancelled' },
+      });
+    });
+
     it('calls an onFinish attached mid-stream when the first stream errors and reconnectToStream is set', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
