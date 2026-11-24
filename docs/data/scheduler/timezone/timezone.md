@@ -99,13 +99,12 @@ Each bound is a `BaseTemporal.ZonedDateTime` in `displayTimezone`:
 
 - Its date and time fields, such as `year`, `month`, `day`, `hour` and `minute`, are the wall-clock time in `displayTimezone`.
 - `epochMilliseconds` is the instant, in milliseconds since the Unix epoch.
-- `timeZoneId` is the display timezone, which is the timezone of the system for `"default"`, and `offset` is its offset from UTC at this instant.
+- `timeZoneId` is the display timezone, which is the timezone of the system for `"default"`, and `offset` is its offset from UTC at this instant. The `offset` tells apart the two instances of an hour repeated by a daylight saving transition.
 
 For all-day occurrences, `end` is exclusive: an occurrence covering July 1 ends at the start of July 2 in the display timezone.
 Its last day is the day before the date of `end`: `occurrence.end.toPlainDate().add({ days: -1 })`.
 The event models use the same exclusive end, as `YYYY-MM-DD` dates: to write an all-day occurrence back to a model, use `occurrence.start.toPlainDate().toString()` and `occurrence.end.toPlainDate().toString()`.
 All-day events are not affected by `displayTimezone` nor by their `timezone`: they cover the same dates everywhere.
-The `offset` tells apart the two instances of an hour repeated by a daylight saving transition.
 
 Import `BaseTemporal` to read and compare these values:
 
