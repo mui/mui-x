@@ -7,18 +7,24 @@ import {
 } from '@mui/x-internals/densityTheme';
 import type { TreeItemLoaderClassKey } from '../TreeItemLoader/treeItemLoaderClasses';
 import { treeItemLoaderClasses } from '../TreeItemLoader/treeItemLoaderClasses';
+import type { TreeItemClassKey } from '../TreeItem/treeItemClasses';
 
-/** A theme whose `components` object the enhancer chain owns and can write into. */
-export type DensityEnhancedTheme<T extends Theme> = T & {
-  components: NonNullable<Theme['components']>;
-};
-
-// The loading row resolves theme overrides by name, but the package's theme
-// augmentation does not list it, so pin its key here.
-type TreeViewDensityComponents = NonNullable<Theme['components']> & {
+// The tree view keys are typed by the theme augmentation a program loads, and
+// programs that compile this file without one (docs, tests) have no keys. The
+// loading row resolves theme overrides by name, but the package's theme
+// augmentation does not list it, so its key is pinned here.
+export type TreeViewDensityComponents = NonNullable<Theme['components']> & {
+  MuiSimpleTreeView?: { defaultProps?: object };
+  MuiRichTreeView?: { defaultProps?: object };
+  MuiTreeItem?: { styleOverrides?: Partial<Record<TreeItemClassKey, unknown>> };
   MuiTreeItemLoader?: {
     styleOverrides?: Partial<Record<TreeItemLoaderClassKey, CSSInterpolation>>;
   };
+};
+
+/** A theme whose `components` object the enhancer chain owns and can write into. */
+export type DensityEnhancedTheme<T extends Theme> = T & {
+  components: TreeViewDensityComponents;
 };
 
 /**

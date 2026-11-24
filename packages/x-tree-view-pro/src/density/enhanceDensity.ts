@@ -3,6 +3,10 @@ import { unstable_enhanceDensity as enhanceCommunityDensity } from '@mui/x-tree-
 import type { DensityEnhancedTheme } from '@mui/x-tree-view/density';
 import { addDefaultProps, getDensityScale } from '@mui/x-internals/densityTheme';
 
+type TreeViewProDensityComponents = NonNullable<Theme['components']> & {
+  MuiRichTreeViewPro?: { defaultProps?: object };
+};
+
 /**
  * Make the Pro tree view density-aware: the community enhancer first, then
  * the Pro tree view's own props.
@@ -15,7 +19,8 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const scale = getDensityScale(theme);
   // The virtualizer positions rows with `itemHeight` (32 by default, the
   // touch target), so the row height follows the scale through the prop.
-  addDefaultProps(enhanced.components, 'MuiRichTreeViewPro', {
+  const components: TreeViewProDensityComponents = enhanced.components;
+  addDefaultProps(components, 'MuiRichTreeViewPro', {
     itemHeight: scale.touchTarget,
     itemChildrenIndentation: scale.spacing.small,
   });

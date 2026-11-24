@@ -29,7 +29,7 @@ import DensityExperimentShell, { createEnhancedTheme } from './DensityExperiment
 const enhanced = createEnhancedTheme(enhancePickers);
 const value = dayjs('2026-04-17T09:30');
 const range: [dayjs.Dayjs, dayjs.Dayjs] = [dayjs('2026-04-14T09:30'), dayjs('2026-04-22T17:00')];
-const noActions = { actionBar: { actions: [] } } as const;
+const noActions = { actionBar: { actions: [] } };
 const variants = ['outlined', 'filled', 'standard'] as const;
 const sizes = ['medium', 'small'] as const;
 

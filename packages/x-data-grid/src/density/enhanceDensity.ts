@@ -5,11 +5,18 @@ import { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import { tablePaginationClasses } from '@mui/material/TablePagination';
 import { addDefaultProps, addRootOverride } from '@mui/x-internals/densityTheme';
 import { gridClasses } from '../constants/gridClasses';
+import type { GridClassKey } from '../constants/gridClasses';
 import { getDensityScale, getDensitySizing, gridDensityHeight } from './densityScale';
+
+// `MuiDataGrid` is typed by whichever tier's theme augmentation a program loads,
+// and programs that compile this file without one (docs, tests) have no key.
+export type GridDensityComponents = NonNullable<Theme['components']> & {
+  MuiDataGrid?: { defaultProps?: object; styleOverrides?: Partial<Record<GridClassKey, unknown>> };
+};
 
 /** A theme whose `components` object the enhancer chain owns and can write into. */
 export type DensityEnhancedTheme<T extends Theme> = T & {
-  components: NonNullable<Theme['components']>;
+  components: GridDensityComponents;
 };
 
 /**
@@ -20,7 +27,7 @@ export type DensityEnhancedTheme<T extends Theme> = T & {
  */
 export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<T> {
   const scale = getDensityScale(theme);
-  const components: NonNullable<Theme['components']> = { ...theme.components };
+  const components: GridDensityComponents = { ...theme.components };
   const height = gridDensityHeight(scale);
   // The checkbox column's width is a colDef number fed to the virtualizer;
   // `checkboxColDef` is spread over the built-in definition, so the width

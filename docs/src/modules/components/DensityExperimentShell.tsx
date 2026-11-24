@@ -6,11 +6,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import type { Theme } from '@mui/material/styles';
 import {
   createTheme,
   ThemeProvider,
   unstable_enhanceDensity as enhanceMaterial,
-  Theme,
 } from '@mui/material/styles';
 
 const pages = [

@@ -1,4 +1,4 @@
-import type { CSSInterpolation, Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import { unstable_enhanceDensity as enhanceProDensity } from '@mui/x-charts-pro/density';
 import type { ChartsDensityComponents, DensityEnhancedTheme } from '@mui/x-charts-pro/density';
 import { addRootOverride, getDensitySizing } from '@mui/x-internals/densityTheme';
@@ -6,7 +6,7 @@ import { addRootOverride, getDensitySizing } from '@mui/x-internals/densityTheme
 // The palette option renders inside the data grid's charts panel and styles
 // itself under the grid's theme name; that key is not typed in this package.
 type ChartsPremiumDensityComponents = ChartsDensityComponents & {
-  MuiDataGrid?: { styleOverrides?: Record<string, CSSInterpolation> };
+  MuiDataGrid?: { styleOverrides?: Record<string, unknown> };
 };
 
 /**

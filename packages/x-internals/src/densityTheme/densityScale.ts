@@ -29,7 +29,9 @@ export function getDensityScale(theme: object): DensityScale {
   const scale = (theme as DensityEnhancedThemeLike).unstable_densityScale;
   if (!scale) {
     throw new Error(
-      "MUI X: `unstable_enhanceDensity` needs a theme enhanced by `@mui/material`'s `unstable_enhanceDensity` first (`theme.unstable_densityScale` is missing).",
+      'MUI X: `unstable_enhanceDensity` received a theme without `theme.unstable_densityScale`.\n' +
+        'The MUI X enhancers read every size from that scale, so they cannot make the components follow the density.\n' +
+        'Apply `unstable_enhanceDensity` from `@mui/material/styles` to the theme first, then the MUI X enhancer.',
     );
   }
   return scale;
@@ -53,7 +55,9 @@ export function getDensitySizing(theme: object): DensitySizing {
   const iconSize = enhanced.vars?.iconSize ?? enhanced.iconSize;
   if (!touchTarget || !iconSize) {
     throw new Error(
-      "MUI X: `unstable_enhanceDensity` needs a theme enhanced by `@mui/material`'s `unstable_enhanceDensity` first (`theme.touchTarget` / `theme.iconSize` are missing).",
+      'MUI X: `unstable_enhanceDensity` received a theme without `theme.touchTarget` or `theme.iconSize`.\n' +
+        'The MUI X enhancers size boxes and icons from these two values, so they cannot make the components follow the density.\n' +
+        'Apply `unstable_enhanceDensity` from `@mui/material/styles` to the theme first, then the MUI X enhancer.',
     );
   }
   return { touchTarget, iconSize };

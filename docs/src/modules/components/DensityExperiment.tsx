@@ -10,11 +10,11 @@ import Chip from '@mui/material/Chip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   GridActionsCellItem,
   GridCheckIcon,
-  GridColDef,
   GridDeleteIcon,
   unstable_enhanceDensity as enhanceGrid,
 } from '@mui/x-data-grid-premium';
@@ -100,12 +100,14 @@ export default function DensityExperiment() {
               rowReordering
               aiAssistant
               onPrompt={async () => ({
+                conversationId: 'density-experiment',
                 select: -1,
                 filters: [],
                 aggregation: {},
                 sorting: [],
                 grouping: [],
                 pivoting: {},
+                chart: null,
               })}
               initialState={{
                 pagination: { paginationModel: { pageSize: 10 } },

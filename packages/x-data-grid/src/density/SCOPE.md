@@ -1,8 +1,8 @@
-# MUI X density overrides — scope and porting log
+# MUI X density overrides — scope and porting log
 
-Companion to `unstable_enhanceDensity` in every package that ships one (`packages/x-data-grid*/src/density/`, `x-date-pickers*`, `x-tree-view*`, `x-charts*`; shared helpers in `x-internals/src/densityTheme/`). It lives in the grid package because the grid was ported first. The checklist below lists the components whose static size/spacing the enhancers port, with the decision per line; the fix log records what broke under the Material UI density chain and how each was fixed.
+Companion to `unstable_enhanceDensity` in every package that ships one (`packages/x-data-grid*/src/density/`, `x-date-pickers*`, `x-tree-view*`, `x-charts*`; shared helpers in `x-internals/src/densityTheme/`). It lives in the grid package because the grid was ported first. The checklist below lists the components whose static size/spacing the enhancers port, with the decision per line; the fix log records what broke under the Material UI density chain and how each was fixed.
 
-Derived by reading every non-deprecated component's styled bodies and their JS consumers on this branch. A line is **KEEP** when a theme `styleOverrides` change of that property is plain CSS with no JS reading or producing the value, and it affects density (padding, margin, gap, control/icon/item sizes). **DYNAMIC → defaultProps** lines are density-relevant but JS-owned (row/header/item heights fed to a virtualizer, prop-driven vars) — the enhancer must set them through `defaultProps`, never CSS. Everything else (layout fills, popover widths, overlays, fillers, skeletons, handles, SVG geometry, JS-set vars) is listed in the appendix with its reason.
+Derived by reading every non-deprecated component's styled bodies and their JavaScript consumers on this branch. A line is **KEEP** when a theme `styleOverrides` change of that property is plain CSS with no JavaScript reading or producing the value, and it affects density (padding, margin, gap, control/icon/item sizes). **DYNAMIC → defaultProps** lines are density-relevant but JavaScript-owned (row/header/item heights fed to a virtualizer, prop-driven vars) — the enhancer must set them through `defaultProps`, never CSS. Everything else (layout fills, popover widths, overlays, fillers, skeletons, handles, SVG geometry, JavaScript-set vars) is listed in the appendix with its reason.
 
 Totals: **81 components in scope** (169 KEEP lines, 5 DYNAMIC → defaultProps lines), 39 components excluded.
 
@@ -24,7 +24,7 @@ Totals: **81 components in scope** (169 KEEP lines, 5 DYNAMIC → defaultProps l
 - quick filter trigger 36→16px. slot `width/height: min-content`, box came from IconButton padding; material: explicit box + `padding: 0`. fix: slot `width/height: touchTarget`. `--trigger-width` followed.
 
 - pickers calendar kept a blank band. `DateCalendar` hardcodes `height: VIEW_HEIGHT` (336); with the day grid shrunk to `touchTarget` the content ends 36px short. fix: emit the view height as the same sum master hardcodes (header block + 7 rows), and the year list `maxHeight` as 7 rows (master's 280).
-- pickers calendar cut off at low density (touchTarget 44, xxSmall 8): the last week row was hidden and the days shrank to 37.7px. `PickerViewRoot` still applied master's `maxHeight: 336` and `width: 320`, so the 432px view was capped, and 7 day columns of 52px (364px) did not fit in 320px. The month and year grids wrapped at the same width (3 pills of 88px plus 2 gaps of 32px = 328px). fix: `MuiDateCalendar.root` takes `maxHeight: none` and `width: max(320px, (touchTarget + xxSmall) * 7 + 2 * large)`, and `MuiMonthCalendar.root` / `MuiYearCalendar.root` take the same width. Measured in Chromium with Material UI's low, medium and high recipes: low is 428 × 432 with 44px days, three months and three or four years per row, nothing clipped; medium (320 × 300) and high (320 × 216) are unchanged.
+- pickers calendar cut off at low density (touchTarget 44, xxSmall 8): the last week row was hidden and the days shrank to 37.7px. `PickerViewRoot` still applied master's `maxHeight: 336` and `width: 320`, so the 432px view was capped, and 7 day columns of 52px (364px) did not fit in 320px. The month and year grids wrapped at the same width (3 pills of 88px plus 2 gaps of 32px = 328px). fix: `MuiDateCalendar.root` takes `maxHeight: none` and `width: max(320px, (touchTarget + xxSmall) * 7 + 2 * large)`, and `MuiMonthCalendar.root` / `MuiYearCalendar.root` take the same width. Measured in Chromium with Material UI's low, medium and high recipes: low is 428 × 432 with 44px days, three months and three or four years per row, nothing clipped; medium (320 × 300) and high (320 × 216) are unchanged.
 - pickers day gutters: the 2px day margin maps to half the smallest step (`xxSmall / 2`). A full step would make each column 40px again and cancel the smaller day.
 - pickers year fillers (`YearCalendarButtonFiller`) have a styled slot but no class key in `YearCalendarClasses`, so the key does not typecheck. fix: nest `& > div:empty` under `MuiYearCalendar.root`.
 - pickers toolbar values clipped. `PickersToolbarButton = styled(Button)` holds h3/h4 headline text; material's enhancer sizes medium Buttons `height: touchTarget`, so the value overflowed its box and sat below the `:` separator (am/pm stack 53→64). fix: `MuiPickersToolbarButton.root { height: auto }`.
@@ -33,20 +33,21 @@ Totals: **81 components in scope** (169 KEEP lines, 5 DYNAMIC → defaultProps l
 - `MuiTimeRangePickerTabs` / `MuiTimeRangePickerToolbar` resolve theme overrides by name (`styled(..., { name })`) but are missing from `x-date-pickers-pro`'s theme augmentation, so `components.MuiTimeRange*` does not typecheck. fixed upstream: master added both to the augmentation (#24284), so the Pro enhancer no longer types them locally.
 - tree item checkbox box 24→32 squeezed to 25.5. `TreeItemCheckbox = styled(MuiCheckbox)` with `padding: 0` (box = glyph); material's enhancer sizes every Checkbox to `touchTarget`. fix: `MuiTreeItem.checkbox { width/height: iconSize }`.
 - charts components missing from the theme augmentation: `MuiChartsAxisHighlightValue`, `MuiChartsLabelMark`, `MuiContinuousColorLegend`, `MuiPiecewiseColorLegend`, `MuiChartsToolbar`, `MuiChartsHeatmapTooltip` resolve overrides by name but `components.<name>` does not typecheck. fix: `ChartsDensityComponents` types them loosely in the enhancer. The charts enhancer imports `../themeAugmentation` so the typed keys (`MuiChartsLegend`, `MuiChartsTooltip`) resolve when the Premium package compiles it.
+
 ## Porting steps (one per checkbox below)
 
 Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `packages/mui-material/src/styles/enhanceDensity.ts` + `densityScale.ts`. Any new case not covered by the rules → look there first, copy the pattern, then add it to the rules list in the PR description.
 
 1. **Pick the component.** Open its KEEP lines below and the master rule in source. Confirm the line is still KEEP after any rebase.
 2. **Decide the slot.** Slot = the `gridClasses` key the master selector targets (`cell`, `columnHeader`, …). A key only works if the element has its own `styled(..., { slot })` OR the key is in `gridClassesOverrides` (`gridClasses.ts`, root resolver list) — otherwise the override is dropped silently: nest `& .MuiDataGrid-<key>` under `root` (in-root elements only; portaled ones need their own slot). Compound master selector → one slot per call. Component rendered by Pro/Premium → that tier's enhancer, even when the CSS sits in community `GridRootStyles.ts`.
-3. **Decide the property.** Logical property of the axis density changes (`paddingInline`, `paddingBlock`, `marginInlineEnd`), not master's shorthand. Physical only when JS reads the physical value.
+3. **Decide the property.** Logical property of the axis density changes (`paddingInline`, `paddingBlock`, `marginInlineEnd`), not master's shorthand. Physical only when JavaScript reads the physical value.
 4. **Decide the value.** Spacing: master px → the step of the SAME size (2-4 → `xxSmall`, 5-8 → `xSmall`, 10-12 → `small`, 16 → `medium`, 20-24 → `large`); most insets/gaps land on `xSmall`/`xxSmall`, never one step up (the prototype did; corrected 2026-10-09). Sizing: boxes → `calc()` off `touchTarget`, glyphs → `iconSize` (`getDensitySizing(theme)`); actionable rows (triggers, field rows, drop zones, editable bars) → `height: touchTarget`, no block padding; bars that only hold controls → `touchTarget + medium`. Zero resets, `auto`/`unset`, UNRELATED, DYNAMIC → skip (DYNAMIC → `defaultProps`).
    4c. **Check later resets.** Grep master for a zero/auto of the same property on a sibling selector that comes AFTER the rule you override (`cellCheckbox { padding: 0 }` after `cell { padding }`). Your emission lands last and leaks into it; restate the reset on that slot.
    4a. **Check `min-content` boxes.** Grep the component for `min-content`. An icon button sized that way carried its box through padding; under the material enhancer (explicit box, `padding: 0`) it collapses to the glyph. Restate `width`/`height: touchTarget` on that slot.
    4b. **Check the icons.** Icon `fontSize` is outside the scanner's property set, so the rows below never list it. If the slot renders icons with `fontSize="small"` (grep the component), add `'& svg': { fontSize: iconSize }` to the slot's object — without it the material enhancer shrinks the grid's default glyph to `iconSize - 2px`.
 5. **Write it.** `addRootOverride(components, 'MuiDataGrid', { <prop>: spacing('<key>') }, '<slot>')` with `const { spacing } = theme` — keyed spacing from material's enhancer, no formatter in X. Master nested under a state class → nest the same selector inside the slot object. One `addRootOverride` call per slot per enhancer.
 6. **Record.** Add the row to the mapping table in the PR description (slot, master, emission, tier). Extend the community test (vars + plain expectation) or the tier's test.
-7. **Check.** From the repo root: eslint on the density dirs, prettier via `node -e "require('child_process').execSync('pnpm exec prettier --write <dirs>',{stdio:'ignore'})"`, `tsc --noEmit` in each of the three grid packages, vitest `--config packages/x-data-grid/vitest.config.jsdom.mts src/density`.
+7. **Check.** From the repo root: ESLint on the density dirs, prettier via `node -e "require('child_process').execSync('pnpm exec prettier --write <dirs>',{stdio:'ignore'})"`, `tsc --noEmit` in each of the three grid packages, vitest `--config packages/x-data-grid/vitest.config.jsdom.mts src/density`.
 8. **Measure.** Run the docs experiment page (`docs/pages/x/density-experiment.js`; `pnpm docs:dev` → `/x/density-experiment/`, vanilla vs enhanced side by side) and measure the slot AND every interactive child (trigger buttons, inputs, their open states) with Playwright — snippet in the PR description. Measured values must equal the emitted step px, and the enhanced render must look right (nothing clipped or overlapping, controls aligned): a number that matches with a broken picture is a failed step. Known blind spots there: the multi-select edit popup and the AI assistant panel.
 9. **Tick.** Check the box below with the date.
 
@@ -56,7 +57,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 
 - [x] [GridEditInputCell](/packages/x-data-grid/src/components/cell/GridEditInputCell.tsx) — ported 2026-10-09: `& input { paddingInline: xSmall }` (aligned to the cell inset; master's 16 vs 10 made the value jump on edit entry), load-icon glyph rule. Root `1px 0` is a focus-outline inset, no emission
   - `(root)` → padding — KEEP: static `1px 0` on the edit input root; nothing measures the edit cell
-  - `& input` → padding — KEEP: static `0 16px` inner padding of the edit input; cell box is JS-sized but input padding only squeezes content
+  - `& input` → padding — KEEP: static `0 16px` inner padding of the edit input; cell box is JavaScript-sized but input padding only squeezes content
 - [x] [GridEditLongTextCell](/packages/x-data-grid/src/components/cell/GridEditLongTextCell.tsx) — ported 2026-10-09: value paddingInline xSmall; popper content paddingInline `xSmall - 1px`, paddingBlock `(rowHeight - 1px - 1lh) / 2` (master 15.5 = (52 - 1 - 20) / 2). Textarea `0` reset: no emission
   - `(root)` → padding — KEEP: static `0` reset on the textarea slot (`EditLongTextCellTextarea`); no measurement
   - `(root)` → paddingInline — KEEP: static `10` on the value slot and `9` on the popper content slot; mirrors cell padding, nothing reads it
@@ -69,7 +70,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 - [x] [GridFooterContainer](/packages/x-data-grid/src/components/containers/GridFooterContainer.tsx) — ported 2026-10-09: `minHeight: calc(touchTarget + medium)` (material's TablePagination bar) + nested pagination toolbar at `- 1px`
   - `(root)` → minHeight — KEEP: static `52`; grid dimensions come from a ResizeObserver on the root/main (x-virtualizer/src/features/dimensions.ts:742), so a smaller footer just yields a taller measured viewport. Paired constant: GridPagination's `& .MuiToolbar-root { minHeight: 51 }` and MUI TablePagination's own toolbar `minHeight: 52` must be overridden together or the footer stays 52
 - [x] [GridRootStyles](/packages/x-data-grid/src/components/containers/GridRootStyles.ts) — community rows ported 2026-10-09 (`cell`, `columnHeader`, `columnHeaderTitleContainer`, `menuIcon` + alignRight twin, `actionsCell`, checkbox-column resets restated); Pro rows ported in the Pro enhancer (header filter, reorder, toggles, multi-select)
-  - `(root)` → paddingTop, paddingBottom — PORTED as `paddingBlock: xxSmall` root-nested (prototype's `small` would leave 16px for a 28px input in the 40px row). KEEP: flattened from `columnHeader--filter` (lines 322-323, `8`) and `root--densityCompact .columnHeader--filter` (lines 329-330, `4`); static. Row height itself is JS-set (`headerFilterHeight`, x-data-grid-pro/src/hooks/features/columnHeaders/useGridColumnHeaders.tsx:165) so padding only squeezes the input. An override must also target the `root--densityCompact` rule or the built-in density prop wins there
+  - `(root)` → paddingTop, paddingBottom — PORTED as `paddingBlock: xxSmall` root-nested (prototype's `small` would leave 16px for a 28px input in the 40px row). KEEP: flattened from `columnHeader--filter` (lines 322-323, `8`) and `root--densityCompact .columnHeader--filter` (lines 329-330, `4`); static. Row height itself is JavaScript-set (`headerFilterHeight`, x-data-grid-pro/src/hooks/features/columnHeaders/useGridColumnHeaders.tsx:165) so padding only squeezes the input. An override must also target the `root--densityCompact` rule or the built-in density prop wins there
   - `(root)` → paddingRight — PORTED `xSmall`, physical. KEEP: flattened from `columnHeader--filter` (line 324, `5`); autosize reads the computed value (packages/x-data-grid/src/hooks/features/columnResize/useGridColumnResize.tsx:290-291) so an override is picked up, not broken
   - `(root)` → marginLeft — PORTED at `columnHeader--alignRight` nesting `& .MuiDataGrid-menuIcon`. KEEP: flattened from `columnHeader--alignRight .menuIcon { marginLeft: -5 }` (line 385), the right-aligned twin of `menuIcon` marginRight; `columnHeader--alignCenter .menuIcon { marginLeft: auto }` (line 381) is alignment, UNRELATED
   - `& .${c.columnHeader}, & .${c.cell}` → padding — KEEP: static `0 10px`; autosize reads header padding via `getComputedStyle` (useGridColumnResize.tsx:261-263) and cell width via `getBoundingClientRect` under `max-content` (useGridColumnResize.tsx:244), so an override is folded into the measured width rather than breaking it; row-height auto measurement observes the row border box (x-virtualizer/src/features/dimensions.ts:669-675) and is horizontal-padding independent
@@ -82,7 +83,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
   - `& .${c.groupingCriteriaCellToggle}` → marginRight — PORTED same as tree toggle. KEEP: static `vars.spacing(2)`; same reasoning as the tree-data toggle
   - `& .${c.cell}` → height — DYNAMIC → defaultProps: `var(--height)` set from `dimensions.rowHeight` at packages/x-data-grid/src/hooks/features/dimensions/useGridDimensions.ts:232 and per row at packages/x-data-grid/src/components/GridRow.tsx:267 (feeds the virtualizer); change via the `rowHeight` prop
 - [x] [GridPagination](/packages/x-data-grid/src/components/GridPagination.tsx) — ported 2026-10-09 under `footerContainer` (internal slot); selector `.MuiTablePagination-root .MuiTablePagination-toolbar` to outrank the internal `.MuiToolbar-root` rule
-  - `& .MuiToolbar-root` → minHeight — KEEP: static `51`; paired with GridFooterContainer `minHeight: 52` (footer border) and MUI TablePagination toolbar `minHeight: 52`; override all three together, no JS reads it
+  - `& .MuiToolbar-root` → minHeight — KEEP: static `51`; paired with GridFooterContainer `minHeight: 52` (footer border) and MUI TablePagination toolbar `minHeight: 52`; override all three together, no JavaScript reads it
 - [x] [GridRowCount](/packages/x-data-grid/src/components/GridRowCount.tsx) — ported 2026-10-09 (`marginInline: large`)
   - `(root)` → margin — KEEP: static `vars.spacing(0, 2)`; footer text, no measurement
 - [x] [GridSelectedRowCount](/packages/x-data-grid/src/components/GridSelectedRowCount.tsx) — ported 2026-10-09 (`marginInline: large`)
@@ -100,7 +101,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 - [x] [GridActionsCell](/packages/x-data-grid/src/components/cell/GridActionsCell.tsx) — `actionsCell` gap lives in GridRootStyles (`gridGap: su(1)` → small) + glyph rule, 2026-10-09
 - [x] [GridToolbarQuickFilter](/packages/x-data-grid/src/components/toolbar/GridToolbarQuickFilter.tsx) — trigger box restated off touchTarget 2026-10-09 (criterion 10); not in the original scan (its sizes are `min-content` / a var, which the rubric read as non-static)
   - `(root)` → minHeight — KEEP: static `52`; the toolbar sits above the main container and is outside `topContainerHeight` (headers only), root size is re-measured by ResizeObserver (x-virtualizer/src/features/dimensions.ts:742), so a shorter toolbar just yields a taller viewport
-  - `(root)` → gap, padding — KEEP: `calc(var(--DataGrid-t-spacing-unit, <theme unit>) * n)`; the var is a static theme-derived definition (packages/x-data-grid/src/material/variables.ts:46), not JS state; no measurement
+  - `(root)` → gap, padding — KEEP: `calc(var(--DataGrid-t-spacing-unit, <theme unit>) * n)`; the var is a static theme-derived definition (packages/x-data-grid/src/material/variables.ts:46), not JavaScript state; no measurement
 - [x] [material/index](/packages/x-data-grid/src/material/index.tsx) — 2026-10-09; internal slots (no keys), each emitted at its owning grid slot:
   - `&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}` → marginRight — KEEP: static `theme.spacing(-0.75)` pull on the end adornment icon button; no measurement. PORTED at `columnsManagementHeader` + `toolbarQuickFilterControl` as `calc(touchTarget / -4)` (material's edge pull); selector adds `.MuiIconButton-edgeEnd` to outrank the internal rule
   - `(root)` → gap — KEEP: static `theme.spacing(0.5)` on FormControlLabel and `theme.spacing(1)` on ToggleButton; no measurement. FormControlLabel PORTED under `columnsManagement` (gap xSmall). ToggleButton renders only in Premium's charts panel → Premium batch
@@ -117,7 +118,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 - [x] [GridMultiSelectChips](/packages/x-data-grid-pro/src/components/cell/GridMultiSelectChips.tsx) — ported 2026-10-09: its root carries the `multiSelectCell` / `editMultiSelectCell` class (its own slot `MultiSelectChips` has no key), gap xxSmall root-nested
   - `(root)` → gap — KEEP: literal 4; overflow math reads the computed gap (packages/x-data-grid-pro/src/components/cell/GridMultiSelectMeasurer.tsx:61 `getComputedStyle(container).gap`) from the same `MultiSelectChips` slot, so a CSS override is followed
 - [x] [GridHeaderFilterCell](/packages/x-data-grid-pro/src/components/headerFiltering/GridHeaderFilterCell.tsx) — ported 2026-10-09: input marginRight xSmall / marginBottom -xxSmall, operator label marginRight xSmall; the compact-density input height row stays dormant (grid `density` prop unset), no emission
-  - `(root)` → height — KEEP: literal 20 on the compact-density input only; the cell box height comes from the `height` prop (JS), the inner input is not measured
+  - `(root)` → height — KEEP: literal 20 on the compact-density input only; the cell box height comes from the `height` prop (JavaScript), the inner input is not measured
   - `(root)` → marginRight, marginBottom, paddingTop, paddingBottom — KEEP: `vars.spacing(...)` on the filter input and operator label, nothing measures them
 
 ### Data Grid Premium (`x-data-grid-premium`) — 20 in scope, 4 excluded
@@ -134,7 +135,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 - [x] [GridChartsPanelCustomize](/packages/x-data-grid-premium/src/components/chartsPanel/customize/GridChartsPanelCustomize.tsx) — no override surface (see GridChartsPanelChart)
   - `(root)` → margin, padding, gap — KEEP: `vars.spacing(...)` on section / panel, nothing measures
 - [x] [GridChartsPanelDataBody](/packages/x-data-grid-premium/src/components/chartsPanel/data/GridChartsPanelDataBody.tsx) — no override surface (see GridChartsPanelChart)
-  - `(root)` → minHeight — UNRELATED: structural region minimums (84 available fields, 158 resizable sections); placeholder minHeight 38 — KEEP: static drop-zone row height, resize JS only writes inline `height` (packages/x-data-grid-premium/src/components/resizablePanel/ResizablePanelHandle.tsx:99) and CSS min clamps
+  - `(root)` → minHeight — UNRELATED: structural region minimums (84 available fields, 158 resizable sections); placeholder minHeight 38 — KEEP: static drop-zone row height, resize JavaScript only writes inline `height` (packages/x-data-grid-premium/src/components/resizablePanel/ResizablePanelHandle.tsx:99) and CSS min clamps
   - `(root)` → margin, marginRight, gap, padding — KEEP: `vars.spacing(...)` static, nothing measures
 - [x] [GridChartsPanelDataField](/packages/x-data-grid-premium/src/components/chartsPanel/data/GridChartsPanelDataField.tsx) — no override surface (see GridChartsPanelChart)
   - `(root)` → height — KEEP: literal 32 item height; drop position reads the live rect (:294) so it adapts
@@ -148,21 +149,21 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
   - `(root)` → height — KEEP: literal 40 trigger height, no collapse animation measures it
   - `(root)` → padding — KEEP: `vars.spacing(0, 1.5)` static
 - [x] [FormulaBar](/packages/x-data-grid-premium/src/components/formulaBar/FormulaBar.tsx) — ported 2026-10-09 root only: minHeight row-high, paddingInline xSmall, gap small. Address/preview are class-less inner `styled('div')`s (no key, no class), unreachable; address minWidth 64 structural. Not measured live: the bar needs the `formula` feature dependency wired
-  - `(root)` → minHeight — KEEP: literal 40 toolbar-row height; rendered inside the toolbar, no JS reads it
+  - `(root)` → minHeight — KEEP: literal 40 toolbar-row height; rendered inside the toolbar, no JavaScript reads it
   - `(root)` → minWidth — KEEP: literal 64 address cell width, static
   - `(root)` → padding, gap, paddingInline — KEEP: `vars.spacing(...)` static
 - [x] [GridAggregationHeader](/packages/x-data-grid-premium/src/components/GridAggregationHeader.tsx) — `marginTop: -1` hairline nudge, no emission
-  - `(root)` → marginTop — KEEP: literal -1 label nudge, static; header box height is JS-owned but the label is not measured
+  - `(root)` → marginTop — KEEP: literal -1 label nudge, static; header box height is JavaScript-owned but the label is not measured
 - [x] [GridFormulaColumnHeaderLetter](/packages/x-data-grid-premium/src/components/GridFormulaColumnHeaderLetter.tsx) — ported 2026-10-09 (`marginInlineEnd: xSmall`); not rendered in the harness
   - `(root)` → marginInlineEnd — KEEP: `theme.spacing(0.75)` static
 - [x] [GridFormulaEditable](/packages/x-data-grid-premium/src/components/GridFormulaEditable.tsx) — NO OVERRIDE SURFACE: the editable root is a class-less `styled('div')`, the popper slot `FormulaAutocompletePopper` has no key
-  - `(root)` → padding — KEEP: editable `0 10px` inline padding mirrors the cell's 10px for alignment; JS only writes `paddingBlock` inline in wrap mode (packages/x-data-grid-premium/src/components/GridFormulaEditor.tsx:475) and re-measures scroll sizes live; option/signature/list paddings static
+  - `(root)` → padding — KEEP: editable `0 10px` inline padding mirrors the cell's 10px for alignment; JavaScript only writes `paddingBlock` inline in wrap mode (packages/x-data-grid-premium/src/components/GridFormulaEditor.tsx:475) and re-measures scroll sizes live; option/signature/list paddings static
   - `(root)` → margin — KEEP: literal 0 list reset
   - `(root)` → gap — KEEP: literal 8 option gap, static
 - [x] [GridFormulaEditor](/packages/x-data-grid-premium/src/components/GridFormulaEditor.tsx) — NO OVERRIDE SURFACE: `FormulaEditor` / `FormulaEditorSurface` slots have no key
   - `(root)` → paddingInline — KEEP: literal 10 on the anchor value, mirrors cell padding, nothing measures it
 - [x] [GridPivotPanelBody](/packages/x-data-grid-premium/src/components/pivotPanel/GridPivotPanelBody.tsx) — ported 2026-10-09: section margin `xSmall small`, title marginRight medium / gap small, field list paddingBlock xSmall, placeholder `minHeight: calc(touchTarget + xxSmall)` / paddingInline small; region minimums structural
-  - `(root)` → minHeight — UNRELATED: structural region minimums (84 available fields, 158 resizable sections); placeholder minHeight 38 — KEEP: static drop-zone row height, resize JS only writes inline `height` (packages/x-data-grid-premium/src/components/resizablePanel/ResizablePanelHandle.tsx:99) and CSS min clamps
+  - `(root)` → minHeight — UNRELATED: structural region minimums (84 available fields, 158 resizable sections); placeholder minHeight 38 — KEEP: static drop-zone row height, resize JavaScript only writes inline `height` (packages/x-data-grid-premium/src/components/resizablePanel/ResizablePanelHandle.tsx:99) and CSS min clamps
   - `(root)` → margin, marginRight, gap, padding — KEEP: `vars.spacing(...)` static, nothing measures
 - [x] [GridPivotPanelField](/packages/x-data-grid-premium/src/components/pivotPanel/GridPivotPanelField.tsx) — ported 2026-10-09: `height: touchTarget`, `padding: 0 small 0 large`, gap xSmall, `marginInlineStart: xSmall` (prototype's drag-handle room), drag icon `width: iconSize`, checkbox `marginLeft: -small`, glyph rule; `-1px 0` border collapse untouched
   - `(root)` → height — KEEP: literal 32 item height; drop position reads the live rect (:259) so it adapts
@@ -184,48 +185,48 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 - [x] [DateCalendar](/packages/x-date-pickers/src/DateCalendar/DateCalendar.tsx) — ported 2026-10-18: root `height: small + touchTarget + xxSmall + (touchTarget + xxSmall) * 7` (header block plus weekday row plus six weeks, the same sum as master's 336); `maxHeight: none` and `width: max(320px, (touchTarget + xxSmall) * 7 + 2 * large)` so the view grows past master's 336 × 320 box at low density
   - `(root)` → height — KEEP (moved from the appendix 2026-10-18): VIEW_HEIGHT is reused by DesktopDateTimePicker.tsx:55 and MobileDateTimePicker.tsx:124 only as `maxHeight` caps on the sibling clock columns, so a shorter calendar leaves that row at the clock height without tearing; standalone, a fixed 336 left a blank band under the shrunk day grid
 - [x] [DayCalendar](/packages/x-date-pickers/src/DateCalendar/DayCalendar.tsx) — ported 2026-10-18: `weekDayLabel` / `weekNumberLabel` width `touchTarget`, height `touchTarget + xxSmall`, `marginInline` half xxSmall; `weekNumber` `touchTarget` box; `weekContainer` `marginBlock` half xxSmall; `slideTransition` + `loadingContainer` `minHeight: (touchTarget + xxSmall) * 6`
-  - `(root)` → width, height — KEEP: literal 36/40 on weekDayLabel/weekNumberLabel and DAY_SIZE (36) on weekNumber; CSS-only, no JS reads them; must move together with PickerDay `--PickerDay-size`
+  - `(root)` → width, height — KEEP: literal 36/40 on weekDayLabel/weekNumberLabel and DAY_SIZE (36) on weekNumber; CSS-only, no JavaScript reads them; must move together with PickerDay `--PickerDay-size`
   - `(root)` → minHeight — KEEP: slideTransition/loadingContainer minHeight = (DAY_SIZE + 2*DAY_MARGIN)*6 = 240 is a build-time literal consumed by CSS only (PickersSlideTransition measures nothing); override alongside the day size or six rows no longer fill the box
-  - `(root)` → margin — KEEP: weekContainer `2px 0`, labels `0 2px`, weekNumber `0 ${DAY_MARGIN}px`; static literals, no JS consumer
+  - `(root)` → margin — KEEP: weekContainer `2px 0`, labels `0 2px`, weekNumber `0 ${DAY_MARGIN}px`; static literals, no JavaScript consumer
   - `(root)` → padding — KEEP: weekNumber padding 0, static
 - [x] [DatePickerToolbar](/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx) — ported 2026-10-18: `title` landscape variant `marginRight: medium`
-  - `(root)` → margin — KEEP: title slot landscape `auto 16px auto auto`, static literal, no JS consumer
+  - `(root)` → margin — KEEP: title slot landscape `auto 16px auto auto`, static literal, no JavaScript consumer
 - [x] [DateTimePickerToolbar](/packages/x-date-pickers/src/DateTimePicker/DateTimePickerToolbar.tsx) — ported 2026-10-18: root `paddingInline: medium`, desktop portrait variant `paddingLeft: large` + `paddingRight: 0` restated; `timeContainer` desktop portrait `gap: xSmall`, `marginRight: xxSmall`; `separator` mobile variant `marginLeft: xxSmall / 2`, `marginRight: xxSmall`; `ampmSelection` `marginLeft: small`, landscape variant `marginTop: xxSmall` + `marginLeft: 0` restated; `timeDigitsContainer` gap 1.5 left (sub-step hairline)
   - `(root)` → paddingLeft, paddingRight — KEEP: root 16/16 and desktop-portrait 24/0, static literals
   - `(root)` → gap — KEEP: timeContainer 9 (desktop portrait) and timeDigitsContainer 1.5 (desktop), static literals
   - `(root)` → marginRight — KEEP: timeContainer 4 (desktop portrait), static
   - `(root)` → margin — KEEP: separator `0 4px 0 2px` (0 on desktop) and ampmSelection landscape `4px 0 auto`, static
-  - `(root)` → marginLeft — KEEP: ampmSelection 12, static (the hour/minute button `width` is a JS `sx` prop at :356/:442, not a styled value, so it is outside this line)
+  - `(root)` → marginLeft — KEEP: ampmSelection 12, static (the hour/minute button `width` is a JavaScript `sx` prop at :356/:442, not a styled value, so it is outside this line)
 - [x] [DigitalClock](/packages/x-date-pickers/src/DigitalClock/DigitalClock.tsx) — ported 2026-10-18: `MuiDigitalClock.item` (a MenuItem): `minHeight: touchTarget`, `paddingBlock: 0`, `paddingInline: medium`, `marginBlock: xxSmall / 2`, `marginInline: xxSmall`; first-item `marginTop: 4` left alone (DYNAMIC, the scroll code subtracts it as a literal); list `maxHeight` 232 left as the scroll viewport (denser items show more of the list)
   - `(root)` → maxHeight — KEEP: DIGITAL_CLOCK_VIEW_HEIGHT (232) literal; scroll-to-selected at :232-239 reads runtime `offsetTop`, not the constant
   - `(root)` → padding — KEEP: list 0, item `8px 16px`, static literals
   - `(root)` → margin — KEEP: item `2px 4px`, static; scroll uses measured offsetTop
 - [x] [PickersArrowSwitcher](/packages/x-date-pickers/src/internals/components/PickersArrowSwitcher/PickersArrowSwitcher.tsx) — ported 2026-10-18: `spacer` width `large`
-  - `(root)` → width — KEEP: spacer slot `theme.spacing(3)`, gap between the two arrow buttons, no JS consumer
+  - `(root)` → width — KEEP: spacer slot `theme.spacing(3)`, gap between the two arrow buttons, no JavaScript consumer
 - [x] [PickersToolbar](/packages/x-date-pickers/src/internals/components/PickersToolbar.tsx) — ported 2026-10-18: root `padding: medium large`, landscape variant restates `padding: medium` (it resets the portrait padding after the base rule)
   - `(root)` → padding — KEEP: `theme.spacing(2, 3)` portrait, 16 landscape, static
 - [x] [PickersToolbarButton](/packages/x-date-pickers/src/internals/components/PickersToolbarButton.tsx) — ported 2026-10-18: root `height: auto` — material's enhancer gives every medium Button a `touchTarget` height, which clipped the headline value and dropped it below the separator; padding/minWidth unchanged
-  - `(root)` → minWidth — KEEP: literal 16, static (a JS `width` prop may add `sx.width` on top, but minWidth stays CSS-owned)
+  - `(root)` → minWidth — KEEP: literal 16, static (a JavaScript `width` prop may add `sx.width` on top, but minWidth stays CSS-owned)
   - `(root)` → padding — KEEP: literal 0, static
 - [x] [MonthCalendar](/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx) — ported 2026-10-18: `rowGap: medium`, `paddingBlock: xSmall`, three-per-row `columnGap: large` (variant); `width` = the DateCalendar view width
   - `(root)` → width — KEEP: DIALOG_WIDTH (320) literal, CSS only; follows the DateCalendar view width or the pills wrap at low density
-  - `(root)` → rowGap — KEEP: literal 16 (columnGap 24/0 per monthsPerRow), static, no JS measurement in MonthCalendar
+  - `(root)` → rowGap — KEEP: literal 16 (columnGap 24/0 per monthsPerRow), static, no JavaScript measurement in MonthCalendar
   - `(root)` → padding — KEEP: `8px 0`, static
 - [x] [MonthCalendarButton](/packages/x-date-pickers/src/MonthCalendar/MonthCalendarButton.tsx) — ported 2026-10-18: `MuiMonthCalendar.button` pill: height `touchTarget`, width `2 * touchTarget`, radius `touchTarget / 2`
-  - `(root)` → height, width — KEEP: literal 36×72 button box (borderRadius 18 pairs), static, no JS consumer
+  - `(root)` → height, width — KEEP: literal 36×72 button box (borderRadius 18 pairs), static, no JavaScript consumer
 - [x] [MultiSectionDigitalClockSection](/packages/x-date-pickers/src/MultiSectionDigitalClock/MultiSectionDigitalClockSection.tsx) — ported 2026-10-18: `item`: same actionable row as the digital clock with `paddingInline: xSmall`, first item `marginTop: xxSmall`; section and item widths stay (DYNAMIC, toolbar `sx` pairs)
   - `(root)` → maxHeight — KEEP: DIGITAL_CLOCK_VIEW_HEIGHT (232) literal; centering scroll at :209-224 reads runtime clientHeight/scrollHeight/offsetTop, not the constant
   - `(root)` → padding — KEEP: root 0, item 8, static
   - `(root)` → margin — KEEP: item `2px 4px`, static; scroll centering is runtime-measured
   - `&:first-of-type` → marginTop — KEEP: literal 4, no literal offset in the section scroll logic (unlike DigitalClock)
 - [x] [PickerDay](/packages/x-date-pickers/src/PickerDay/PickerDay.tsx) — ported 2026-10-18: `--PickerDay-size: touchTarget`, `--PickerDay-horizontalMargin: xxSmall / 2` (the 2px gutter is half the smallest step; a full step would cancel the density gain)
-  - `(root)` → --PickerDay-size — KEEP: defined as `${DAY_SIZE}px` literal; read only by CSS (width/height/borderRadius here, DateRangePickerDay pseudo-elements); no JS reads it (grep `PickerDay-size` hits only styled bodies); pair with DayCalendar label widths and slideTransition minHeight
+  - `(root)` → --PickerDay-size — KEEP: defined as `${DAY_SIZE}px` literal; read only by CSS (width/height/borderRadius here, DateRangePickerDay pseudo-elements); no JavaScript reads it (grep `PickerDay-size` hits only styled bodies); pair with DayCalendar label widths and slideTransition minHeight
   - `(root)` → width, height — KEEP: `var(--PickerDay-size)`, CSS-only
   - `(root)` → --PickerDay-horizontalMargin — KEEP: `${DAY_MARGIN}px` literal, read only by CSS (margins here, DateRangePickerDay :88/:98 pseudo insets)
   - `(root)` → padding — KEEP: literal 0
   - `(root)` → marginLeft, marginRight — KEEP: `var(--PickerDay-horizontalMargin)`, CSS-only
 - [x] [PickersCalendarHeader](/packages/x-date-pickers/src/PickersCalendarHeader/PickersCalendarHeader.tsx) — ported 2026-10-18: root `min/maxHeight: touchTarget` (the bar is as high as its arrow buttons), margins `small`/`xxSmall`, padding `large`/`small`; `label` `marginRight: xSmall`
-  - `(root)` → maxHeight, minHeight — KEEP: literal 40/40 header row height, static, no JS consumer
+  - `(root)` → maxHeight, minHeight — KEEP: literal 40/40 header row height, static, no JavaScript consumer
   - `(root)` → marginTop, marginBottom, paddingLeft, paddingRight — KEEP: 12/4/24/12 literals, static
   - `(root)` → marginRight — KEEP: label slot 6 literal (labelContainer/switchViewButton `auto` are layout, ignore)
 - [x] [PickersFilledInput](/packages/x-date-pickers/src/PickersTextField/PickersFilledInput/PickersFilledInput.tsx) — ported 2026-10-18: root writes `--_restY` = mid of the padding, `--_shrinkY` 6px/4px, `--_inlinePad`; adornment `paddingLeft/Right: small`; `sectionsContainer` `paddingTop: medium + (touchTarget - 1lh) / 2` (small: `/ 4`), `paddingBottom` input pad, `paddingInline: small`, adornment zeros and hiddenLabel variants restated
@@ -255,13 +256,13 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 - [x] [DateRangeCalendar](/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx) — ported 2026-10-18: `monthContainer` nests `& .MuiDayCalendar-root { minHeight: (touchTarget + xxSmall) * 6 }` (the internal range DayCalendar has no key)
   - `(root)` → minHeight — KEEP: literal 240 = (DAY_RANGE_SIZE + 2·DAY_MARGIN)·6, CSS-only; the "internal" wrapper is the `monthContainer` slot (DateRangeCalendar.tsx:83 `overridesResolver: styles.monthContainer`, :620 `className={classes.monthContainer}`), so target `MuiDateRangeCalendar.styleOverrides.monthContainer` and move it together with `--PickerDay-size`
 - [x] [DateRangePickerDay](/packages/x-date-pickers-pro/src/DateRangePickerDay/DateRangePickerDay.tsx) — ported 2026-10-18: root `--PickerDay-size: touchTarget`, `--PickerDay-horizontalMargin: xxSmall / 2`, as the community day; highlight/preview pseudo-elements read the vars
-  - `(root)` → --PickerDay-size — KEEP: literal `36px`, read only by CSS (width/height/borderRadius); no JS consumer; pair with DayCalendar labels and DateRangeCalendar minHeight
+  - `(root)` → --PickerDay-size — KEEP: literal `36px`, read only by CSS (width/height/borderRadius); no JavaScript consumer; pair with DayCalendar labels and DateRangeCalendar minHeight
   - `(root)` → width, height — KEEP: `var(--PickerDay-size)`, CSS-only
   - `(root)` → --PickerDay-horizontalMargin — KEEP: literal `2px`, read by CSS only (margins and the :88/:98 highlight/preview pseudo insets)
   - `(root)` → padding — KEEP: literal 0
   - `(root)` → marginLeft, marginRight — KEEP: `var(--PickerDay-horizontalMargin)`, CSS-only
 - [x] [DateTimeRangePickerTabs](/packages/x-date-pickers-pro/src/DateTimeRangePicker/DateTimeRangePickerTabs.tsx) — ported 2026-10-18: root `minHeight: touchTarget + small` (the strip holds a large Button, material's large box); `filler` width `touchTarget` (stands in for a navigation IconButton, 40 → the enhanced IconButton)
-  - `(root)` → minHeight — KEEP: literal 48 tab bar height, static, no JS consumer
+  - `(root)` → minHeight — KEEP: literal 48 tab bar height, static, no JavaScript consumer
 - [x] [DateTimeRangePickerToolbar](/packages/x-date-pickers-pro/src/DateTimeRangePicker/DateTimeRangePickerToolbar.tsx) — ported 2026-10-18: nothing to emit: the start toolbar's `paddingBottom: 0` survives, the community `DateTimePickerToolbar` emission only touches inline padding
   - `(root)` → paddingBottom — KEEP: startToolbar literal 0 (gap between the stacked start/end toolbars), static
 - [x] [PickersRangeCalendarHeader](/packages/x-date-pickers-pro/src/PickersRangeCalendarHeader/PickersRangeCalendarHeader.tsx) — ported 2026-10-18: `MuiDateRangeCalendar.monthContainer` nests `& > .MuiPickersArrowSwitcher-root { padding: small medium xxSmall }`
@@ -302,7 +303,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 ### Charts Community (`x-charts`) — 7 in scope, 4 excluded
 
 - [x] [ChartsAxisHighlightValueItem](/packages/x-charts/src/ChartsAxisHighlightValue/ChartsAxisHighlightValueItem.tsx) — ported 2026-10-18: `MuiChartsAxisHighlightValue.root` `padding: xxSmall xSmall`
-  - `(root)` → padding — KEEP: static `theme.spacing(0.5, 1)`; the JS-set `--min/--max/--space` vars only clamp the `translate` offset and use `100%` of the element's own box, so a padding change is absorbed (ChartsAxisHighlightValueItem.tsx:18,70-78)
+  - `(root)` → padding — KEEP: static `theme.spacing(0.5, 1)`; the JavaScript-set `--min/--max/--space` vars only clamp the `translate` offset and use `100%` of the element's own box, so a padding change is absorbed (ChartsAxisHighlightValueItem.tsx:18,70-78)
 - [x] [ChartsLabelMark](/packages/x-charts/src/ChartsLabel/ChartsLabelMark.tsx) — ported 2026-10-18: glyph sizes off `iconSize`: base `iconSize - 2px`, line `iconSize x iconSize / 2`, square `iconSize - 3px`, circle `iconSize - 1px` (master's 14 / 16x8 / 13 / 15 at the default 16)
   - `(root)` → width, height — KEEP: static `14px` legend/tooltip mark; nothing measures it, the tooltip `markContainer` is sized independently in CSS
   - `&.${labelMarkClasses.line}` → width, height — KEEP: static `16 x 8`
@@ -367,7 +368,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 - [GridColumnsManagement](/packages/x-data-grid/src/components/columnsManagement/GridColumnsManagement.tsx) — in scope above; these lines are not:
   - `(root)` → maxHeight — UNRELATED: structural scroll-area cap (`300`) on the scroll area slot
 - [GridRootStyles](/packages/x-data-grid/src/components/containers/GridRootStyles.ts) — in scope above; these lines are not:
-  - `(root)` → --DataGrid-width, --DataGrid-scrollbarSize, --DataGrid-rowWidth, --DataGrid-columnsTotalWidth, --DataGrid-leftPinnedWidth, --DataGrid-rightPinnedWidth, --DataGrid-headerHeight, --DataGrid-headersTotalHeight, --DataGrid-topContainerHeight, --DataGrid-bottomContainerHeight — UNRELATED: `0px` placeholders mirroring JS state; overwritten inline by packages/x-data-grid/src/hooks/features/dimensions/useGridDimensions.ts:217-232
+  - `(root)` → --DataGrid-width, --DataGrid-scrollbarSize, --DataGrid-rowWidth, --DataGrid-columnsTotalWidth, --DataGrid-leftPinnedWidth, --DataGrid-rightPinnedWidth, --DataGrid-headerHeight, --DataGrid-headersTotalHeight, --DataGrid-topContainerHeight, --DataGrid-bottomContainerHeight — UNRELATED: `0px` placeholders mirroring JavaScript state; overwritten inline by packages/x-data-grid/src/hooks/features/dimensions/useGridDimensions.ts:217-232
   - `(root)` → boxSizing — UNRELATED: boxSizing
   - `(root)` → height, minHeight, maxHeight — UNRELATED: structural container size driven by the `height` prop (`ownerState.height ?? '100%'`)
   - `(root)` → minWidth — UNRELATED: `0` flex-shrink fix
@@ -423,7 +424,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
   - `(root)` → minWidth — UNRELATED: `fit-content` on the Tab slot
   - `& .${listItemTextClasses.primary}` → maxWidth — UNRELATED: structural text cap (`300px`) in the column menu
 - [GridOverlays](/packages/x-data-grid/src/components/base/GridOverlays.tsx) — EXCLUDED: all lines UNRELATED (overlay)
-  - `(root)` → width, height — UNRELATED: 0×0 sticky overlay anchor; inner size is JS-set from dimensions (GridOverlays.tsx:71-96)
+  - `(root)` → width, height — UNRELATED: 0×0 sticky overlay anchor; inner size is JavaScript-set from dimensions (GridOverlays.tsx:71-96)
 - [GridIconButtonContainer](/packages/x-data-grid/src/components/columnHeaders/GridIconButtonContainer.tsx) — EXCLUDED: all lines UNRELATED (show/hide toggle)
   - `(root)` → width — UNRELATED: `0` paired with `visibility: hidden`, flipped to `auto` by GridRootStyles hover/sorted rules; a visibility toggle, not spacing
 - [GridOverlay](/packages/x-data-grid/src/components/containers/GridOverlay.tsx) — EXCLUDED: all lines UNRELATED (overlay)
@@ -433,22 +434,22 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
   - `&::before` → height — UNRELATED: 2px drop-position indicator line
   - `&::after` → height — UNRELATED: 2px drop-position indicator line
 - [GridScrollArea](/packages/x-data-grid/src/components/GridScrollArea.tsx) — EXCLUDED: all lines UNRELATED (drag autoscroll zone)
-  - `(root)` → width, height — UNRELATED: 20px edge hot-zones for column/row drag autoscroll; JS reads their rect for scroll speed (GridScrollArea.tsx:185-187, 256-258)
+  - `(root)` → width, height — UNRELATED: 20px edge hot-zones for column/row drag autoscroll; JavaScript reads their rect for scroll speed (GridScrollArea.tsx:185-187, 256-258)
 - [GridScrollShadows](/packages/x-data-grid/src/components/GridScrollShadows.tsx) — EXCLUDED: all lines UNRELATED (overlay)
-  - `(root)` → inset — UNRELATED: `0` positional anchoring of the shadow overlay; variant insets use JS-set `--DataGrid-*` vars (useGridDimensions.ts:222-227)
+  - `(root)` → inset — UNRELATED: `0` positional anchoring of the shadow overlay; variant insets use JavaScript-set `--DataGrid-*` vars (useGridDimensions.ts:222-227)
 - [GridShadowScrollArea](/packages/x-data-grid/src/components/GridShadowScrollArea.tsx) — EXCLUDED: all lines UNRELATED (overlay)
   - `&::after` → width, height — UNRELATED: 4px sticky scroll-shadow strip
 - [GridSkeletonLoadingOverlay](/packages/x-data-grid/src/components/GridSkeletonLoadingOverlay.tsx) — EXCLUDED: all lines UNRELATED (skeleton)
-  - `(root)` → minWidth, width, height — UNRELATED: skeleton overlay layout fill; cell sizes are JS-driven from `dimensions` and `--width` (GridSkeletonLoadingOverlay.tsx:166-177, 235-240)
+  - `(root)` → minWidth, width, height — UNRELATED: skeleton overlay layout fill; cell sizes are JavaScript-driven from `dimensions` and `--width` (GridSkeletonLoadingOverlay.tsx:166-177, 235-240)
 - [GridColumnMenuContainer](/packages/x-data-grid/src/components/menu/columnMenu/GridColumnMenuContainer.tsx) — EXCLUDED: all lines UNRELATED (popover width)
   - `(root)` → minWidth — UNRELATED: structural popover width (`248`) of the column menu list
 - [GridPanel](/packages/x-data-grid/src/components/panel/GridPanel.tsx) — EXCLUDED: all lines UNRELATED (popover width)
   - `(root)` → maxWidth — UNRELATED: structural popover cap (`calc(100vw - spacing(2))`)
 - [GridMainContainer](/packages/x-data-grid/src/components/virtualization/GridMainContainer.tsx) — EXCLUDED: all lines UNRELATED (anchor)
-  - `(root)` → width — UNRELATED: panel-anchor width `calc(100% - hasScrollY * scrollbarSize)`, positional anchoring from JS-set vars (useGridDimensions.ts:218-219)
+  - `(root)` → width — UNRELATED: panel-anchor width `calc(100% - hasScrollY * scrollbarSize)`, positional anchoring from JavaScript-set vars (useGridDimensions.ts:218-219)
 - [GridVirtualScrollbar](/packages/x-data-grid/src/components/virtualization/GridVirtualScrollbar.tsx) — EXCLUDED: all lines UNRELATED (scrollbar)
   - `(root)` → --size — UNRELATED: `calc(max(var(--DataGrid-scrollbarSize), 14px))` mirrors measured scrollbar size (useGridDimensions.ts:219)
-  - `(root)` → width, height — DYNAMIC: `var(--size)` plus `--DataGrid-headersTotalHeight` / `--DataGrid-hasScroll*` from packages/x-data-grid/src/hooks/features/dimensions/useGridDimensions.ts:217-225; the content size is also computed in JS at GridVirtualScrollbar.tsx:113-118
+  - `(root)` → width, height — DYNAMIC: `var(--size)` plus `--DataGrid-headersTotalHeight` / `--DataGrid-hasScroll*` from packages/x-data-grid/src/hooks/features/dimensions/useGridDimensions.ts:217-225; the content size is also computed in JavaScript at GridVirtualScrollbar.tsx:113-118
   - `& > div` → width, height — DYNAMIC: `var(--size)`, same source
 - [GridVirtualScroller](/packages/x-data-grid/src/components/virtualization/GridVirtualScroller.tsx) — EXCLUDED: all lines UNRELATED (layout fill)
   - `(root)` → height — UNRELATED: layout fill (`100%`) on the scroller
@@ -456,7 +457,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 - [GridVirtualScrollerFiller](/packages/x-data-grid/src/components/virtualization/GridVirtualScrollerFiller.tsx) — EXCLUDED: all lines DYNAMIC or UNRELATED (filler)
   - `(root)` → width — DYNAMIC: `var(--DataGrid-rowWidth)` set by packages/x-data-grid/src/hooks/features/dimensions/useGridDimensions.ts:220
   - `(root)` → boxSizing — UNRELATED: boxSizing
-  - `(root)` → height — UNRELATED: layout fill (`100%`) on pinned filler slots; filler row height is JS-set from `scrollbarSize` (GridVirtualScrollerFiller.tsx:66-79)
+  - `(root)` → height — UNRELATED: layout fill (`100%`) on pinned filler slots; filler row height is JavaScript-set from `scrollbarSize` (GridVirtualScrollerFiller.tsx:66-79)
 
 ### Data Grid Pro (`x-data-grid-pro`)
 
@@ -470,7 +471,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
   - `(root)` → boxSizing — UNRELATED: boxSizing
 - [GridMultiSelectChips](/packages/x-data-grid-pro/src/components/cell/GridMultiSelectChips.tsx) — in scope above; these lines are not:
   - `(root)` → width, height — UNRELATED: layout fill (100%)
-- [GridDetailPanel](/packages/x-data-grid-pro/src/components/GridDetailPanel.tsx) — EXCLUDED: all lines DYNAMIC (JS-set vars)
+- [GridDetailPanel](/packages/x-data-grid-pro/src/components/GridDetailPanel.tsx) — EXCLUDED: all lines DYNAMIC (JavaScript-set vars)
   - `(root)` → width — DYNAMIC: calc of `--DataGrid-rowWidth` set by packages/x-data-grid/src/hooks/features/dimensions/useGridDimensions.ts:220 and `--DataGrid-scrollbarSize`
 - [useGridInfiniteLoadingIntersection](/packages/x-data-grid-pro/src/hooks/features/serverSideLazyLoader/useGridInfiniteLoadingIntersection.tsx) — EXCLUDED: all lines UNRELATED (intersection sentinel)
   - `(root)` → width, height — UNRELATED: 0×0 intersection-observer trigger element
@@ -503,7 +504,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
   - `(root)` → boxSizing — UNRELATED: boxSizing
   - `(root)` → maxHeight — UNRELATED: popover list scroll clamp (240)
 - [GridFormulaEditor](/packages/x-data-grid-premium/src/components/GridFormulaEditor.tsx) — in scope above; these lines are not:
-  - `(root)` → width, height — UNRELATED: layout fill (100%); surface width/height are JS-written (:555, :517)
+  - `(root)` → width, height — UNRELATED: layout fill (100%); surface width/height are JavaScript-written (:555, :517)
   - `(root)` → boxSizing — UNRELATED: boxSizing
 - [GridPivotPanelBody](/packages/x-data-grid-premium/src/components/pivotPanel/GridPivotPanelBody.tsx) — in scope above; these lines are not:
   - `(root)` → height — UNRELATED: layout fill (100%)
@@ -511,7 +512,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
   - `(root)` → boxSizing — UNRELATED: boxSizing
   - `(root)` → marginRight — UNRELATED: layout fill (`auto`)
 - [GridFormulaReferenceOverlay](/packages/x-data-grid-premium/src/components/GridFormulaReferenceOverlay.tsx) — EXCLUDED: all lines UNRELATED (overlay)
-  - `(root)` → width, height, boxSizing — UNRELATED: 0×0 overlay anchor and JS-positioned rects
+  - `(root)` → width, height, boxSizing — UNRELATED: 0×0 overlay anchor and JavaScript-positioned rects
 - [GridFormulaRowNumberCell](/packages/x-data-grid-premium/src/components/GridFormulaRowNumberCell.tsx) — EXCLUDED: all lines UNRELATED (layout fill)
   - `(root)` → width — UNRELATED: layout fill (100%)
 - [ResizablePanelHandle](/packages/x-data-grid-premium/src/components/resizablePanel/ResizablePanelHandle.tsx) — EXCLUDED: all lines UNRELATED (resize handle)
@@ -547,13 +548,13 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
   - `(root)` → height — UNRELATED: root `100%` fill (buttonFiller 36 pairs with YearCalendarButton, see there)
   - `(root)` → boxSizing — UNRELATED:
 - [DayCalendarSkeleton](/packages/x-date-pickers/src/DayCalendarSkeleton/DayCalendarSkeleton.tsx) — EXCLUDED: all lines UNRELATED (skeleton)
-  - `(root)` → margin — UNRELATED: skeleton placeholder (week `2px 0`, day `0 2px`; day size is a JS `width`/`height` prop at :103)
+  - `(root)` → margin — UNRELATED: skeleton placeholder (week `2px 0`, day `0 2px`; day size is a JavaScript `width`/`height` prop at :103)
 - [PickersModalDialog](/packages/x-date-pickers/src/internals/components/PickersModalDialog.tsx) — EXCLUDED: all lines UNRELATED (structural dialog; unnamed internal slot, no theme key)
   - `& .${dialogClasses.paper}` → minWidth — UNRELATED: DIALOG_WIDTH structural dialog width
   - `&:first-of-type` → padding — UNRELATED: resets DialogContent padding to 0 so the fixed-width view fills the paper
 - [PickerViewRoot](/packages/x-date-pickers/src/internals/components/PickerViewRoot/PickerViewRoot.tsx) — EXCLUDED: all lines UNRELATED (unnamed internal slot, structural view box)
   - `(root)` → width — UNRELATED: DIALOG_WIDTH structural view width (MobileDateTimePicker.tsx:119 re-sets it via sx)
-  - `(root)` → maxHeight — UNRELATED: VIEW_HEIGHT structural view box; no theme name to target (see DateCalendar for the JS pairing)
+  - `(root)` → maxHeight — UNRELATED: VIEW_HEIGHT structural view box; no theme name to target (see DateCalendar for the JavaScript pairing)
   - `(root)` → margin — UNRELATED: `0 auto` centering
 - [useStaticPicker](/packages/x-date-pickers/src/internals/hooks/useStaticPicker/useStaticPicker.tsx) — EXCLUDED: all lines UNRELATED (structural)
   - `(root)` → minWidth — UNRELATED: DIALOG_WIDTH structural static-layout width on an unnamed internal wrapper
@@ -598,7 +599,7 @@ Pattern source of truth: `@mui/material` 9.6.0 (from mui/material-ui#48749), `pa
 - [SimpleTreeView](/packages/x-tree-view/src/SimpleTreeView/SimpleTreeView.tsx) — EXCLUDED: all lines UNRELATED (ul list reset to 0 on structural container)
   - `(root)` → padding, margin — UNRELATED: `padding: 0; margin: 0` list-style reset on the `ul` container, no spacing value to scale
 - [TreeItemDragAndDropOverlay](/packages/x-tree-view/src/TreeItemDragAndDropOverlay/TreeItemDragAndDropOverlay.tsx) — EXCLUDED: all lines UNRELATED (drag placeholder)
-  - `(root)` → marginLeft — UNRELATED: drag-and-drop placeholder overlay; `calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))` where `--TreeView-indentMultiplier` is defined nowhere in `packages/` (consumed only here), `--TreeView-itemDepth` is JS-set (useTreeItem.ts:230)
+  - `(root)` → marginLeft — UNRELATED: drag-and-drop placeholder overlay; `calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))` where `--TreeView-indentMultiplier` is defined nowhere in `packages/` (consumed only here), `--TreeView-itemDepth` is JavaScript-set (useTreeItem.ts:230)
 
 ### Tree View Pro (`x-tree-view-pro`)
 
