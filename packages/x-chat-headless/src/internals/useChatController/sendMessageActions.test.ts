@@ -418,6 +418,38 @@ describe('createSendMessageActions', () => {
       });
     });
 
+    it('calls onFinish once with isError when the first stream cannot be read and reconnectToStream is set', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn();
+      const setRuntimeError = vi.fn();
+      const lockedStream = createStream([{ type: 'start', messageId: 'a1' }]);
+      lockedStream.getReader();
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(lockedStream),
+        reconnectToStream: vi.fn(),
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onFinish } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(setRuntimeError.mock.calls[0][0].code).toBe('SEND_ERROR');
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(onFinish.mock.calls[0][0]).toMatchObject({
+        isAbort: false,
+        isDisconnect: false,
+        isError: true,
+        message: { role: 'assistant', status: 'error' },
+      });
+    });
+
     it('calls an onFinish attached mid-stream when the first stream errors and reconnectToStream is set', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
@@ -1168,12 +1200,18 @@ describe('createSendMessageActions', () => {
       lockedStream.getReader();
       const adapter = createAdapter({
         regenerate: vi.fn().mockImplementation(async () => {
-          // A message from elsewhere (e.g. realtime) is not the replacement reply.
+          // Messages from elsewhere (e.g. realtime) are not the replacement reply.
           store.addMessage({
             id: 'u2',
             role: 'user',
             status: 'sent',
             parts: [{ type: 'text', text: 'Realtime' }],
+          });
+          store.addMessage({
+            id: 'a3',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Realtime reply' }],
           });
           return lockedStream;
         }),
@@ -1192,6 +1230,7 @@ describe('createSendMessageActions', () => {
 
       expect(store.state.messagesById.a1).toBeDefined();
       expect(store.state.messagesById.u2).toBeDefined();
+      expect(store.state.messagesById.a3).toBeDefined();
       expect(setRuntimeError).toHaveBeenCalledTimes(1);
       expect(setRuntimeError.mock.calls[0][0].code).toBe('REGENERATE_ERROR');
       expect(store.state.isStreaming).toBe(false);

@@ -71,20 +71,25 @@ export function createSendMessageActions<Cursor = string>(params: {
     conversationId: string | undefined,
     abortController: AbortController,
     fallbackMessageId: string,
+    onReplyMessageId?: (messageId: string) => void,
   ): Promise<ProcessStreamResult> {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
+    const onFinishAtStart = runtimeRef.current.onFinish;
     let capturedFinishPayload: ChatOnFinishPayload | undefined;
     const processOptions = {
       conversationId,
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
-      onFinish: shouldDeferFinish
-        ? (payload: ChatOnFinishPayload) => {
-            capturedFinishPayload = payload;
-          }
-        : runtimeRef.current.onFinish,
+      onFinish: async (payload: ChatOnFinishPayload) => {
+        onReplyMessageId?.(payload.message.id);
+        if (shouldDeferFinish) {
+          capturedFinishPayload = payload;
+        } else {
+          await onFinishAtStart?.(payload);
+        }
+      },
       onData: runtimeRef.current.onData,
       // Unique-per-run fallback the stream binds to when the adapter omits a
       // `messageId` on `start`. A backend-supplied id still overrides it (see
@@ -112,8 +117,17 @@ export function createSendMessageActions<Cursor = string>(params: {
     try {
       result = await processStream(store, stream, processOptions);
     } catch (error) {
-      if (capturedFinishPayload && runtimeRef.current.onFinish) {
-        await runtimeRef.current.onFinish(capturedFinishPayload);
+      if (capturedFinishPayload) {
+        await runtimeRef.current.onFinish?.(capturedFinishPayload);
+      } else {
+        // The stream threw before finishing (e.g. a locked stream): still report the run once.
+        await emitDeferredFinish({
+          messageId: fallbackMessageId,
+          status: 'error',
+          isAbort: false,
+          isDisconnect: false,
+          isError: true,
+        });
       }
       throw error;
     }
@@ -431,8 +445,8 @@ export function createSendMessageActions<Cursor = string>(params: {
     // Fresh fallback id: the prior assistant run was just removed above, so a
     // regenerated reply with no adapter-supplied id targets a new message.
     const fallbackMessageId = createLocalId();
-    const messageIdsBeforeRun = store.state.messageIds;
-    let didReceiveStream = false;
+    // Set once the stream binds this run's reply (fallback or backend id).
+    let replyMessageId: string | undefined;
 
     try {
       const stream = await adapter.regenerate({
@@ -442,13 +456,15 @@ export function createSendMessageActions<Cursor = string>(params: {
         messages: getMessages(storeUnknown),
         signal: abortController.signal,
       });
-      didReceiveStream = true;
 
       const result = await processStreamWithReconnect(
         stream,
         conversationId,
         abortController,
         fallbackMessageId,
+        (id) => {
+          replyMessageId = id;
+        },
       );
 
       if (result.messageId) {
@@ -472,15 +488,9 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      // Restore the snapshot assistant messages (D4) unless the returned stream already
-      // added a reply. A later failure (e.g. a throwing onFinish) must not overwrite it.
-      const idsBeforeRun = new Set(messageIdsBeforeRun);
-      const didAddReply =
-        didReceiveStream &&
-        store.state.messageIds.some(
-          (id) => !idsBeforeRun.has(id) && store.state.messagesById[id]?.role === 'assistant',
-        );
-      if (!didAddReply) {
+      // Restore the snapshot assistant messages (D4) unless this run already added its
+      // reply. A later failure (e.g. a throwing onFinish) must not overwrite it.
+      if (!replyMessageId || !store.state.messagesById[replyMessageId]) {
         for (const removedMessage of removedMessages) {
           store.addMessage(removedMessage);
         }
