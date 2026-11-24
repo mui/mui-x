@@ -102,6 +102,15 @@ describe('<DatePicker />', () => {
     expect(hiddenInput.value).not.to.contain('12');
   });
 
+  it('should keep the focus in the field when editing it while the picker is open', async () => {
+    const { user } = render(<DatePicker open />);
+
+    await user.click(screen.getByRole('spinbutton', { name: 'Month' }));
+    await user.keyboard('12');
+
+    expect(document.activeElement).to.equal(screen.getByRole('spinbutton', { name: 'Day' }));
+  });
+
   it('should clear the field when calling clearValue from fieldRef', async () => {
     const fieldRef = React.createRef<any>();
     const { user } = render(<DatePicker slotProps={{ field: { fieldRef } }} />);

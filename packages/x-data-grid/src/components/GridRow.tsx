@@ -138,6 +138,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   });
   const editable = rootProps.editMode === GridEditModes.Row;
   const hasFocusCell = focusedColumnIndex !== undefined;
+  const isKeyboardReorderTarget = configuration.hooks.useIsRowKeyboardReorderTarget(rowId);
   const hasVirtualFocusCellLeft =
     hasFocusCell &&
     focusedColumnIndex >= pinnedColumns.left.length &&
@@ -157,6 +158,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       isLastVisible && 'row--lastVisible',
       showBottomBorder && 'row--borderBottom',
       rowHeight === 'auto' && 'row--dynamicHeight',
+      isKeyboardReorderTarget && 'row--reorderTarget',
     ],
   });
   const getRowAriaAttributes = configuration.hooks.useGridRowAriaAttributes();
