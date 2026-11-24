@@ -207,7 +207,7 @@ export function applyRecurringUpdateAll(
     );
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const seriesStartMs = originalEvent.start.timestamp;
+  const seriesStartMs = originalEvent.start.epochMilliseconds;
   const seriesStartPlainDate = toPlainDate(seriesStartMs, dayTimezone);
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
   const displayedDaysShift = getDisplayedDaysShift(
@@ -279,7 +279,7 @@ export function applyRecurringUpdateAll(
         eventUpdatedProperties.end = new Date(
           moveEndToPlainDate(
             changes.end.getTime(),
-            toPlainDate(originalEvent.end.timestamp, dayTimezone),
+            toPlainDate(originalEvent.end.epochMilliseconds, dayTimezone),
             startMs,
             dayTimezone,
           ),
@@ -453,7 +453,7 @@ function shiftUntilToDisplayedDay(
   }
   const untilDay = getAllDayUntil(
     rrule.until,
-    toPlainDateTime(originalEvent.start.timestamp, originalEvent.timezone),
+    toPlainDateTime(originalEvent.start.epochMilliseconds, originalEvent.timezone),
     originalEvent.timezone,
   );
   const shiftedUntilDay = shiftToDisplayedDay(untilDay, shift);

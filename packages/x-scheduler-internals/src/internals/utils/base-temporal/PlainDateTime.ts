@@ -1,23 +1,15 @@
-import {
-  PlainDate,
-  createPlainDate,
-  readDate,
-  type BaseTemporal as PlainDateTypes,
-  type PlainDateFields,
-  type PlainDateFromOptions,
+import { PlainDate, createPlainDate, readDate } from './PlainDate';
+import type {
+  BaseTemporal as PlainDateTypes,
+  PlainDateFields,
+  AssignmentOptions,
 } from './PlainDate';
-import {
-  PlainTime,
-  readTime,
-  type BaseTemporal as PlainTimeTypes,
-  type PlainTimeFields,
-  type PlainTimeInput,
-} from './PlainTime';
+import { PlainTime, readTime } from './PlainTime';
+import type { BaseTemporal as PlainTimeTypes, PlainTimeFields, PlainTimeInput } from './PlainTime';
 import {
   compareOrder,
   formatIsoDate,
   formatIsoTime,
-  fromDayNumber,
   getTimeNumber,
   readOverflow,
   throwOnPrimitiveConversion,
@@ -26,8 +18,16 @@ import {
 import { formatCalendarAnnotation, readCalendarAnnotation } from './calendar';
 import { mergeDateFields } from './mergeDateFields';
 
+/**
+ * The fields of a date-time: the fields of a date, read in `calendar`, and the fields of a time,
+ * which default to 0.
+ */
 export interface PlainDateTimeFields extends PlainTimeFields, PlainDateFields {}
 
+/**
+ * A date-time as its fields, or as a `YYYY-MM-DDTHH:mm` string (`±YYYYYY` for other years than 0
+ * to 9999) with optional seconds and an optional `[u-ca=…]` calendar annotation.
+ */
 export type PlainDateTimeInput = PlainDateTimeFields | string;
 
 /**
@@ -41,22 +41,117 @@ export declare namespace BaseTemporal {
    * A date and time without a timezone, in the ISO calendar or another calendar system. Its date
    * fields are those of `BaseTemporal.PlainDate`.
    */
-  interface PlainDateTime {
+  class PlainDateTime {
+    /**
+     * Creates a date-time from its ISO date and its time. Throws an error when they don't form a
+     * supported date-time.
+     * @param isoYear The year in the ISO calendar.
+     * @param isoMonth The month in the ISO calendar, from 1 to 12.
+     * @param isoDay The day of the month in the ISO calendar.
+     * @param hour The hour, from 0 to 23. Defaults to 0.
+     * @param minute The minute, from 0 to 59. Defaults to 0.
+     * @param second The second, from 0 to 59. Defaults to 0.
+     * @param millisecond The millisecond, from 0 to 999. Defaults to 0.
+     * @param microsecond The microsecond, from 0 to 999. Defaults to 0.
+     * @param nanosecond The nanosecond, from 0 to 999. Defaults to 0.
+     * @param calendar The calendar of the date-time. The date arguments are ISO fields in every
+     *   calendar. Defaults to `'iso8601'`.
+     */
+    constructor(
+      isoYear: number,
+      isoMonth: number,
+      isoDay: number,
+      hour?: number | undefined,
+      minute?: number | undefined,
+      second?: number | undefined,
+      millisecond?: number | undefined,
+      microsecond?: number | undefined,
+      nanosecond?: number | undefined,
+      calendar?: string | undefined,
+    );
+    /**
+     * Creates a date-time from another date-time or date, from fields read in their `calendar`, or
+     * from a `YYYY-MM-DDTHH:mm` string (`±YYYYYY` for other years than 0 to 9999) with optional
+     * seconds and an optional `[u-ca=…]` calendar annotation.
+     */
+    static from(
+      item: PlainDateTime | PlainDateTimeInput,
+      options?: AssignmentOptions | undefined,
+    ): PlainDateTime;
+    /**
+     * Returns `-1`, `0` or `1` when `one` is before, the same date and time as, or after `two`,
+     * whatever their calendars.
+     */
+    static compare(
+      one: PlainDateTime | PlainDateTimeInput,
+      two: PlainDateTime | PlainDateTimeInput,
+    ): -1 | 0 | 1;
+    /**
+     * The calendar of the date-time, such as `'iso8601'` or `'hebrew'`.
+     */
     readonly calendarId: string;
+    /**
+     * The era of the date, such as `'ce'` in the Gregorian calendar, or `undefined` in a calendar
+     * without eras, such as `'iso8601'`.
+     */
     readonly era: string | undefined;
+    /**
+     * The year in the era, or `undefined` in a calendar without eras.
+     */
     readonly eraYear: number | undefined;
+    /**
+     * The year in the calendar, which keeps counting down before its first era: the ISO year 0 is
+     * 1 BC.
+     */
     readonly year: number;
+    /**
+     * The position of the month in its year, from 1. Years of some calendars have 13 months.
+     */
     readonly month: number;
+    /**
+     * Identifies the month in every year, such as `'M05L'` for Adar I, the month Hebrew leap years
+     * add before Adar (`'M06'`).
+     */
     readonly monthCode: string;
+    /**
+     * The day of the month, from 1.
+     */
     readonly day: number;
+    /**
+     * The day of the week, from 1 for Monday to 7 for Sunday, regardless of the locale.
+     */
     readonly dayOfWeek: number;
+    /**
+     * The number of days in the month.
+     */
     readonly daysInMonth: number;
+    /**
+     * The number of months in the year.
+     */
     readonly monthsInYear: number;
+    /**
+     * The hour, from 0 to 23.
+     */
     readonly hour: number;
+    /**
+     * The minute, from 0 to 59.
+     */
     readonly minute: number;
+    /**
+     * The second, from 0 to 59.
+     */
     readonly second: number;
+    /**
+     * The millisecond, from 0 to 999.
+     */
     readonly millisecond: number;
+    /**
+     * The microsecond, from 0 to 999.
+     */
     readonly microsecond: number;
+    /**
+     * The nanosecond, from 0 to 999.
+     */
     readonly nanosecond: number;
     /**
      * Returns whether `other` represents the same date and time in the same calendar.
@@ -66,7 +161,7 @@ export declare namespace BaseTemporal {
      * Returns the date-time with some fields replaced, with the rules of `BaseTemporal.PlainDate`
      * for the date fields.
      */
-    with(fields: PlainDateTimeWithFields, options?: PlainDateFromOptions): PlainDateTime;
+    with(fields: PlainDateTimeWithFields, options?: AssignmentOptions): PlainDateTime;
     /**
      * Returns the same date at another time, midnight by default.
      */
@@ -75,47 +170,25 @@ export declare namespace BaseTemporal {
      * Returns the same date-time in another calendar.
      */
     withCalendar(calendar: string): PlainDateTime;
+    /**
+     * Returns the date of the date-time, in the same calendar.
+     */
     toPlainDate(): PlainDateTypes.PlainDate;
+    /**
+     * Returns the time of the date-time.
+     */
     toPlainTime(): PlainTimeTypes.PlainTime;
     /**
-     * Returns the date-time as a `YYYY-MM-DDTHH:mm:ss` string, followed by the fraction of a second
-     * when it isn't 0, and by a `[u-ca=…]` annotation outside the ISO calendar.
+     * Returns the date-time as a `YYYY-MM-DDTHH:mm:ss` string (`±YYYYYY` for other years than 0 to
+     * 9999), followed by the fraction of a second when it isn't 0, and by a `[u-ca=…]` annotation
+     * outside the ISO calendar.
      */
     toJSON(): string;
   }
 }
 
-export interface PlainDateTimeConstructor {
-  new (
-    isoYear: number,
-    isoMonth: number,
-    isoDay: number,
-    hour?: number | undefined,
-    minute?: number | undefined,
-    second?: number | undefined,
-    millisecond?: number | undefined,
-    microsecond?: number | undefined,
-    nanosecond?: number | undefined,
-    calendar?: string | undefined,
-  ): BaseTemporal.PlainDateTime;
-  /**
-   * Creates a date-time from another date-time or date, from fields read in their `calendar`, or
-   * from a `YYYY-MM-DDTHH:mm` string with optional seconds and an optional `[u-ca=…]` calendar
-   * annotation.
-   */
-  from(
-    item: BaseTemporal.PlainDateTime | PlainDateTimeInput,
-    options?: PlainDateFromOptions | undefined,
-  ): BaseTemporal.PlainDateTime;
-  /**
-   * Returns `-1`, `0` or `1` when `one` is before, the same as, or after `two`, whatever their
-   * calendars.
-   */
-  compare(
-    one: BaseTemporal.PlainDateTime | PlainDateTimeInput,
-    two: BaseTemporal.PlainDateTime | PlainDateTimeInput,
-  ): -1 | 0 | 1;
-}
+// Lets `createPlainDateTime()` skip the checks of the public constructor.
+const TRUSTED = Symbol('trusted');
 
 /**
  * A date and time without a timezone, in the ISO calendar or another calendar system.
@@ -144,10 +217,11 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
     nanosecond = 0,
     calendar?: string,
     // Passed by `createPlainDateTime()`, with a time it already read.
+    validation?: typeof TRUSTED,
     date?: PlainDate,
   ) {
     let time = { hour, minute, second, millisecond, microsecond, nanosecond };
-    if (date === undefined) {
+    if (validation !== TRUSTED || date === undefined) {
       date = new PlainDate(isoYear, isoMonth, isoDay, calendar);
       time = readTime(time, { overflow: 'reject' });
     }
@@ -192,7 +266,7 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
     return this.date.monthsInYear;
   }
 
-  static from(item: PlainDateTimeInput, options?: PlainDateFromOptions): PlainDateTime {
+  static from(item: PlainDateTimeInput, options?: AssignmentOptions): PlainDateTime {
     const overflow = readOverflow(options, 'PlainDateTime.from()');
     if (item instanceof PlainDateTime) {
       return createPlainDateTime(item.date, item);
@@ -205,7 +279,7 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
       if (match == null) {
         throw new Error(
           'MUI X Scheduler: The date-time string has an unsupported format. ' +
-            "Its date and time cannot be read. Use YYYY-MM-DDTHH:mm, such as '2024-05-24T09:30', without an offset or timezone, optionally followed by a calendar annotation such as '[u-ca=hebrew]'.",
+            "Its date and time cannot be read. Use YYYY-MM-DDTHH:mm, or ±YYYYYY-MM-DDTHH:mm for other years than 0 to 9999, such as '2024-05-24T09:30', without an offset or timezone, optionally followed by a calendar annotation such as '[u-ca=hebrew]'.",
         );
       }
       date = PlainDate.from(
@@ -238,7 +312,7 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
     const value = other instanceof PlainDateTime ? other : PlainDateTime.from(other);
     return PlainDateTime.compare(this, value) === 0 && this.calendarId === value.calendarId;
   }
-  with(fields: PlainDateTimeWithFields, options?: PlainDateFromOptions): PlainDateTime {
+  with(fields: PlainDateTimeWithFields, options?: AssignmentOptions): PlainDateTime {
     return withFields(this, fields, options, 'PlainDateTime.prototype.with()', TIME_FIELDS);
   }
   withPlainTime(time: PlainTimeInput = new PlainTime()): PlainDateTime {
@@ -272,14 +346,15 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
 export function withFields(
   dateTime: PlainDateTime,
   fields: PlainDateTimeWithFields,
-  options: PlainDateFromOptions | undefined,
+  options: AssignmentOptions | undefined,
   apiName: string,
   fieldNames: readonly string[],
 ): PlainDateTime {
   const dateFields = mergeDateFields(dateTime.toPlainDate(), fields, apiName, fieldNames);
   const time: PlainTimeFields = {};
   for (const key of TIME_FIELDS) {
-    time[key] = fields[key] ?? dateTime[key];
+    // Like Temporal, only an omitted field keeps its value: `null` reads as 0.
+    time[key] = fields[key] === undefined ? dateTime[key] : fields[key];
   }
   return PlainDateTime.from({ ...dateFields, ...time }, options);
 }
@@ -300,6 +375,7 @@ export function createPlainDateTime(date: PlainDate, time: Required<PlainTimeFie
     time.microsecond,
     time.nanosecond,
     date.calendarId,
+    TRUSTED,
     date,
   );
 }
@@ -308,6 +384,5 @@ export function createPlainDateTime(date: PlainDate, time: Required<PlainTimeFie
  * Formats the ISO fields of a date-time as `YYYY-MM-DDTHH:mm:ss`, without a calendar annotation.
  */
 export function formatIsoDateTime(value: PlainDateTime): string {
-  const isoDate = fromDayNumber(value.toPlainDate().dayNumber);
-  return `${formatIsoDate(isoDate.year, isoDate.month, isoDate.day)}T${formatIsoTime(value)}`;
+  return `${formatIsoDate(value.toPlainDate().dayNumber)}T${formatIsoTime(value)}`;
 }

@@ -124,7 +124,7 @@ premiumStoreClasses.forEach((storeClass) => {
           allDay: occurrence.allDay ?? false,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.start.timestamp,
+          start: occurrence.start.epochMilliseconds,
           end: createDate('2025-07-04T15:00:00Z').getTime(),
         },
       );
@@ -308,9 +308,9 @@ premiumStoreClasses.forEach((storeClass) => {
           allDay: occurrence.allDay ?? false,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.start.timestamp,
+          start: occurrence.start.epochMilliseconds,
           // One more day.
-          end: addDays(new Date(occurrence.end.timestamp), 1).getTime(),
+          end: addDays(new Date(occurrence.end.epochMilliseconds), 1).getTime(),
         },
       );
       store.selectRecurringEventScope('all');
@@ -347,16 +347,18 @@ premiumStoreClasses.forEach((storeClass) => {
           allDay: occurrence.allDay ?? false,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.start.timestamp,
+          start: occurrence.start.epochMilliseconds,
           // One more day.
-          end: addDays(new Date(occurrence.end.timestamp), 1).getTime(),
+          end: addDays(new Date(occurrence.end.epochMilliseconds), 1).getTime(),
         },
       );
 
       const edited = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
       expect(edited.start).to.equal(occurrence.start);
       // July 6th 00:00 in New York.
-      expect(new Date(edited.end.timestamp).toISOString()).to.equal('2025-07-06T04:00:00.000Z');
+      expect(new Date(edited.end.epochMilliseconds).toISOString()).to.equal(
+        '2025-07-06T04:00:00.000Z',
+      );
     });
 
     it('should resend both bounds when the drop toggles all-day off', () => {
@@ -371,7 +373,7 @@ premiumStoreClasses.forEach((storeClass) => {
         displayTimezone: 'America/New_York',
         onEventsChange,
       });
-      const start = new Date(occurrence.start.timestamp);
+      const start = new Date(occurrence.start.epochMilliseconds);
       const end = addHours(start, 1);
 
       applyInternalDragOrResizeOccurrencePlaceholder(
@@ -432,8 +434,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // The form opened from the armed toolbar reads these: the dropped times, not whole days.
       const edited = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
       expect(edited.allDay).to.equal(false);
-      expect(edited.start.plainDateTime.toString()).to.equal('2025-07-04T10:00:00');
-      expect(edited.end.plainDateTime.toString()).to.equal('2025-07-04T11:00:00');
+      expect(edited.start.toPlainDateTime().toString()).to.equal('2025-07-04T10:00:00');
+      expect(edited.end.toPlainDateTime().toString()).to.equal('2025-07-04T11:00:00');
     });
   });
 });

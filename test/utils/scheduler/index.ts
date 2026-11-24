@@ -10,7 +10,6 @@ export * from './StoreSpy';
 export * from './state';
 export * from './event-builder';
 export * from './fixtures';
-export * from './days';
 export * from './timeline-axis';
 export * from './resource-builder';
 export * from './storeClasses';

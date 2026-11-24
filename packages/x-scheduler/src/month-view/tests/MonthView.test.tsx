@@ -137,12 +137,14 @@ describe('<MonthView />', () => {
     expect(within(july2).getByRole('button', { name: 'Aller au 2 juillet' })).not.to.equal(null);
   });
 
-  it('should move to the day view when a day is clicked', async () => {
+  it('should open the named day at midnight in the display timezone when clicked', async () => {
     const handleViewChange = vi.fn();
     const handleVisibleDateChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
         {...standaloneDefaults}
+        displayTimezone="America/New_York"
+        defaultVisibleDate={createDate('2025-05-01T12:00:00Z')}
         onViewChange={handleViewChange}
         onVisibleDateChange={handleVisibleDateChange}
       >
@@ -157,7 +159,9 @@ describe('<MonthView />', () => {
     expect(handleViewChange.mock.calls.length).to.equal(1);
     expect(handleViewChange.mock.calls[0][0]).to.equal('day');
     expect(handleVisibleDateChange.mock.calls.length).to.equal(1);
-    expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(createDate('2025-05-15'));
+    expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(
+      createDate('2025-05-15', 'America/New_York'),
+    );
   });
 
   it('should render day numbers as plain text when the day view is not enabled', () => {

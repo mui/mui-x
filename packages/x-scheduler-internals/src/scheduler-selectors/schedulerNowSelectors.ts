@@ -19,9 +19,4 @@ export const schedulerNowSelectors = {
    */
   nowTimestamp: (state: State) => state.nowTimestamp,
   nowDayNumber,
-  /**
-   * Whether `timestamp` is on the current day of the display timezone.
-   */
-  isCurrentDay: (state: State, timestamp: number) =>
-    toLocalDayNumber(timestamp, state.displayTimezone) === nowDayNumber(state),
 };

@@ -215,7 +215,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY', interval: 1, count: 1 })
         .toProcessed();
-      const occurrenceStart = new Date(event.start.timestamp);
+      const occurrenceStart = new Date(event.start.epochMilliseconds);
 
       const result = applyRecurringDeleteOnlyThis(
         event,

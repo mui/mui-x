@@ -33,6 +33,8 @@ const configuration: GridConfiguration = {
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
     useColumnHeaderAdornment: () => null,
+    useIsRowKeyboardReorderTarget: () => false,
+    useIsColumnKeyboardReorderTarget: () => false,
   },
 };
 

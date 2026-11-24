@@ -5,11 +5,13 @@ import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
+  createStartOfPlainDate,
   formatDayOfMonth,
   formatMonthAndDayOfMonth,
   formatMonthShortAndDayOfMonth,
   formatWeekdayMonthAndDayOfMonth,
   getDayNumber,
+  getOccurrenceFirstDayNumber,
   isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
@@ -184,12 +186,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
-    day,
+    day.plainDate,
   );
   const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
@@ -202,7 +203,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isCurrentMonth =
     day.plainDate.year === visiblePlainDate.year && day.plainDate.month === visiblePlainDate.month;
   const isFirstDayOfMonth = day.plainDate.day === 1;
-  const isToday = getDayNumber(day.plainDate) === nowDayNumber;
+  const dayNumber = getDayNumber(day.plainDate);
+  const isToday = dayNumber === nowDayNumber;
 
   const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
   const hasOverflow = inBoundOccurrences.length < day.withPosition.length;
@@ -213,7 +215,9 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
-  const dateLabelId = schedulerId ? `${schedulerId}-MonthViewDate-${day.key}` : undefined;
+  const dateLabelId = schedulerId
+    ? `${schedulerId}-MonthViewDate-${day.plainDate.toString()}`
+    : undefined;
   const dayNumberText = isFirstDayOfMonth
     ? formatMonthShortAndDayOfMonth(locale, day.plainDate)
     : formatDayOfMonth(locale, day.plainDate);
@@ -238,7 +242,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     <MonthViewCellRoot
       className={classes.monthViewCell}
       ref={handleRef}
-      key={day.key}
       value={day.plainDate}
       aria-colindex={colIndex}
       includeColumnHeaderInLabel={!dateLabelId}
@@ -260,7 +263,15 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           aria-label={localeText.goToDay(
             isFirstDayOfMonth ? dayNumberText : formatMonthAndDayOfMonth(locale, day.plainDate),
           )}
-          onClick={(event) => store.switchToDay(new Date(day.timestamp), event)}
+          onClick={(event) =>
+            store.switchToDay(
+              createStartOfPlainDate(
+                day.plainDate,
+                schedulerOtherSelectors.displayTimezone(store.state),
+              ),
+              event,
+            )
+          }
           tabIndex={-1}
         >
           {cellNumberContent}
@@ -278,18 +289,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               );
             }
 
-            // `day.timestamp` is the first instant of the day.
-            const startsBeforeThisDay = occurrence.start.timestamp < day.timestamp;
+            const startsBeforeThisDay = getOccurrenceFirstDayNumber(occurrence) < dayNumber;
 
             return (
               <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
                   occurrence={occurrence}
-                  variant={
-                    isOccurrenceAllDayOrMultipleDay(occurrence, displayTimezone)
-                      ? 'filled'
-                      : 'compact'
-                  }
+                  variant={isOccurrenceAllDayOrMultipleDay(occurrence) ? 'filled' : 'compact'}
                   {...(startsBeforeThisDay ? { 'data-starting-before-edge': '' } : {})}
                 />
               </EventContextMenuTrigger>
