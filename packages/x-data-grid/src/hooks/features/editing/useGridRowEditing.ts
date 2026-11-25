@@ -766,7 +766,7 @@ export const useGridRowEditing = (
           promises.push(promise);
         }
 
-        Object.entries(editingState[id]).forEach(([thisField, fieldProps]) => {
+        Object.keys(editingState[id]).forEach((thisField) => {
           if (thisField === field) {
             return;
           }
@@ -776,6 +776,8 @@ export const useGridRowEditing = (
             return;
           }
 
+          // A validator that ran before this loop can change the field
+          const fieldProps = gridEditRowsStateSelector(apiRef)[id][thisField];
           updateOrDeleteFieldState(id, thisField, { ...fieldProps, isProcessingProps: true });
 
           const promise = processEditCellProps(

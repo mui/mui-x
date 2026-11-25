@@ -720,8 +720,6 @@ describe('<DataGridPro /> - Row editing', () => {
           hasChanged,
         }: GridPreProcessEditCellProps) => {
           if (hasChanged) {
-            // Set the other field after the row setter starts its validation
-            await Promise.resolve();
             await apiRef.current?.setEditCellValue({ id: 0, field: 'price1M', value: 12 });
           }
           return props;
