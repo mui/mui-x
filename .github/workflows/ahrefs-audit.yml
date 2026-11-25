@@ -1,12 +1,13 @@
 name: Ahrefs audit
 
 # Runs mui-public's reusable Ahrefs audit workflow against the pages of the site this repo builds,
-# daily or by hand. The setup it needs is in the README's "Agentic workflows" section of
+# weekly or by hand. The setup it needs is in the README's "Agentic workflows" section of
 # mui/mui-public.
 
 on:
   schedule:
-    - cron: '11 7 * * *' # daily 07:11 UTC
+    # Weekly: the site changes with releases, and Ahrefs recrawls it on its own schedule.
+    - cron: '11 7 * * 1' # Mondays 07:11 UTC
   workflow_dispatch:
 
 permissions: {}
