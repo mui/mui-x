@@ -17,28 +17,54 @@ export const getDefaultCellValue = (colDef: GridColDef) => {
   }
 };
 
-export type GridProcessingPropsLookup = Record<GridRowId, Record<string, { count: number }>>;
+interface GridProcessingPropsCell {
+  generation: number;
+  pending: number;
+}
+
+export type GridProcessingPropsLookup = Map<GridRowId, Map<string, GridProcessingPropsCell>>;
 
 /**
- * Counts a `preProcessEditCellProps` call of a cell until the returned callback runs.
- * The callback returns `true` while other calls of the cell are still pending.
+ * Counts a pending `preProcessEditCellProps()` call of a cell.
+ * A call with `hasChanged: true` validates a new value, so the earlier calls of the cell become stale.
+ * Call the returned callback when the call resolves. A rejected call stops counting by itself.
  */
 export const trackProcessingProps = (
   lookup: GridProcessingPropsLookup,
   id: GridRowId,
   field: string,
+  hasChanged: boolean,
+  promise: Promise<unknown>,
 ) => {
-  if (!lookup[id]) {
-    lookup[id] = {};
+  let rowLookup = lookup.get(id);
+  if (!rowLookup) {
+    rowLookup = new Map();
+    lookup.set(id, rowLookup);
   }
-  if (!lookup[id][field]) {
-    lookup[id][field] = { count: 0 };
+  let cell = rowLookup.get(field);
+  if (!cell) {
+    cell = { generation: 0, pending: 0 };
+    rowLookup.set(field, cell);
   }
-  const counter = lookup[id][field];
-  counter.count += 1;
+  if (hasChanged) {
+    cell.generation += 1;
+    cell.pending = 0;
+  }
+  cell.pending += 1;
 
-  return () => {
-    counter.count -= 1;
-    return (lookup[id]?.[field]?.count ?? 0) > 0;
+  const trackedCell = cell;
+  const generation = cell.generation;
+
+  const end = () => {
+    // The cell entry changes when the cell leaves edit mode
+    const isStale =
+      lookup.get(id)?.get(field) !== trackedCell || trackedCell.generation !== generation;
+    if (!isStale) {
+      trackedCell.pending -= 1;
+    }
+    return { isStale, isProcessingProps: trackedCell.pending > 0 };
   };
+  promise.catch(end);
+
+  return end;
 };

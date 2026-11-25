@@ -520,6 +520,39 @@ describe('<DataGridPro /> - Row editing', () => {
         await act(() => promise); // Run all updates scheduled for when preProcessEditCellProps resolves
       });
 
+      it('should ignore the result of the validation of an earlier value', async () => {
+        let resolveFirstValidation: () => void;
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => {
+          if (props.value === 'BAD') {
+            return { ...props, error: true };
+          }
+          return new Promise((resolve) => {
+            resolveFirstValidation = () => resolve(props);
+          });
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            column1Props={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() => apiRef.current?.startRowEditMode({ id: 0 }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        });
+        await act(() =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' }),
+        );
+        // The validation of 'USD GBP' ends after the error of 'BAD'
+        await act(async () => resolveFirstValidation!());
+
+        act(() => apiRef.current?.stopRowEditMode({ id: 0 }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
+      });
+
       it('should do nothing if props of any column contains error=true', async () => {
         const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
