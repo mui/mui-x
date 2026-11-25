@@ -15,6 +15,7 @@ import {
   useOriginalOccurrence,
   computeElementPositionInCollection,
   timestampToTimelineAxisOffsetMs,
+  getEventLinkProps,
 } from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -188,7 +189,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       },
       { [TimelineGridEventDataAttributes.occurrenceKey]: occurrenceKey } as Record<string, string>,
       // A link keeps the native link behavior, so it only needs the roving `tabIndex`.
-      isLink ? { href, tabIndex } : getButtonProps,
+      isLink ? getEventLinkProps(href, tabIndex) : getButtonProps,
     ],
     stateAttributesMapping: extraStateAttributesMapping,
   });

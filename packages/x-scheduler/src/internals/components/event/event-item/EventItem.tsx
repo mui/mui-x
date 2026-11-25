@@ -14,6 +14,7 @@ import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models
 import {
   formatMonthShortAndDayOfMonth,
   getDayNumber,
+  getEventLinkProps,
   getOccurrenceFirstDayNumber,
   getOccurrenceLastDayNumber,
   plainDateFromDayNumber,
@@ -293,9 +294,8 @@ export const EventItem = React.forwardRef(function EventItem(
       <EventItemCard
         as="a"
         ref={forwardedRef}
-        href={href}
-        // Read by the agenda's delete-focus fallback, which finds the events by their `tabindex`.
-        tabIndex={0}
+        // The agenda's delete-focus fallback finds the events by their `tabindex`.
+        {...getEventLinkProps(href, 0)}
         data-link=""
         {...cardProps}
       >

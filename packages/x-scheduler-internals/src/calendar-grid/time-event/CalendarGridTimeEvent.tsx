@@ -7,6 +7,7 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
+import { getEventLinkProps } from '../../internals/utils/event-link-props';
 import { computeElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import type { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
@@ -136,7 +137,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         } as React.CSSProperties,
       },
       // A link keeps the native link behavior, so it only needs the roving `tabIndex`.
-      ...(interactive ? [isLink ? { href, tabIndex } : getButtonProps] : []),
+      ...(interactive ? [isLink ? getEventLinkProps(href, tabIndex) : getButtonProps] : []),
     ],
   });
 

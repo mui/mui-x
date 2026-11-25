@@ -7,6 +7,7 @@ import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
+import { getEventLinkProps } from '../../internals/utils/event-link-props';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import type { BaseTemporal } from '../../internals/utils/base-temporal';
@@ -176,7 +177,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
         style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
       },
       // A link keeps the native link behavior, so it only needs the roving `tabIndex`.
-      isLink ? { href, tabIndex } : getButtonProps,
+      isLink ? getEventLinkProps(href, tabIndex) : getButtonProps,
     ],
     stateAttributesMapping: overflowStateAttributesMapping,
   });

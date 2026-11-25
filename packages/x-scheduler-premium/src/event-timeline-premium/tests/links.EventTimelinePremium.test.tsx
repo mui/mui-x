@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { clearWarningsCache } from '@mui/x-internals/warning';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
@@ -12,6 +11,7 @@ import {
   getEventNamePattern,
   ResourceBuilder,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -70,6 +70,7 @@ describe('EventTimelinePremium - Event links', () => {
     const link = getLink();
     expect(link).to.have.attribute('href', HREF);
     expect(link).to.have.attribute('data-link');
+    expect(link).to.have.attribute('draggable', 'false');
     expect(screen.queryByRole('button', { name: getEventNamePattern('Order 1042') })).to.equal(
       null,
     );
@@ -138,18 +139,14 @@ describe('EventTimelinePremium - Event links', () => {
     links.forEach((link) => expect(link).to.have.attribute('href', HREF));
   });
 
-  it('should ignore the href of an editable event and warn', async () => {
+  it('should ignore the href of an editable event', async () => {
     const event = EventBuilder.new()
       .title('Order 1042')
       .singleDay('2025-07-03T09:00:00Z', 60)
       .resource(engineering)
       .href(HREF)
       .build();
-
-    clearWarningsCache();
-    await expect(() => renderTimeline({ events: [event] })).toWarnDev([
-      'MUI X Scheduler: An event has an `href` but is editable',
-    ]);
+    await renderTimeline({ events: [event] });
 
     expect(screen.queryByRole('link', { name: getEventNamePattern('Order 1042') })).to.equal(null);
   });
@@ -164,14 +161,44 @@ describe('EventTimelinePremium - Event links', () => {
     expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
-  it('should not create an event when a link is clicked in an editable row', async () => {
-    const onEventEditingStart = vi.fn();
-    const { user } = await renderTimeline({ onEventEditingStart });
+  it('should navigate when the link is clicked', async () => {
+    const { user } = await renderTimeline();
 
     await user.click(getLink());
 
-    expect(onEventEditingStart.mock.calls.length).to.equal(0);
+    expect(window.location.hash).to.equal(HREF);
   });
+
+  it('should navigate when Enter is pressed on the link', async () => {
+    const onEventEditingStart = vi.fn();
+    const { user } = await renderTimeline({ onEventEditingStart });
+
+    await act(async () => {
+      getLink().focus();
+    });
+    await user.keyboard('{Enter}');
+
+    expect(window.location.hash).to.equal(HREF);
+    expect(onEventEditingStart.mock.calls.length).to.equal(0);
+    expect(screen.queryByRole('dialog')).to.equal(null);
+  });
+
+  // The position of a created event is read from the layout.
+  it.skipIf(isJSDOM)(
+    'should not create an event when a link is clicked in an editable row',
+    async () => {
+      const onEventEditingStart = vi.fn();
+      const { user } = await renderTimeline({
+        eventCreation: { interaction: 'click' },
+        onEventEditingStart,
+      });
+
+      await user.click(getLink());
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(0);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    },
+  );
 
   it('should keep the native context menu on right-click', async () => {
     await renderTimeline();
@@ -193,6 +220,47 @@ describe('EventTimelinePremium - Event links', () => {
     expect(onEventEditingStart.mock.calls.length).to.equal(0);
     expect(screen.queryByRole('menu')).to.equal(null);
     expect(screen.queryByRole('dialog')).to.equal(null);
+    // `fireEvent` returns `false` when a handler prevented the default behavior, here the scroll.
+    expect(fireEvent.keyDown(getLink(), { key: ' ' })).to.equal(false);
+  });
+
+  it('should stop editing an event that becomes a link', async () => {
+    const event = EventBuilder.new()
+      .title('Order 1042')
+      .singleDay('2025-07-03T09:00:00Z', 60)
+      .resource(engineering)
+      .href(HREF)
+      .build();
+    const { user, setProps } = await renderTimeline({ events: [event] });
+    await user.click(screen.getByRole('button', { name: getEventNamePattern('Order 1042') }));
+    await screen.findByRole('dialog');
+
+    setProps({ readOnly: true });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+    expect(getLink()).not.to.have.attribute('data-editing');
+  });
+
+  // The browser decides which elements Tab reaches.
+  it.skipIf(isJSDOM)('should reach the link with Tab from its row', async () => {
+    const { userEvent: browserUser } = await import('vitest/browser');
+    await renderTimeline();
+    const link = getLink();
+    const row = link.parentElement!.closest<HTMLElement>('[tabindex]')!;
+
+    await act(async () => {
+      row.focus();
+    });
+    await waitFor(() => {
+      expect(link).to.have.attribute('tabindex', '0');
+    });
+    await act(async () => {
+      await browserUser.keyboard('{Tab}');
+    });
+
+    expect(document.activeElement).to.equal(link);
   });
 
   it('should move focus to the event row when the focused link is removed', async () => {

@@ -1438,6 +1438,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       });
 
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      expect(store.state.selection).not.to.equal(null);
 
       const link = getEventElement('Link event');
       fireEvent.pointerDown(link);
@@ -1452,6 +1453,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
       });
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      expect(store.state.selection).not.to.equal(null);
 
       // Like a link rendered by the `timelineResourceTitle` slot.
       const link = document.createElement('a');

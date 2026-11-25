@@ -4,6 +4,8 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { isCoarsePointer, isEventOccurrence } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   captureFocusFallback,
   resolveFocusFallback,
@@ -152,6 +154,14 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
 function EventLinkTrigger(props: EventContextMenuTriggerProps) {
   const { occurrence, getFocusFallback, children } = props;
   const ref = React.useRef<HTMLElement | null>(null);
+  const store = useSchedulerStoreContext();
+
+  // A link has no dialog, so the editing of an event that becomes a link ends.
+  useIsoLayoutEffect(() => {
+    if (schedulerOtherSelectors.isEditedOccurrence(store.state, occurrence.key)) {
+      store.stopEditing();
+    }
+  }, [store, occurrence.key]);
 
   // The "+N more" popover, which passes `getFocusFallback`, moves focus out of its own items.
   useMoveFocusOutOnUnmount(ref, occurrence, getFocusFallback == null);

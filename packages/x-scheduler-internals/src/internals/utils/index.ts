@@ -5,6 +5,7 @@ export * from './drag-utils';
 export * from './placeholder-occurrence';
 export * from './pointer-utils';
 export * from './dom-utils';
+export * from './event-link-props';
 export * from './useDropTarget';
 export * from './useEventResizeHandler';
 export * from './resize-utils';

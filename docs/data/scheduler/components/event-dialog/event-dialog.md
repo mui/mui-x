@@ -109,7 +109,7 @@ A bound you did not touch is still resubmitted when `allDay` changes (both bound
 Two groups of names are **reserved** and cannot back custom model data:
 
 - The `EventDialogBuiltInFormValues` keys (`title`, `startDate`, `resourceIds`, and the rest): the form always seeds them from the event being edited, so a custom model property with one of these names cannot be read or written through the form (a development warning points it out).
-- The `SchedulerEvent` properties that have no form key (`id`, `start`, `end`, `rrule`, `readOnly`, `timezone`, `className`, and the other built-in event properties): a custom field cannot rewrite them, so a write to such a key is dropped on save. They are rejected at the type level and warned about in development.
+- The `SchedulerEvent` properties that have no form key (`id`, `start`, `end`, `rrule`, `readOnly`, `timezone`, `className`, `href`, and the other built-in event properties): a custom field cannot rewrite them, so a write to such a key is dropped on save. They are rejected at the type level and warned about in development.
 
 ## Reading the edited occurrence
 

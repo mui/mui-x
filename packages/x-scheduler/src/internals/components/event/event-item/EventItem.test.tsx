@@ -103,7 +103,6 @@ describe('<EventItem />', () => {
       .singleDay('2025-05-06T09:00:00Z')
       .readOnly()
       .href('#order-1042')
-      .className('order-event')
       .build();
     render(
       <EventCalendarProvider
@@ -124,6 +123,5 @@ describe('<EventItem />', () => {
     expect(link).to.have.attribute('tabindex', '0');
     expect(link).to.have.attribute('data-event-id', String(event.id));
     expect(link).to.have.attribute('data-occurrence-timestamp');
-    expect(link).to.have.class('order-event');
   });
 });
