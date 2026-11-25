@@ -349,7 +349,9 @@ const beBYGrid: Partial<GridLocaleText> = {
   // rowReorderingAnnouncementSorted: () => "Rows can't be reordered while the grid is sorted.",
   // rowReorderingAnnouncementInvalid: () => "The row can't be moved there.",
   // rowReorderingAnnouncementDisabled: () => "This row can't be reordered.",
-  // rowReorderingKeyboardDescription: () => 'Press Alt+Up Arrow or Alt+Down Arrow to move the row.',
+  // rowReorderingKeyboardDescription: ({
+  //   modifierKey
+  // }) => `Press ${modifierKey}+Up Arrow or ${modifierKey}+Down Arrow to move the row.`,
 
   // Column reordering text
   // columnReorderingAnnouncementMoved: ({
@@ -364,7 +366,9 @@ const beBYGrid: Partial<GridLocaleText> = {
   // columnReorderingAnnouncementDisabled: ({
   //   columnName
   // }) => `Column ${columnName} can't be reordered.`,
-  // columnReorderingKeyboardDescription: () => 'Press Alt+Left Arrow or Alt+Right Arrow to move the column.',
+  // columnReorderingKeyboardDescription: ({
+  //   modifierKey
+  // }) => `Press ${modifierKey}+Left Arrow or ${modifierKey}+Right Arrow to move the column.`,
 
   // Aggregation
   aggregationMenuItemHeader: "Аб'яднанне дадзеных",

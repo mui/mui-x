@@ -4,7 +4,8 @@ import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-t
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { getCell, getRowsFieldContent } from 'test/utils/helperFn';
-import { vi, describe, it, expect } from 'vitest';
+import { mockPlatform } from 'test/utils/mockPlatform';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
 
 const rows = [
   { id: 0, name: 'A', group: 'X', amount: 1 },
@@ -75,6 +76,8 @@ describe('<DataGridPremium /> - Keyboard reorder', () => {
   });
 
   it('should not describe the row keys with row grouping', () => {
+    // The text names the keys of the OS
+    onTestFinished(mockPlatform('Win32'));
     render(
       <Test
         initialState={{ rowGrouping: { model: ['group'] } }}

@@ -15,6 +15,20 @@ import {
 } from './keyboardReorderUtils';
 import type { KeyboardReorderDescriptionKind } from './keyboardReorderUtils';
 
+type NavigatorWithUserAgentData = Navigator & { userAgentData?: { platform: string } };
+
+// Apple keyboards label `Alt` as `Option`.
+// The grid doesn't render on the server, so reading `navigator` during render can't break the hydration.
+function getModifierKey(): 'Alt' | 'Option' {
+  if (typeof navigator === 'undefined') {
+    return 'Alt';
+  }
+  // `userAgentData` is only in Chromium browsers. iPadOS reports `MacIntel` in `platform`.
+  const platform =
+    (navigator as NavigatorWithUserAgentData).userAgentData?.platform ?? navigator.platform;
+  return /mac|iphone|ipad|ipod/i.test(platform) ? 'Option' : 'Alt';
+}
+
 /**
  * Returns the text that describes the reorder keys of rows or columns.
  * An empty text turns the description off.
@@ -28,7 +42,7 @@ export function getKeyboardReorderDescriptionText(
 ): string {
   return apiRef.current.getLocaleText(
     kind === 'row' ? 'rowReorderingKeyboardDescription' : 'columnReorderingKeyboardDescription',
-  )();
+  )({ modifierKey: getModifierKey() });
 }
 
 /**

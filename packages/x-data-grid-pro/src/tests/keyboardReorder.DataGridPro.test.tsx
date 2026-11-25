@@ -19,7 +19,8 @@ import {
   getRowsFieldContent,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi, describe, it, expect } from 'vitest';
+import { mockPlatform } from 'test/utils/mockPlatform';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { getRowMoveTarget } from '../hooks/features/rowReorder/rowReorderDragUtils';
 
@@ -1038,6 +1039,9 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
 
     const twoColumns: GridColDef[] = [{ field: 'name' }, { field: 'other' }];
 
+    // The texts name the keys of the OS
+    beforeEach(() => mockPlatform('Win32'));
+
     it('should describe the column keys on a reorderable header without a key press', () => {
       render(<ColumnTest />);
       expect(getHints(getHeader('a'))).to.deep.equal([columnHint]);
@@ -1294,6 +1298,31 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       setProps({ disableColumnReorder: true, rowReordering: false });
       expect(getCellOf(1, 'name')).not.to.have.attribute('aria-describedby');
       expectNoDanglingIds();
+    });
+
+    it('should name the Option key on Apple platforms', () => {
+      mockPlatform('MacIntel');
+      render(<Test columns={twoColumns} />);
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([
+        'Press Option+Up Arrow or Option+Down Arrow to move the row.',
+        'Press Option+Left Arrow or Option+Right Arrow to move the column.',
+      ]);
+    });
+
+    it('should pass the modifier key to the locale texts', () => {
+      mockPlatform('MacIntel');
+      render(
+        <Test
+          columns={twoColumns}
+          localeText={{
+            rowReorderingKeyboardDescription: ({ modifierKey }) => `Row ${modifierKey}`,
+            columnReorderingKeyboardDescription: ({ modifierKey }) => `Column ${modifierKey}`,
+          }}
+        />,
+      );
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal(['Row Option', 'Column Option']);
     });
 
     it('should use the locale texts, and remove the hints when they are empty', () => {
