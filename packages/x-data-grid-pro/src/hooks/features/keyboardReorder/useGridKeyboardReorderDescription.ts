@@ -10,7 +10,7 @@ import { useGridRootProps } from '../../utils/useGridRootProps';
 import {
   getKeyboardReorderDescriptionId,
   gridColumnKeyboardReorderDescribedSelector,
-  gridCellKeyboardReorderDescriptionSelector,
+  gridCellKeyboardReorderDescribedStepsSelector,
 } from './keyboardReorderUtils';
 import type { KeyboardReorderDescriptionKind } from './keyboardReorderUtils';
 
@@ -49,19 +49,30 @@ export const useKeyboardReorderCellDescription = (
 ): GridKeyboardReorderCellDescription | null => {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  return useGridSelector(
+  // The locale texts stay out of the selector arguments: when the arguments change,
+  // `useGridSelector` can keep the stale value in React 18 Strict Mode.
+  const steps = useGridSelector(
     apiRef,
-    gridCellKeyboardReorderDescriptionSelector,
+    gridCellKeyboardReorderDescribedStepsSelector,
     {
       rowId,
       rowReordering: rootProps.rowReordering,
       isRowReorderable: rootProps.isRowReorderable,
       disableColumnReorder: rootProps.disableColumnReorder,
-      rowDescriptionId: getDescriptionId(apiRef, 'row'),
-      columnDescriptionId: getDescriptionId(apiRef, 'column'),
     },
     objectShallowCompare,
   );
+  if (!steps) {
+    return null;
+  }
+
+  const describedBy = [
+    steps.row ? getDescriptionId(apiRef, 'row') : undefined,
+    steps.column ? getDescriptionId(apiRef, 'column') : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
+  return describedBy ? { field: steps.field, describedBy } : null;
 };
 
 /**
