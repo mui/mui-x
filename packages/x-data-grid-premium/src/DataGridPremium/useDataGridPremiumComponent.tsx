@@ -135,6 +135,10 @@ import {
   computedColumnsStateInitializer,
   useGridComputedColumns,
 } from '../hooks/features/computedColumns/useGridComputedColumns';
+import {
+  conditionalFormattingStateInitializer,
+  useGridConditionalFormatting,
+} from '../hooks/features/conditionalFormatting/useGridConditionalFormatting';
 
 registerMultiSelectColumnType();
 
@@ -266,6 +270,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
   useGridInitializeState(chartsIntegrationStateInitializer, apiRef, props);
   useGridInitializeState(historyStateInitializer, apiRef, props);
+  useGridInitializeState(conditionalFormattingStateInitializer, apiRef, props);
 
   useGridSidebar(apiRef, props);
   useGridComputedColumns(apiRef, props);
@@ -282,6 +287,7 @@ export const useDataGridPremiumComponent = (
   // Before `useGridRowSelection`: the select-all shortcut of the cell selection feature
   // must run first and block the row selection listener with `defaultMuiPrevented`.
   useGridCellSelection(apiRef, props);
+  useGridConditionalFormatting(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);

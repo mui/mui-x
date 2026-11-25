@@ -99,6 +99,11 @@ import { findComputedColumnCellCycle } from './gridFormulaDraftCycles';
 import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 import { useGridFormulaReferencePicking } from './useGridFormulaReferencePicking';
 import { clearFormulaPickSession } from './gridFormulaReferencePicking';
+import type { GridConditionalFormattingPrivateApi } from '../conditionalFormatting/gridConditionalFormattingInterfaces';
+import {
+  evaluateConditionalFormattingFormula,
+  getConditionalFormattingExcelFormula,
+} from './gridConditionalFormattingFormula';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
@@ -731,6 +736,20 @@ export const useGridFormula = (
   };
 
   useGridApiMethod(apiRef, formulaPrivateApi, 'private');
+
+  const conditionalFormattingPrivateApi: GridConditionalFormattingPrivateApi = {
+    evaluateConditionalFormattingFormula: React.useCallback(
+      (formula, row, id) => evaluateConditionalFormattingFormula(apiRef, formula, row, id),
+      [apiRef],
+    ),
+    getConditionalFormattingExcelFormula: React.useCallback(
+      (formula, fieldToColumnLetter, rowNumber) =>
+        getConditionalFormattingExcelFormula(apiRef, formula, fieldToColumnLetter, rowNumber),
+      [apiRef],
+    ),
+  };
+
+  useGridApiMethod(apiRef, conditionalFormattingPrivateApi, 'private');
 
   const validateComputedColumnDefinitionMethod = React.useCallback<
     GridComputedColumnsPrivateApi['validateComputedColumnDefinition']

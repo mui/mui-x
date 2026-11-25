@@ -25,6 +25,7 @@ import {
 import type { ExcelExportInitEvent } from './serializer/excelSerializer';
 import { GridExcelExportMenuItem } from '../../../components';
 import type { SerializedRow } from './serializer/utils';
+import { getConditionalFormattingExcelExport } from '../conditionalFormatting/gridConditionalFormattingUtils';
 
 /**
  * @requires useGridColumns (state)
@@ -172,12 +173,25 @@ export const useGridExcelExport = (
         return acc;
       }, {});
 
+      // Same header rows as the worker writes. A `exceljsPreProcess` adding rows shifts them.
+      const groupHeaderRows = options.includeColumnGroupsHeaders
+        ? Math.max(0, ...Object.values(columnGroupPaths).map((path) => path.length))
+        : 0;
+      const firstDataRowNumber = groupHeaderRows + 2;
+      const conditionalFormatting = getConditionalFormattingExcelExport(
+        apiRef,
+        exportedColumns.map((column) => column.field),
+        firstDataRowNumber,
+        firstDataRowNumber + exportedRowIds.length - 1,
+      );
+
       const message: ExcelExportInitEvent = {
         // workers share the pub-sub channel namespace. Use this property to filter out messages.
         namespace: 'mui-x-data-grid-export',
         serializedColumns,
         serializedRows,
         valueOptionsData,
+        conditionalFormatting,
         columnGroupPaths,
         columnGroupDetails: apiRef.current.getAllGroupDetails(),
         options: cloneableOptions,

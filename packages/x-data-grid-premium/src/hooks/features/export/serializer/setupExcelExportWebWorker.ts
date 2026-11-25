@@ -19,6 +19,7 @@ export function setupExcelExportWebWorker(
       options,
       valueOptionsSheetName,
       valueOptionsData,
+      conditionalFormatting,
       columnGroupDetails,
       columnGroupPaths,
     } = event.data;
@@ -54,6 +55,8 @@ export function setupExcelExportWebWorker(
     serializedRows.forEach((serializedRow) => {
       addSerializedRowToWorksheet(serializedRow, worksheet);
     });
+
+    conditionalFormatting?.forEach((options) => worksheet.addConditionalFormatting(options));
 
     if (exceljsPostProcess) {
       await exceljsPostProcess({ workbook, worksheet });

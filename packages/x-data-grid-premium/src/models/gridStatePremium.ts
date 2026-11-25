@@ -31,6 +31,10 @@ import type {
   GridComputedColumnsInitialState,
   GridComputedColumnsState,
 } from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
+import type {
+  GridConditionalFormattingInitialState,
+  GridConditionalFormattingState,
+} from '../hooks/features/conditionalFormatting/gridConditionalFormattingInterfaces';
 
 /**
  * The state of Data Grid Premium.
@@ -46,6 +50,7 @@ export interface GridStatePremium extends GridStatePro {
   history: GridHistoryState;
   formula: GridFormulaState;
   computedColumns: GridComputedColumnsState;
+  conditionalFormatting: GridConditionalFormattingState;
 }
 
 /**
@@ -60,4 +65,5 @@ export interface GridInitialStatePremium extends GridInitialStatePro {
   sidebar?: GridSidebarInitialState;
   chartsIntegration?: GridChartsIntegrationInitialState;
   computedColumns?: GridComputedColumnsInitialState;
+  conditionalFormatting?: GridConditionalFormattingInitialState;
 }

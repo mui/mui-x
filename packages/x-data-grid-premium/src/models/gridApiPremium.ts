@@ -40,6 +40,10 @@ import type {
   GridComputedColumnsApi,
   GridComputedColumnsPrivateApi,
 } from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
+import type {
+  GridConditionalFormattingApi,
+  GridConditionalFormattingPrivateApi,
+} from '../hooks/features/conditionalFormatting/gridConditionalFormattingInterfaces';
 
 /**
  * The api of Data Grid Premium.
@@ -63,6 +67,7 @@ export interface GridApiPremium
     GridChartsIntegrationApi,
     GridHistoryApi,
     GridComputedColumnsApi,
+    GridConditionalFormattingApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}
@@ -78,6 +83,8 @@ export interface GridPrivateApiPremium
     Partial<GridFormulaPrivateApi>,
     // Registered by the formula feature as well: validation needs the engine.
     Partial<GridComputedColumnsPrivateApi>,
+    // Registered by the formula feature: formula conditions need the engine.
+    Partial<GridConditionalFormattingPrivateApi>,
     GridDetailPanelPrivateApi,
     GridRowReorderPrivateApi,
     GridKeyboardReorderPrivateApi,

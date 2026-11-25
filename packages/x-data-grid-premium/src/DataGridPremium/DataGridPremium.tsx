@@ -42,6 +42,7 @@ import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRow
 import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
+import { useGridConditionalFormattingSx } from '../hooks/features/conditionalFormatting/useGridConditionalFormatting';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -131,6 +132,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     validateProps(props, dataGridPremiumPropValidators);
   }
 
+  const sx = useGridConditionalFormattingSx(privateApiRef, props.sx);
   const sidebarOpen = useGridSelector(privateApiRef, gridSidebarOpenSelector);
   const sidePanel = sidebarOpen ? <Sidebar /> : null;
 
@@ -149,7 +151,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
       <GridRoot
         className={props.className}
         style={props.style}
-        sx={props.sx}
+        sx={sx}
         {...pickDataAttributes(props)}
         {...props.slotProps?.root}
         ref={ref}
@@ -955,6 +957,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
       'columnVisibilityModelChange',
       'columnWidthChange',
       'computedColumnsChange',
+      'conditionalFormattingChange',
       'debouncedResize',
       'densityChange',
       'detailPanelsExpandedRowIdsChange',
