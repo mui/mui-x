@@ -74,6 +74,15 @@ export const TreeItemContent = styled('div', {
             opacity: (theme.vars || theme).palette.action.disabledOpacity,
           },
         },
+        '[role="treeitem"]:focus:not(:focus-visible) > &': {
+          backgroundColor: (theme.vars || theme).palette.action.focus,
+        },
+        '[role="treeitem"]:focus:not(:focus-visible) > &[data-selected]': {
+          backgroundColor: theme.alpha(
+            (theme.vars || theme).palette.primary.main,
+            `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
+          ),
+        },
       }
     : {
         '&[data-focused]': {

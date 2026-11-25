@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
@@ -17,7 +17,8 @@ import { getFakeContextValue } from 'test/utils/tree-view/fakeContextValue';
 import { describeSlotsConformance } from 'test/utils/describeSlotsConformance';
 import { isJSDOM } from 'test/utils/skipIf';
 // It's not publicly exported, so, using a relative import
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect } from 'vitest';
+import type { userEvent as BrowserUserEvent } from 'vitest/browser';
 import { TreeViewContext } from '../internals/TreeViewProvider/TreeViewContext';
 
 describe('<TreeItem />', () => {
@@ -88,6 +89,7 @@ describe('<TreeItem />', () => {
       expect(content).to.have.style('outline-style', 'solid');
       expect(content).to.have.style('outline-color', 'rgb(1, 2, 3)');
       expect(content).to.have.style('outline-offset', '-2px');
+      expect(content).to.have.style('background-color', 'rgba(0, 0, 0, 0)');
     });
 
     it.skipIf(isJSDOM)(
@@ -126,6 +128,46 @@ describe('<TreeItem />', () => {
       const content = screen.getByRole('treeitem').firstElementChild;
       expect(content).to.have.style('outline-style', 'solid');
       expect(content).to.have.style('outline-color', 'rgb(1, 2, 3)');
+    });
+
+    describe.skipIf(isJSDOM)('after a real mouse click', () => {
+      const sendRealInput = async (send: (input: typeof BrowserUserEvent) => Promise<void>) => {
+        const { userEvent } = await import('vitest/browser');
+        await act(() => send(userEvent));
+      };
+
+      afterEach(() => sendRealInput((input) => input.keyboard('{Tab}')));
+
+      it('tints the focused item instead of drawing the ring', async () => {
+        render(
+          <ThemeProvider theme={theme}>
+            <SimpleTreeView disableSelection>
+              <TreeItem itemId="one" label="one" />
+            </SimpleTreeView>
+          </ThemeProvider>,
+        );
+
+        await sendRealInput((input) => input.click(screen.getByText('one')));
+
+        const content = screen.getByRole('treeitem').firstElementChild;
+        expect(content).to.have.style('outline-style', 'none');
+        expect(content).to.have.style('background-color', 'rgba(0, 0, 0, 0.12)');
+      });
+
+      it('tints a selected item with the selected focus shade', async () => {
+        render(
+          <ThemeProvider theme={theme}>
+            <SimpleTreeView>
+              <TreeItem itemId="one" label="one" />
+            </SimpleTreeView>
+          </ThemeProvider>,
+        );
+
+        await sendRealInput((input) => input.click(screen.getByText('one')));
+
+        const content = screen.getByRole('treeitem').firstElementChild;
+        expect(content).to.have.style('background-color', 'rgba(25, 118, 210, 0.2)');
+      });
     });
   });
 });
