@@ -15,8 +15,7 @@ import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-util
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate, toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -174,11 +173,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
       const occurrence = builder.toOccurrence();
       // The drop landed at 10:15 in Tokyo.
-      const dropInstant = occurrence.start.timestamp + (10 * 60 + 15) * 60_000;
+      const dropInstant = occurrence.start.epochMilliseconds + (10 * 60 + 15) * 60_000;
       const snapshot = {
         ...occurrence,
-        start: createProcessedDate(dropInstant, displayTimezone),
-        end: createProcessedDate(occurrence.end.timestamp, displayTimezone),
+        start: toZonedDateTime(dropInstant, displayTimezone),
+        end: toZonedDateTime(occurrence.end.epochMilliseconds, displayTimezone),
       };
 
       const { user } = render(

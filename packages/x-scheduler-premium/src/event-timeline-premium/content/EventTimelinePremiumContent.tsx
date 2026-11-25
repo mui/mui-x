@@ -51,10 +51,11 @@ import {
 import {
   TitleColumnWidthProvider,
   useTitleColumnWidth,
-  useReportTitleWidth,
+  useTitleCellMeasurement,
   TITLE_HEADER_KEY,
 } from './useTitleColumnWidth';
 import { useTitleScrollSync } from './useTitleScrollSync';
+import { observeResizeNextFrame } from './observeResizeNextFrame';
 import { useEventTabNavigation } from './useEventTabNavigation';
 import { getRowHeightForLaneCount } from './rowGeometry';
 import { getVisibleFractionRange } from './getVisibleFractionRange';
@@ -403,7 +404,6 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
     const { showCurrentTimeIndicator } = props;
     const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
     const { classes, localeText, resourceColumnLabel } = useEventTimelinePremiumStyledContext();
-    const reportTitleWidth = useReportTitleWidth();
 
     const pinnedLeftOffset = virtualizerStore.use(
       Virtualization.selectors.pinnedLeftOffsetSelector,
@@ -423,22 +423,7 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
       [renderContext.firstColumnIndex, renderContext.lastColumnIndex],
     );
 
-    // Measure the header title cell's natural width so the title column
-    // also accounts for the header label, not just the body rows.
-    const titleHeaderCellRef = React.useRef<HTMLDivElement | null>(null);
-    const titleHeaderContentRef = React.useRef<HTMLSpanElement | null>(null);
-    useIsoLayoutEffect(() => {
-      const cell = titleHeaderCellRef.current;
-      const content = titleHeaderContentRef.current;
-      if (!cell || !content || typeof ResizeObserver === 'undefined') {
-        return undefined;
-      }
-      const observer = new ResizeObserver(() => {
-        reportTitleWidth(TITLE_HEADER_KEY, cell.scrollWidth);
-      });
-      observer.observe(content);
-      return () => observer.disconnect();
-    }, [reportTitleWidth]);
+    const { cellRef, contentRef } = useTitleCellMeasurement(TITLE_HEADER_KEY);
 
     return (
       <EventTimelinePremiumHeaderRow
@@ -448,12 +433,12 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
         {...containerVerticalProps}
       >
         <EventTimelinePremiumTitleHeaderCell
-          ref={titleHeaderCellRef}
+          ref={cellRef}
           className={classes.titleHeaderCell}
           style={{ transform: `translateX(${pinnedLeftOffset}px)` }}
         >
           <span
-            ref={titleHeaderContentRef}
+            ref={contentRef}
             style={{ width: 'max-content', whiteSpace: 'nowrap', flexShrink: 0 }}
           >
             {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
@@ -650,16 +635,11 @@ function useElementSize(
       return undefined;
     }
 
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const box = entry.borderBoxSize[0];
-        setSize(dimension === 'width' ? box.inlineSize : box.blockSize);
-      }
-    });
-
     setSize(measure(element));
-    observer.observe(element);
-    return () => observer.disconnect();
+    return observeResizeNextFrame(element, (entry) => {
+      const box = entry.borderBoxSize[0];
+      setSize(dimension === 'width' ? box.inlineSize : box.blockSize);
+    });
   }, [ref, dimension]);
 
   return size;

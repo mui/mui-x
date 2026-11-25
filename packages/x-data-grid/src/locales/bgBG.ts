@@ -170,7 +170,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Header filter operators text
   headerFilterOperatorContains: 'Съдържа',
   headerFilterOperatorDoesNotContain: 'Не съдържа',
-  headerFilterOperatorEquals: 'Равнo',
+  headerFilterOperatorEquals: 'Равно',
   headerFilterOperatorDoesNotEqual: 'Не е равно',
   headerFilterOperatorStartsWith: 'Започва с',
   headerFilterOperatorEndsWith: 'Завършва с',
@@ -308,6 +308,30 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Подредба на редове',
+  // rowReorderingAnnouncementMoved: ({
+  //   position,
+  //   total
+  // }) => `Row moved to position ${formatNumber(position)} of ${formatNumber(total)}.`,
+  // rowReorderingAnnouncementEdge: ({
+  //   direction
+  // }) => `Can't move the row further ${direction === 'up' ? 'up' : 'down'}.`,
+  // rowReorderingAnnouncementSorted: () => "Rows can't be reordered while the grid is sorted.",
+  // rowReorderingAnnouncementInvalid: () => "The row can't be moved there.",
+  // rowReorderingAnnouncementDisabled: () => "This row can't be reordered.",
+
+  // Column reordering text
+  // columnReorderingAnnouncementMoved: ({
+  //   columnName,
+  //   position,
+  //   total
+  // }) => `Column ${columnName} moved to position ${formatNumber(position)} of ${formatNumber(total)}.`,
+  // columnReorderingAnnouncementEdge: ({
+  //   columnName,
+  //   direction
+  // }) => `Can't move column ${columnName} further ${direction === 'left' ? 'left' : 'right'}.`,
+  // columnReorderingAnnouncementDisabled: ({
+  //   columnName
+  // }) => `Column ${columnName} can't be reordered.`,
 
   // Aggregation
   aggregationMenuItemHeader: 'Агрегиране',

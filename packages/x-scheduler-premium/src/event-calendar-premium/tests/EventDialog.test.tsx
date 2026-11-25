@@ -2591,7 +2591,7 @@ describe('<EventDialogContent open />', () => {
         // An all-day occurrence is identified by the day it is displayed on: July 4th in New York.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy.mock.lastCall[0];
-        expect(payload.occurrence.start.timestamp).to.equal(
+        expect(payload.occurrence.start.epochMilliseconds).to.equal(
           createDate('2025-07-04T00:00:00', 'America/New_York').getTime(),
         );
       });
@@ -2683,7 +2683,7 @@ describe('<EventDialogContent open />', () => {
         // November 7th in UTC, the display timezone, whatever the New York offset.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.occurrence.start.timestamp).to.equal(
+        expect(payload.occurrence.start.epochMilliseconds).to.equal(
           createDate('2025-11-07T00:00:00', 'UTC').getTime(),
         );
       });
@@ -4775,7 +4775,7 @@ describe('<EventDialogContent open />', () => {
         const event = builder.build();
         const occurrence = builder.toOccurrence();
         // One more day.
-        const resizedEnd = addDays(new Date(occurrence.end.timestamp), 1);
+        const resizedEnd = addDays(new Date(occurrence.end.epochMilliseconds), 1);
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({

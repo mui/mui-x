@@ -74,7 +74,7 @@ function createOriginalEvent(allDay: boolean): SchedulerProcessedEvent {
 
 /** The bounds of an occurrence placeholder, as ISO strings. */
 function boundsOf(occurrence: ReturnType<typeof getPlaceholderOccurrence>) {
-  return [occurrence.start.timestamp, occurrence.end.timestamp].map((ms) =>
+  return [occurrence.start.epochMilliseconds, occurrence.end.epochMilliseconds].map((ms) =>
     new Date(ms).toISOString(),
   );
 }

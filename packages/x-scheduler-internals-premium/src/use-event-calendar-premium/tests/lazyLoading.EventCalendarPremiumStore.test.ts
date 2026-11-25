@@ -5,12 +5,12 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   endOfDay,
   isSameDay,
-  processDay,
   setSystemTimezone,
   startOfDay,
 } from 'test/utils/scheduler';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
@@ -60,11 +60,13 @@ const DEFAULT_PARAMS = {
 };
 
 // Build a minimal `visibleDaysSelector` returning a `dayCount`-day window starting at the
-// store's current `visibleDate` in the display timezone. The plugin only reads `timestamp`.
+// store's current `visibleDate` in the display timezone.
 const buildViewDefinition = (dayCount = 7): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
-  visibleDaysSelector: (state: any): SchedulerProcessedDay[] =>
-    Array.from({ length: dayCount }, (_, i) => processDay(addDays(state.visibleDate, i))),
+  visibleDaysSelector: (state: any): BaseTemporal.PlainDate[] =>
+    Array.from({ length: dayCount }, (_, i) =>
+      schedulerOtherSelectors.visiblePlainDate(state).add({ days: i }),
+    ),
 });
 
 describe('Lazy loading - EventCalendarPremiumStore', () => {
@@ -172,9 +174,9 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
         createDate('2025-07-01T00:00:00', displayTimezone).toISOString(),
         new Date(createDate('2025-07-02T00:00:00', displayTimezone).getTime() - 1).toISOString(),
       ]);
-      expect(store.state.processedEventLookup.get('1')!.start.plainDateTime.toString()).to.equal(
-        '2025-07-01T00:00:00',
-      );
+      expect(
+        store.state.processedEventLookup.get('1')!.start.toPlainDateTime().toString(),
+      ).to.equal('2025-07-01T00:00:00');
     },
   );
 

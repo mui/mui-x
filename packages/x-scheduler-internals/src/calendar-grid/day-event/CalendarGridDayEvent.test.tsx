@@ -7,15 +7,15 @@ import {
   describeConformance,
   endOfDay,
 } from 'test/utils/scheduler';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = createProcessedDate(Date.now(), 'default');
-  const eventEnd = createProcessedDate(eventStart.timestamp + 3_600_000, 'default');
+  const eventStart = toZonedDateTime(Date.now(), 'default');
+  const eventEnd = toZonedDateTime(eventStart.epochMilliseconds + 3_600_000, 'default');
 
   type ProviderProps = React.ComponentProps<typeof EventCalendarProvider>;
 
@@ -30,18 +30,14 @@ describe('<CalendarGrid.DayEvent />', () => {
     const {
       events = [],
       resources = [],
-      rowStart = new Date(eventStart.timestamp),
-      rowEnd = new Date(eventEnd.timestamp),
+      rowStart = new Date(eventStart.epochMilliseconds),
+      rowEnd = new Date(eventEnd.epochMilliseconds),
     } = options;
     const cellDate = toPlainDate(rowStart.getTime(), 'default');
     return render(
       <EventCalendarProvider events={events} resources={resources}>
         <CalendarGrid.Root>
-          <CalendarGrid.DayRow
-            start={rowStart.getTime()}
-            end={rowEnd.getTime()}
-            days={[{ plainDate: cellDate }]}
-          >
+          <CalendarGrid.DayRow start={rowStart.getTime()} end={rowEnd.getTime()} days={[cellDate]}>
             <CalendarGrid.DayCell value={cellDate}>{node}</CalendarGrid.DayCell>
           </CalendarGrid.DayRow>
         </CalendarGrid.Root>
@@ -75,8 +71,8 @@ describe('<CalendarGrid.DayEvent />', () => {
         <CalendarGrid.DayEvent
           eventId="fake-id"
           occurrenceKey="fake-key"
-          start={createProcessedDate(createDate(start).getTime(), 'default')}
-          end={createProcessedDate(createDate(end).getTime(), 'default')}
+          start={toZonedDateTime(createDate(start).getTime(), 'default')}
+          end={toZonedDateTime(createDate(end).getTime(), 'default')}
           renderDragPreview={() => null}
           data-testid="event"
         />,

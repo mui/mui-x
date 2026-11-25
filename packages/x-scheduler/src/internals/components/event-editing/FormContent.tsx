@@ -147,14 +147,12 @@ export function FormContent(props: FormContentProps) {
 
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
-    const startFields = formatDateAndTimeFields(occurrence.start.plainDateTime);
+    const startFields = formatDateAndTimeFields(occurrence.start);
     // The form shows the last day of an all-day event, the day before its exclusive end.
     const endFields = formatDateAndTimeFields(
       occurrence.allDay
-        ? plainDateFromDayNumber(
-            getOccurrenceLastDayNumber(occurrence, initialDisplayTimezone),
-          ).toPlainDateTime('23:59')
-        : occurrence.end.plainDateTime,
+        ? plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence)).toPlainDateTime('23:59')
+        : occurrence.end,
     );
 
     // The rule is read and written in the event's timezone, not the display one.
@@ -200,7 +198,7 @@ export function FormContent(props: FormContentProps) {
         base,
         getRulePlainDate(
           occurrence,
-          occurrence.start.timestamp,
+          occurrence.start.epochMilliseconds,
           !!occurrence.allDay,
           initialDisplayTimezone,
         ),
@@ -413,8 +411,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         liveEvent.rrule == null &&
         !displayTimezoneMoved &&
         isEventOccurrence(occurrence) &&
-        modelBounds?.[bound] === liveEvent[bound].timestamp &&
-        occurrence[bound].timestamp !== liveEvent[bound].timestamp;
+        modelBounds?.[bound] === liveEvent[bound].epochMilliseconds &&
+        occurrence[bound].epochMilliseconds !== liveEvent[bound].epochMilliseconds;
       // Read directly instead of subscribing: the placeholder changes on every
       // creation keystroke and would re-render the whole dialog.
       const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
@@ -428,7 +426,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // moved since the snapshot; the recurring update defaults it to the occurrence's own.
       const untouchedBound = (bound: 'start' | 'end') => {
         const source = liveEvent != null && liveEvent.rrule == null ? liveEvent : occurrence;
-        return source[bound].timestamp;
+        return source[bound].epochMilliseconds;
       };
       const submittedStart = submitStart ? range.start : untouchedBound('start');
       const submittedEnd = submitEnd ? range.end : untouchedBound('end');
