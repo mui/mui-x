@@ -141,7 +141,7 @@ export const TreeItemLabel = styled('div', {
     {
       props: ({ editable }: UseTreeItemLabelSlotOwnProps) => editable,
       style: {
-        paddingLeft: '2px',
+        paddingLeft: theme.focusVisible ? 4 : '2px',
       },
     },
   ],

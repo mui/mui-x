@@ -2,6 +2,7 @@ import * as React from 'react';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import {
   TreeItem,
   TreeItemContent,
@@ -137,6 +138,29 @@ describe('<TreeItem />', () => {
 
       expect(document.querySelector(`.${classes.label}`)).to.have.style('overflow-x', 'hidden');
     });
+
+    it.skipIf(isJSDOM)(
+      'draws the rename input ring inside and keeps the text where the label had it',
+      async () => {
+        const { user } = render(
+          <ThemeProvider theme={theme}>
+            <RichTreeView items={[{ id: 'one', label: 'one' }]} isItemEditable />
+          </ThemeProvider>,
+        );
+
+        const labelPadding = getComputedStyle(
+          document.querySelector(`.${classes.label}`)!,
+        ).paddingLeft;
+        await user.keyboard('{Tab}');
+        await user.keyboard('{Enter}');
+
+        const input = screen.getByRole('textbox');
+        expect(input).to.have.style('outline-style', 'solid');
+        expect(input).to.have.style('outline-offset', '-2px');
+        expect(input).to.have.style('padding-left', labelPadding);
+        expect(labelPadding).to.equal('4px');
+      },
+    );
 
     it.skipIf(isJSDOM)('shows the ring on an item built with useTreeItem', async () => {
       const { user } = render(
