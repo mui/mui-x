@@ -1,6 +1,22 @@
 import { test, expect } from '@playwright/test';
+import type { Locator } from '@playwright/test';
 
 const MAX_OFFSET_PX = 1;
+
+async function expectColors(demo: Locator) {
+  await expect(async () => {
+    const keyword = demo.locator('pre code .pl-k').first();
+    const string = demo.locator('pre code .pl-s').first();
+
+    await expect(keyword).toBeVisible();
+    await expect(string).toBeVisible();
+
+    const keywordColor = await keyword.evaluate((node) => getComputedStyle(node).color);
+    const stringColor = await string.evaluate((node) => getComputedStyle(node).color);
+
+    expect(keywordColor).not.toBe(stringColor);
+  }).toPass({ timeout: 10_000 });
+}
 
 test.describe('Demo source variants', () => {
   test.skip(!process.env.PLAYWRIGHT_TEST_BASE_URL, 'Set the migrated docs build URL explicitly.');
@@ -45,18 +61,43 @@ test.describe('Demo source variants', () => {
     await demo.getByRole('button', { name: 'Show code', exact: true }).click();
     await expect(demo.locator('textarea')).toHaveCount(0);
 
-    await expect(async () => {
-      const keyword = demo.locator('pre code .pl-k').first();
-      const string = demo.locator('pre code .pl-s').first();
+    await expectColors(demo);
+  });
 
-      await expect(keyword).toBeVisible();
-      await expect(string).toBeVisible();
+  test('keeps switched files colored after editing without focusing them', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/x/react-charts/accessibility/#keyboard-support');
 
-      const keywordColor = await keyword.evaluate((node) => getComputedStyle(node).color);
-      const stringColor = await string.evaluate((node) => getComputedStyle(node).color);
+    const demo = page.locator('#KeyboardNavigation').locator('..');
 
-      expect(keywordColor).not.toBe(stringColor);
-    }).toPass({ timeout: 10_000 });
+    await demo.getByRole('button', { name: 'Show code', exact: true }).click();
+    await demo.getByRole('group', { name: 'Editable code' }).first().click();
+
+    const editor = demo.locator('textarea:visible');
+
+    await editor.focus();
+    await expect(editor).toBeFocused();
+    const source = await editor.inputValue();
+
+    await editor.fill(source.replace('Focus chart', 'Edited focus chart'));
+    await expect(
+      demo.getByRole('button', { name: 'Edited focus chart', exact: true }),
+    ).toBeVisible();
+
+    async function checkFile(file: RegExp) {
+      await demo.getByRole('tab', { name: file }).click();
+      await expectColors(demo);
+      await expect(demo.locator('textarea:focus')).toHaveCount(0);
+    }
+
+    async function checkLanguage(language: 'JavaScript' | 'TypeScript') {
+      await demo.getByRole('button', { name: `Show ${language} source`, exact: true }).click();
+      await checkFile(/KeyboardNavigation\.(?:tsx|jsx)$/);
+      await checkFile(/randomData\.(?:ts|js)$/);
+    }
+
+    await checkLanguage('JavaScript');
+    await checkLanguage('TypeScript');
   });
 
   test('hides chart source after switching languages', async ({ page }) => {
