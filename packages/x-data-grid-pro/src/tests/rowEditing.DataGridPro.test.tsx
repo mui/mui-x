@@ -176,7 +176,7 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(renderEditCell1.mock.lastCall?.[0].value).to.equal('usdgbp');
       });
 
-      it('should resolve if the column of a field that it validates again is removed', async () => {
+      it('should resolve with false if a new edit starts while it validates a removed column', async () => {
         let endValidation: () => void = () => {};
         const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
           new Promise((resolve) => {
@@ -203,7 +203,8 @@ describe('<DataGridPro /> - Row editing', () => {
         await act(async () => {
           endValidation();
         });
-        expect(await isValid!).to.equal(true);
+        // The value belongs to the cancelled edit, so an editor must not stop the new edit.
+        expect(await isValid!).to.equal(false);
       });
 
       it('should pass to renderEditCell the row with the values updated', async () => {
@@ -1522,6 +1523,87 @@ describe('<DataGridPro /> - Row editing', () => {
         });
         expect(processRowUpdate.mock.calls.length).to.equal(0);
         expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.Edit);
+      });
+
+      it('should save once if Enter is pressed again during the validation of a debounced value', async () => {
+        let endValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => {
+            endValidation = () => resolve(props);
+          });
+        // The save does not end, so the row stays in edit mode.
+        const processRowUpdate = vi.fn(() => new Promise<never>(() => {}));
+        render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await act(async () => {
+          endValidation();
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        // A model update during the save must not start the stop again.
+        act(() => apiRef.current?.startRowEditMode({ id: 1 }));
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+      });
+
+      it('should not wait for the validation of a cancelled edit to save the next edit', async () => {
+        let endOldValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          props.value === 'USD GBP'
+            ? new Promise((resolve) => {
+                endOldValidation = () => resolve(props);
+              })
+            : props;
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
+        const priceCell = getCell(0, 2);
+        fireUserEvent.mousePress(priceCell);
+        fireEvent.doubleClick(priceCell);
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'price1M', value: 42, debounceMs: 100 });
+        });
+        fireEvent.keyDown(priceCell.querySelector('input')!, { key: 'Enter' });
+        await waitFor(() => {
+          expect(processRowUpdate.mock.calls.length).to.equal(1);
+        });
+        await act(async () => {
+          endOldValidation();
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(processRowUpdate.mock.lastCall?.[0].price1M).to.equal(42);
       });
     });
 

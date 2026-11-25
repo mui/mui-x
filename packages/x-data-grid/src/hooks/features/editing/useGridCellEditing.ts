@@ -392,6 +392,9 @@ export const useGridCellEditing = (
 
       const shouldProcessEditCellProps = !!column.preProcessEditCellProps && deleteValue;
 
+      // A stop of the new edit must not wait for the updates of an earlier edit.
+      apiRef.current.detachEditCellValueMutations(id, field);
+
       let newProps: GridEditCellProps = {
         value: newValue,
         error: false,
@@ -467,12 +470,17 @@ export const useGridCellEditing = (
         // The validation of a debounced value that the stop ran ends later.
         // Finish the stop then, if the model still asks for it.
         if (isProcessingProps && flushedMutation) {
-          flushedMutation.then(() => {
+          flushedMutation.then((isSameEdit) => {
             const modelParams = cellModesModelRef.current[id]?.[field];
+            const prevParams = prevCellModesModel.current[id]?.[field];
             if (
+              isSameEdit &&
               modelParams?.mode === GridCellModes.View &&
+              prevParams?.mode === GridCellModes.Edit &&
               apiRef.current.getCellMode(id, field) === GridCellModes.Edit
             ) {
+              // Mark the stop as done, as the effect does, so that a later stop does not save again.
+              prevCellModesModel.current[id][field].mode = GridCellModes.View;
               updateStateToStopCellEditMode({ id, field, ...modelParams });
             }
           });

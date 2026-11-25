@@ -497,6 +497,8 @@ export const useGridRowEditing = (
         return acc;
       }, {});
 
+      // A stop of the new edit must not wait for the updates of an earlier edit.
+      apiRef.current.detachEditCellValueMutations(id);
       prevRowValuesLookup.current[id] = row;
       updateOrDeleteRowState(id, newProps);
 
@@ -585,12 +587,17 @@ export const useGridRowEditing = (
         // The validation of the debounced values that the stop ran ends later.
         // Finish the stop then, if the model still asks for it.
         if (flushedMutation) {
-          flushedMutation.then(() => {
+          flushedMutation.then((isSameEdit) => {
             const modelParams = rowModesModelRef.current[id];
+            const prevParams = prevRowModesModel.current[id];
             if (
+              isSameEdit &&
               modelParams?.mode === GridRowModes.View &&
+              prevParams?.mode === GridRowModes.Edit &&
               apiRef.current.getRowMode(id) === GridRowModes.Edit
             ) {
+              // Mark the stop as done, as the effect does, so that a later stop does not save again.
+              prevRowModesModel.current[id].mode = GridRowModes.View;
               updateStateToStopRowEditMode({ id, ...modelParams });
             }
           });
@@ -799,7 +806,11 @@ export const useGridRowEditing = (
         Promise.all(promises).then(() => {
           if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
             editingState = gridEditRowsStateSelector(apiRef);
-            resolve(!editingState[id][field].error);
+            // A newer value or a new edit replaced this value during the processing.
+            const currentProps = editingState[id][field];
+            resolve(
+              !!currentProps && Object.is(currentProps.value, parsedValue) && !currentProps.error,
+            );
           } else {
             resolve(false);
           }

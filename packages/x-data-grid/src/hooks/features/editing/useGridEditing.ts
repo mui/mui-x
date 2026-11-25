@@ -38,7 +38,9 @@ export const useGridEditing = (
     Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => Promise<void>]>>
   >({});
   // The updates that ran immediately and did not end, so that a stop can wait for them.
-  const flushedMutations = React.useRef<Record<GridRowId, Record<string, Promise<void>>>>({});
+  const flushedMutations = React.useRef<
+    Record<GridRowId, Record<string, { promise: Promise<void>; isDetached: boolean }>>
+  >({});
 
   const { isCellEditable: isCellEditableProp } = props;
 
@@ -126,13 +128,13 @@ export const useGridEditing = (
         return;
       }
       const [, runCallback] = debounces[debouncedField];
-      const mutation = runCallback();
+      const mutation = { promise: runCallback(), isDetached: false };
       if (!flushedMutations.current[id]) {
         flushedMutations.current[id] = {};
       }
       flushedMutations.current[id][debouncedField] = mutation;
       // `finally()` keeps a rejection of the mutation unhandled, as before.
-      mutation.finally(() => {
+      mutation.promise.finally(() => {
         if (flushedMutations.current[id]?.[debouncedField] === mutation) {
           delete flushedMutations.current[id][debouncedField];
         }
@@ -146,10 +148,24 @@ export const useGridEditing = (
     if (mutations.length === 0) {
       return null;
     }
-    return Promise.all(mutations).then(
-      () => {},
-      () => {},
-    );
+    return Promise.all(mutations.map((mutation) => mutation.promise))
+      .then(
+        () => {},
+        () => {},
+      )
+      .then(() => mutations.every((mutation) => !mutation.isDetached));
+  }, []);
+
+  const detachEditCellValueMutations = React.useCallback<
+    GridEditingPrivateApi['detachEditCellValueMutations']
+  >((id, field) => {
+    const inProgress = flushedMutations.current[id] ?? {};
+    Object.keys(inProgress)
+      .filter((mutatedField) => !field || mutatedField === field)
+      .forEach((mutatedField) => {
+        inProgress[mutatedField].isDetached = true;
+        delete inProgress[mutatedField];
+      });
   }, []);
 
   const setEditCellValue = React.useCallback<GridEditingApi['setEditCellValue']>(
@@ -203,6 +219,7 @@ export const useGridEditing = (
 
   const editingSharedPrivateApi: GridEditingSharedPrivateApi = {
     runPendingEditCellValueMutation,
+    detachEditCellValueMutations,
   };
 
   useGridApiMethod(apiRef, editingSharedApi, 'public');
