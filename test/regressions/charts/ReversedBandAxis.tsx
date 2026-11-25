@@ -1,26 +1,42 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import type { HighlightItemIdentifier } from '@mui/x-charts/models';
 
 const letters = ['A', 'B', 'C', 'D'];
 const groups = Array.from({ length: 20 }, (_, index) => `G${index}`);
 
 export default function ReversedBandAxis() {
+  // The clicked bar stays highlighted, so the screenshot doesn't depend on the pointer staying put.
+  const [clicked, setClicked] = React.useState<HighlightItemIdentifier<'bar'> | null>(null);
+
   return (
     <Stack direction="row" spacing={4} sx={{ p: 2 }}>
-      <BarChart
-        width={300}
-        height={250}
-        xAxis={[{ scaleType: 'band', data: letters, reverse: true }]}
-        series={[
-          {
-            data: [1, 2, 3, 4],
-            highlightScope: { highlight: 'item', fade: 'global' },
-          },
-        ]}
-        hideLegend
-      />
+      <Stack>
+        <BarChart
+          width={300}
+          height={250}
+          xAxis={[{ scaleType: 'band', data: letters, reverse: true }]}
+          series={[
+            {
+              id: 'series',
+              data: [1, 2, 3, 4],
+              highlightScope: { highlight: 'item', fade: 'global' },
+            },
+          ]}
+          highlightedItem={clicked}
+          onItemClick={(_, item) =>
+            setClicked({ seriesId: item.seriesId, dataIndex: item.dataIndex })
+          }
+          slotProps={{ tooltip: { trigger: 'none' } }}
+          hideLegend
+        />
+        <Typography>
+          Clicked: {clicked?.dataIndex === undefined ? 'none' : letters[clicked.dataIndex]}
+        </Typography>
+      </Stack>
       <BarChartPro
         width={300}
         height={250}

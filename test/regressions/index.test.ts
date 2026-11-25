@@ -450,13 +450,13 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    test('should highlight the hovered bar on a reversed band axis', async ({
+    test('should resolve the clicked bar on a reversed band axis', async ({
       pooled,
       onTestFinished,
     }) => {
       const { page } = pooled;
       const route = '/test-regressions-charts/ReversedBandAxis';
-      const screenshotPath = path.resolve(screenshotDir, `.${route}BarHover.png`);
+      const screenshotPath = path.resolve(screenshotDir, `.${route}BarClick.png`);
 
       const testcase = await navigateToTest(page, route);
       // Pooled pages can keep the scroll position of a previous test.
@@ -465,22 +465,19 @@ async function main() {
       await enablePointerDot(page, onTestFinished);
 
       // Bar D is the fourth bar of the first chart, drawn on the left of the reversed axis.
-      const barD = page.locator(`[data-testpath="${route}"] rect.MuiBarChart-element`).nth(3);
-      await barD.hover();
-      await page.waitForFunction(
-        (bar) => bar?.getAttribute('data-highlighted') === 'true',
-        await barD.elementHandle(),
-      );
+      // Clicking it keeps it highlighted, unlike a hover that later pointer events can clear.
+      const testcaseLocator = page.locator(`[data-testpath="${route}"]`);
+      await testcaseLocator.locator('rect.MuiBarChart-element').nth(3).click();
+      await testcaseLocator.getByText('Clicked: D').waitFor();
 
       const tooltips = page.getByRole('tooltip');
-      await tooltips.filter({ hasText: /^D/ }).waitFor();
       await tooltips.filter({ hasText: 'G2' }).waitFor();
       await tooltips.filter({ hasText: 'G7' }).waitFor();
       // Let the poppers settle on their final position.
       await sleep(300);
 
-      // Clip a viewport screenshot instead of an element one, which would scroll and
-      // drop the hover. It still captures the tooltips rendered outside the testcase.
+      // Clip a viewport screenshot instead of an element one, which would scroll.
+      // It still captures the zoom slider tooltips rendered outside the testcase.
       const clip = await testcase.boundingBox();
       if (!clip) {
         throw new Error('The reversed band axis testcase is not visible.');
