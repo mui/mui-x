@@ -191,6 +191,7 @@ export {
   getRowIndexRelativeToAllRows,
 } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
+export { objectShallowCompare } from '../hooks/utils/useGridSelector';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
 export { usePointerDrag, getElementAtPoint } from '../hooks/utils/usePointerDrag';
@@ -244,6 +245,7 @@ export {
   isEventForCellContent,
   isEventTargetInPortal,
   isEventTargetTextEntryElement,
+  onFocusLeave,
 } from '../utils/domUtils';
 export {
   isNavigationKey,
@@ -279,6 +281,7 @@ export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadi
 
 export type { GridConfiguration } from '../models/configuration/gridConfiguration';
 export type { CellEditableConditionFn } from '../models/configuration/gridCellEditableConfiguration';
+export type { GridKeyboardReorderCellDescription } from '../models/configuration/gridKeyboardReorderConfiguration';
 
 export * from '../hooks/features/pivoting';
 

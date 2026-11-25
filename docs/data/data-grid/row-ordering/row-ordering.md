@@ -137,6 +137,8 @@ Rows only move within the current page, and pinned rows don't move.
 
 While the keyboard is in use, the row that a key press would move has a faint highlight, with the `row--reorderTarget` class.
 Screen readers announce the new position after each move, or the reason why the row can't move.
+They also read a short description of the keys on the first cell that gets the focus each time the focus enters the Data Grid.
+Customize it with the `rowReorderingKeyboardDescription` locale text, or make it return an empty string to remove it.
 
 :::info
 Keyboard reordering isn't available yet with [tree data](/x/react-data-grid/tree-data/) or [row grouping](/x/react-data-grid/row-grouping/), nor while the Data Grid is sorted or a cell is being edited.

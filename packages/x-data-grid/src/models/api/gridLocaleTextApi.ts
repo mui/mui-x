@@ -279,6 +279,7 @@ export interface GridLocaleText {
   rowReorderingAnnouncementEdge: (params: { direction: 'up' | 'down' }) => string;
   rowReorderingAnnouncementSorted: () => string;
   rowReorderingAnnouncementInvalid: () => string;
+  rowReorderingKeyboardDescription: () => string;
 
   // Column reordering text
   columnReorderingAnnouncementMoved: (params: {
@@ -291,6 +292,7 @@ export interface GridLocaleText {
     direction: 'left' | 'right';
   }) => string;
   columnReorderingAnnouncementDisabled: (params: { columnName: string }) => string;
+  columnReorderingKeyboardDescription: () => string;
 
   // Aggregation
   aggregationMenuItemHeader: string;

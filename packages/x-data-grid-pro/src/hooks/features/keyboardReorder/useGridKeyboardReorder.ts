@@ -3,26 +3,44 @@ import * as React from 'react';
 import type { MuiEvent, RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
+  gridClasses,
   gridExpandedRowCountSelector,
   gridExpandedSortedRowIndexLookupSelector,
   gridPaginationSelector,
   gridVisibleColumnFieldsSelector,
   useGridApiMethod,
   useGridEventPriority,
+  useGridNativeEventListener,
 } from '@mui/x-data-grid';
-import type { GridEventListener } from '@mui/x-data-grid';
-import { getRowIndexRelativeToAllRows, isEventForCellContent } from '@mui/x-data-grid/internals';
+import type { GridCellCoordinates, GridEventListener } from '@mui/x-data-grid';
+import {
+  getRowIndexRelativeToAllRows,
+  isEventForCellContent,
+  onFocusLeave,
+} from '@mui/x-data-grid/internals';
+import type { GridStateInitializer } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import type { GridKeyboardReorderPrivateApi } from '../../../models/gridKeyboardReorderApi';
 import {
   commitRowReorder,
+  getRowIdFromElement,
   getRowMoveTarget,
   isReorderSessionActive,
 } from '../rowReorder/rowReorderDragUtils';
 import { getColumnMoveTarget, publishColumnOrderChange } from '../columnReorder/columnReorderUtils';
 import type { ColumnReorderDirection } from '../columnReorder/columnReorderUtils';
-import { getColumnReorderStepStatus, getRowReorderStepStatus } from './keyboardReorderUtils';
+import {
+  getColumnReorderStepStatus,
+  getRowReorderStepStatus,
+  gridKeyboardReorderDescribedCellSelector,
+} from './keyboardReorderUtils';
+import type { GridKeyboardReorderState } from './keyboardReorderInterfaces';
+
+export const keyboardReorderStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  keyboardReorder: { describedCell: 'tabStop' },
+});
 
 type ReorderKey = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'Home' | 'End';
 
@@ -40,12 +58,6 @@ function getReorderKey(event: React.KeyboardEvent): ReorderKey | null {
     return null;
   }
   return REORDER_KEYS.has(event.key) ? (event.key as ReorderKey) : null;
-}
-
-function markAsHandled(event: MuiEvent<React.KeyboardEvent>) {
-  // On Windows and Linux, `Alt+Left/Right` navigates the browser history
-  event.preventDefault();
-  event.defaultMuiPrevented = true;
 }
 
 /**
@@ -183,12 +195,73 @@ export const useGridKeyboardReorder = (
 
   useGridApiMethod(apiRef, { stepRowReorder, stepColumnReorder }, 'private');
 
+  // Screen readers read the description of the keys on the first cell that gets the focus,
+  // and on every column header. Reading it on every cell would repeat it on each arrow press.
+  const setDescribedCell = (describedCell: GridKeyboardReorderState['describedCell']) => {
+    if (gridKeyboardReorderDescribedCellSelector(apiRef) === describedCell) {
+      return;
+    }
+    apiRef.current.setState((state) => ({ ...state, keyboardReorder: { describedCell } }));
+  };
+
+  const getRootElement = () => apiRef.current.rootElementRef.current;
+
+  const getCellFromElement = (element: Element): GridCellCoordinates | null => {
+    const cellElement = element.closest(`.${gridClasses.cell}`);
+    const rowElement = cellElement?.closest(`.${gridClasses.row}`);
+    const field = cellElement?.getAttribute('data-field');
+    if (!rowElement || !field) {
+      return null;
+    }
+    const id = getRowIdFromElement(apiRef, rowElement);
+    // Not a cell of a nested grid, for example in a detail panel
+    return id !== null && apiRef.current.getCellElement(id, field) === cellElement
+      ? { id, field }
+      : null;
+  };
+
+  // The first cell that gets the focus keeps the description while it has it, so it can be read again.
+  // It may not have the tab stop: VoiceOver moves the focus to the cell under its cursor.
+  const handleFocusIn = (event: FocusEvent) => {
+    const describedCell = gridKeyboardReorderDescribedCellSelector(apiRef);
+    if (describedCell === null) {
+      return;
+    }
+    const cell = getCellFromElement(event.target as Element);
+    if (describedCell === 'tabStop') {
+      // For example a column header, before the focus reaches a cell
+      if (cell) {
+        setDescribedCell(cell);
+      }
+    } else if (cell?.id !== describedCell.id || cell.field !== describedCell.field) {
+      setDescribedCell(null);
+    }
+  };
+
+  const handleFocusOut = (event: FocusEvent) => {
+    const root = getRootElement();
+    if (root) {
+      onFocusLeave(root, event, () => setDescribedCell('tabStop'));
+    }
+  };
+
+  useGridNativeEventListener(apiRef, getRootElement, 'focusin', handleFocusIn);
+  useGridNativeEventListener(apiRef, getRootElement, 'focusout', handleFocusOut);
+
   // `Home` is the start of the row: the left side in LTR, and the right side in RTL
   const getColumnDirection = (key: ReorderKey): ColumnReorderDirection => {
     if (key === 'ArrowLeft' || key === 'ArrowRight') {
       return key === 'ArrowLeft' ? 'left' : 'right';
     }
     return (key === 'Home') !== isRtl ? 'left' : 'right';
+  };
+
+  // The user knows the keys after the first press
+  const markAsHandled = (event: MuiEvent<React.KeyboardEvent>) => {
+    // On Windows and Linux, `Alt+Left/Right` navigates the browser history
+    event.preventDefault();
+    event.defaultMuiPrevented = true;
+    setDescribedCell(null);
   };
 
   const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (params, event) => {

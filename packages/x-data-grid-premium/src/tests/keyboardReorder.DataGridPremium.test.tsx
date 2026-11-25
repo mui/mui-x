@@ -74,6 +74,23 @@ describe('<DataGridPremium /> - Keyboard reorder', () => {
     expect(getAnnouncement()).to.equal('');
   });
 
+  it('should not describe the row keys with row grouping', () => {
+    render(
+      <Test
+        initialState={{ rowGrouping: { model: ['group'] } }}
+        defaultGroupingExpansionDepth={-1}
+      />,
+    );
+
+    act(() => apiRef.current!.setCellFocus(0, 'name'));
+    const leafCell = document.querySelector('[data-id="0"] [data-field="name"]')!;
+    const hints = leafCell
+      .getAttribute('aria-describedby')!
+      .split(' ')
+      .map((id) => document.getElementById(id)?.textContent);
+    expect(hints).to.deep.equal(['Press Alt+Left Arrow or Alt+Right Arrow to move the column.']);
+  });
+
   it('should not move a row below the aggregation footer', async () => {
     render(<Test initialState={{ aggregation: { model: { amount: 'sum' } } }} />);
 

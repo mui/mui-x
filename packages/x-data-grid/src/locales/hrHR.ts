@@ -336,6 +336,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // }) => `Can't move the row further ${direction === 'up' ? 'up' : 'down'}.`,
   // rowReorderingAnnouncementSorted: () => "Rows can't be reordered while the grid is sorted.",
   // rowReorderingAnnouncementInvalid: () => "The row can't be moved there.",
+  // rowReorderingKeyboardDescription: () => 'Press Alt+Up Arrow or Alt+Down Arrow to move the row.',
 
   // Column reordering text
   // columnReorderingAnnouncementMoved: ({
@@ -350,6 +351,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // columnReorderingAnnouncementDisabled: ({
   //   columnName
   // }) => `Column ${columnName} can't be reordered.`,
+  // columnReorderingKeyboardDescription: () => 'Press Alt+Left Arrow or Alt+Right Arrow to move the column.',
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregacija',

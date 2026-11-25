@@ -3,6 +3,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
+import { onFocusLeave } from '../../../utils/domUtils';
 
 export const keyboardUseStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -47,15 +48,9 @@ export const useGridKeyboardUse = (apiRef: RefObject<GridPrivateApiCommunity>): 
   // The grid keeps its focused cell when the focus leaves it
   const handleFocusOut = (event: FocusEvent) => {
     const root = getRootElement();
-    if (!root || root.contains(event.relatedTarget as Node | null)) {
-      return;
+    if (root) {
+      onFocusLeave(root, event, () => setActive(false));
     }
-    // Moving the focused row or column blurs it until React restores the focus
-    setTimeout(() => {
-      if (!root.contains(root.ownerDocument.activeElement)) {
-        setActive(false);
-      }
-    });
   };
 
   // Native listeners, so a key that a feature marks as handled still counts
