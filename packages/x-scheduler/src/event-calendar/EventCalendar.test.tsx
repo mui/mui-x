@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { act, screen, waitFor, within } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -348,24 +348,22 @@ describe('EventCalendar', () => {
           .span('2025-05-26T21:00:00Z', '2025-05-26T22:00:00Z')
           .build();
         const outer = React.createRef<HTMLDivElement>();
-        let scrollAtActivation: number | undefined;
         await renderSettled(
-          <div
-            ref={outer}
-            style={{ height: 300, overflow: 'auto' }}
-            onClickCapture={(event) => {
-              scrollAtActivation = event.currentTarget.scrollTop;
-            }}
-          >
+          <div ref={outer} style={{ height: 300, overflow: 'auto' }}>
             <div style={{ height: 220 }} />
             <EventCalendar events={[lateEvent]} defaultView="month" style={{ height: 400 }} />
           </div>,
         );
         const content = getContent();
         const dateButton = within(content).getByRole('button', { name: '26' });
+        dateButton.scrollIntoView({ block: 'center' });
+        const scrollAtActivation = outer.current!.scrollTop;
+        expect(scrollAtActivation).to.be.greaterThan(0);
         // A screen reader can activate the date button without first focusing it.
-        await act(async () => dateButton.click());
-        expect(within(content).getByRole('button', { name: /^Late event,/ })).toHaveFocus();
+        fireEvent.click(dateButton);
+        await waitFor(() =>
+          expect(within(content).getByRole('button', { name: /^Late event,/ })).toHaveFocus(),
+        );
         const grid = content.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGrid}`)!;
         const hour = grid.querySelector<HTMLElement>(
           `.${eventCalendarClasses.dayTimeGridTimeAxisCell}`,

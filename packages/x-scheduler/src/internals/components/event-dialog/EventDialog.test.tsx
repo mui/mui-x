@@ -679,22 +679,17 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       </EventCalendarProvider>,
     );
 
-    await user.click(screen.getByText(DEFAULT_EVENT.title));
+    const eventButton = screen.getByRole('button', { name: /^Running,/ });
+    await user.click(eventButton);
     const titleInput = await screen.findByLabelText(/event title/i);
     await user.type(titleInput, ' edited');
     expect(titleInput).to.have.value('Running edited');
 
-    // Closing unmounts the dialog content, which is what discards the draft store.
-    // Unmounting the focused, edited title makes React 19 suspend, and it logs an un-awaited `act`
-    // warning unless the key press itself happens inside an awaited `act` — which `user.keyboard`
-    // and a bare `fireEvent` both leave outside, so the browser run fails on the console output.
-    // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      fireEvent.keyDown(titleInput, { key: 'Escape' });
-    });
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(eventButton).toHaveFocus());
     expect(screen.queryByLabelText(/event title/i)).to.equal(null);
 
-    await user.click(screen.getByText(DEFAULT_EVENT.title));
+    await user.click(eventButton);
     expect(await screen.findByLabelText(/event title/i)).to.have.value(DEFAULT_EVENT.title);
   });
 
