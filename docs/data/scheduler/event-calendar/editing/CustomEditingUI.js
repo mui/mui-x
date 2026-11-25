@@ -51,11 +51,11 @@ export default function CustomEditingUI() {
           title,
           // The dates of an all-day event are `YYYY-MM-DD` strings, with an exclusive end.
           start: occurrence.allDay
-            ? occurrence.start.plainDateTime.toPlainDate().toString()
-            : new Date(occurrence.start.timestamp).toISOString(),
+            ? occurrence.start.toPlainDate().toString()
+            : new Date(occurrence.start.epochMilliseconds).toISOString(),
           end: occurrence.allDay
-            ? occurrence.end.plainDateTime.toPlainDate().toString()
-            : new Date(occurrence.end.timestamp).toISOString(),
+            ? occurrence.end.toPlainDate().toString()
+            : new Date(occurrence.end.epochMilliseconds).toISOString(),
           allDay: occurrence.allDay,
         },
       ]);

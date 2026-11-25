@@ -22,7 +22,6 @@
     "./event-calendar-selectors": "./src/event-calendar-selectors/index.ts",
     "./get-day-list": "./src/get-day-list/index.ts",
     "./models": "./src/models/index.ts",
-    "./process-date": "./src/process-date/index.ts",
     "./process-event": "./src/process-event/index.ts",
     "./scheduler-selectors": "./src/scheduler-selectors/index.ts",
     "./sort-event-occurrences": "./src/sort-event-occurrences/index.ts",

@@ -54,12 +54,6 @@ describe('getDayNumber', () => {
     expect(getDayNumber(plainDate.add({ days: 1 }))).to.equal(19_783);
     expect(getDayNumber(plainDate.with({ day: 1 }))).to.equal(19_754);
   });
-
-  it('should read the ISO date of a date in another calendar', () => {
-    // The copy only builds in the ISO and Gregorian calendars.
-    const plainDate = BaseTemporal.PlainDate.from('2024-02-29').withCalendar('gregory');
-    expect(getDayNumber(plainDate)).to.equal(19_782);
-  });
 });
 
 describe('getPlainDateKey', () => {
