@@ -39,7 +39,7 @@ export const useGridEditing = (
   >({});
   // The updates that ran immediately and did not end, so that a stop can wait for them.
   const flushedMutations = React.useRef<
-    Record<GridRowId, Record<string, { promise: Promise<void>; isDetached: boolean }>>
+    Record<GridRowId, Record<string, { promise: Promise<void>; edit: { isDetached: boolean } }>>
   >({});
 
   const { isCellEditable: isCellEditableProp } = props;
@@ -128,10 +128,12 @@ export const useGridEditing = (
         return;
       }
       const [, runCallback] = debounces[debouncedField];
-      const mutation = { promise: runCallback(), isDetached: false };
       if (!flushedMutations.current[id]) {
         flushedMutations.current[id] = {};
       }
+      // An update that replaces a running one belongs to the same edit, so a detach applies to both.
+      const replaced = flushedMutations.current[id][debouncedField];
+      const mutation = { promise: runCallback(), edit: replaced?.edit ?? { isDetached: false } };
       flushedMutations.current[id][debouncedField] = mutation;
       // `finally()` keeps a rejection of the mutation unhandled, as before.
       mutation.promise.finally(() => {
@@ -153,7 +155,7 @@ export const useGridEditing = (
         () => {},
         () => {},
       )
-      .then(() => mutations.every((mutation) => !mutation.isDetached));
+      .then(() => mutations.every((mutation) => !mutation.edit.isDetached));
   }, []);
 
   const detachEditCellValueMutations = React.useCallback<
@@ -163,7 +165,7 @@ export const useGridEditing = (
     Object.keys(inProgress)
       .filter((mutatedField) => !field || mutatedField === field)
       .forEach((mutatedField) => {
-        inProgress[mutatedField].isDetached = true;
+        inProgress[mutatedField].edit.isDetached = true;
         delete inProgress[mutatedField];
       });
   }, []);

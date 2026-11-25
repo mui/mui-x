@@ -1605,6 +1605,59 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(processRowUpdate.mock.calls.length).to.equal(1);
         expect(processRowUpdate.mock.lastCall?.[0].price1M).to.equal(42);
       });
+
+      it('should not let a stop of a cancelled edit save the next edit', async () => {
+        const endValidation: Record<string, () => void> = {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => {
+            endValidation[props.value] = () => resolve(props);
+          });
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        // Escape runs a newer debounced value, which replaces the update that the stop waits for.
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD EUR',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD JPY' });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await act(async () => {
+          endValidation['USD JPY']();
+        });
+        await act(async () => {
+          endValidation['USD GBP']();
+        });
+        await act(async () => {
+          endValidation['USD EUR']();
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+      });
     });
 
     describe('by pressing Tab', () => {
