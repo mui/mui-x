@@ -129,6 +129,9 @@ export default withDeploymentConfig({
   transpilePackages: [
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
     '@mui/internal-core-docs',
+    // ESM-only, and its CJS `@algolia/autocomplete-core` dependency breaks
+    // named-export interop when Next externalizes it for SSR.
+    '@docsearch/react',
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
