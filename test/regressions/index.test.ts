@@ -78,6 +78,11 @@ const TEST_RULES: RouteRule[] = [
     enabled: false,
   },
   {
+    test: '/test-regressions-charts/ReversedBandAxis',
+    // Dedicated tests hover a bar and screenshot the tooltips rendered outside the testcase.
+    enabled: false,
+  },
+  {
     test: '/docs-charts-map/MarsMap',
     // `MapImagePlot` renders its `<image>` only after the texture loads and is
     // reprojected. The `<img>` wait below does not see that load.
@@ -443,6 +448,47 @@ async function main() {
       await sleep(300);
 
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
+    test('should show the zoom range in the zoom slider tooltips of a reversed band axis', async ({
+      pooled,
+    }) => {
+      const { page } = pooled;
+      const route = '/test-regressions-charts/ReversedBandAxis';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomSliderTooltips.png`);
+
+      await navigateToTest(page, route);
+      await sleep(300);
+
+      // The tooltips render outside the testcase.
+      const body = await page.waitForSelector('body');
+      await body.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
+    test('should highlight the hovered bar on a reversed band axis', async ({
+      pooled,
+      onTestFinished,
+    }) => {
+      const { page } = pooled;
+      const route = '/test-regressions-charts/ReversedBandAxis';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}BarHover.png`);
+
+      const testcase = await navigateToTest(page, route);
+
+      await enablePointerDot(page, onTestFinished);
+
+      // Bar D is the fourth bar of the first chart, drawn on the left of the reversed axis.
+      const bars = await testcase.$$('rect.MuiBarChart-element');
+      const box = await bars[3]?.boundingBox();
+      if (!box) {
+        throw new Error('Bar D of the reversed band axis chart was not rendered.');
+      }
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await sleep(300);
+
+      // The item tooltip renders outside the testcase.
+      const body = await page.waitForSelector('body');
+      await body.screenshot({ path: screenshotPath, type: 'png' });
     });
 
     test('should export a chart as PNG', async ({ pooled }) => {
