@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
@@ -24,6 +25,8 @@ describe('EventTimelinePremium - Event links', () => {
 
   const originalMatchMedia = window.matchMedia;
   beforeEach(() => {
+    // The warning is only logged once, so every test starts without it.
+    clearWarningsCache();
     window.matchMedia = createMatchMedia(false);
   });
   afterEach(() => {
@@ -139,14 +142,16 @@ describe('EventTimelinePremium - Event links', () => {
     links.forEach((link) => expect(link).to.have.attribute('href', HREF));
   });
 
-  it('should ignore the href of an editable event', async () => {
+  it('should ignore the href of an editable event and warn', async () => {
     const event = EventBuilder.new()
       .title('Order 1042')
       .singleDay('2025-07-03T09:00:00Z', 60)
       .resource(engineering)
       .href(HREF)
       .build();
-    await renderTimeline({ events: [event] });
+    await expect(() => renderTimeline({ events: [event] })).toWarnDev([
+      'MUI X Scheduler: An event has an `href` but is editable',
+    ]);
 
     expect(screen.queryByRole('link', { name: getEventNamePattern('Order 1042') })).to.equal(null);
   });
@@ -231,7 +236,11 @@ describe('EventTimelinePremium - Event links', () => {
       .resource(engineering)
       .href(HREF)
       .build();
-    const { user, setProps } = await renderTimeline({ events: [event] });
+    let view!: Awaited<ReturnType<typeof renderTimeline>>;
+    await expect(async () => {
+      view = await renderTimeline({ events: [event] });
+    }).toWarnDev(['MUI X Scheduler: An event has an `href` but is editable']);
+    const { user, setProps } = view;
     await user.click(screen.getByRole('button', { name: getEventNamePattern('Order 1042') }));
     await screen.findByRole('dialog');
 

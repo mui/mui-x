@@ -1,4 +1,5 @@
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import {
   createSchedulerRenderer,
   EventBuilder,
@@ -8,13 +9,20 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
-import { vi, describe, it, expect, afterEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('EventCalendar - Event links', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });
 
   // A hash keeps the navigation inside the page, which jsdom supports.
   const HREF = '#order-1042';
+
+  const WARNING = 'MUI X Scheduler: An event has an `href` but is editable';
+
+  // The warning is only logged once, so every test starts without it.
+  beforeEach(() => {
+    clearWarningsCache();
+  });
 
   // Clicking a link changes the hash of the page.
   afterEach(() => {
@@ -166,22 +174,69 @@ describe('EventCalendar - Event links', () => {
       const { setProps } = render(<EventCalendar events={[event]} readOnly />);
       expect(getLink()).to.have.attribute('href', HREF);
 
-      setProps({ readOnly: false });
+      expect(() => setProps({ readOnly: false })).toWarnDev([WARNING]);
 
       expect(screen.queryByRole('link', { name: namePattern })).to.equal(null);
       expect(screen.getByRole('button', { name: namePattern })).not.to.equal(null);
     });
 
-    it('should ignore the href of an editable event', () => {
+    it('should ignore the href of an editable event and warn', () => {
       const event = EventBuilder.new()
         .title('Order 1042')
         .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
         .href(HREF)
         .build();
-      render(<EventCalendar events={[event]} />);
+
+      expect(() => {
+        render(<EventCalendar events={[event]} />);
+      }).toWarnDev([WARNING]);
 
       expect(screen.queryByRole('link', { name: namePattern })).to.equal(null);
       expect(screen.getByRole('button', { name: namePattern })).not.to.equal(null);
+    });
+
+    it('should not warn for the editable events when the href comes from eventModelStructure', () => {
+      const readOnlyEvent = { ...timedEvent, href: undefined, orderId: 1042 };
+      const editableEvent = EventBuilder.new()
+        .title('Order 1043')
+        .span('2025-05-27T07:30:00Z', '2025-05-27T08:15:00Z')
+        .build();
+
+      // The test fails on any unexpected warning.
+      render(
+        <EventCalendar
+          events={[readOnlyEvent, { ...editableEvent, orderId: 1043 }]}
+          eventModelStructure={{
+            href: { getter: (model) => `#order-${model.orderId}` },
+          }}
+        />,
+      );
+
+      expect(getLink()).to.have.attribute('href', HREF);
+      expect(screen.getByRole('button', { name: getEventNamePattern('Order 1043') })).not.to.equal(
+        null,
+      );
+    });
+
+    it('should not warn when a link is removed with the "more events" popover open', async () => {
+      const events = Array.from({ length: 6 }, (_, index) =>
+        EventBuilder.new()
+          .title(`Order ${1042 + index}`)
+          .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+          .readOnly()
+          .href(`#order-${1042 + index}`)
+          .build(),
+      );
+      const { user, setProps } = render(<EventCalendar events={events} defaultView="month" />);
+      await user.click(screen.getByRole('button', { name: /more/i }));
+      const popover = await screen.findByRole('presentation');
+
+      // The test fails on any unexpected warning.
+      setProps({ events: events.slice(1) });
+
+      await waitFor(() => {
+        expect(within(popover).getAllByRole('link').length).to.equal(events.length - 1);
+      });
     });
   });
 
@@ -320,7 +375,11 @@ describe('EventCalendar - Event links', () => {
         .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
         .href(HREF)
         .build();
-      const { user, setProps } = render(<EventCalendar events={[event]} />);
+      let view!: ReturnType<typeof render>;
+      expect(() => {
+        view = render(<EventCalendar events={[event]} />);
+      }).toWarnDev([WARNING]);
+      const { user, setProps } = view;
       await user.click(screen.getByRole('button', { name: namePattern }));
       await screen.findByRole('dialog');
 
