@@ -71,7 +71,7 @@ Weekday column headers carry a `role="columnheader"` with an `aria-label` contai
 
 Each event element has `role="button"` and an `aria-label` that announces its title, when it happens, its day, its resource, and whether it recurs, for example `"Running, 7:30 AM to 8:30 AM, Monday, May 26, 2025, Resource: Sport, Recurring"`.
 The parts come from [locale text](#localization-of-aria-labels) keys, composed by `eventAriaLabel`.
-A read-only event with an `href` is a native link instead, with the same `aria-label`: <kbd class="key">Enter</kbd> follows the link, and it opens neither the event dialog nor the event context menu (see [Events—Link](/x/react-scheduler/event-calendar/events/#link)).
+A read-only event with an `href` is a native link instead, with the same `aria-label` (see [Events—Link](/x/react-scheduler/event-calendar/events/#link)).
 On the Event Timeline, the announced resource is the one of the row the event is rendered in, and `getEventAriaLabel` can replace the name, for example to include details rendered through the `timelineEventContent` slot.
 
 The previews rendered while creating, dragging or resizing an event, and the placeholders of multi-day events, are hidden from assistive technologies.
@@ -140,11 +140,11 @@ The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) inte
 
 ### Menus and popovers
 
-|                          Keys | Description                                                                                                                                 |
-| ----------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------ |
-| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, or delete confirmation dialog                     |
-|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event, or follows the link of a link event                                                                      |
-|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below), and does nothing on a link event |
+|                          Keys | Description                                                                                                             |
+| ----------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
+| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, or delete confirmation dialog |
+|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                                       |
+|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below)               |
 
 ## Live region announcements
 
@@ -176,7 +176,6 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 - The popover header shows the formatted date (for example, `"Mon, May 26"`).
 - Each event inside the popover has the same `aria-label` as in the grid (see [Events](#events)).
 - Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd>. On a mouse/trackpad, <kbd class="key">Space</kbd> opens the [event context menu](#event-context-menu) instead of activating the event directly.
-  Link events are native links with `tabIndex="0"`.
 - Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
 - The popover's list follows the day's events, and stays open while the day still has more events than the cell can display. When the focused event, or the one whose context menu is open, is removed (for example, deleted from that menu), focus moves to the next event in the list, or to the previous one if it was the last. Once every event fits in the cell, the **"X more"** button is no longer displayed, so the popover closes and focus moves to the day cell.
 
@@ -197,7 +196,6 @@ Inside the menu:
 ## Event context menu
 
 Right-clicking an event, or pressing <kbd class="key">Space</kbd> while it is focused, opens a context menu with **Edit** and **Delete** actions.
-Link events keep the native browser behavior instead.
 
 - The menu exposes `role="menu"` (via MUI's `Menu`) with a localized `aria-label` (default: `"Event actions"`).
 - **Edit** opens the event dialog directly, the same as clicking the event on a mouse/trackpad.
