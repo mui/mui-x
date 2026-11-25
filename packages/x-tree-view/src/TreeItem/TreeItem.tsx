@@ -9,6 +9,7 @@ import type { CheckboxProps } from '@mui/material/Checkbox';
 import MuiCheckbox from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
+import { getFocusVisibleReach } from '@mui/x-internals/focusVisible';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import type { TreeItemProps } from './TreeItem.types';
@@ -131,6 +132,10 @@ export const TreeItemLabel = styled('div', {
   minWidth: 0,
   position: 'relative',
   overflow: 'hidden',
+  ...(theme.focusVisible && {
+    overflow: 'clip',
+    overflowClipMargin: getFocusVisibleReach(theme.focusVisible),
+  }),
   ...theme.typography.body1,
   variants: [
     {

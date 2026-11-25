@@ -5,6 +5,7 @@ import type { ListProps } from '@mui/material/List';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
+import { getFocusVisibleReach } from '@mui/x-internals/focusVisible';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import type { PickerValidValue } from '../internals/models';
 import { useIsValidValue, usePickerActionsContext } from '../hooks';
@@ -49,8 +50,6 @@ export interface PickersShortcutsProps<
   TValue extends PickerValidValue,
 > extends ExportedPickersShortcutProps<TValue> {}
 
-const toCssLength = (value: string | number) => (typeof value === 'number' ? `${value}px` : value);
-
 const PickersShortcutsRoot = styled(List, {
   name: 'MuiPickersLayout',
   slot: 'Shortcuts',
@@ -58,9 +57,8 @@ const PickersShortcutsRoot = styled(List, {
   if (!theme.focusVisible) {
     return {};
   }
-  const { outlineWidth = 0, outlineOffset = 0 } = theme.focusVisible;
   return {
-    scrollPaddingBlock: `calc(${toCssLength(outlineWidth)} + ${toCssLength(outlineOffset)})`,
+    scrollPaddingBlock: getFocusVisibleReach(theme.focusVisible),
   };
 });
 

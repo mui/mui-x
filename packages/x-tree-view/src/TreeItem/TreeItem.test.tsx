@@ -114,6 +114,30 @@ describe('<TreeItem />', () => {
       },
     );
 
+    it.skipIf(isJSDOM)('lets the ring of a control inside the label draw past its edge', () => {
+      render(
+        <ThemeProvider theme={theme}>
+          <SimpleTreeView>
+            <TreeItem itemId="one" label="one" />
+          </SimpleTreeView>
+        </ThemeProvider>,
+      );
+
+      const label = document.querySelector(`.${classes.label}`);
+      expect(label).to.have.style('overflow-x', 'clip');
+      expect(label).to.have.style('overflow-clip-margin', '4px');
+    });
+
+    it.skipIf(isJSDOM)('keeps the label clipping at its edge without the option', () => {
+      render(
+        <SimpleTreeView>
+          <TreeItem itemId="one" label="one" />
+        </SimpleTreeView>,
+      );
+
+      expect(document.querySelector(`.${classes.label}`)).to.have.style('overflow-x', 'hidden');
+    });
+
     it.skipIf(isJSDOM)('shows the ring on an item built with useTreeItem', async () => {
       const { user } = render(
         <ThemeProvider theme={theme}>
