@@ -22,7 +22,7 @@ catalog:
   '@mui/icons-material': 9.6.0
   '@mui/internal-test-utils': 2.1.1-canary.11
   '@mui/internal-core-docs': 10.0.0-canary.3
-  '@mui/internal-docs-infra': 0.13.1-canary.39
+  '@mui/internal-docs-infra': 0.13.1-canary.40
   '@mui/material': 9.6.0
   '@mui/stylis-plugin-rtl': 9.6.0
   '@mui/system': 9.6.0
@@ -85,8 +85,7 @@ catalog:
 engineStrict: true
 updateNotifier: false
 autoDedupe: true
-# Restore after preview packages in https://github.com/mui/material-ui/pull/49910 are released.
-blockExoticSubdeps: false
+blockExoticSubdeps: true
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
@@ -121,9 +120,8 @@ allowBuilds:
   msw: false
 
 overrides:
-  # Until https://github.com/mui/mui-public/pull/2118 is released.
-  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@4e2b2f14
-  '@mui/internal-docs-infra>@mui/internal-typescript-api-extractor': 0.1.1-canary.3
+  # Until core-docs/scripts adopt https://github.com/mui/mui-public/pull/2118.
+  '@mui/internal-docs-infra': 0.13.1-canary.40
   # Until https://github.com/mui/material-ui/pull/49910 is released.
   '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@9a2a9b05f6
   '@mui/internal-core-docs>@mui/internal-markdown': 4.0.1-canary.2
