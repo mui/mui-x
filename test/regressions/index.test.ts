@@ -79,7 +79,7 @@ const TEST_RULES: RouteRule[] = [
   },
   {
     test: '/test-regressions-charts/ReversedBandAxis',
-    // Dedicated tests hover a bar and screenshot the tooltips rendered outside the testcase.
+    // A dedicated test hovers a bar and screenshots the tooltips rendered outside the testcase.
     enabled: false,
   },
   {
@@ -450,21 +450,6 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    test('should show the zoom range in the zoom slider tooltips of a reversed band axis', async ({
-      pooled,
-    }) => {
-      const { page } = pooled;
-      const route = '/test-regressions-charts/ReversedBandAxis';
-      const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomSliderTooltips.png`);
-
-      await navigateToTest(page, route);
-      await sleep(300);
-
-      // The tooltips render outside the testcase.
-      const body = await page.waitForSelector('body');
-      await body.screenshot({ path: screenshotPath, type: 'png' });
-    });
-
     test('should highlight the hovered bar on a reversed band axis', async ({
       pooled,
       onTestFinished,
@@ -486,7 +471,7 @@ async function main() {
       await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
       await sleep(300);
 
-      // The item tooltip renders outside the testcase.
+      // The item and zoom slider tooltips render outside the testcase.
       const body = await page.waitForSelector('body');
       await body.screenshot({ path: screenshotPath, type: 'png' });
     });
