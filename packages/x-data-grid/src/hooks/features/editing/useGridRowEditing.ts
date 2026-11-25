@@ -53,6 +53,7 @@ import {
   deleteProcessingProps,
   getDefaultCellValue,
   getProcessingPropsRow,
+  isProcessingPropsRunning,
   processEditCellProps,
 } from './utils';
 import type { GridProcessingPropsLookup } from './utils';
@@ -538,14 +539,16 @@ export const useGridRowEditing = (
               }),
             (processedProps, isProcessingProps) => {
               // Check if still in edit mode before updating
-              if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
-                const editingState = gridEditRowsStateSelector(apiRef);
-                updateOrDeleteFieldState(id, field, {
-                  ...processedProps,
-                  value: editingState[id][field].value,
-                  isProcessingProps,
-                });
+              if (apiRef.current.getRowMode(id) !== GridRowModes.Edit) {
+                return false;
               }
+              const editingState = gridEditRowsStateSelector(apiRef);
+              updateOrDeleteFieldState(id, field, {
+                ...processedProps,
+                value: editingState[id][field].value,
+                isProcessingProps,
+              });
+              return true;
             },
           );
         });
@@ -706,7 +709,7 @@ export const useGridRowEditing = (
       }
 
       return new Promise((resolve) => {
-        const promises: Promise<void>[] = [];
+        const promises: Promise<unknown>[] = [];
 
         if (column.preProcessEditCellProps) {
           const hasChanged = newProps.value !== editingState[id][field].value;
@@ -750,9 +753,9 @@ export const useGridRowEditing = (
               updateOrDeleteFieldState(id, field, processedProps);
               return true;
             },
-          ).then((isApplied) => {
-            // `isApplied` is undefined when a newer value of the field replaced this one
-            if (!isApplied) {
+          ).then((processedProps) => {
+            // `undefined` when a newer value replaced this one or the row left edit mode
+            if (!processedProps) {
               resolve(false);
             }
           });
@@ -772,6 +775,8 @@ export const useGridRowEditing = (
 
           updateOrDeleteFieldState(id, thisField, { ...fieldProps, isProcessingProps: true });
 
+          // Skip a queued call: it waits for the running call, which can wait for this setter
+          const isQueued = isProcessingPropsRunning(processingPropsLookup.current, id, thisField);
           const promise = processEditCellProps(
             processingPropsLookup.current,
             id,
@@ -794,14 +799,17 @@ export const useGridRowEditing = (
               // discarded the changes while the props were being processed.
               if (apiRef.current.getRowMode(id) === GridRowModes.View) {
                 resolve(false);
-                return;
+                return false;
               }
 
               updateOrDeleteFieldState(id, thisField, { ...processedProps, isProcessingProps });
+              return true;
             },
           );
 
-          promises.push(promise);
+          if (!isQueued) {
+            promises.push(promise);
+          }
         });
 
         Promise.all(promises).then(() => {

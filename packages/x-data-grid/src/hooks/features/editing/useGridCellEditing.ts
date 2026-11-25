@@ -420,14 +420,16 @@ export const useGridCellEditing = (
             }),
           (processedProps, isProcessingProps) => {
             // Check if still in edit mode before updating
-            if (apiRef.current.getCellMode(id, field) === GridCellModes.Edit) {
-              const editingState = gridEditRowsStateSelector(apiRef);
-              updateOrDeleteFieldState(id, field, {
-                ...processedProps,
-                value: editingState[id][field].value,
-                isProcessingProps,
-              });
+            if (apiRef.current.getCellMode(id, field) !== GridCellModes.Edit) {
+              return false;
             }
+            const editingState = gridEditRowsStateSelector(apiRef);
+            updateOrDeleteFieldState(id, field, {
+              ...processedProps,
+              value: editingState[id][field].value,
+              isProcessingProps,
+            });
+            return true;
           },
         );
       }
@@ -591,18 +593,17 @@ export const useGridCellEditing = (
             ? gridEditRowsStateSelector(apiRef)[id][field].value
             : parsedValue,
         });
-
-        return !gridEditRowsStateSelector(apiRef)[id]?.[field]?.error;
+        return true;
       };
 
       if (!column.preProcessEditCellProps) {
-        return applyProps(newProps, false);
+        return applyProps(newProps, false) && !newProps.error;
       }
 
       const hasChanged = parsedValue !== editingState[id][field].value;
       updateOrDeleteFieldState(id, field, { ...newProps, isProcessingProps: true });
 
-      const isValid = await processEditCellProps(
+      const processedProps = await processEditCellProps(
         processingPropsLookup.current,
         id,
         field,
@@ -620,8 +621,8 @@ export const useGridCellEditing = (
           }),
         applyProps,
       );
-      // A newer value of the cell replaced the validated one
-      return isValid ?? false;
+      // `undefined` when a newer value replaced this one or the cell left edit mode
+      return !!processedProps && !processedProps.error;
     },
     [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
   );

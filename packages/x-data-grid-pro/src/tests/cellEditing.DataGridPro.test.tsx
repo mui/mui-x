@@ -336,6 +336,34 @@ describe('<DataGridPro /> - Cell editing', () => {
         expect(await act(async () => promise)).to.equal(false);
       });
 
+      it('should return false for a repeated value when a newer value replaces it', async () => {
+        // The validation of the first value never ends
+        const preProcessEditCellProps = ({ props, hasChanged }: GridPreProcessEditCellProps) =>
+          props.value === 'USD GBP' && hasChanged ? new Promise(() => {}) : props;
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        });
+        let isValid: unknown;
+        act(() => {
+          (
+            apiRef.current?.setEditCellValue({
+              id: 0,
+              field: 'currencyPair',
+              value: 'USD GBP',
+            }) as Promise<boolean>
+          ).then((result) => {
+            isValid = result;
+          });
+        });
+
+        await act(() =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD' }),
+        );
+        expect(isValid).to.equal(false);
+      });
+
       describe('with debounceMs > 0', () => {
         it('should debounce multiple changes if debounceMs > 0', async () => {
           const renderEditCell = vi.fn((() => <input />) as (

@@ -17,15 +17,24 @@ export const getDefaultCellValue = (colDef: GridColDef) => {
   }
 };
 
+interface GridProcessingPropsCall {
+  validate: () => unknown;
+  // Writes the props to the state, and returns `false` when the cell is not in edit mode
+  apply: (props: any, isProcessingProps: boolean) => boolean;
+  settle: (props: unknown) => void;
+  fail: (error: unknown) => void;
+  promise: Promise<unknown>;
+}
+
 interface GridProcessingPropsCell {
   generation: number;
-  pending: number;
-  /** Resolves when the last call of the generation ends. */
-  last: Promise<void>;
+  isRunning: boolean;
+  /** The call that runs after the running call. The later calls of the same value join it. */
+  queued: GridProcessingPropsCall | null;
 }
 
 /**
- * The pending `preProcessEditCellProps()` calls of each cell in edit mode.
+ * The `preProcessEditCellProps()` calls of each cell in edit mode.
  * The row keys are strings because the modes models give a string id after a row is removed.
  */
 export type GridProcessingPropsLookup = Map<string, Map<string, GridProcessingPropsCell>>;
@@ -42,98 +51,151 @@ export const getProcessingPropsRow = (lookup: GridProcessingPropsLookup, id: Gri
   return rowLookup;
 };
 
+/**
+ * Returns `true` when a call of the cell runs, so a call of the same value waits for it.
+ */
+export const isProcessingPropsRunning = (
+  lookup: GridProcessingPropsLookup,
+  id: GridRowId,
+  field: string,
+) => !!lookup.get(String(id))?.get(field)?.isRunning;
+
+// The queued call has no use after a new value or the end of the edit mode
+const releaseQueuedCall = (cell: GridProcessingPropsCell) => {
+  cell.queued?.settle(undefined);
+  cell.queued = null;
+};
+
 export const deleteProcessingProps = (
   lookup: GridProcessingPropsLookup,
   id: GridRowId,
   field?: string,
 ) => {
   const rowLookup = lookup.get(String(id));
-  if (field !== undefined) {
-    rowLookup?.delete(field);
+  if (!rowLookup) {
+    return;
   }
-  if (field === undefined || rowLookup?.size === 0) {
+  if (field === undefined) {
+    rowLookup.forEach(releaseQueuedCall);
+    lookup.delete(String(id));
+    return;
+  }
+  const cell = rowLookup.get(field);
+  if (cell) {
+    releaseQueuedCall(cell);
+    rowLookup.delete(field);
+  }
+  if (rowLookup.size === 0) {
     lookup.delete(String(id));
   }
+};
+
+const runCall = (
+  lookup: GridProcessingPropsLookup,
+  id: GridRowId,
+  field: string,
+  cell: GridProcessingPropsCell,
+  call: GridProcessingPropsCall,
+  shouldThrow: boolean,
+) => {
+  const generation = cell.generation;
+  cell.isRunning = true;
+
+  // The cell entry changes when the cell leaves edit mode
+  const isStale = () =>
+    lookup.get(String(id))?.get(field) !== cell || cell.generation !== generation;
+
+  const runNext = () => {
+    if (isStale()) {
+      return;
+    }
+    cell.isRunning = false;
+    const next = cell.queued;
+    if (next) {
+      cell.queued = null;
+      runCall(lookup, id, field, cell, next, false);
+    }
+  };
+
+  let validation: Promise<unknown>;
+  try {
+    validation = Promise.resolve(call.validate());
+  } catch (error) {
+    runNext();
+    if (shouldThrow) {
+      throw error;
+    }
+    call.fail(error);
+    return;
+  }
+
+  validation.then(
+    (props) => {
+      if (isStale()) {
+        call.settle(undefined);
+        return;
+      }
+      try {
+        call.settle(call.apply(props, cell.queued !== null) ? props : undefined);
+      } catch (error) {
+        call.fail(error);
+      } finally {
+        // The next call starts after this result is in the state
+        runNext();
+      }
+    },
+    (error) => {
+      runNext();
+      call.fail(error);
+    },
+  );
 };
 
 /**
  * Runs a `preProcessEditCellProps()` call of a cell, then applies its result.
  * A call with `hasChanged: true` validates a new value, so the earlier calls of the cell become stale.
- * A call with `hasChanged: false` runs after the pending calls of the same value, so the last result uses the latest props.
- * Resolves with the return value of `apply()`, or `undefined` when the call is stale.
+ * A call with `hasChanged: false` runs after the running call of the same value, so it gets the latest props.
+ * Resolves with the applied props, or `undefined` when the call is stale or the cell left edit mode.
  */
-export const processEditCellProps = <T, R>(
+export const processEditCellProps = <T>(
   lookup: GridProcessingPropsLookup,
   id: GridRowId,
   field: string,
   hasChanged: boolean,
   validate: () => T | Promise<T>,
-  apply: (props: T, isProcessingProps: boolean) => R,
-): Promise<R | undefined> => {
+  apply: (props: T, isProcessingProps: boolean) => boolean,
+): Promise<T | undefined> => {
   const rowLookup = getProcessingPropsRow(lookup, id);
   let cell = rowLookup.get(field);
   if (!cell) {
-    cell = { generation: 0, pending: 0, last: Promise.resolve() };
+    cell = { generation: 0, isRunning: false, queued: null };
     rowLookup.set(field, cell);
   }
   if (hasChanged) {
     cell.generation += 1;
-    cell.pending = 0;
+    cell.isRunning = false;
+    releaseQueuedCall(cell);
   }
 
-  // Register the call before the validator runs, because the validator can edit the cell again
-  const trackedCell = cell;
-  const generation = cell.generation;
-  const previous = cell.pending > 0 ? cell.last : null;
-  let markEnded!: () => void;
-  cell.last = new Promise((resolve) => {
-    markEnded = resolve;
+  // The calls of the same value that wait share one call, because they all read the latest props
+  if (cell.queued) {
+    cell.queued.validate = validate;
+    cell.queued.apply = apply;
+    return cell.queued.promise as Promise<T | undefined>;
+  }
+
+  let settle!: (props: unknown) => void;
+  let fail!: (error: unknown) => void;
+  const promise = new Promise<unknown>((resolve, reject) => {
+    settle = resolve;
+    fail = reject;
   });
-  cell.pending += 1;
+  const call: GridProcessingPropsCall = { validate, apply, settle, fail, promise };
 
-  // The cell entry changes when the cell leaves edit mode
-  const isStale = () =>
-    lookup.get(String(id))?.get(field) !== trackedCell || trackedCell.generation !== generation;
-
-  const end = () => {
-    if (!isStale()) {
-      trackedCell.pending -= 1;
-    }
-    markEnded();
-  };
-
-  const run = () => {
-    if (isStale()) {
-      markEnded();
-      return Promise.resolve(undefined);
-    }
-    let validation: Promise<T>;
-    try {
-      validation = Promise.resolve(validate());
-    } catch (error) {
-      end();
-      throw error;
-    }
-    return validation.then(
-      (props) => {
-        if (isStale()) {
-          markEnded();
-          return undefined;
-        }
-        trackedCell.pending -= 1;
-        try {
-          return apply(props, trackedCell.pending > 0);
-        } finally {
-          // The next call starts after this result is in the state
-          markEnded();
-        }
-      },
-      (error) => {
-        end();
-        throw error;
-      },
-    );
-  };
-
-  return previous ? previous.then(run) : run();
+  if (cell.isRunning) {
+    cell.queued = call;
+  } else {
+    runCall(lookup, id, field, cell, call, true);
+  }
+  return promise as Promise<T | undefined>;
 };
