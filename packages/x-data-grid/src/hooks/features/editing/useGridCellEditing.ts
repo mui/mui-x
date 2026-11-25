@@ -411,12 +411,12 @@ export const useGridCellEditing = (
           id,
           field,
           hasChanged,
-          () =>
+          (hasValueChanged) =>
             column.preProcessEditCellProps!({
               id,
               row: apiRef.current.getRow(id),
-              props: newProps,
-              hasChanged,
+              props: gridEditRowsStateSelector(apiRef)[id][field],
+              hasChanged: hasValueChanged,
             }),
           (processedProps, isProcessingProps) => {
             // Check if still in edit mode before updating
@@ -608,16 +608,16 @@ export const useGridCellEditing = (
         id,
         field,
         hasChanged,
-        () =>
+        (hasValueChanged) =>
           column.preProcessEditCellProps!({
             id,
             row,
-            // A call that waited for an earlier one gets the result of that call
+            // A call that runs again gets the latest props
             props: {
               ...gridEditRowsStateSelector(apiRef)[id][field],
               changeReason: newProps.changeReason,
             },
-            hasChanged,
+            hasChanged: hasValueChanged,
           }),
         applyProps,
       );

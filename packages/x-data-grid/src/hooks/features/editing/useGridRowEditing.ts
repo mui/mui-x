@@ -53,7 +53,6 @@ import {
   deleteProcessingProps,
   getDefaultCellValue,
   getProcessingPropsRow,
-  isProcessingPropsRunning,
   processEditCellProps,
 } from './utils';
 import type { GridProcessingPropsLookup } from './utils';
@@ -521,6 +520,10 @@ export const useGridRowEditing = (
         })
         .forEach((column) => {
           const field = column.field;
+          // A validator of an earlier column set this field, so a newer validation runs
+          if (processingPropsLookup.current.get(String(id))?.has(field)) {
+            return;
+          }
           const value = apiRef.current.getCellValue(id, field);
           const newValue = deleteValue ? getDefaultCellValue(column) : (initialValue ?? value);
           const hasChanged = newValue !== value;
@@ -530,12 +533,12 @@ export const useGridRowEditing = (
             id,
             field,
             hasChanged,
-            () =>
+            (hasValueChanged) =>
               column.preProcessEditCellProps!({
                 id,
                 row,
-                props: newProps[field],
-                hasChanged,
+                props: gridEditRowsStateSelector(apiRef)[id][field],
+                hasChanged: hasValueChanged,
               }),
             (processedProps, isProcessingProps) => {
               // Check if still in edit mode before updating
@@ -723,15 +726,15 @@ export const useGridRowEditing = (
             id,
             field,
             hasChanged,
-            () => {
-              // A call that waited for an earlier one gets the result of that call
+            (hasValueChanged) => {
+              // A call that runs again gets the latest props
               const { [field]: fieldProps, ...otherFieldsProps } =
                 gridEditRowsStateSelector(apiRef)[id];
               return column.preProcessEditCellProps!({
                 id,
                 row,
                 props: { ...fieldProps, changeReason },
-                hasChanged,
+                hasChanged: hasValueChanged,
                 otherFieldsProps,
               });
             },
@@ -775,15 +778,13 @@ export const useGridRowEditing = (
 
           updateOrDeleteFieldState(id, thisField, { ...fieldProps, isProcessingProps: true });
 
-          // Skip a queued call: it waits for the running call, which can wait for this setter
-          const isQueued = isProcessingPropsRunning(processingPropsLookup.current, id, thisField);
           const promise = processEditCellProps(
             processingPropsLookup.current,
             id,
             thisField,
             false,
             () => {
-              // A call that waited for an earlier one gets the result of that call
+              // A call that runs again gets the latest props
               const { [thisField]: thisFieldProps, ...otherFieldsProps } =
                 gridEditRowsStateSelector(apiRef)[id];
               return fieldColumn.preProcessEditCellProps!({
@@ -807,9 +808,7 @@ export const useGridRowEditing = (
             },
           );
 
-          if (!isQueued) {
-            promises.push(promise);
-          }
+          promises.push(promise);
         });
 
         Promise.all(promises).then(() => {
