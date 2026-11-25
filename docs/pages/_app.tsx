@@ -303,6 +303,10 @@ export default function MyApp(
     usePageData();
   const ThemeWrapper = useThemeWrapper();
 
+  React.useEffect(() => {
+    void import('@mui/internal-core-docs/ThemeContext/syntax.css');
+  }, []);
+
   return (
     <DocsApp
       {...props}

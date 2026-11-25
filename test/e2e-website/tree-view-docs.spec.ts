@@ -169,9 +169,7 @@ test.describe('Tree View docs-infra migration', () => {
     await expect(await editor(demo)).toHaveValue(/export default function BasicSimpleTreeView/);
   });
 
-  test('live source editing changes a tree label and expansion resets the edit', async ({
-    page,
-  }) => {
+  test('preserves live edits and tree state across source toggles', async ({ page }) => {
     await page.goto(`${ITEMS_PATH}#BasicSimpleTreeView.tsx`);
     const demo = await readyDemo(page, 'BasicSimpleTreeView');
     const textarea = await editor(demo);
@@ -181,12 +179,21 @@ test.describe('Tree View docs-infra migration', () => {
     await expect(
       demo.getByRole('treeitem', { name: 'Edited live tree', exact: true }),
     ).toBeVisible();
-    await demo.locator('button[data-ga-event-action="expand"]').click();
-    await clickForEffect(demo.locator('button[data-ga-event-action="expand"]'), async () => {
-      await expect(demo.getByRole('treeitem', { name: 'Data Grid', exact: true })).toBeVisible({
-        timeout: 2000,
-      });
-    });
+    const edited = demo.getByRole('treeitem', { name: 'Edited live tree', exact: true });
+    const item = await edited.elementHandle();
+
+    async function toggle(name: 'Show code' | 'Hide code') {
+      await demo.getByRole('button', { name, exact: true }).click();
+      await expect(edited).toBeVisible();
+      expect(await item!.evaluate((node) => node.isConnected)).toBe(true);
+    }
+
+    await toggle('Hide code');
+    await toggle('Show code');
+
+    await expect(await editor(demo)).toHaveValue(/Edited live tree/);
+    await demo.getByRole('button', { name: 'Reset demo', exact: true }).click();
+    await expect(demo.getByRole('treeitem', { name: 'Data Grid', exact: true })).toBeVisible();
     await expect(await editor(demo)).not.toHaveValue(/Edited live tree/);
   });
 
@@ -204,8 +211,18 @@ test.describe('Tree View docs-infra migration', () => {
     await expect(
       demo.getByRole('treeitem', { name: 'Edited shared item', exact: true }),
     ).toBeVisible();
-    await demo.locator('button[data-ga-event-action="expand"]').click();
-    await demo.locator('button[data-ga-event-action="expand"]').click();
+    await demo.getByRole('button', { name: 'Collapse code', exact: true }).click();
+    await demo.getByRole('button', { name: 'Expand code', exact: true }).click();
+    await expect(
+      demo.getByRole('treeitem', { name: 'Edited shared item', exact: true }),
+    ).toBeVisible();
+    await expect(demo.getByRole('tab', { name: 'items.ts', exact: true })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    await expect(await editor(demo)).toHaveValue(/Edited shared item/);
+
+    await demo.getByRole('button', { name: 'Reset demo', exact: true }).click();
     await expect(demo.getByRole('treeitem', { name: 'Amy Harris', exact: true })).toBeVisible();
   });
 
