@@ -177,7 +177,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     ],
   );
   const store = useChatInstance(parameters, storeClass);
-  const actions = useChatController({
+  const { actions, sendMessageIfIdle } = useChatController({
     store,
     adapter,
     onToolCall,
@@ -204,8 +204,18 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       onError,
       partRenderers: mergedPartRenderers,
       actions,
+      sendMessageIfIdle,
     }),
-    [actions, adapter, mergedPartRenderers, onToolCall, onFinish, onData, onError],
+    [
+      actions,
+      sendMessageIfIdle,
+      adapter,
+      mergedPartRenderers,
+      onToolCall,
+      onFinish,
+      onData,
+      onError,
+    ],
   );
 
   return (
