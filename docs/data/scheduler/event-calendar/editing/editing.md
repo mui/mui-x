@@ -95,7 +95,7 @@ All other dialog features (editing title, dates, resources, colors, description,
 :::
 
 :::info
-Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode, unless they have an [`href`](/x/react-scheduler/event-calendar/events/#link): they then render as links and open no dialog.
+Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
 :::
 
 The General tab can be recomposed with built-in and custom sections through the `eventDialogGeneralTab` slot — see the [Event dialog component page](/x/react-scheduler/components/event-dialog/).

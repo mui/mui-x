@@ -145,12 +145,8 @@ const event = {
 
 {{"demo": "HrefProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
-The event renders as a link only when it's read-only, through its own `readOnly` property, the `areEventsReadOnly` property of its resource, or the `readOnly` prop of the Event Timeline.
-See [Editing—Read-only](/x/react-scheduler/event-timeline/editing/#read-only) for details.
-The `href` of an editable event is ignored, and a warning is logged in development.
-
-A link event keeps the behavior of a native link: clicking it navigates to the URL, the browser can open it in a new tab, and it doesn't open the event dialog or the context menu.
-Its root element has a `data-link` attribute, so you can style link events differently from the other events.
+The event must be [read-only](/x/react-scheduler/event-timeline/editing/#read-only), otherwise the `href` is ignored.
+A link event doesn't open the event dialog or the context menu, and has a `data-link` attribute to style it.
 
 To build the URL from other fields of your model, use the `eventModelStructure` prop:
 

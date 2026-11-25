@@ -91,7 +91,7 @@ The General tab can be recomposed with built-in and custom sections through the 
 {{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode, unless they have an [`href`](/x/react-scheduler/event-timeline/events/#link): they then render as links and open no dialog.
+Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
 :::
 
 ### Replace the dialog with your own UI
