@@ -469,6 +469,12 @@ async function main() {
         throw new Error('Bar D of the reversed band axis chart was not rendered.');
       }
       await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+
+      const tooltips = page.getByRole('tooltip');
+      await tooltips.filter({ hasText: 'D' }).waitFor();
+      await tooltips.filter({ hasText: 'G2' }).waitFor();
+      await tooltips.filter({ hasText: 'G7' }).waitFor();
+      // Let the poppers settle on their final position.
       await sleep(300);
 
       // The item and zoom slider tooltips render outside the testcase.
