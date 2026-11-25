@@ -168,6 +168,23 @@ describe('<TreeItem />', () => {
         const content = screen.getByRole('treeitem').firstElementChild;
         expect(content).to.have.style('background-color', 'rgba(25, 118, 210, 0.2)');
       });
+
+      it('draws the ring on the row once a clicked checkbox is used with the keyboard', async () => {
+        render(
+          <ThemeProvider theme={theme}>
+            <SimpleTreeView checkboxSelection>
+              <TreeItem itemId="one" label="one" />
+            </SimpleTreeView>
+          </ThemeProvider>,
+        );
+
+        const content = screen.getByRole('treeitem').firstElementChild!;
+        await sendRealInput((input) => input.click(content.querySelector('input')!));
+        expect(content).to.have.style('outline-style', 'none');
+
+        await sendRealInput((input) => input.keyboard(' '));
+        expect(content).to.have.style('outline-style', 'solid');
+      });
     });
   });
 });

@@ -21,7 +21,9 @@ See Material UI's [Focus visible](/material-ui/customization/focus-visible/) pa
 
 ## Usage
 
-When `focusVisible` is enabled, these elements show the focus ring: items, checkboxes, and the input used to rename an item when [label editing](/x/react-tree-view/rich-tree-view/editing/) is enabled.
+When `focusVisible` is enabled, items and the input used to rename an item when [label editing](/x/react-tree-view/rich-tree-view/editing/) is enabled show the focus ring.
+Checkboxes don't take keyboard focus.
+If you click a checkbox and then press a key, the ring shows on its item.
 
 The focus ring replaces the gray background that normally marks the focused item.
 Selected items keep their selected background.
