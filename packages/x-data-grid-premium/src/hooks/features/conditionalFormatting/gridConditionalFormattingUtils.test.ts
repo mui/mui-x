@@ -15,9 +15,14 @@ const layout = {
   fieldToColumnLetter: new Map([
     ['name', 'A'],
     ['price', 'B'],
+    ['day', 'C'],
   ]),
-  firstDataRowNumber: 2,
-  lastDataRowNumber: 5,
+  fieldToColumnType: new Map([
+    ['name', 'string'],
+    ['price', 'number'],
+    ['day', 'date'],
+  ]),
+  rowRuns: [[2, 5]] as [number, number][],
 };
 
 const getFormula = (condition: GridConditionalFormattingCondition, field = 'price') => {
@@ -50,6 +55,15 @@ describe('gridConditionalFormattingUtils', () => {
       expect(
         matchesConditionalFormattingValue({ type: 'cell', operator: 'notEqual', value: 1 }, null),
       ).to.equal(true);
+    });
+
+    it('never compares numbers with dates', () => {
+      expect(
+        matchesConditionalFormattingValue(
+          { type: 'cell', operator: 'greaterThan', value: 0 },
+          new Date(2026, 0, 1),
+        ),
+      ).to.equal(false);
     });
 
     it('compares dates and strings', () => {
@@ -89,6 +103,10 @@ describe('gridConditionalFormattingUtils', () => {
       expect(
         matchesConditionalFormattingValue({ type: 'text', operator: 'isEmpty' }, ' '),
       ).to.equal(true);
+      // Like Excel's `TRIM`, only spaces are blank.
+      expect(
+        matchesConditionalFormattingValue({ type: 'text', operator: 'isEmpty' }, '\t'),
+      ).to.equal(false);
       expect(
         matchesConditionalFormattingValue({ type: 'text', operator: 'isNotEmpty' }, null),
       ).to.equal(false);
@@ -125,10 +143,13 @@ describe('gridConditionalFormattingUtils', () => {
       ];
       expect(Object.entries(getConditionalFormattingStyles(model, 7))).to.deep.equal([
         [
-          '& .MuiDataGrid-cell.MuiDataGrid-conditionalFormatting-7-1:not(.Mui-selected)',
+          '.MuiDataGrid-root .MuiDataGrid-row:not(.Mui-selected) .MuiDataGrid-cell.MuiDataGrid-conditionalFormatting-7-1:not(.Mui-selected)',
           { backgroundColor: '#222' },
         ],
-        ['& .MuiDataGrid-cell.MuiDataGrid-conditionalFormatting-7-0', { color: '#111' }],
+        [
+          '.MuiDataGrid-root .MuiDataGrid-cell.MuiDataGrid-conditionalFormatting-7-0',
+          { color: '#111' },
+        ],
       ]);
     });
   });
@@ -145,8 +166,33 @@ describe('gridConditionalFormattingUtils', () => {
         'AND(ISTEXT(A2),A2="a""b")',
       );
       expect(
-        getFormula({ type: 'cell', operator: 'lessThan', value: new Date(2026, 1, 3, 4, 5, 6) }),
-      ).to.equal('AND(ISNUMBER(B2),B2<(DATE(2026,2,3)+TIME(4,5,6)))');
+        getFormula(
+          { type: 'cell', operator: 'lessThan', value: new Date(2026, 1, 3, 4, 5, 6) },
+          'day',
+        ),
+      ).to.equal('AND(ISNUMBER(C2),C2<(DATE(2026,2,3)+TIME(4,5,6)))');
+    });
+
+    it('keeps number rules off date columns and date rules off number columns', () => {
+      expect(getFormula({ type: 'cell', operator: 'greaterThan', value: 1 }, 'day')).to.equal(
+        undefined,
+      );
+      expect(
+        getFormula({ type: 'cell', operator: 'greaterThan', value: new Date(2026, 0, 1) }),
+      ).to.equal(undefined);
+    });
+
+    it('skips unknown operators and malformed rules', () => {
+      expect(getFormula({ type: 'cell', operator: 'toString' as 'equal', value: 1 })).to.equal(
+        undefined,
+      );
+      expect(
+        getConditionalFormattingExcelOptions(
+          [{ fields: 'price' } as any, null as any],
+          layout,
+          undefined,
+        ),
+      ).to.deep.equal([]);
     });
 
     it('escapes the wildcards of text conditions', () => {
@@ -159,7 +205,7 @@ describe('gridConditionalFormattingUtils', () => {
       expect(getFormula({ type: 'text', operator: 'isNotEmpty' })).to.equal('LEN(TRIM(B2))>0');
     });
 
-    it('writes one conditional format per exported column, in priority order', () => {
+    it('writes one conditional format per exported column and run of rows, in priority order', () => {
       expect(
         getConditionalFormattingExcelOptions(
           [
@@ -174,17 +220,28 @@ describe('gridConditionalFormattingUtils', () => {
               style: { backgroundColor: '#abc', fontWeight: 'bold' },
             },
           ],
-          layout,
+          {
+            ...layout,
+            rowRuns: [
+              [2, 3],
+              [5, 5],
+            ],
+          },
           (formula, letters, rowNumber) => `${letters.get('price')}${rowNumber}>1`,
         ),
       ).to.deep.equal(
-        ['A', 'B'].map((letter) => ({
-          ref: `${letter}2:${letter}5`,
+        [
+          ['A2:A3', 'B2>1'],
+          ['B2:B3', 'B2>1'],
+          ['A5:A5', 'B5>1'],
+          ['B5:B5', 'B5>1'],
+        ].map(([ref, formula]) => ({
+          ref,
           rules: [
             {
               type: 'expression',
               priority: 2,
-              formulae: ['B2>1'],
+              formulae: [formula],
               style: {
                 font: { bold: true },
                 fill: {
@@ -212,7 +269,7 @@ describe('gridConditionalFormattingUtils', () => {
       expect(
         getConditionalFormattingExcelOptions(
           [{ ...model[0], condition: { type: 'text', operator: 'isEmpty' } }],
-          { ...layout, lastDataRowNumber: 1 },
+          { ...layout, rowRuns: [] },
           undefined,
         ),
       ).to.deep.equal([]);

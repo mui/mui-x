@@ -408,12 +408,9 @@ export async function buildExcel(
   });
   apiRef.current.resetColSpan();
 
-  getConditionalFormattingExcelExport(
-    apiRef,
-    columns.map((column) => column.field),
-    firstDataRowNumber,
-    worksheet.rowCount,
-  ).forEach((conditionalFormatting) => worksheet.addConditionalFormatting(conditionalFormatting));
+  getConditionalFormattingExcelExport(apiRef, columns, rowIds, firstDataRowNumber).forEach(
+    (conditionalFormatting) => worksheet.addConditionalFormatting(conditionalFormatting),
+  );
 
   if (exceljsPostProcess) {
     await exceljsPostProcess({

@@ -131,7 +131,7 @@ export interface GridConditionalFormattingPrivateApi {
 export interface GridConditionalFormattingInternalCache {
   /**
    * The class names of each cell, by row object then field. Dropped when the
-   * rules, the formula results or the computed columns change.
+   * rules, the formula results, the computed columns or the columns change.
    */
   classNames: WeakMap<GridValidRowModel, Map<string, string[]>>;
   /**

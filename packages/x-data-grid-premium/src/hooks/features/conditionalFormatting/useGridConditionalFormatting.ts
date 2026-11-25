@@ -1,10 +1,8 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import type { SxProps } from '@mui/system';
-import type { Theme } from '@mui/material/styles';
 import { warnOnce } from '@mui/x-internals/warning';
-import { gridRowNodeSelector, useGridSelector } from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, useGridSelector } from '@mui/x-data-grid-pro';
 import type { GridRowId, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { useGridApiMethod, useGridRegisterPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import type {
@@ -23,8 +21,10 @@ import type {
 } from './gridConditionalFormattingInterfaces';
 import { gridConditionalFormattingSelector } from './gridConditionalFormattingSelectors';
 import {
+  getConditionalFormattingCellValue,
   getConditionalFormattingClassName,
-  getConditionalFormattingStyles,
+  isConditionalFormattingRow,
+  isValidConditionalFormattingRule,
   matchesConditionalFormattingValue,
 } from './gridConditionalFormattingUtils';
 
@@ -82,7 +82,10 @@ export const useGridConditionalFormatting = (
           apiRef.current.evaluateConditionalFormattingFormula?.(condition.formula, row, id) ?? false
         );
       }
-      return matchesConditionalFormattingValue(condition, apiRef.current.getCellValue(id, field));
+      return matchesConditionalFormattingValue(
+        condition,
+        getConditionalFormattingCellValue(apiRef, row, id, field),
+      );
     },
     [apiRef],
   );
@@ -93,8 +96,7 @@ export const useGridConditionalFormatting = (
       if (model.length === 0) {
         return classNames;
       }
-      // Group and aggregation rows have no value of their own to format.
-      if (gridRowNodeSelector(apiRef, id)?.type !== 'leaf') {
+      if (!isConditionalFormattingRow(apiRef, id)) {
         return classNames;
       }
       const row = apiRef.current.getRow(id);
@@ -103,15 +105,19 @@ export const useGridConditionalFormatting = (
       }
 
       const cache = apiRef.current.caches.conditionalFormatting;
-      // Formula and computed cells change value without a new row object.
-      const inputs = [
-        model,
-        gridFormulaLookupSelector(apiRef),
-        gridComputedColumnsRevisionSelector(apiRef),
-      ];
-      if (inputs.some((input, index) => input !== cache.inputs[index])) {
+      // Formula, computed and `valueGetter` cells change value without a new row object.
+      const formulaLookup = gridFormulaLookupSelector(apiRef);
+      const computedRevision = gridComputedColumnsRevisionSelector(apiRef);
+      const columnsLookup = gridColumnLookupSelector(apiRef);
+      const { inputs } = cache;
+      if (
+        inputs[0] !== model ||
+        inputs[1] !== formulaLookup ||
+        inputs[2] !== computedRevision ||
+        inputs[3] !== columnsLookup
+      ) {
         cache.classNames = new WeakMap();
-        cache.inputs = inputs;
+        cache.inputs = [model, formulaLookup, computedRevision, columnsLookup];
       }
 
       let rowClassNames = cache.classNames.get(row);
@@ -123,7 +129,12 @@ export const useGridConditionalFormatting = (
       if (cellClassNames === undefined) {
         cellClassNames = [];
         for (let i = 0; i < model.length; i += 1) {
-          if (model[i].fields.includes(field) && matchesRule(model[i], row, id, field)) {
+          const rule = model[i];
+          if (
+            isValidConditionalFormattingRule(rule) &&
+            rule.fields.includes(field) &&
+            matchesRule(rule, row, id, field)
+          ) {
             cellClassNames.push(getConditionalFormattingClassName(apiRef.current.instanceId.id, i));
           }
         }
@@ -170,7 +181,7 @@ export const useGridConditionalFormatting = (
     if (
       process.env.NODE_ENV !== 'production' &&
       apiRef.current.evaluateConditionalFormattingFormula === undefined &&
-      model.some((rule) => rule.condition.type === 'formula')
+      model.some((rule) => rule?.condition?.type === 'formula')
     ) {
       warnOnce(
         [
@@ -186,21 +197,4 @@ export const useGridConditionalFormatting = (
       apiRef.current.setConditionalFormatting(props.conditionalFormatting);
     }
   }, [apiRef, props.conditionalFormatting]);
-};
-
-/**
- * Adds the styles of the rules to the `sx` of the grid root.
- */
-export const useGridConditionalFormattingSx = (
-  apiRef: RefObject<GridPrivateApiPremium>,
-  sx: SxProps<Theme> | undefined,
-): SxProps<Theme> | undefined => {
-  const model = useGridSelector(apiRef, gridConditionalFormattingSelector);
-  return React.useMemo(() => {
-    if (model.length === 0) {
-      return sx;
-    }
-    const styles = getConditionalFormattingStyles(model, apiRef.current.instanceId.id);
-    return [...(Array.isArray(sx) ? sx : [sx]), styles];
-  }, [apiRef, model, sx]);
 };

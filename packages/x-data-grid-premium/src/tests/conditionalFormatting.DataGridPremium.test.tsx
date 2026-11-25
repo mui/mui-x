@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, microtasks } from 'test/utils/helperFn';
 import { describe, it, expect, vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
@@ -124,6 +124,87 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
     expect(apiRef.current?.exportState().conditionalFormatting).to.deep.equal({ model: expensive });
   });
 
+  it('formats pinned rows, but not group and aggregation rows', async () => {
+    render(
+      <Test
+        conditionalFormatting={expensive}
+        pinnedRows={{ top: [{ id: 'pinned', item: 'Pinned', price: 9, quantity: 1 }] }}
+        rowGroupingModel={['item']}
+        aggregationModel={{ price: 'sum' }}
+        defaultGroupingExpansionDepth={-1}
+      />,
+    );
+    await microtasks();
+    const getPriceCell = (id: string) =>
+      document.querySelector(`[data-id="${id}"] [data-field="price"]`)!;
+
+    expect(getPriceCell('pinned').className).to.match(/MuiDataGrid-conditionalFormatting-\d+-0/);
+    expect(getPriceCell('auto-generated-row-item/Banana').className).not.to.match(
+      /MuiDataGrid-conditionalFormatting/,
+    );
+    expect(getPriceCell('1').className).to.match(/MuiDataGrid-conditionalFormatting-\d+-0/);
+    expect(getPriceCell('auto-generated-group-footer-root').className).not.to.match(
+      /MuiDataGrid-conditionalFormatting/,
+    );
+  });
+
+  it('matches the text the export writes for single select columns', () => {
+    render(
+      <Test
+        rows={[{ id: 0, status: 'd' }]}
+        columns={[
+          {
+            field: 'status',
+            type: 'singleSelect',
+            valueOptions: [{ value: 'd', label: 'Discontinued' }],
+          },
+        ]}
+        conditionalFormatting={[
+          {
+            fields: ['status'],
+            condition: { type: 'text', operator: 'contains', value: 'disc' },
+            style: { color: '#000000' },
+          },
+        ]}
+      />,
+    );
+
+    expect(getRuleIndexes(0, 0)).to.deep.equal([0]);
+  });
+
+  it('updates the cells when the columns or the controlled rules change', () => {
+    const { setProps } = render(<Test conditionalFormatting={expensive} />);
+    expect(getRuleIndexes(0, 1)).to.deep.equal([]);
+
+    setProps({
+      columns: [
+        columns[0],
+        { ...columns[1], valueGetter: (value: number) => value * 10 },
+        columns[2],
+      ],
+    });
+    expect(getRuleIndexes(0, 1)).to.deep.equal([0]);
+
+    setProps({
+      conditionalFormatting: [
+        { ...expensive[0], condition: { type: 'cell', operator: 'greaterThan', value: 1000 } },
+      ],
+    });
+    expect(getRuleIndexes(0, 1)).to.deep.equal([]);
+  });
+
+  it.skipIf(isJSDOM)('keeps the selection background of selected rows', () => {
+    render(
+      <Test
+        conditionalFormatting={[{ ...expensive[0], style: { backgroundColor: '#ff0000' } }]}
+        rowSelectionModel={{ type: 'include', ids: new Set([1]) }}
+      />,
+    );
+
+    expect(getComputedStyle(getCell(1, 1)).backgroundColor).not.to.equal('rgb(255, 0, 0)');
+    expect(getComputedStyle(getCell(2, 1)).backgroundColor).to.equal('rgb(255, 0, 0)');
+  });
+
   describe('formula conditions', () => {
     const formulaRule: GridConditionalFormattingModel = [
       {
@@ -232,6 +313,37 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
         ['B2:B4', 'AND(ISNUMBER(B2),B2>5)', 1],
         ['A2:A4', 'B2>C2', 2],
       ]);
+    });
+
+    it('skips group and aggregation rows', async () => {
+      render(
+        <Test
+          rows={[
+            { id: 0, item: 'a', price: 3, quantity: 1 },
+            { id: 1, item: 'a', price: 4, quantity: 1 },
+          ]}
+          conditionalFormatting={[
+            { ...expensive[0], condition: { type: 'cell', operator: 'greaterThan', value: 2 } },
+          ]}
+          rowGroupingModel={['item']}
+          aggregationModel={{ price: 'sum' }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      const workbook = await act(() => apiRef.current?.getDataAsExcel());
+      const worksheet = workbook!.worksheets[0];
+      const formattedValues = (
+        worksheet as unknown as { conditionalFormattings: { ref: string }[] }
+      ).conditionalFormattings.flatMap(({ ref }) => {
+        const [, letter, first, last] = /^([A-Z]+)(\d+):[A-Z]+(\d+)$/.exec(ref)!;
+        const values = [];
+        for (let rowNumber = Number(first); rowNumber <= Number(last); rowNumber += 1) {
+          values.push(worksheet.getCell(`${letter}${rowNumber}`).value);
+        }
+        return values;
+      });
+      expect(formattedValues).to.deep.equal([3, 4]);
     });
   });
 });

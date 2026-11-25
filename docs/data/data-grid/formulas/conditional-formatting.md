@@ -12,7 +12,7 @@ Each rule names the columns it applies to, a condition, and the style of the cel
 The demo below has three rules:
 
 - **Stock** below 10 is red and bold.
-- **Product** and **Status** of discontinued products are struck through.
+- **Product** and **Status** of discontinued products are struck through: a formula condition reads the **Status** of the row.
 - **Product** and **Price** get a green background when the price is more than twice the cost.
 
 Edit the values to see the styles update, or export to Excel from the toolbar.
@@ -27,7 +27,7 @@ A `cell` condition compares the value of the cell with `value`.
 The operators are `equal`, `notEqual`, `greaterThan`, `greaterThanOrEqual`, `lessThan`, `lessThanOrEqual`, `between` and `notBetween`.
 `between` and `notBetween` also read the upper bound from `valueTo`. Both bounds are inclusive.
 
-A number or a date only matches number and date cells, and a string only matches text cells.
+A number only matches number cells, a date only matches date cells, and a string only matches text cells.
 Strings are compared case-insensitively.
 
 ```ts
@@ -37,6 +37,7 @@ Strings are compared case-insensitively.
 ### Text
 
 A `text` condition matches the text of the cell, case-insensitively.
+For columns that are not number, boolean or date columns, it reads the formatted value, like the label of a single select option.
 The operators are `contains`, `notContains`, `startsWith`, `endsWith`, `isEmpty` and `isNotEmpty`.
 
 ```ts
@@ -52,6 +53,8 @@ It uses the [formula syntax](/x/react-data-grid/formula-syntax/) and can only re
 { type: 'formula', formula: '=AND(stock < 10, status = "Active")' }
 ```
 
+A formula reads the values of the cells, not their formatted text.
+
 Formula conditions need the formula feature, injected through the `featureDependencies` prop as described in [Enabling formulas](/x/react-data-grid/formulas/#enabling-formulas).
 
 ## Styles
@@ -60,9 +63,9 @@ A rule sets any of `color`, `backgroundColor`, `fontWeight: 'bold'`, `fontStyle:
 Colors are hex strings, such as `#c62828`. Other values are ignored.
 
 When several rules match a cell and set the same property, the first rule wins.
-Selected cells keep the selection background.
+Selected cells and rows keep the selection background.
 
-The rules only apply to data rows. Group rows and aggregation rows are not formatted.
+The rules apply to data rows, including pinned rows. Group rows and aggregation rows are not formatted.
 
 ## Controlled rules
 
@@ -76,6 +79,8 @@ The [Excel export](/x/react-data-grid/export/#excel-export) writes each rule as 
 
 Formula conditions are exported when the formula feature is injected and the formula only calls registered functions.
 A rule whose formula references a column that is not exported is skipped.
+
+With a [web worker](/x/react-data-grid/export/#using-a-web-worker), an `exceljsPreProcess` that adds rows before the headers shifts the conditional formats.
 
 ## API
 

@@ -180,9 +180,9 @@ export const useGridExcelExport = (
       const firstDataRowNumber = groupHeaderRows + 2;
       const conditionalFormatting = getConditionalFormattingExcelExport(
         apiRef,
-        exportedColumns.map((column) => column.field),
+        exportedColumns,
+        exportedRowIds,
         firstDataRowNumber,
-        firstDataRowNumber + exportedRowIds.length - 1,
       );
 
       const message: ExcelExportInitEvent = {

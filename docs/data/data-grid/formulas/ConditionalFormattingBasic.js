@@ -75,7 +75,7 @@ const conditionalFormatting = [
   },
   {
     fields: ['product', 'status'],
-    condition: { type: 'text', operator: 'contains', value: 'discontinued' },
+    condition: { type: 'formula', formula: '=status = "Discontinued"' },
     style: { color: '#757575', textDecoration: 'line-through' },
   },
   {

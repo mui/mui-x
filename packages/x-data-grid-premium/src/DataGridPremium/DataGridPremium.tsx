@@ -42,7 +42,7 @@ import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRow
 import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
-import { useGridConditionalFormattingSx } from '../hooks/features/conditionalFormatting/useGridConditionalFormatting';
+import { GridConditionalFormattingStyles } from '../components/GridConditionalFormattingStyles';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -132,7 +132,6 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     validateProps(props, dataGridPremiumPropValidators);
   }
 
-  const sx = useGridConditionalFormattingSx(privateApiRef, props.sx);
   const sidebarOpen = useGridSelector(privateApiRef, gridSidebarOpenSelector);
   const sidePanel = sidebarOpen ? <Sidebar /> : null;
 
@@ -151,7 +150,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
       <GridRoot
         className={props.className}
         style={props.style}
-        sx={sx}
+        sx={props.sx}
         {...pickDataAttributes(props)}
         {...props.slotProps?.root}
         ref={ref}
@@ -159,6 +158,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
       >
         {watermark}
         <GridMultiSelectMeasurer />
+        <GridConditionalFormattingStyles />
         {FormulaReferenceOverlay !== undefined && <FormulaReferenceOverlay />}
       </GridRoot>
     </GridContextProvider>
