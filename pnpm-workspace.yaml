@@ -125,7 +125,7 @@ overrides:
   # Until https://github.com/mui/mui-public/pull/2125 is released.
   '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@b8b593e
   # Until https://github.com/mui/material-ui/pull/49910 is released.
-  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@07616b9bf3
+  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@1cf0ea6430
   '@mui/internal-core-docs>@mui/internal-markdown': 4.0.1-canary.2
   '@mui/internal-core-docs>@mui/icons-material': 9.6.0
   '@mui/internal-core-docs>@mui/material': 9.6.0
