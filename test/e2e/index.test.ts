@@ -1,4 +1,5 @@
 import { platform } from 'node:os';
+import * as React from 'react';
 import { chromium, webkit, firefox, devices } from '@playwright/test';
 import type {
   Page,
@@ -117,6 +118,52 @@ async function initializeEnvironment(
     });
 
     describe('<DataGrid />', () => {
+      it.runIf(React.version.startsWith('17.'))(
+        'should toggle the scrollbar when detail panel content resizes without a ResizeObserver loop on React 17',
+        async () => {
+          await renderFixture('DataGridPro/AutoHeightDetailPanel');
+          const summary = page.getByText('Panel content', { exact: true });
+          await summary.waitFor();
+
+          const errors = await page.evaluateHandle(() => {
+            const resizeErrors: string[] = [];
+            window.addEventListener('error', (event) => {
+              if (event.message.includes('ResizeObserver')) {
+                resizeErrors.push(event.message);
+              }
+            });
+            return resizeErrors;
+          });
+
+          const scrollbar = page.locator('.MuiDataGrid-scrollbar--vertical');
+          expect(await scrollbar.isVisible()).to.equal(false);
+          await summary.click();
+          await scrollbar.waitFor({ state: 'visible' });
+          await summary.click();
+          await scrollbar.waitFor({ state: 'hidden' });
+          expect(await errors.jsonValue()).to.deep.equal([]);
+        },
+      );
+
+      it.skipIf(React.version.startsWith('17.'))(
+        'should account for the scrollbar in the same frame when detail panel content expands',
+        async () => {
+          await renderFixture('DataGridPro/AutoHeightDetailPanel');
+          const details = page.locator('details').filter({ hasText: 'Panel content' });
+          const narrowedInSameFrame = await details.evaluate((element: HTMLDetailsElement) => {
+            return new Promise<boolean>((resolve) => {
+              requestAnimationFrame(() => {
+                const width = element.clientWidth;
+                element.open = true;
+                // Sample before a frame requested from the ensuing resize delivery can run.
+                requestAnimationFrame(() => resolve(element.clientWidth < width));
+              });
+            });
+          });
+          expect(narrowedInSameFrame).to.equal(true);
+        },
+      );
+
       it('should select the first column header when pressing tab key', async () => {
         await renderFixture('DataGrid/KeyboardNavigationFocus');
 
