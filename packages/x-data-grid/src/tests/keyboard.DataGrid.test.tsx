@@ -101,6 +101,18 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal('19-1'); // Already on the last row
     });
 
+    it('should move the focus, not the row or the column, when pressing Alt+Arrow', async () => {
+      const { user } = render(<NavigationTestCaseNoScrollX />);
+      const cell = getCell(1, 1);
+      await user.click(cell);
+      const values = getColumnValues(1);
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown', altKey: true });
+      expect(getActiveCell()).to.equal('2-1');
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight', altKey: true });
+      expect(getActiveCell()).to.equal('2-2');
+      expect(getColumnValues(1)).to.deep.equal(values);
+    });
+
     it('should move to the cell below when pressing "ArrowDown" on the checkbox selection cell', async () => {
       const { user } = render(<NavigationTestCaseNoScrollX checkboxSelection />);
       const cell = getCell(0, 0);

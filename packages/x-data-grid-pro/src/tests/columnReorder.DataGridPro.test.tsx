@@ -15,6 +15,7 @@ import {
 import type { GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { vi, describe, it, expect } from 'vitest';
+import { getColumnReorderTargetIndex } from '../hooks/features/columnReorder/columnReorderUtils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -936,6 +937,56 @@ describe('<DataGridPro /> - Columns reorder', () => {
         'col2',
         'col3',
       ]);
+    });
+  });
+
+  describe('getColumnReorderTargetIndex', () => {
+    let apiRef: RefObject<GridApi | null>;
+
+    function Test() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={[{ id: 0 }]}
+            columns={[{ field: 'a' }, { field: 'b' }, { field: 'c' }]}
+          />
+        </div>
+      );
+    }
+
+    const getTargetIndex = (targetField: string, direction: 'left' | 'right', isRtl: boolean) =>
+      getColumnReorderTargetIndex(apiRef as any, {
+        dragField: 'b',
+        targetField,
+        direction,
+        isRtl,
+        forbiddenIndexes: {},
+      });
+
+    it('should move toward the visual direction in LTR', () => {
+      render(<Test />);
+      expect(getTargetIndex('c', 'right', false)).to.equal(2);
+      expect(getTargetIndex('a', 'left', false)).to.equal(0);
+    });
+
+    it('should not move when the target is on the other side in LTR', () => {
+      render(<Test />);
+      expect(getTargetIndex('c', 'left', false)).to.equal(null);
+      expect(getTargetIndex('a', 'right', false)).to.equal(null);
+    });
+
+    it('should move toward the visual direction in RTL', () => {
+      render(<Test />);
+      expect(getTargetIndex('c', 'left', true)).to.equal(2);
+      expect(getTargetIndex('a', 'right', true)).to.equal(0);
+    });
+
+    it('should not move when the target is on the other side in RTL', () => {
+      render(<Test />);
+      expect(getTargetIndex('c', 'right', true)).to.equal(null);
+      expect(getTargetIndex('a', 'left', true)).to.equal(null);
     });
   });
 });

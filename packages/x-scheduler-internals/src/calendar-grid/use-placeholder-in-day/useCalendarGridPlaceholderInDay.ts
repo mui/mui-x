@@ -11,7 +11,7 @@ import {
   getPlaceholderOccurrenceKey,
 } from '../../internals/utils/placeholder-occurrence';
 import { getLastInstant } from '../../internals/utils/event-utils';
-import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
+import { toEpochMs, toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 
 export function useCalendarGridPlaceholderInDay(
@@ -20,12 +20,13 @@ export function useCalendarGridPlaceholderInDay(
   maxEvents?: number,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
   const store = useEventCalendarStoreContext();
-  const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext().axis;
+  const { axis, dayNumbers } = useCalendarGridDayRowContext();
+  const { start: rowStart, end: rowEnd } = axis;
 
   const rawPlaceholder = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell,
-    day,
+    day.plainDate,
     rowStart,
   );
 
@@ -44,17 +45,21 @@ export function useCalendarGridPlaceholderInDay(
     // and `getPlaceholderOccurrence()` snaps that piece to whole days.
     const placeholder =
       rawPlaceholder.type === 'creation'
-        ? { ...rawPlaceholder, start: day.timestamp, end: Math.min(rawPlaceholder.end, rowEnd + 1) }
+        ? {
+            ...rawPlaceholder,
+            start: toEpochMs(day.plainDate, displayTimezone),
+            end: Math.min(rawPlaceholder.end, rowEnd + 1),
+          }
         : rawPlaceholder;
     const occurrence = getPlaceholderOccurrence(placeholder, originalEvent, displayTimezone);
     // The placeholder can run past the week row: the next rows render their own piece.
     const lastInstantInRow = Math.min(
-      getLastInstant(occurrence.end.timestamp, occurrence.allDay),
+      getLastInstant(occurrence.end.epochMilliseconds, occurrence.allDay),
       rowEnd,
     );
     // The placeholder covers the cells of every date up to its end, like the occurrences.
     const daySpan = getDayGridCellSpan(
-      row.days,
+      dayNumbers,
       row.days.indexOf(day),
       toLocalDayNumber(lastInstantInRow, displayTimezone),
     );
@@ -78,5 +83,14 @@ export function useCalendarGridPlaceholderInDay(
       ...occurrence,
       position: { index, daySpan },
     };
-  }, [day, displayTimezone, maxEvents, originalEvent, rawPlaceholder, row.days, rowEnd]);
+  }, [
+    day,
+    dayNumbers,
+    displayTimezone,
+    maxEvents,
+    originalEvent,
+    rawPlaceholder,
+    row.days,
+    rowEnd,
+  ]);
 }

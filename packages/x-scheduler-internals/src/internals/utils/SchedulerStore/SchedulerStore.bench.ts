@@ -1,9 +1,11 @@
 import { describe, test } from 'vitest';
 import type { SchedulerEvent } from '../../../models';
 import { buildEventsState } from './SchedulerStore.utils';
+import { getTimezoneId } from '../plain-date-utils/timeZone';
 
 const EVENT_COUNT = 10_000;
-const displayTimezone = 'default';
+// The timezone of the system, as the store holds it: by its identifier.
+const displayTimezone = getTimezoneId('default');
 const events: SchedulerEvent[] = Array.from({ length: EVENT_COUNT }, (_, index) => ({
   id: index,
   title: `Event ${index}`,

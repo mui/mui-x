@@ -122,6 +122,9 @@ PickersShortcuts.propTypes /* remove-proptypes */ = {
    * @default "accept"
    */
   changeImportance: PropTypes.oneOf(['accept', 'set']),
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   component: PropTypes.elementType,
   /**

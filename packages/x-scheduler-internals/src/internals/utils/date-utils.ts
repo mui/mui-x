@@ -146,7 +146,7 @@ export function getOccurrenceEnd({
   if (event.allDay) {
     return addDaysToDayStart(occurrenceStart, getAllDayDayCount(event), displayTimezone);
   }
-  return occurrenceStart + event.end.timestamp - event.start.timestamp;
+  return occurrenceStart + event.end.epochMilliseconds - event.start.epochMilliseconds;
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
