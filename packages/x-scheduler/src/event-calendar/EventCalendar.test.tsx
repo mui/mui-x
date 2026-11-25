@@ -1,5 +1,7 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
+import type { MuiRenderResult } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   createSchedulerRenderer,
@@ -224,24 +226,30 @@ describe('EventCalendar', () => {
 
   describe('opening a date in Day view', () => {
     const getContent = () => screen.getByRole('region', { name: 'Calendar content' });
+    const lunch = EventBuilder.new()
+      .title('Lunch')
+      .span('2025-05-26T12:00:00Z', '2025-05-26T13:00:00Z')
+      .build();
+
+    async function openDate(user: MuiRenderResult['user'], view: 'month' | 'week', day: number) {
+      const content = within(getContent());
+      if (view === 'month') {
+        await user.click(content.getByRole('button', { name: String(day) }));
+      } else {
+        const header = content.getByRole('columnheader', { name: new RegExp(`May ${day}$`) });
+        act(() => header.focus());
+        await user.keyboard('{Enter}');
+      }
+    }
 
     it.each(['month', 'week'] as const)(
-      'should focus the first event after Enter in %s view and let Tab reach the next event',
+      'should focus the first event when opening a day from %s view and let Tab reach the next event',
       async (defaultView) => {
-        const lunch = EventBuilder.new()
-          .title('Lunch')
-          .span('2025-05-26T12:00:00Z', '2025-05-26T13:00:00Z')
-          .build();
         const { user } = await renderSettled(
           <EventCalendar events={[lunch, event1]} defaultView={defaultView} />,
         );
         const content = getContent();
-        const dateTrigger =
-          defaultView === 'week'
-            ? within(content).getByRole('columnheader', { name: 'Monday, May 26' })
-            : within(content).getByRole('button', { name: '26' });
-        act(() => dateTrigger.focus());
-        await user.keyboard('{Enter}');
+        await openDate(user, defaultView, 26);
 
         expect(content).to.have.attribute('data-view', 'day');
         expect(within(content).getByRole('button', { name: /^Running,/ })).toHaveFocus();
@@ -251,26 +259,31 @@ describe('EventCalendar', () => {
     );
 
     it.each(['month', 'week'] as const)(
-      'should focus a calendar cell after Enter opens an empty day from %s view',
+      'should focus the all-day cell when opening an empty day from %s view and Tab to the time column',
       async (defaultView) => {
         const { user } = await renderSettled(
           <EventCalendar events={[event1]} defaultView={defaultView} />,
         );
         const content = getContent();
-        const dateTrigger =
-          defaultView === 'week'
-            ? within(content).getByRole('columnheader', { name: 'Sunday, May 25' })
-            : within(content).getByRole('button', { name: '25' });
-        act(() => dateTrigger.focus());
-        await user.keyboard('{Enter}');
+        await openDate(user, defaultView, 25);
 
         expect(content).to.have.attribute('data-view', 'day');
         expect(within(content).getByRole('columnheader')).toHaveAccessibleName('Sunday, May 25');
-        expect(within(content).getAllByRole('gridcell')).to.include(document.activeElement);
+        expect(
+          within(content).getByRole('gridcell', { name: /All-day and multi-day events/ }),
+        ).toHaveFocus();
+        await user.tab();
+        // Firefox can make the scrollable time grid an extra native Tab stop.
+        if (
+          document.activeElement === content.querySelector(`.${eventCalendarClasses.dayTimeGrid}`)
+        ) {
+          await user.tab();
+        }
+        expect(within(content).getByRole('gridcell', { name: '' })).toHaveFocus();
       },
     );
 
-    it('should focus the all-day event first when a controlled calendar opens a clicked date', async () => {
+    it('should focus the all-day event when a controlled calendar commits the view change synchronously', async () => {
       const holiday = EventBuilder.new()
         .title('Holiday')
         .span('2025-05-26', '2025-05-27', { allDay: true })
@@ -282,7 +295,7 @@ describe('EventCalendar', () => {
           <EventCalendar
             events={[event1, holiday]}
             view={view}
-            onViewChange={(nextView) => setView(nextView)}
+            onViewChange={(nextView) => ReactDOM.flushSync(() => setView(nextView))}
             visibleDate={date}
             onVisibleDateChange={(nextDate) => setDate(nextDate)}
           />
@@ -296,6 +309,72 @@ describe('EventCalendar', () => {
       expect(within(content).getByRole('button', { name: /^Holiday,/ })).toHaveFocus();
     });
 
+    it('should preserve focus moved by the app while opening a date', async () => {
+      const field = React.createRef<HTMLInputElement>();
+      const { user } = await renderSettled(
+        <React.Fragment>
+          <input ref={field} aria-label="Notes" />
+          <EventCalendar
+            events={[event1]}
+            defaultView="month"
+            onViewChange={() => field.current!.focus()}
+          />
+        </React.Fragment>,
+      );
+      await openDate(user, 'month', 26);
+      expect(getContent()).to.have.attribute('data-view', 'day');
+      expect(screen.getByRole('textbox', { name: 'Notes' })).toHaveFocus();
+    });
+
+    it('should keep the next event tabbable when focus returns to an event after closing its dialog', async () => {
+      const { user } = await renderSettled(
+        <EventCalendar events={[event1, lunch]} defaultView="day" />,
+      );
+      const content = within(getContent());
+      const running = content.getByRole('button', { name: /^Running,/ });
+      await user.click(running);
+      await screen.findByRole('dialog');
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(running).toHaveFocus());
+      await user.tab();
+      expect(content.getByRole('button', { name: /^Lunch,/ })).toHaveFocus();
+    });
+
+    it.skipIf(isJSDOM)(
+      'should preserve the calendar and outer scroll positions when focusing a late event',
+      async () => {
+        const lateEvent = EventBuilder.new()
+          .title('Late event')
+          .span('2025-05-26T21:00:00Z', '2025-05-26T22:00:00Z')
+          .build();
+        const outer = React.createRef<HTMLDivElement>();
+        let scrollAtActivation: number | undefined;
+        await renderSettled(
+          <div
+            ref={outer}
+            style={{ height: 300, overflow: 'auto' }}
+            onClickCapture={(event) => {
+              scrollAtActivation = event.currentTarget.scrollTop;
+            }}
+          >
+            <div style={{ height: 220 }} />
+            <EventCalendar events={[lateEvent]} defaultView="month" style={{ height: 400 }} />
+          </div>,
+        );
+        const content = getContent();
+        const dateButton = within(content).getByRole('button', { name: '26' });
+        // A screen reader can activate the date button without first focusing it.
+        await act(async () => dateButton.click());
+        expect(within(content).getByRole('button', { name: /^Late event,/ })).toHaveFocus();
+        const grid = content.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGrid}`)!;
+        const hour = grid.querySelector<HTMLElement>(
+          `.${eventCalendarClasses.dayTimeGridTimeAxisCell}`,
+        )!;
+        expect(grid.scrollTop).to.equal(7 * hour.getBoundingClientRect().height);
+        expect(outer.current!.scrollTop).to.equal(scrollAtActivation);
+      },
+    );
+
     it('should leave focus on the toolbar when switching views after a canceled date change', async () => {
       const { user } = await renderSettled(
         <EventCalendar
@@ -305,10 +384,8 @@ describe('EventCalendar', () => {
         />,
       );
       const content = getContent();
-      const dateButton = within(content).getByRole('button', { name: /26$/ });
-      act(() => dateButton.focus());
-      await user.keyboard('{Enter}');
-      expect(dateButton).toHaveFocus();
+      await openDate(user, 'week', 26);
+      expect(within(content).getByRole('columnheader', { name: 'Monday, May 26' })).toHaveFocus();
       expect(content).to.have.attribute('data-view', 'week');
 
       const viewSwitcher = screen.getByRole('button', { name: 'Week' });
@@ -324,11 +401,9 @@ describe('EventCalendar', () => {
         <EventCalendar events={[event1]} view="month" onViewChange={onViewChange} />,
       );
       const content = getContent();
-      const dateButton = within(content).getByRole('button', { name: /26$/ });
-      act(() => dateButton.focus());
-      await user.keyboard('{Enter}');
+      await openDate(user, 'month', 26);
       expect(onViewChange.mock.calls[0][0]).to.equal('day');
-      expect(dateButton).toHaveFocus();
+      expect(content).to.have.attribute('data-view', 'month');
 
       setProps({ view: 'day' });
       expect(content).to.have.attribute('data-view', 'day');
@@ -760,7 +835,7 @@ describe('EventCalendar', () => {
       );
 
       const eventButton = screen.getByRole('button', { name: /Running/i });
-      eventButton.focus();
+      act(() => eventButton.focus());
       expect(eventButton).to.equal(document.activeElement);
       await user.keyboard('{Enter}');
 

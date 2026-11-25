@@ -19,7 +19,6 @@ import {
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  createStartOfPlainDate,
   formatDayOfMonth,
   formatTime,
   formatWeekdayMonthAndDayOfMonth,
@@ -29,7 +28,6 @@ import {
   getInitialScrollTime,
   isWeekendPlainDate,
   getPlainDateRangeMs,
-  useCalendarGridRootContext,
 } from '@mui/x-scheduler-internals/internals';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
@@ -39,7 +37,7 @@ import { DayGridCell, EVENT_HEIGHT } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
-import { isFocusOnDocument } from '../../utils/focus-utils';
+import { openDayAndFocus } from '../../utils/focus-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
@@ -510,9 +508,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               <DayTimeGridHeaderButton
                 className={classes.dayTimeGridHeaderButton}
                 type="button"
-                onClick={(event) =>
-                  store.switchToDay(createStartOfPlainDate(day, displayTimezone), event)
-                }
+                onClick={(event) => openDayAndFocus(store, day, event)}
                 tabIndex={-1}
               >
                 {renderHeaderContent(day)}
@@ -612,52 +608,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           </DayTimeGridScrollableContent>
         </DayTimeGridBody>
       </DayTimeGridRoot>
-      {days.length === 1 && (
-        <DayNavigationFocus dayNumber={firstDayNumber} gridRef={containerRef} />
-      )}
     </DayTimeGridContainer>
   );
 });
-
-function DayNavigationFocus({
-  dayNumber,
-  gridRef,
-}: {
-  dayNumber: number;
-  gridRef: React.RefObject<HTMLElement | null>;
-}) {
-  const store = useEventCalendarStoreContext();
-  const { setFocusedCell } = useCalendarGridRootContext();
-
-  React.useEffect(() => {
-    const grid = gridRef.current;
-    // Controlled callbacks can commit the new view before the navigation event finishes.
-    queueMicrotask(() => {
-      if (
-        !grid?.isConnected ||
-        !store.consumeDayFocus(dayNumber) ||
-        !isFocusOnDocument(grid.ownerDocument)
-      ) {
-        return;
-      }
-
-      const firstEvent = grid.querySelector<HTMLElement>(
-        `.${eventCalendarClasses.dayGridEvent}:not([aria-hidden="true"]), .${eventCalendarClasses.timeGridEvent}`,
-      );
-      const target = firstEvent ?? grid.querySelector<HTMLElement>('[role="gridcell"]');
-      if (target) {
-        target.focus();
-        // The active cell makes its other events reachable with Tab.
-        setFocusedCell({
-          rowType: target.classList.contains(eventCalendarClasses.timeGridEvent)
-            ? 'time-grid'
-            : 'day-grid',
-          rowIndex: 0,
-          columnIndex: 0,
-        });
-      }
-    });
-  }, [dayNumber, gridRef, setFocusedCell, store]);
-
-  return null;
-}

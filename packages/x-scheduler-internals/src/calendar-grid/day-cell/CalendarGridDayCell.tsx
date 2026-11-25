@@ -95,7 +95,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
+    if (event.currentTarget.contains(event.target)) {
       setFocusedCell({ rowType: 'day-grid', rowIndex, columnIndex: index });
     }
   };

@@ -127,7 +127,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
+    if (event.currentTarget.contains(event.target)) {
       setFocusedCell({ rowType: 'time-grid', rowIndex: 0, columnIndex: index });
     }
   };
