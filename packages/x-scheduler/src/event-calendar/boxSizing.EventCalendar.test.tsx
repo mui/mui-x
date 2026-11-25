@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { fireEvent, screen } from '@mui/internal-test-utils';
+import TextField from '@mui/material/TextField';
 import { isJSDOM } from 'test/utils/skipIf';
 import { emulateTouch } from 'test/utils/touchEmulation';
 import {
@@ -14,7 +15,7 @@ import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 import type { CalendarView } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { describe, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ErrorContainer } from '../internals/components/error-container';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../internals/constants/defaultLocaleText';
@@ -36,8 +37,8 @@ describe.skipIf(isJSDOM)('EventCalendar - box-sizing', () => {
       .singleDay('2025-07-03T09:00:00Z', 60)
       .resource(sport)
       .build(),
-    // 15 minutes is as tall as the `minHeight` of a timed event, but keeps the vertical padding.
-    EventBuilder.new().title('Check-in').singleDay('2025-07-03T11:00:00Z', 15).build(),
+    // The shortest event with vertical padding: up to 15 minutes, a timed event has none.
+    EventBuilder.new().title('Check-in').singleDay('2025-07-03T11:00:00Z', 16).build(),
     EventBuilder.new().title('Ping').singleDay('2025-07-03T12:00:00Z', 5).build(),
     EventBuilder.new()
       .title('A long event title that does not fit in its column')
@@ -138,5 +139,22 @@ describe.skipIf(isJSDOM)('EventCalendar - box-sizing', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
     await screen.findByRole('textbox', { name: /Event title/i });
     expectBoxSizingIndependentLayout();
+  });
+
+  it('should keep the drawer input height when a TextField renders first', async () => {
+    // Inserts the InputBase styles before the scheduler styles, so a descendant reset would win the tie.
+    render(<TextField label="Reference date" type="date" size="small" />);
+    const referenceHeight = screen.getByLabelText('Reference date').getBoundingClientRect().height;
+
+    await renderSettled(
+      <div style={{ height: 700, width: 420 }}>
+        <StandaloneCompactDayView events={events} resources={[sport]} />
+      </div>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /Standup/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+
+    const drawerInput = await screen.findByLabelText(/start date/i);
+    expect(drawerInput.getBoundingClientRect().height).to.equal(referenceHeight);
   });
 });
