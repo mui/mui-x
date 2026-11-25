@@ -459,27 +459,33 @@ async function main() {
       const screenshotPath = path.resolve(screenshotDir, `.${route}BarHover.png`);
 
       const testcase = await navigateToTest(page, route);
+      // Pooled pages can keep the scroll position of a previous test.
+      await page.evaluate(() => window.scrollTo(0, 0));
 
       await enablePointerDot(page, onTestFinished);
 
       // Bar D is the fourth bar of the first chart, drawn on the left of the reversed axis.
-      const bars = await testcase.$$('rect.MuiBarChart-element');
-      const box = await bars[3]?.boundingBox();
-      if (!box) {
-        throw new Error('Bar D of the reversed band axis chart was not rendered.');
-      }
-      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      const barD = page.locator(`[data-testpath="${route}"] rect.MuiBarChart-element`).nth(3);
+      await barD.hover();
+      await page.waitForFunction(
+        (bar) => bar?.getAttribute('data-highlighted') === 'true',
+        await barD.elementHandle(),
+      );
 
       const tooltips = page.getByRole('tooltip');
-      await tooltips.filter({ hasText: 'D' }).waitFor();
+      await tooltips.filter({ hasText: /^D/ }).waitFor();
       await tooltips.filter({ hasText: 'G2' }).waitFor();
       await tooltips.filter({ hasText: 'G7' }).waitFor();
       // Let the poppers settle on their final position.
       await sleep(300);
 
-      // The item and zoom slider tooltips render outside the testcase.
-      const body = await page.waitForSelector('body');
-      await body.screenshot({ path: screenshotPath, type: 'png' });
+      // Clip a viewport screenshot instead of an element one, which would scroll and
+      // drop the hover. It still captures the tooltips rendered outside the testcase.
+      const clip = await testcase.boundingBox();
+      if (!clip) {
+        throw new Error('The reversed band axis testcase is not visible.');
+      }
+      await page.screenshot({ path: screenshotPath, type: 'png', clip });
     });
 
     test('should export a chart as PNG', async ({ pooled }) => {
