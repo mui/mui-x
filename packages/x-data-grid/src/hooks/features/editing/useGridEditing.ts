@@ -37,9 +37,10 @@ export const useGridEditing = (
   const debounceMap = React.useRef<
     Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => Promise<void>]>>
   >({});
-  // The updates that ran immediately and did not end, so that a stop can wait for them.
+  // The updates of each field that ran immediately and did not end, so that a stop can wait for them.
+  // The entry of a field stays until all its updates end, so that a detach reaches all of them.
   const flushedMutations = React.useRef<
-    Record<GridRowId, Record<string, { promise: Promise<void>; edit: { isDetached: boolean } }>>
+    Record<GridRowId, Record<string, { promises: Set<Promise<void>>; isDetached: boolean }>>
   >({});
 
   const { isCellEditable: isCellEditableProp } = props;
@@ -131,31 +132,41 @@ export const useGridEditing = (
       if (!flushedMutations.current[id]) {
         flushedMutations.current[id] = {};
       }
-      // An update that replaces a running one belongs to the same edit, so a detach applies to both.
-      const replaced = flushedMutations.current[id][debouncedField];
-      const mutation = { promise: runCallback(), edit: replaced?.edit ?? { isDetached: false } };
-      flushedMutations.current[id][debouncedField] = mutation;
+      if (!flushedMutations.current[id][debouncedField]) {
+        flushedMutations.current[id][debouncedField] = { promises: new Set(), isDetached: false };
+      }
+      const fieldMutations = flushedMutations.current[id][debouncedField];
+      const mutation = runCallback();
+      fieldMutations.promises.add(mutation);
       // `finally()` keeps a rejection of the mutation unhandled, as before.
-      mutation.promise.finally(() => {
-        if (flushedMutations.current[id]?.[debouncedField] === mutation) {
+      mutation.finally(() => {
+        fieldMutations.promises.delete(mutation);
+        if (
+          fieldMutations.promises.size === 0 &&
+          flushedMutations.current[id]?.[debouncedField] === fieldMutations
+        ) {
           delete flushedMutations.current[id][debouncedField];
         }
       });
     });
 
     const inProgress = flushedMutations.current[id] ?? {};
-    const mutations = Object.keys(inProgress)
+    const fieldsMutations = Object.keys(inProgress)
       .filter((mutatedField) => !field || mutatedField === field)
       .map((mutatedField) => inProgress[mutatedField]);
-    if (mutations.length === 0) {
+    if (fieldsMutations.length === 0) {
       return null;
     }
-    return Promise.all(mutations.map((mutation) => mutation.promise))
+    const promises = fieldsMutations.reduce<Promise<void>[]>(
+      (acc, fieldMutations) => acc.concat(Array.from(fieldMutations.promises)),
+      [],
+    );
+    return Promise.all(promises)
       .then(
         () => {},
         () => {},
       )
-      .then(() => mutations.every((mutation) => !mutation.edit.isDetached));
+      .then(() => fieldsMutations.every((fieldMutations) => !fieldMutations.isDetached));
   }, []);
 
   const detachEditCellValueMutations = React.useCallback<
@@ -165,7 +176,7 @@ export const useGridEditing = (
     Object.keys(inProgress)
       .filter((mutatedField) => !field || mutatedField === field)
       .forEach((mutatedField) => {
-        inProgress[mutatedField].edit.isDetached = true;
+        inProgress[mutatedField].isDetached = true;
         delete inProgress[mutatedField];
       });
   }, []);
