@@ -279,6 +279,10 @@ export const gridKeyboardReorderDescribedCellSelector = createRootSelector(
   (state: GridStatePro) => state.keyboardReorder.describedCell,
 );
 
+export const gridKeyboardReorderUnreadDescriptionsSelector = createRootSelector(
+  (state: GridStatePro) => state.keyboardReorder.unreadDescriptions,
+);
+
 /**
  * Whether the column header describes the reorder keys: a step could move the column.
  * Unlike the marker, it doesn't wait for a key press, so the description is there when the focus lands.
@@ -326,7 +330,7 @@ export interface KeyboardReorderCellDescribedSteps {
 }
 
 /**
- * Returns the cell of the row that describes the reorder keys, and the steps it describes.
+ * Returns the cell of the row that describes the reorder keys, and the unread steps it describes.
  * Until the focus lands on a cell, it's the cell with the tab stop,
  * so the description is there when the focus lands on it with the keyboard.
  * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
@@ -345,7 +349,9 @@ export function gridCellKeyboardReorderDescribedStepsSelector(
     return null;
   }
 
-  const row = getRowReorderStepStatus(apiRef, args, rowId) === 'allowed';
-  const column = getColumnReorderStepStatus(apiRef, args, cell.field) === 'allowed';
+  const unread = gridKeyboardReorderUnreadDescriptionsSelector(apiRef);
+  const row = unread.row && getRowReorderStepStatus(apiRef, args, rowId) === 'allowed';
+  const column =
+    unread.column && getColumnReorderStepStatus(apiRef, args, cell.field) === 'allowed';
   return row || column ? { field: cell.field, row, column } : null;
 }

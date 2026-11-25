@@ -5,6 +5,7 @@ import type { GridRowId } from '@mui/x-data-grid';
 import { objectShallowCompare } from '@mui/x-data-grid/internals';
 import type { GridKeyboardReorderCellDescription } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import {
@@ -30,11 +31,29 @@ export function getKeyboardReorderDescriptionText(
   )();
 }
 
+/**
+ * Returns whether `GridKeyboardReorderDescriptions` renders the description of the reorder keys.
+ * The props are read during render, unlike selector arguments, which React 18 can leave stale.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {Pick<DataGridProProcessedProps, 'rowReordering' | 'disableColumnReorder'>} props The props that turn the features on.
+ * @param {KeyboardReorderDescriptionKind} kind Whether the description is for rows or columns.
+ * @returns {boolean} Whether the description is rendered.
+ */
+export function isKeyboardReorderDescriptionRendered(
+  apiRef: RefObject<GridPrivateApiPro>,
+  props: Pick<DataGridProProcessedProps, 'rowReordering' | 'disableColumnReorder'>,
+  kind: KeyboardReorderDescriptionKind,
+): boolean {
+  const isFeatureOn = kind === 'row' ? !!props.rowReordering : !props.disableColumnReorder;
+  return isFeatureOn && getKeyboardReorderDescriptionText(apiRef, kind) !== '';
+}
+
 function getDescriptionId(
   apiRef: RefObject<GridPrivateApiPro>,
+  props: Pick<DataGridProProcessedProps, 'rowReordering' | 'disableColumnReorder'>,
   kind: KeyboardReorderDescriptionKind,
 ) {
-  return getKeyboardReorderDescriptionText(apiRef, kind)
+  return isKeyboardReorderDescriptionRendered(apiRef, props, kind)
     ? getKeyboardReorderDescriptionId(apiRef, kind)
     : undefined;
 }
@@ -67,8 +86,8 @@ export const useKeyboardReorderCellDescription = (
   }
 
   const describedBy = [
-    steps.row ? getDescriptionId(apiRef, 'row') : undefined,
-    steps.column ? getDescriptionId(apiRef, 'column') : undefined,
+    steps.row ? getDescriptionId(apiRef, rootProps, 'row') : undefined,
+    steps.column ? getDescriptionId(apiRef, rootProps, 'column') : undefined,
   ]
     .filter(Boolean)
     .join(' ');
@@ -87,5 +106,5 @@ export const useKeyboardReorderColumnHeaderDescribedBy = (field: string): string
     field,
     disableColumnReorder: rootProps.disableColumnReorder,
   });
-  return isDescribed ? getDescriptionId(apiRef, 'column') : undefined;
+  return isDescribed ? getDescriptionId(apiRef, rootProps, 'column') : undefined;
 };

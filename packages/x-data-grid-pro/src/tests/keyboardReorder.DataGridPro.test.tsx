@@ -1223,6 +1223,79 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       expect(getDescribedCells()).to.have.length(0);
     });
 
+    it('should keep the row keys for the cells after a column move from a header', async () => {
+      const { user } = render(<Test columns={twoColumns} />);
+      focusHeader('name');
+      pressAlt(getHeader('name'), 'ArrowRight');
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).to.equal(getCellOf(0, 'name'));
+      expect(getHints(getCellOf(0, 'name'))).to.deep.equal([rowHint]);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getDescribedCells()).to.have.length(0);
+    });
+
+    it('should describe the row keys on the next cell when the first one cannot move', async () => {
+      const { user } = render(
+        <Test columns={twoColumns} isRowReorderable={({ row }) => row.id !== 0} />,
+      );
+      focusCell(0, 'name');
+      expect(getHints(getCellOf(0, 'name'))).to.deep.equal([columnHint]);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint]);
+      expect(getDescribedCells()).to.deep.equal([getCellOf(1, 'name')]);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getDescribedCells()).to.have.length(0);
+    });
+
+    it('should not describe the keys again after a popup of the grid closes', async () => {
+      const { user } = render(<Test columns={twoColumns} />);
+      focusCell(1, 'name');
+      await user.keyboard('{ArrowDown}{ArrowUp}{ArrowUp}{ArrowUp}');
+      expect(document.activeElement).to.equal(getHeader('name'));
+
+      await user.keyboard('{Control>}{Enter}{/Control}');
+      await waitFor(() => expect(screen.getByRole('menu')).toHaveFocus());
+      // The focus leaves the root
+      await act(
+        () =>
+          new Promise((resolve) => {
+            setTimeout(resolve);
+          }),
+      );
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(getHeader('name')).toHaveFocus());
+      expect(getDescribedCells()).to.have.length(0);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getDescribedCells()).to.have.length(0);
+    });
+
+    it('should only reference rendered descriptions when reordering turns off', () => {
+      const { setProps } = render(<Test columns={twoColumns} />);
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint, columnHint]);
+
+      const expectNoDanglingIds = () =>
+        document.querySelectorAll('[aria-describedby]').forEach((element) => {
+          element
+            .getAttribute('aria-describedby')!
+            .split(' ')
+            .forEach((id) => expect(document.getElementById(id)).not.to.equal(null));
+        });
+
+      setProps({ disableColumnReorder: true });
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint]);
+      expect(getHeader('name')).not.to.have.attribute('aria-describedby');
+      expectNoDanglingIds();
+
+      setProps({ disableColumnReorder: true, rowReordering: false });
+      expect(getCellOf(1, 'name')).not.to.have.attribute('aria-describedby');
+      expectNoDanglingIds();
+    });
+
     it('should use the locale texts, and remove the hints when they are empty', () => {
       const { setProps } = render(
         <Test
