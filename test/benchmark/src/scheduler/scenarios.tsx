@@ -1,7 +1,9 @@
 import * as React from 'react';
 import type { InteractionContext } from '@mui/internal-benchmark/page';
 import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerDependency } from '@mui/x-scheduler-premium/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
@@ -33,6 +35,77 @@ export const eventCalendar = defineScenario('EventCalendar week view with 200 ev
     />
   </div>
 ));
+
+/**
+ * Drags the first event of the week view one day to the right and drops it there.
+ * The drag is a native one, which the browser only lets the DevTools Protocol drive once it
+ * intercepts it: the mouse starts it, then the drag events are sent one by one.
+ */
+async function dragEvent({ cdp, waitForElementTiming }: InteractionContext) {
+  // Until the mount is painted, the browser may not route the mouse to the event.
+  await waitForElementTiming('default');
+  const event = document.querySelector('.MuiEventCalendar-timeGridEvent');
+  if (!event) {
+    throw new Error('The Event Calendar rendered no event to drag.');
+  }
+  const { left, top, width } = event.getBoundingClientRect();
+  const x = Math.round(left + width / 2);
+  const y = Math.round(top + 4);
+  const mouse = (type: string, toX: number, buttons: number) =>
+    cdp.send('Input.dispatchMouseEvent', { type, x: toX, y, button: 'left', buttons });
+  const drag = (type: string, toX: number) =>
+    cdp.send('Input.dispatchDragEvent', {
+      type,
+      x: toX,
+      y,
+      // A move, with no data: the scheduler keeps the dragged event itself.
+      data: { items: [], dragOperationsMask: 16 },
+    });
+
+  await cdp.send('Input.setInterceptDrags', { enabled: true });
+  try {
+    const dragStart = new Promise((resolve) => {
+      window.addEventListener('dragstart', resolve, { once: true });
+    });
+    await mouse('mousePressed', x, 1);
+    await mouse('mouseMoved', x + 10, 1);
+    await dragStart;
+
+    await drag('dragEnter', x + 10);
+    // A day column is about 160px wide: in steps a frame apart, so that the placeholder follows.
+    for (let step = 1; step <= 8; step += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await drag('dragOver', x + step * 20);
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((resolve) => {
+        requestAnimationFrame(resolve);
+      });
+    }
+    if (!document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')) {
+      throw new Error('The drag rendered no placeholder.');
+    }
+    await drag('drop', x + 160);
+    await mouse('mouseReleased', x + 160, 0);
+  } finally {
+    // The setting stays on the tab, for the other cases too.
+    await cdp.send('Input.setInterceptDrags', { enabled: false });
+  }
+}
+
+export const eventCalendarDrag = defineScenario(
+  'EventCalendar week view with 200 events, dragging an event',
+  () => (
+    <div style={{ width: 1200, height: 700 }}>
+      <EventCalendar
+        events={events}
+        defaultView="week"
+        defaultVisibleDate={new Date(2025, 6, 16)}
+        defaultPreferences={{ isSidePanelOpen: false }}
+      />
+    </div>
+  ),
+  dragEvent,
+);
 
 // 1,000 events over July 2025: 32 or 33 a day from 6:00 UTC, one every 30 minutes, half an hour
 // each. They are instants, so a display timezone moves them.
@@ -176,4 +249,61 @@ export const eventTimelinePremium = defineScenario(
     </div>
   ),
   scrollEventTimeline,
+);
+
+const DEPENDENCY_RESOURCE_COUNT = 50;
+const DEPENDENCY_EVENTS_PER_RESOURCE = 20;
+
+const dependencyResources = timelineResources.slice(0, DEPENDENCY_RESOURCE_COUNT);
+
+// 1,000 events: 20 per resource over the four days from July 14, 2025, one every four and a half
+// hours, four hours each.
+const dependencyEvents: SchedulerEvent[] = Array.from(
+  { length: DEPENDENCY_RESOURCE_COUNT * DEPENDENCY_EVENTS_PER_RESOURCE },
+  (_, index) => {
+    const start = (index % DEPENDENCY_EVENTS_PER_RESOURCE) * 270;
+    const day = (minutes: number) => `2025-07-${14 + Math.floor(minutes / (24 * 60))}`;
+    const end = start + 240;
+    return {
+      id: `event-${index}`,
+      title: `Event ${index}`,
+      start: `${day(start)}T${time(start % (24 * 60))}`,
+      end: `${day(end)}T${time(end % (24 * 60))}`,
+      resource: `resource-${Math.floor(index / DEPENDENCY_EVENTS_PER_RESOURCE)}`,
+    };
+  },
+);
+
+// 931 dependencies: each event to the next one of the resource below, which starts half an hour
+// after it ends.
+const dependencies: SchedulerDependency[] = [];
+for (let resource = 0; resource < DEPENDENCY_RESOURCE_COUNT - 1; resource += 1) {
+  for (let index = 0; index < DEPENDENCY_EVENTS_PER_RESOURCE - 1; index += 1) {
+    const source = resource * DEPENDENCY_EVENTS_PER_RESOURCE + index;
+    dependencies.push({
+      id: `dependency-${source}`,
+      source: `event-${source}`,
+      target: `event-${source + DEPENDENCY_EVENTS_PER_RESOURCE + 1}`,
+      type: 'FinishToStart',
+    });
+  }
+}
+
+const timelineFeatures = { dependencies: dependenciesFeature };
+
+export const eventTimelinePremiumDependencies = defineScenario(
+  'EventTimelinePremium with 1,000 events and their dependencies',
+  () => (
+    <div style={{ width: 1200, height: 700 }}>
+      <EventTimelinePremium
+        features={timelineFeatures}
+        events={dependencyEvents}
+        resources={dependencyResources}
+        dependencies={dependencies}
+        defaultVisibleDate={new Date(2025, 6, 14)}
+        defaultPreset="dayAndHour"
+        presets={timelinePresets}
+      />
+    </div>
+  ),
 );

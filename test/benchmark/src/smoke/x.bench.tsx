@@ -36,10 +36,12 @@ import { dataGrid, dataGridPremium, dataGridPro } from '../dataGrid/scenarios';
 import { dateCalendar, dateRangeCalendar } from '../datePickers/scenarios';
 import {
   eventCalendar,
+  eventCalendarDrag,
   eventCalendarMonth,
   eventCalendarMonthDisplayTimezone,
   eventCalendarPremiumRecurring,
   eventTimelinePremium,
+  eventTimelinePremiumDependencies,
 } from '../scheduler/scenarios';
 import { richTreeView, richTreeViewPro } from '../treeView/scenarios';
 
@@ -106,10 +108,12 @@ smokeBenchmark(richTreeViewPro);
 
 // Scheduler
 smokeBenchmark(eventCalendar);
+smokeBenchmark(eventCalendarDrag);
 smokeBenchmark(eventCalendarMonth);
 smokeBenchmark(eventCalendarMonthDisplayTimezone);
 smokeBenchmark(eventCalendarPremiumRecurring);
 smokeBenchmark(eventTimelinePremium);
+smokeBenchmark(eventTimelinePremiumDependencies);
 
 // Chat
 smokeBenchmark(chatBox);
