@@ -37,10 +37,13 @@ export const useGridEditing = (
   const debounceMap = React.useRef<
     Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => Promise<void>]>>
   >({});
-  // The updates of each field that ran immediately and did not end, so that a stop can wait for them.
+  // The updates of each field that ran immediately, so that a stop can wait for the latest one.
   // The entry of a field stays until all its updates end, so that a detach reaches all of them.
   const flushedMutations = React.useRef<
-    Record<GridRowId, Record<string, { promises: Set<Promise<void>>; isDetached: boolean }>>
+    Record<
+      GridRowId,
+      Record<string, { pending: number; latest: Promise<void> | null; isDetached: boolean }>
+    >
   >({});
 
   const { isCellEditable: isCellEditableProp } = props;
@@ -133,16 +136,24 @@ export const useGridEditing = (
         flushedMutations.current[id] = {};
       }
       if (!flushedMutations.current[id][debouncedField]) {
-        flushedMutations.current[id][debouncedField] = { promises: new Set(), isDetached: false };
+        flushedMutations.current[id][debouncedField] = {
+          pending: 0,
+          latest: null,
+          isDetached: false,
+        };
       }
       const fieldMutations = flushedMutations.current[id][debouncedField];
       const mutation = runCallback();
-      fieldMutations.promises.add(mutation);
+      fieldMutations.pending += 1;
+      fieldMutations.latest = mutation;
       // `finally()` keeps a rejection of the mutation unhandled, as before.
       mutation.finally(() => {
-        fieldMutations.promises.delete(mutation);
+        fieldMutations.pending -= 1;
+        if (fieldMutations.latest === mutation) {
+          fieldMutations.latest = null;
+        }
         if (
-          fieldMutations.promises.size === 0 &&
+          fieldMutations.pending === 0 &&
           flushedMutations.current[id]?.[debouncedField] === fieldMutations
         ) {
           delete flushedMutations.current[id][debouncedField];
@@ -150,18 +161,17 @@ export const useGridEditing = (
       });
     });
 
+    // The result of an earlier value is outdated, so the stop waits only for the latest update.
     const inProgress = flushedMutations.current[id] ?? {};
     const fieldsMutations = Object.keys(inProgress)
-      .filter((mutatedField) => !field || mutatedField === field)
+      .filter(
+        (mutatedField) => (!field || mutatedField === field) && inProgress[mutatedField].latest,
+      )
       .map((mutatedField) => inProgress[mutatedField]);
     if (fieldsMutations.length === 0) {
       return null;
     }
-    const promises = fieldsMutations.reduce<Promise<void>[]>(
-      (acc, fieldMutations) => acc.concat(Array.from(fieldMutations.promises)),
-      [],
-    );
-    return Promise.all(promises)
+    return Promise.all(fieldsMutations.map((fieldMutations) => fieldMutations.latest))
       .then(
         () => {},
         () => {},
