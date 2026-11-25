@@ -5,4 +5,11 @@ export type {
   PlainDateTimeInput,
   PlainDateTimeWithFields,
 } from './PlainDateTime';
-export type { PlainDateFields, PlainDateFromOptions, PlainDateWithFields } from './PlainDate';
+export type { ZonedDateTimeFields, ZonedDateTimeAssignmentOptions } from './ZonedDateTime';
+export type {
+  ArithmeticOptions,
+  AssignmentOptions,
+  DurationLike,
+  PlainDateFields,
+  PlainDateWithFields,
+} from './PlainDate';

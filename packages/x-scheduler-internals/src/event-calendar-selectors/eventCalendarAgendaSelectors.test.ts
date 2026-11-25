@@ -2,13 +2,13 @@ import {
   createDate,
   EventBuilder,
   getEventCalendarStateFromParameters,
-  processDay,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { eventCalendarAgendaSelectors } from './eventCalendarAgendaSelectors';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import type { EventCalendarState } from '../use-event-calendar';
 import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('eventCalendarEventSelectors', () => {
   describe('baseVisibleDays', () => {
@@ -22,8 +22,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
       expect(days).to.have.length(9);
-      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01')));
-      expect(days[days.length - 1]).to.deep.equal(processDay(createDate('2025-07-11')));
+      expect(days[0]).to.deep.equal(BaseTemporal.PlainDate.from('2025-07-01'));
+      expect(days[days.length - 1]).to.deep.equal(BaseTemporal.PlainDate.from('2025-07-11'));
     });
 
     it('should skip the weekend of the date locale when weekends are hidden', () => {
@@ -37,7 +37,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
-      expect(days.map((day) => day.key)).to.deep.equal([
+      expect(days.map((day) => day.toString())).to.deep.equal([
         '2025-07-01',
         '2025-07-02',
         '2025-07-03',
@@ -96,18 +96,18 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDay(createDate('2025-01-01')),
-        processDay(createDate('2025-01-03')),
-        processDay(createDate('2025-01-05')),
-        processDay(createDate('2025-01-08')),
-        processDay(createDate('2025-01-09')),
-        processDay(createDate('2025-01-10')),
-        processDay(createDate('2025-01-11')),
-        processDay(createDate('2025-01-13')),
-        processDay(createDate('2025-01-14')),
-        processDay(createDate('2025-01-16')),
-        processDay(createDate('2025-01-18')),
-        processDay(createDate('2025-01-20')),
+        BaseTemporal.PlainDate.from('2025-01-01'),
+        BaseTemporal.PlainDate.from('2025-01-03'),
+        BaseTemporal.PlainDate.from('2025-01-05'),
+        BaseTemporal.PlainDate.from('2025-01-08'),
+        BaseTemporal.PlainDate.from('2025-01-09'),
+        BaseTemporal.PlainDate.from('2025-01-10'),
+        BaseTemporal.PlainDate.from('2025-01-11'),
+        BaseTemporal.PlainDate.from('2025-01-13'),
+        BaseTemporal.PlainDate.from('2025-01-14'),
+        BaseTemporal.PlainDate.from('2025-01-16'),
+        BaseTemporal.PlainDate.from('2025-01-18'),
+        BaseTemporal.PlainDate.from('2025-01-20'),
       ]);
     });
 
@@ -132,7 +132,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays.map((day) => day.key)).to.deep.equal([
+      expect(visibleDays.map((day) => day.toString())).to.deep.equal([
         '2025-10-05',
         '2025-10-06',
         '2025-10-07',
@@ -182,18 +182,18 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDay(createDate('2025-10-03')),
-        processDay(createDate('2025-10-06')),
-        processDay(createDate('2025-10-07')),
-        processDay(createDate('2025-10-08')),
-        processDay(createDate('2025-10-09')),
-        processDay(createDate('2025-10-10')),
-        processDay(createDate('2025-10-13')),
-        processDay(createDate('2025-10-14')),
-        processDay(createDate('2025-10-15')),
-        processDay(createDate('2025-10-16')),
-        processDay(createDate('2025-10-17')),
-        processDay(createDate('2025-10-20')),
+        BaseTemporal.PlainDate.from('2025-10-03'),
+        BaseTemporal.PlainDate.from('2025-10-06'),
+        BaseTemporal.PlainDate.from('2025-10-07'),
+        BaseTemporal.PlainDate.from('2025-10-08'),
+        BaseTemporal.PlainDate.from('2025-10-09'),
+        BaseTemporal.PlainDate.from('2025-10-10'),
+        BaseTemporal.PlainDate.from('2025-10-13'),
+        BaseTemporal.PlainDate.from('2025-10-14'),
+        BaseTemporal.PlainDate.from('2025-10-15'),
+        BaseTemporal.PlainDate.from('2025-10-16'),
+        BaseTemporal.PlainDate.from('2025-10-17'),
+        BaseTemporal.PlainDate.from('2025-10-20'),
       ]);
     });
 
@@ -257,7 +257,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays).to.deep.equal([processDay(createDate('2025-07-17'))]);
+      expect(visibleDays).to.deep.equal([BaseTemporal.PlainDate.from('2025-07-17')]);
     });
 
     it('should find an event on the last day of the horizon when showEmptyDaysInAgenda=false', () => {
@@ -272,7 +272,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays).to.deep.equal([processDay(createDate('2024-06-28'))]);
+      expect(visibleDays).to.deep.equal([BaseTemporal.PlainDate.from('2024-06-28')]);
     });
 
     it('should not list a day twice when a scanned chunk ends on a skipped day', () => {
@@ -289,7 +289,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays.map((day) => day.key)).to.deep.equal(['2011-12-31']);
+      expect(visibleDays.map((day) => day.toString())).to.deep.equal(['2011-12-31']);
     });
 
     it('should not find an event past the horizon when showEmptyDaysInAgenda=false', () => {
@@ -409,8 +409,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
       expect(days).to.have.length(5);
-      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01')));
-      expect(days[4]).to.deep.equal(processDay(createDate('2025-07-05')));
+      expect(days[0]).to.deep.equal(BaseTemporal.PlainDate.from('2025-07-01'));
+      expect(days[4]).to.deep.equal(BaseTemporal.PlainDate.from('2025-07-05'));
     });
 
     it("should return the whole month of the visible date when dayCount is 'month'", () => {
@@ -424,8 +424,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days).to.have.length(31);
-      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01')));
-      expect(days[30]).to.deep.equal(processDay(createDate('2025-07-31')));
+      expect(days[0]).to.deep.equal(BaseTemporal.PlainDate.from('2025-07-01'));
+      expect(days[30]).to.deep.equal(BaseTemporal.PlainDate.from('2025-07-31'));
     });
 
     it("should only keep the days of the month that have events when hiding the empty days in 'month' mode", () => {
@@ -442,10 +442,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(days.map((day) => day.key)).to.deep.equal([
-        processDay(createDate('2025-07-03')).key,
-        processDay(createDate('2025-07-20')).key,
-      ]);
+      expect(days.map((day) => day.toString())).to.deep.equal(['2025-07-03', '2025-07-20']);
 
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
       expect(fetchRange.start.toString()).to.equal('2025-07-01');
@@ -481,8 +478,8 @@ describe('eventCalendarEventSelectors', () => {
 
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(days.map((day) => day.key)).to.deep.equal(
-        occupiedDays.map((day) => processDay(createDate(day)).key),
+      expect(days.map((day) => day.toString())).to.deep.equal(
+        occupiedDays.map((day) => toPlainDate(createDate(day).getTime(), 'default').toString()),
       );
     });
 
@@ -504,12 +501,12 @@ describe('eventCalendarEventSelectors', () => {
 
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(days.map((day) => day.key)).to.deep.equal([
-        processDay(createDate('2025-07-02')).key,
-        processDay(createDate('2025-07-08')).key,
-        processDay(createDate('2025-07-10')).key,
-        processDay(createDate('2025-07-15')).key,
-        processDay(createDate('2025-07-20')).key,
+      expect(days.map((day) => day.toString())).to.deep.equal([
+        '2025-07-02',
+        '2025-07-08',
+        '2025-07-10',
+        '2025-07-15',
+        '2025-07-20',
       ]);
     });
 

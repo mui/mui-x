@@ -33,6 +33,11 @@ const series = [
   { label: 'Series B', data: data.map((p) => p.y2), highlightScope },
 ];
 
+const lineSeries = series.map((s) => ({
+  ...s,
+  highlightScope: { highlight: 'series', fade: 'global' } as const,
+}));
+
 type ChartType = 'scatter' | 'line' | 'bar' | 'pie';
 
 export default function KeyboardNavigation() {
@@ -120,8 +125,9 @@ function Chart<T extends ChartType = ChartType>({
           ref={chartRef}
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
-          series={series}
+          series={lineSeries}
           slotProps={{ tooltip: { trigger: 'item' } }}
+          experimentalFeatures={{ enablePositionBasedPointerInteraction: true }}
           focusItemOnClick={focusItemOnClick}
         />
       );

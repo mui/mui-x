@@ -1,3 +1,5 @@
+import { useSyncExternalStore as useSyncExternalStoreShim } from 'use-sync-external-store/shim';
+
 export type {
   GridBaseColDef,
   GridStateColDef,
@@ -291,4 +293,11 @@ export { useGridPanelContext } from '../components/panel/GridPanelContext';
 
 export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';
 
-export { useSyncExternalStore } from 'use-sync-external-store/shim';
+/**
+ * @deprecated Import it from `use-sync-external-store/shim` instead. Kept for older `@mui/x-data-grid-pro` versions, it will be removed in v10.
+ */
+export const useSyncExternalStore: <Snapshot>(
+  subscribe: (onStoreChange: () => void) => () => void,
+  getSnapshot: () => Snapshot,
+  getServerSnapshot?: () => Snapshot,
+) => Snapshot = useSyncExternalStoreShim;

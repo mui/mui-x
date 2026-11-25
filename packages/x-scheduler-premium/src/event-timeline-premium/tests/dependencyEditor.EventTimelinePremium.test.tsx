@@ -97,7 +97,7 @@ function chooseLagUnit(dialog: HTMLElement, label: string) {
 }
 
 function getStartTimestamp(store: EventTimelinePremiumStore<any, any>, eventId: string): number {
-  return store.state.processedEventLookup.get(eventId)!.unstable_internalInfos.dataStart;
+  return store.state.processedEventLookup.get(eventId)!.start.epochMilliseconds;
 }
 
 // The submit validates asynchronously: wait until the dialog closes or Save is enabled again.

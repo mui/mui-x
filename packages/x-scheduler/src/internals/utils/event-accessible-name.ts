@@ -1,7 +1,4 @@
-import type {
-  SchedulerProcessedDate,
-  SchedulerRenderableEventOccurrence,
-} from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import {
   formatFullDate,
@@ -39,8 +36,8 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
   const isMultiDay = isOccurrenceMultiDay(occurrence);
 
   const formatDate = (date: BaseTemporal.PlainDate) => formatFullDate(locale, date);
-  const formatDateTime = (date: SchedulerProcessedDate) =>
-    `${formatDate(date.plainDateTime.toPlainDate())} ${formatTime(locale, getMinutesInDay(date.plainDateTime), ampm)}`;
+  const formatDateTime = (date: BaseTemporal.ZonedDateTime) =>
+    `${formatDate(date.toPlainDate())} ${formatTime(locale, getMinutesInDay(date), ampm)}`;
 
   // A multi-day timed event carries its times inside the date range, since they belong to
   // different days, so it has no separate `when`.
@@ -52,18 +49,18 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
       return undefined;
     }
     return localeText.eventAriaLabelTimeRange(
-      formatTime(locale, getMinutesInDay(start.plainDateTime), ampm),
-      formatTime(locale, getMinutesInDay(end.plainDateTime), ampm),
+      formatTime(locale, getMinutesInDay(start), ampm),
+      formatTime(locale, getMinutesInDay(end), ampm),
     );
   })();
 
   let date: string;
   if (!isMultiDay) {
-    date = formatDate(start.plainDateTime.toPlainDate());
+    date = formatDate(start.toPlainDate());
   } else if (occurrence.allDay) {
     // The end of an all-day occurrence is the start of the day after its last day.
     date = localeText.eventAriaLabelDateRange(
-      formatDate(start.plainDateTime.toPlainDate()),
+      formatDate(start.toPlainDate()),
       formatDate(plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence))),
     );
   } else {

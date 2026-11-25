@@ -54,6 +54,27 @@ describe('createEventRangeIndex', () => {
     expect(result.map((event) => event.id)).to.deep.equal(['ends-at-start', 'starts-at-end']);
   });
 
+  it('should exclude an all-day event whose exclusive end is the range start', () => {
+    const events = [
+      EventBuilder.new()
+        .id('ends-at-start')
+        .span('2025-01-14', '2025-01-15', { allDay: true })
+        .toProcessed(),
+      EventBuilder.new()
+        .id('starts-at-start')
+        .span('2025-01-15', '2025-01-16', { allDay: true })
+        .toProcessed(),
+    ];
+    const index = createEventRangeIndex(events, false);
+
+    const result = index.getEventsForRange(
+      Date.parse('2025-01-15T00:00:00Z'),
+      Date.parse('2025-01-15T23:59:59.999Z'),
+    );
+
+    expect(result.map((event) => event.id)).to.deep.equal(['starts-at-start']);
+  });
+
   it('should keep recurring events as candidates outside their original range when expansion is enabled', () => {
     const recurringEvent = EventBuilder.new()
       .id('recurring')
@@ -97,7 +118,9 @@ describe('createEventRangeIndex', () => {
       const start = addDays(firstDay, 5);
       const end = addDays(start, matchCount - 1);
       const rangeMatches = events.filter(
-        (event) => event.start.timestamp <= end.getTime() && event.end.timestamp >= start.getTime(),
+        (event) =>
+          event.start.epochMilliseconds <= end.getTime() &&
+          event.end.epochMilliseconds >= start.getTime(),
       );
       expect(rangeMatches).to.have.length(matchCount);
       const expected = events.filter((event) => event.rrule || rangeMatches.includes(event));
@@ -176,8 +199,8 @@ describe('createEventRangeIndex', () => {
         const rangeEnd = addDays(rangeStart, width);
         const expected = events.filter(
           (event) =>
-            event.start.timestamp <= rangeEnd.getTime() &&
-            event.end.timestamp >= rangeStart.getTime(),
+            event.start.epochMilliseconds <= rangeEnd.getTime() &&
+            event.end.epochMilliseconds >= rangeStart.getTime(),
         );
 
         expect(index.getEventsForRange(rangeStart.getTime(), rangeEnd.getTime())).to.deep.equal(
@@ -201,7 +224,8 @@ describe('createEventRangeIndex', () => {
     const rangeEnd = addDays(firstDay, 30);
     const expected = events.filter(
       (event) =>
-        event.start.timestamp <= rangeEnd.getTime() && event.end.timestamp >= rangeStart.getTime(),
+        event.start.epochMilliseconds <= rangeEnd.getTime() &&
+        event.end.epochMilliseconds >= rangeStart.getTime(),
     );
 
     expect(expected.length).to.be.greaterThan(
@@ -226,7 +250,8 @@ describe('createEventRangeIndex', () => {
     const rangeEnd = addDays(firstDay, 45);
     const expected = events.filter(
       (event) =>
-        event.start.timestamp <= rangeEnd.getTime() && event.end.timestamp >= rangeStart.getTime(),
+        event.start.epochMilliseconds <= rangeEnd.getTime() &&
+        event.end.epochMilliseconds >= rangeStart.getTime(),
     );
 
     expect(expected.length).to.be.lessThan(events.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD);

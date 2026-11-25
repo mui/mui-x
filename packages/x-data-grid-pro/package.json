@@ -46,7 +46,8 @@
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:^",
     "clsx": "catalog:",
-    "prop-types": "catalog:"
+    "prop-types": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
@@ -70,6 +71,7 @@
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/react-transition-group": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-transition-group": "catalog:",

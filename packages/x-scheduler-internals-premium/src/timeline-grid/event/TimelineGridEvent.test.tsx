@@ -8,14 +8,14 @@ import {
   ResourceBuilder,
   startOfDay,
 } from 'test/utils/scheduler';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 
 describe('<TimelineGrid.Event />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = createProcessedDate(startOfDay(new Date()).getTime(), 'default');
-  const end = createProcessedDate(endOfDay(new Date()).getTime(), 'default');
+  const start = toZonedDateTime(startOfDay(new Date()).getTime(), 'default');
+  const end = toZonedDateTime(endOfDay(new Date()).getTime(), 'default');
 
   // Mounts the event in the row context it needs.
   function renderEvent(node: React.ReactElement) {
@@ -34,7 +34,6 @@ describe('<TimelineGrid.Event />', () => {
     <TimelineGrid.Event
       eventId="fake-id"
       occurrenceKey="fake-key"
-      internalInfos={undefined}
       start={start}
       end={end}
       renderDragPreview={() => null}
@@ -52,7 +51,6 @@ describe('<TimelineGrid.Event />', () => {
       <TimelineGrid.Event
         eventId="fake-id"
         occurrenceKey="fake-key"
-        internalInfos={undefined}
         start={start}
         end={end}
         elementPosition={{
@@ -78,7 +76,6 @@ describe('<TimelineGrid.Event />', () => {
       <TimelineGrid.Event
         eventId="fake-id"
         occurrenceKey="fake-key"
-        internalInfos={undefined}
         start={start}
         end={end}
         renderDragPreview={() => null}

@@ -543,6 +543,11 @@ export const updateCacheWithNewRows = ({
     }
   }
 
+  if (previousCache.updates.modelLookupRef) {
+    partialUpdates.modelLookupRef = previousCache.updates.modelLookupRef;
+    partialUpdates.modelLookupRef.current = dataRowIdToModelLookup;
+  }
+
   return {
     dataRowIdToModelLookup,
     updates: partialUpdates,

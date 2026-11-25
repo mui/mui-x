@@ -1,5 +1,4 @@
 import type { EventCalendarState as State } from '../use-event-calendar';
-import type { SchedulerProcessedDay } from '../models';
 import type { BaseTemporal } from '../internals/utils/base-temporal';
 import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
 import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
@@ -12,23 +11,23 @@ function isOnPlainDate(state: State, timestamp: number, plainDate: BaseTemporal.
 }
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
-  placeholderInDayCell: (state: State, day: SchedulerProcessedDay, rowStart: number) => {
+  placeholderInDayCell: (state: State, day: BaseTemporal.PlainDate, rowStart: number) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder === null || placeholder.surfaceType !== 'day-grid' || placeholder.isHidden) {
       return null;
     }
 
-    if (isOnPlainDate(state, placeholder.start, day.plainDate)) {
+    if (isOnPlainDate(state, placeholder.start, day)) {
       return placeholder;
     }
 
     // A placeholder starting in a previous row also renders from the first day of this one, when the
-    // row starts within it (inclusive, in either order). The range is checked first, as it rules out
-    // most cells.
+    // row starts within it, in either order (the end is exclusive). The range is checked first, as
+    // it rules out most cells.
     if (
       Math.min(placeholder.start, placeholder.end) <= rowStart &&
-      rowStart <= Math.max(placeholder.start, placeholder.end) &&
-      isOnPlainDate(state, rowStart, day.plainDate)
+      rowStart < Math.max(placeholder.start, placeholder.end) &&
+      isOnPlainDate(state, rowStart, day)
     ) {
       return placeholder;
     }
@@ -47,12 +46,12 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
 
     return placeholder;
   },
-  isCreatingInDayCell: (state: State, day: SchedulerProcessedDay) => {
+  isCreatingInDayCell: (state: State, day: BaseTemporal.PlainDate) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.type !== 'creation') {
       return false;
     }
-    return isOnPlainDate(state, placeholder.start, day.plainDate);
+    return isOnPlainDate(state, placeholder.start, day);
   },
   isCreatingInTimeRange: (
     state: State,

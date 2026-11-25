@@ -1,3 +1,5 @@
+import '../../typeOverloads';
+
 import type {
   CartesianSeriesType,
   CommonDefaultizedProps,

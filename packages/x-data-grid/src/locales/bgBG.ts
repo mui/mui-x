@@ -170,7 +170,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Header filter operators text
   headerFilterOperatorContains: 'Съдържа',
   headerFilterOperatorDoesNotContain: 'Не съдържа',
-  headerFilterOperatorEquals: 'Равнo',
+  headerFilterOperatorEquals: 'Равно',
   headerFilterOperatorDoesNotEqual: 'Не е равно',
   headerFilterOperatorStartsWith: 'Започва с',
   headerFilterOperatorEndsWith: 'Завършва с',
@@ -317,6 +317,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // }) => `Can't move the row further ${direction === 'up' ? 'up' : 'down'}.`,
   // rowReorderingAnnouncementSorted: () => "Rows can't be reordered while the grid is sorted.",
   // rowReorderingAnnouncementInvalid: () => "The row can't be moved there.",
+  // rowReorderingAnnouncementDisabled: () => "This row can't be reordered.",
   // rowReorderingKeyboardDescription: () => 'Press Alt+Up Arrow or Alt+Down Arrow to move the row.',
 
   // Column reordering text

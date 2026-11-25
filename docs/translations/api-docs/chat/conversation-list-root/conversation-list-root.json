@@ -1,12 +1,6 @@
 {
   "componentDescription": "",
-  "propDescriptions": {
-    "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." },
-    "variant": {
-      "description": "The visual variant of the conversation list. - <code>&#39;default&#39;</code> – shows avatar, title, preview, timestamp, and unread badge. - <code>&#39;compact&#39;</code> – shows only a small unread indicator, the title, and an actions button."
-    }
-  },
+  "propDescriptions": {},
   "classDescriptions": {},
   "slotDescriptions": {
     "item": "The component that renders the item.",

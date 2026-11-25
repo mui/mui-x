@@ -1,7 +1,9 @@
 export {
   addDaysOnWallClock,
+  addDaysToDayStart,
   floorToWallClockMinutes,
   getEndOfDayMs,
+  getPlainDateRangeMs,
   getSkippedDays,
   getStartOfDayMs,
   getTimezoneId,
@@ -13,13 +15,15 @@ export {
   toMsInDay,
   toPlainDate,
   toPlainDateTime,
+  toZonedDateTime,
 } from './timeZone';
 export {
   addToDate,
-  createProcessedDate,
   createStartOfPlainDate,
   isDateOnlyString,
-  normalizeAllDayBounds,
+  parseDateOnlyString,
+  snapAllDayBounds,
+  snapToOwnDays,
 } from './date';
 export {
   getDayNumber,

@@ -4,7 +4,15 @@ import type {
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
+import {
+  BaseTemporal,
+  createEventRangeIndex,
+  getTimezoneId,
+} from '@mui/x-scheduler-internals/internals';
+import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
+import { innerGetEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { EventBuilder } from 'test/utils/scheduler';
+import { schedulerRecurringEventsPlugin } from '../../plugins/schedulerRecurringEventsPlugin';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
 const RULES: SchedulerEventRecurrenceRule[] = [
@@ -17,7 +25,8 @@ const RULES: SchedulerEventRecurrenceRule[] = [
   { freq: 'MONTHLY', byDay: ['2TU'] },
   { freq: 'MONTHLY', byDay: ['-1FR'], count: 60 },
   { freq: 'YEARLY' },
-  { freq: 'DAILY', until: '2026-09-30T23:59:59Z' },
+  // The rule of the all-day series (every tenth one), so its until is a date.
+  { freq: 'DAILY', until: '2026-09-30' },
 ];
 
 /**
@@ -36,19 +45,25 @@ function createRecurringEvents(
       .withDataTimezone(dataTimezone)
       .withDisplayTimezone(displayTimezone);
 
-    if (index % 10 === 9) {
-      builder.span(`2024-01-${day}T00:00:00`, `2024-01-${day}T23:59:59`, { allDay: true });
+    const allDay = index % 10 === 9;
+    if (allDay) {
+      const nextDay = String((index % 28) + 2).padStart(2, '0');
+      builder.span(`2024-01-${day}`, `2024-01-${nextDay}`, { allDay: true });
     } else {
       builder.singleDay(`2024-01-${day}T${hour}:30:00`, 45 + (index % 4) * 30);
     }
 
     if (index % 7 === 0) {
-      builder.exDates([`2026-10-${day}T${hour}:30:00`]);
+      // The exceptions of an all-day series are dates.
+      builder.exDates([allDay ? `2026-10-${day}` : `2026-10-${day}T${hour}:30:00`]);
     }
 
     return builder.rrule(RULES[index % RULES.length]).toProcessed();
   });
 }
+
+// The timezone of the system, as the store holds it: by its identifier.
+const SYSTEM_TIMEZONE = getTimezoneId('default');
 
 // Expanding the year range takes seconds per run before the plain-date migration, so cap the samples.
 const BENCH_OPTIONS = { time: 0, iterations: 10, warmupTime: 0, warmupIterations: 1 };
@@ -78,19 +93,46 @@ function expandAll(
   return count;
 }
 
+const VIEWS = {
+  week: ['2026-10-19', '2026-10-25'],
+  month: ['2026-09-28', '2026-11-08'],
+} as const;
+
+// The occurrences of the series grouped by the days of a view, like the week and month views do.
+function groupByDay(
+  events: SchedulerProcessedEvent[],
+  [first, last]: readonly [string, string],
+  displayTimezone: string,
+  hideWeekends: boolean,
+) {
+  const days = getDayListFromPlainDates({
+    firstPlainDate: BaseTemporal.PlainDate.from(first),
+    lastPlainDate: BaseTemporal.PlainDate.from(last),
+    timezone: displayTimezone,
+    excludedWeekdays: hideWeekends ? [6, 7] : undefined,
+  });
+  return innerGetEventOccurrencesGroupedByDay({
+    days,
+    eventRangeIndex: createEventRangeIndex(events, true),
+    visibleResources: {},
+    displayTimezone,
+    recurringEventsPlugin: schedulerRecurringEventsPlugin,
+  }).size;
+}
+
 describe('recurring event expansion', () => {
   test('200 series in the system timezone', { timeout: 0 }, async ({ bench }) => {
     const events = createRecurringEvents('default', 'default');
 
     await bench.compare(
       bench('week view', () => {
-        expandAll(events, RANGES.week, 'default');
+        expandAll(events, RANGES.week, SYSTEM_TIMEZONE);
       }),
       bench('month view', () => {
-        expandAll(events, RANGES.month, 'default');
+        expandAll(events, RANGES.month, SYSTEM_TIMEZONE);
       }),
       bench('year timeline', () => {
-        expandAll(events, RANGES.year, 'default');
+        expandAll(events, RANGES.year, SYSTEM_TIMEZONE);
       }),
       BENCH_OPTIONS,
     );
@@ -130,10 +172,10 @@ describe('recurring event expansion', () => {
 
     await bench.compare(
       bench('week view, 10 years after DTSTART', () => {
-        expandAll(events, RANGES.week, 'default');
+        expandAll(events, RANGES.week, SYSTEM_TIMEZONE);
       }),
       bench('month view, 10 years after DTSTART', () => {
-        expandAll(events, RANGES.month, 'default');
+        expandAll(events, RANGES.month, SYSTEM_TIMEZONE);
       }),
       BENCH_OPTIONS,
     );
@@ -163,15 +205,42 @@ describe('recurring event expansion', () => {
 
     await bench.compare(
       bench('1 series, month view', () => {
-        expandAll(oneSeries, RANGES.month, 'default');
+        expandAll(oneSeries, RANGES.month, SYSTEM_TIMEZONE);
       }),
       bench('2 series, month view', () => {
-        expandAll(twoSeries, RANGES.month, 'default');
+        expandAll(twoSeries, RANGES.month, SYSTEM_TIMEZONE);
       }),
       bench('4 series, month view', () => {
-        expandAll(fourSeries, RANGES.month, 'default');
+        expandAll(fourSeries, RANGES.month, SYSTEM_TIMEZONE);
       }),
       BENCH_OPTIONS,
     );
+  });
+
+  describe.each([
+    ['default', 'default'],
+    ['America/New_York', 'Europe/Paris'],
+  ] as const)('200 series in %s displayed in %s', (dataTimezone, displayTimezone) => {
+    test('grouped by day', { timeout: 0 }, async ({ bench }) => {
+      const events = createRecurringEvents(dataTimezone, displayTimezone);
+      // The store holds the display timezone by its identifier.
+      const displayTimezoneId = getTimezoneId(displayTimezone);
+
+      await bench.compare(
+        bench('week view', () => {
+          groupByDay(events, VIEWS.week, displayTimezoneId, false);
+        }),
+        bench('week view without weekends', () => {
+          groupByDay(events, VIEWS.week, displayTimezoneId, true);
+        }),
+        bench('month view', () => {
+          groupByDay(events, VIEWS.month, displayTimezoneId, false);
+        }),
+        bench('month view without weekends', () => {
+          groupByDay(events, VIEWS.month, displayTimezoneId, true);
+        }),
+        BENCH_OPTIONS,
+      );
+    });
   });
 });

@@ -93,8 +93,8 @@ export const useGridKeyboardReorder = (
     ) {
       return;
     }
-    if (status === 'invalid') {
-      announce(apiRef.current.getLocaleText('rowReorderingAnnouncementInvalid')());
+    if (status === 'disabled') {
+      announce(apiRef.current.getLocaleText('rowReorderingAnnouncementDisabled')());
       return;
     }
     if (status === 'sorted') {
