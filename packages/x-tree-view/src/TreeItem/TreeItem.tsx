@@ -68,6 +68,12 @@ export const TreeItemContent = styled('div', {
     ? {
         '[role="treeitem"]:focus-visible > &':
           theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
+        '[role="treeitem"]:focus-visible > &[data-disabled]': {
+          opacity: 1,
+          '& > *': {
+            opacity: (theme.vars || theme).palette.action.disabledOpacity,
+          },
+        },
       }
     : {
         '&[data-focused]': {

@@ -90,6 +90,28 @@ describe('<TreeItem />', () => {
       expect(content).to.have.style('outline-offset', '-2px');
     });
 
+    it.skipIf(isJSDOM)(
+      'draws the ring at full strength on a focused disabled item and fades its content',
+      async () => {
+        const { user } = render(
+          <ThemeProvider theme={theme}>
+            <SimpleTreeView disabledItemsFocusable>
+              <TreeItem itemId="one" label="one" />
+              <TreeItem itemId="two" label="two" disabled />
+            </SimpleTreeView>
+          </ThemeProvider>,
+        );
+
+        await user.keyboard('{Tab}');
+        await user.keyboard('{ArrowDown}');
+
+        const content = screen.getAllByRole('treeitem')[1].firstElementChild!;
+        expect(content).to.have.style('outline-style', 'solid');
+        expect(content).to.have.style('opacity', '1');
+        expect(content.querySelector(`.${classes.label}`)).to.have.style('opacity', '0.38');
+      },
+    );
+
     it.skipIf(isJSDOM)('shows the ring on an item built with useTreeItem', async () => {
       const { user } = render(
         <ThemeProvider theme={theme}>
