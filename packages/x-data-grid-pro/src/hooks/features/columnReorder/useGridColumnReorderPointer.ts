@@ -26,6 +26,7 @@ import { useUtilityClasses } from './useGridColumnReorder';
 import {
   finishColumnReorder,
   getColumnReorderTargetIndex,
+  getCursorMoveDirectionX,
   hasCursorPositionChanged,
   setColumnReorderDragCol,
   startColumnReorder,
@@ -152,8 +153,7 @@ export const useGridColumnReorderPointer = (
     const targetIndex = getColumnReorderTargetIndex(apiRef, {
       dragField: session.field,
       targetField,
-      previousPosition: session.previousPosition,
-      position,
+      direction: getCursorMoveDirectionX(session.previousPosition, position),
       isRtl,
       forbiddenIndexes: session.forbiddenIndexes,
     });

@@ -53,7 +53,6 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
                       key={occurrence.key}
                       eventId={occurrence.id}
                       occurrenceKey={occurrence.key}
-                      internalInfos={occurrence.unstable_internalInfos}
                       start={occurrence.start}
                       end={occurrence.end}
                       elementPosition={occurrence.timelinePosition}

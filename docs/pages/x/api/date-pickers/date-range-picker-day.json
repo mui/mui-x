@@ -92,6 +92,7 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "tabIndex": { "type": { "name": "number" }, "default": "0" },
     "today": { "type": { "name": "bool" }, "default": "false" },
     "TouchRippleProps": { "type": { "name": "object" } },
     "touchRippleRef": {

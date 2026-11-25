@@ -14,6 +14,7 @@ import type {
   PickerValueType,
 } from '../../../models';
 import type { InternalPropNames } from '../../../hooks/useSplitFieldProps';
+import type { PickersLocaleText } from '../../../locales';
 import type { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import type {
   FormProps,
@@ -305,7 +306,12 @@ export interface UseFieldState<TValue extends PickerValidValue> {
   /**
    * Last set of parameters used to generate the sections.
    */
-  lastSectionsDependencies: { format: string; isRtl: boolean; locale: any };
+  lastSectionsDependencies: {
+    format: string;
+    isRtl: boolean;
+    locale: any;
+    localeText: PickersLocaleText;
+  };
   /**
    * Non-nullable value used to keep trace of the timezone and the date parts not present in the format.
    * It is updated whenever we have a valid date (for the Range Pickers we update only the portion of the range that is valid).

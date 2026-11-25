@@ -225,6 +225,8 @@ const idIDCalendar: SchedulerCalendarTranslations = {
 const idIDTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Nama sumber daya',
+  // timelineResourceExpand: 'Expand resource',
+  // timelineResourceCollapse: 'Collapse resource',
 
   // Dependency dialog
   dependencyEditTitle: 'Edit dependensi',

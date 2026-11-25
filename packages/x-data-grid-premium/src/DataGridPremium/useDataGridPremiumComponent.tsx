@@ -15,6 +15,8 @@ import {
   filterStateInitializer,
   useGridFocus,
   useGridKeyboardNavigation,
+  useGridKeyboardUse,
+  keyboardUseStateInitializer,
   useGridPagination,
   paginationStateInitializer,
   useGridPreferencesPanel,
@@ -56,6 +58,7 @@ import {
   useGridColumnSpanning,
   useGridRowReorder,
   useGridRowReorderPointer,
+  useGridKeyboardReorder,
   useGridRowReorderPreProcessors,
   useGridRowPinning,
   useGridRowPinningPreProcessors,
@@ -246,6 +249,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
+  useGridInitializeState(keyboardUseStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
@@ -275,6 +279,7 @@ export const useDataGridPremiumComponent = (
   // run before filtering and sorting read cell values in the same cascade.
   useFormulaFeature(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
+  useGridKeyboardUse(apiRef);
   // Before `useGridRowSelection`: the select-all shortcut of the cell selection feature
   // must run first and block the row selection listener with `defaultMuiPrevented`.
   useGridCellSelection(apiRef, props);
@@ -302,6 +307,7 @@ export const useDataGridPremiumComponent = (
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);
   useGridRowReorderPointer(apiRef, props);
+  useGridKeyboardReorder(apiRef, props);
   useGridScroll(apiRef);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);

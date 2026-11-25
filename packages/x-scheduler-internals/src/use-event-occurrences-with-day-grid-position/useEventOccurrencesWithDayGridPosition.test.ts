@@ -29,10 +29,14 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         days: dayList,
         eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: {},
-        displayTimezone,
         recurringEventsPlugin: null,
+        displayTimezone,
       });
-      return useEventOccurrencesWithDayGridPosition({ days: dayList, occurrencesMap, maxEvents });
+      return useEventOccurrencesWithDayGridPosition({
+        days: dayList,
+        occurrencesMap,
+        maxEvents,
+      });
     });
 
     return result.current;
@@ -311,9 +315,10 @@ describe('getDayGridCellSpan', () => {
     lastPlainDate: BaseTemporal.PlainDate.from('2025-07-15'),
     timezone: 'UTC',
   };
-  const allDays = getDayListFromPlainDates(week);
+  const toDayNumbers = (days: BaseTemporal.PlainDate[]) => days.map((day) => getDayNumber(day));
+  const allDays = toDayNumbers(getDayListFromPlainDates(week));
   // Wed, Thu, Fri, Mon, Tue.
-  const weekdays = getDayListFromPlainDates({ ...week, excludedWeekdays: [6, 7] });
+  const weekdays = toDayNumbers(getDayListFromPlainDates({ ...week, excludedWeekdays: [6, 7] }));
 
   it('should count the dates up to the end in a row without hidden days', () => {
     expect(getDayGridCellSpan(allDays, 1, dayNumber('2025-07-14'))).to.equal(5);
@@ -344,11 +349,13 @@ describe('getDayGridCellSpan', () => {
 
   it('should not count a date the timezone skips', () => {
     // Pacific/Apia skipped December 30th, 2011: the row holds Dec 29th, Dec 31st and Jan 1st.
-    const apiaDays = getDayListFromPlainDates({
-      firstPlainDate: BaseTemporal.PlainDate.from('2011-12-29'),
-      lastPlainDate: BaseTemporal.PlainDate.from('2012-01-01'),
-      timezone: 'Pacific/Apia',
-    });
+    const apiaDays = toDayNumbers(
+      getDayListFromPlainDates({
+        firstPlainDate: BaseTemporal.PlainDate.from('2011-12-29'),
+        lastPlainDate: BaseTemporal.PlainDate.from('2012-01-01'),
+        timezone: 'Pacific/Apia',
+      }),
+    );
     expect(getDayGridCellSpan(apiaDays, 0, dayNumber('2011-12-31'))).to.equal(2);
   });
 });

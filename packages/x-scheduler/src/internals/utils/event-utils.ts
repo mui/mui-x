@@ -4,7 +4,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   addDaysOnWallClock,
-  getDayNumber,
+  getOccurrenceFirstDayNumber,
   getOccurrenceLastDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 
@@ -12,10 +12,7 @@ import {
  * Whether the occurrence starts and ends on different days of the display timezone.
  */
 export function isOccurrenceMultiDay(occurrence: SchedulerRenderableEventOccurrence) {
-  return (
-    getDayNumber(occurrence.start.plainDateTime.toPlainDate()) !==
-    getOccurrenceLastDayNumber(occurrence)
-  );
+  return getOccurrenceFirstDayNumber(occurrence) !== getOccurrenceLastDayNumber(occurrence);
 }
 
 export function isOccurrenceAllDayOrMultipleDay(occurrence: SchedulerRenderableEventOccurrence) {
@@ -35,9 +32,9 @@ export function isOccurrenceInDayGrid(
     default: {
       // All-day, or lasts at least a day on the wall clock of the display timezone.
       const { start, end } = occurrence;
-      const timezone = occurrence.unstable_internalInfos.displayTimezone;
       return (
-        !!occurrence.allDay || end.timestamp >= addDaysOnWallClock(start.timestamp, 1, timezone)
+        !!occurrence.allDay ||
+        end.epochMilliseconds >= addDaysOnWallClock(start.epochMilliseconds, 1, start.timeZoneId)
       );
     }
   }

@@ -38,7 +38,7 @@ describe('<CalendarGrid.DayCell />', () => {
           <CalendarGrid.DayRow
             start={startOfDay(day).getTime()}
             end={endOfDay(day).getTime()}
-            days={[{ plainDate: toPlainDate(day.getTime(), 'default') }]}
+            days={[toPlainDate(day.getTime(), 'default')]}
           >
             {children}
           </CalendarGrid.DayRow>
@@ -97,11 +97,7 @@ describe('<CalendarGrid.DayCell />', () => {
       const { user } = render(
         <EventCalendarProvider events={[]} displayTimezone="America/Santiago">
           <CalendarGrid.Root>
-            <CalendarGrid.DayRow
-              start={value.getTime()}
-              end={value.getTime()}
-              days={[{ plainDate: cellDate }]}
-            >
+            <CalendarGrid.DayRow start={value.getTime()} end={value.getTime()} days={[cellDate]}>
               <CalendarGrid.DayCell value={cellDate} />
             </CalendarGrid.DayRow>
           </CalendarGrid.Root>
@@ -135,17 +131,17 @@ describe('<CalendarGrid.DayCell />', () => {
 
         expect(await createInSantiago(value)).to.deep.equal({
           start: '2026-04-05T04:00:00.000Z',
-          end: '2026-04-06T03:59:59.999Z',
+          end: '2026-04-06T04:00:00.000Z',
         });
       },
     );
 
-    it('should end the placeholder on the second occurrence of the last hour of a day a DST transition repeats', async () => {
+    it('should end the placeholder at the start of the day after a day a DST transition lengthens', async () => {
       const value = new Date(Date.UTC(2026, 3, 4, 16));
 
       expect(await createInSantiago(value)).to.deep.equal({
         start: '2026-04-04T03:00:00.000Z',
-        end: '2026-04-05T03:59:59.999Z', // 23:59:59.999 -04
+        end: '2026-04-05T04:00:00.000Z', // 00:00 -04, after the repeated hour
       });
     });
 

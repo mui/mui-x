@@ -25,7 +25,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     // Internal props
     start,
     end,
-    internalInfos,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -54,23 +53,26 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     occurrenceKey,
     start,
     end,
-    internalInfos,
   });
 
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
       // No `input` (pointer-based resize) — skip the layout-reading cursor measurement.
       const initialCursorPositionInEventMs = input
-        ? Math.max(columnStart - start.timestamp, 0) +
-          getCursorPositionInElementMs({ input, elementRef: ref, elementStart: start.timestamp })
+        ? Math.max(columnStart - start.epochMilliseconds, 0) +
+          getCursorPositionInElementMs({
+            input,
+            elementRef: ref,
+            elementStart: start.epochMilliseconds,
+          })
         : 0;
 
       return {
         eventId,
         occurrenceKey,
         originalOccurrence: getOriginalOccurrence(),
-        start: start.timestamp,
-        end: end.timestamp,
+        start: start.epochMilliseconds,
+        end: end.epochMilliseconds,
         initialCursorPositionInEventMs,
       };
     },
@@ -146,8 +148,7 @@ export namespace CalendarGridTimeEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters,
-      Pick<useOriginalOccurrence.Parameters, 'internalInfos'> {
+      useDraggableEvent.PublicParameters {
     /**
      * Whether the event behaves like a button: `role="button"` and a roving `tabIndex`.
      * Set it to `false` for an inert preview (creation / resize placeholder) that

@@ -6,7 +6,7 @@ import {
   startOfWeek,
 } from 'test/utils/scheduler';
 import { getDayListFromPlainDates } from '../get-day-list';
-import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
+import { toEpochMs, toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 
 export const benchmarkResult = { value: undefined as unknown };
@@ -23,6 +23,8 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
     lastPlainDate: firstPlainDate.add({ days: 41 }),
     timezone,
   });
+  // The first instant of each day, as the rows read their start.
+  const dayStarts = days.map((day) => toEpochMs(day, timezone));
   // A 3-day event dragged over the grid.
   const state = {
     ...getEventCalendarStateFromParameters({ events: [], displayTimezone: timezone }),
@@ -30,8 +32,8 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
       type: 'internal-drag',
       surfaceType: 'day-grid',
       isHidden: false,
-      start: days[16].timestamp + 10 * 3_600_000,
-      end: days[18].timestamp + 9 * 3_600_000,
+      start: dayStarts[16] + 10 * 3_600_000,
+      end: dayStarts[18] + 9 * 3_600_000,
       eventId: 'event',
       occurrenceKey: 'event',
       originalOccurrence: null,
@@ -42,7 +44,7 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
     await bench('placeholder lookups of 42 day cells', () => {
       let count = 0;
       for (let index = 0; index < days.length; index += 1) {
-        const rowStart = days[index - (index % 7)].timestamp;
+        const rowStart = dayStarts[index - (index % 7)];
         if (
           eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
             state,

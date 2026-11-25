@@ -1,3 +1,5 @@
+import { useSyncExternalStore as useSyncExternalStoreShim } from 'use-sync-external-store/shim';
+
 export type {
   GridBaseColDef,
   GridStateColDef,
@@ -94,6 +96,11 @@ export type {
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {
+  useGridKeyboardUse,
+  keyboardUseStateInitializer,
+} from '../hooks/features/keyboardUse/useGridKeyboardUse';
+export { gridKeyboardUseActiveSelector } from '../hooks/features/keyboardUse/gridKeyboardUseSelector';
+export {
   useGridPagination,
   paginationStateInitializer,
 } from '../hooks/features/pagination/useGridPagination';
@@ -139,6 +146,7 @@ export {
   gridAdditionalRowGroupsSelector,
   gridPinnedRowsSelector,
   gridRowSelector,
+  gridRowsStateSelector,
 } from '../hooks/features/rows/gridRowsSelector';
 export {
   headerFilteringStateInitializer,
@@ -236,6 +244,7 @@ export {
   getActiveElement,
   getGridCellElement,
   getGridRowElement,
+  isEventForCellContent,
   isEventTargetInPortal,
   isEventTargetTextEntryElement,
 } from '../utils/domUtils';
@@ -282,4 +291,11 @@ export { useGridPanelContext } from '../components/panel/GridPanelContext';
 
 export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';
 
-export { useSyncExternalStore } from 'use-sync-external-store/shim';
+/**
+ * @deprecated Import it from `use-sync-external-store/shim` instead. Kept for older `@mui/x-data-grid-pro` versions, it will be removed in v10.
+ */
+export const useSyncExternalStore: <Snapshot>(
+  subscribe: (onStoreChange: () => void) => () => void,
+  getSnapshot: () => Snapshot,
+  getServerSnapshot?: () => Snapshot,
+) => Snapshot = useSyncExternalStoreShim;
