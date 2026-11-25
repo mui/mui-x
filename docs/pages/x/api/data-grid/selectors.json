@@ -119,6 +119,18 @@
     "description": "Get the computed columns state."
   },
   {
+    "name": "gridConditionalFormattingSelector",
+    "returnType": "GridConditionalFormattingModel",
+    "category": "Conditional formatting",
+    "description": "Get the conditional formatting rules."
+  },
+  {
+    "name": "gridConditionalFormattingStateSelector",
+    "returnType": "GridConditionalFormattingState",
+    "category": "Conditional formatting",
+    "description": "Get the conditional formatting state."
+  },
+  {
     "name": "gridDataRowIdsSelector",
     "returnType": "GridRowId[]",
     "category": "Rows",

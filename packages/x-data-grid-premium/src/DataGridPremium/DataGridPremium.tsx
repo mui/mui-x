@@ -499,6 +499,63 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
     }),
   ),
   /**
+   * Set the conditional formatting rules of the grid: styles applied to the cells that match a condition.
+   * Rules with a `formula` condition have no effect unless the formula feature is provided through `featureDependencies`.
+   */
+  conditionalFormatting: PropTypes.arrayOf(
+    PropTypes.shape({
+      condition: PropTypes.oneOfType([
+        PropTypes.shape({
+          formula: PropTypes.string.isRequired,
+          type: PropTypes.oneOf(['formula']).isRequired,
+        }),
+        PropTypes.shape({
+          operator: PropTypes.oneOf([
+            'between',
+            'equal',
+            'greaterThan',
+            'greaterThanOrEqual',
+            'lessThan',
+            'lessThanOrEqual',
+            'notBetween',
+            'notEqual',
+          ]).isRequired,
+          type: PropTypes.oneOf(['cell']).isRequired,
+          value: PropTypes.oneOfType([
+            PropTypes.instanceOf(Date),
+            PropTypes.number,
+            PropTypes.string,
+          ]).isRequired,
+          valueTo: PropTypes.oneOfType([
+            PropTypes.instanceOf(Date),
+            PropTypes.number,
+            PropTypes.string,
+          ]),
+        }),
+        PropTypes.shape({
+          operator: PropTypes.oneOf([
+            'contains',
+            'endsWith',
+            'isEmpty',
+            'isNotEmpty',
+            'notContains',
+            'startsWith',
+          ]).isRequired,
+          type: PropTypes.oneOf(['text']).isRequired,
+          value: PropTypes.string,
+        }),
+      ]).isRequired,
+      fields: PropTypes.arrayOf(PropTypes.string).isRequired,
+      style: PropTypes.shape({
+        backgroundColor: PropTypes.string,
+        color: PropTypes.string,
+        fontStyle: PropTypes.oneOf(['italic']),
+        fontWeight: PropTypes.oneOf(['bold']),
+        textDecoration: PropTypes.oneOf(['line-through', 'underline']),
+      }).isRequired,
+    }),
+  ),
+  /**
    * Data source object.
    */
   dataSource: PropTypes.shape({
@@ -1331,6 +1388,12 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onComputedColumnsChange: PropTypes.func,
+  /**
+   * Callback fired when the conditional formatting rules change.
+   * @param {GridConditionalFormattingModel} model The new conditional formatting rules.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onConditionalFormattingChange: PropTypes.func,
   /**
    * Callback fired when a data source request fails.
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
