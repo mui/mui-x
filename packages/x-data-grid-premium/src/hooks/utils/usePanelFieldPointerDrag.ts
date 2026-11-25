@@ -5,14 +5,17 @@ import {
   createDragPreview,
   getEdgeScrollDelta,
   getElementAtPoint,
-  hasReachedAutoScrollDistance,
   isElementInGrid,
   isPointerDownOnHandleControl,
   useGridPointerDragRouting,
   usePointerDrag,
   vars,
 } from '@mui/x-data-grid-pro/internals';
-import type { DragPreview, PointerDragPosition } from '@mui/x-data-grid-pro/internals';
+import type {
+  DragPreview,
+  PointerDragFrame,
+  PointerDragPosition,
+} from '@mui/x-data-grid-pro/internals';
 import type { GridPrivateApiPremium } from '../../models/gridApiPremium';
 import type { DropPosition } from '../features/pivoting/gridPivotingInterfaces';
 
@@ -84,17 +87,12 @@ interface DragData<Section> extends PanelFieldDragData<Section> {
 
 interface DragSession<Section> {
   data: PanelFieldDragData<Section>;
-  startClientX: number;
-  startClientY: number;
   clientX: number;
   clientY: number;
-  // Off until the pointer moves away from where the drag started
-  canAutoScroll: boolean;
   preview: DragPreview;
   // The element under the pointer at the last hit test
   elementAtPoint: Element | null;
   target: PanelFieldDropTarget<Section> | null;
-  frame: number | undefined;
   // The scroll area the pointer was last over, still scrolled when the pointer goes past its edge
   scrollArea: HTMLElement | null;
 }
@@ -187,7 +185,6 @@ export function usePanelFieldPointerDrag<Section>(
   };
 
   const stopSession = (session: DragSession<Section>) => {
-    cancelAnimationFrame(session.frame!);
     session.preview.remove();
     if (sessionRef.current === session) {
       sessionRef.current = null;
@@ -219,17 +216,16 @@ export function usePanelFieldPointerDrag<Section>(
   };
 
   // Auto-scrolls while the pointer holds still near an edge
-  const onDragFrame = () => {
+  const onDragFrame = (frame: PointerDragFrame<DragData<Section>>) => {
     const session = sessionRef.current;
     const root = apiRef.current.rootElementRef?.current;
     if (!session || !root) {
       return;
     }
-    if (session.canAutoScroll && autoScroll(session, session.elementAtPoint)) {
+    if (frame.canAutoScroll && autoScroll(session, session.elementAtPoint)) {
       // The fields moved under the still pointer
       updateTarget(session, getElementAtPoint(root, session.clientX, session.clientY));
     }
-    session.frame = requestAnimationFrame(onDragFrame);
   };
 
   const startDrag = (position: PointerDragPosition<DragData<Section>>) => {
@@ -241,11 +237,8 @@ export function usePanelFieldPointerDrag<Section>(
     }
     const session: DragSession<Section> = {
       data,
-      startClientX: position.clientX,
-      startClientY: position.clientY,
       clientX: position.clientX,
       clientY: position.clientY,
-      canAutoScroll: false,
       // Replaces the drag image of HTML drag and drop
       preview: createDragPreview(handle, {
         container: root,
@@ -255,13 +248,11 @@ export function usePanelFieldPointerDrag<Section>(
       }),
       elementAtPoint: null,
       target: null,
-      frame: undefined,
       scrollArea: null,
     };
     sessionRef.current = session;
     optionsRef.current.onDragStart(data);
     updateTarget(session, position.elementAtPoint);
-    session.frame = requestAnimationFrame(onDragFrame);
     return true;
   };
 
@@ -272,17 +263,6 @@ export function usePanelFieldPointerDrag<Section>(
     }
     session.clientX = position.clientX;
     session.clientY = position.clientY;
-    if (
-      !session.canAutoScroll &&
-      hasReachedAutoScrollDistance(
-        session.startClientX,
-        session.startClientY,
-        session.clientX,
-        session.clientY,
-      )
-    ) {
-      session.canAutoScroll = true;
-    }
     session.preview.move(session.clientX, session.clientY);
     updateTarget(session, position.elementAtPoint);
   };
@@ -322,6 +302,7 @@ export function usePanelFieldPointerDrag<Section>(
     onDragMove: moveDrag,
     onDragEnd: endDrag,
     onDragCancel: cancelDrag,
+    onDragFrame,
   });
 
   useGridPointerDragRouting(apiRef, {
@@ -346,7 +327,6 @@ export function usePanelFieldPointerDrag<Section>(
       // The panel is unmounting: remove the preview without calling the callbacks
       const session = sessionRef.current;
       if (session) {
-        cancelAnimationFrame(session.frame!);
         session.preview.remove();
         sessionRef.current = null;
       }

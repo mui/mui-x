@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import ownerDocument from '@mui/utils/ownerDocument';
+import { hasReachedAutoScrollDistance } from './pointerDragUtils';
 
 // This hook must not depend on the Data Grid, so it can be moved to `@mui/x-internals`
 // and reused by other components (for example, the Tree View).
@@ -26,6 +27,24 @@ export interface PointerDragPosition<TData> {
    * Whether the pointer is within the bounds of the capture element.
    */
   isInside: boolean;
+}
+
+export interface PointerDragFrame<TData> {
+  /**
+   * The data passed to `onPointerDown` when the drag session started.
+   */
+  data: TData;
+  /**
+   * The pointer type of the drag session: `'mouse'`, `'pen'` or `'touch'`.
+   */
+  pointerType: string;
+  clientX: number;
+  clientY: number;
+  /**
+   * Whether the pointer moved far enough from where the drag started for auto-scroll to begin.
+   * A long press starts the drag in place, maybe inside an edge scroll zone: picking up an item at an edge must not scroll.
+   */
+  canAutoScroll: boolean;
 }
 
 export interface UsePointerDragOptions<TData> {
@@ -67,6 +86,13 @@ export interface UsePointerDragOptions<TData> {
   onDragMove?: (position: PointerDragPosition<TData>) => void;
   onDragEnd?: (position: PointerDragPosition<TData>) => void;
   /**
+   * Called on every animation frame of a started drag, also while the pointer holds still.
+   * For what must go on without `pointermove`, like auto-scroll, or hit-testing the items that move under the pointer.
+   * The loop stops before `onDragEnd` and `onDragCancel`.
+   * @param {PointerDragFrame<TData>} frame The pointer position.
+   */
+  onDragFrame?: (frame: PointerDragFrame<TData>) => void;
+  /**
    * Called when a started drag stops without a drop: `Escape`, `pointercancel`, lost pointer capture, or `cancel()`.
    * @param {TData} data The data of the drag session.
    */
@@ -96,9 +122,14 @@ interface DragSession<TData> {
   startY: number;
   clientX: number;
   clientY: number;
+  // Where the drag started, after the activation constraints
+  dragStartX: number;
+  dragStartY: number;
+  canAutoScroll: boolean;
   captureElement: HTMLElement | null;
   doc: Document;
   timeout: ReturnType<typeof setTimeout> | undefined;
+  frame: number | undefined;
   cleanup: () => void;
 }
 
@@ -186,6 +217,10 @@ export function usePointerDrag<TData>(
 
   const endSession = React.useCallback((session: DragSession<TData>) => {
     clearTimeout(session.timeout);
+    if (session.frame !== undefined) {
+      cancelAnimationFrame(session.frame);
+      session.frame = undefined;
+    }
     session.cleanup();
     if (session.captureElement?.hasPointerCapture?.(session.pointerId)) {
       session.captureElement.releasePointerCapture(session.pointerId);
@@ -239,14 +274,38 @@ export function usePointerDrag<TData>(
         startY: event.clientY,
         clientX: event.clientX,
         clientY: event.clientY,
+        dragStartX: event.clientX,
+        dragStartY: event.clientY,
+        canAutoScroll: false,
         captureElement,
         doc,
         timeout: undefined,
+        frame: undefined,
         cleanup: () => {},
+      };
+
+      const runFrame = () => {
+        session.frame = undefined;
+        if (sessionRef.current !== session || session.status !== 'dragging') {
+          return;
+        }
+        optionsRef.current.onDragFrame?.({
+          data: session.data,
+          pointerType: session.pointerType,
+          clientX: session.clientX,
+          clientY: session.clientY,
+          canAutoScroll: session.canAutoScroll,
+        });
+        // The callback can end the session
+        if (sessionRef.current === session) {
+          session.frame = requestAnimationFrame(runFrame);
+        }
       };
 
       const startDragging = () => {
         session.status = 'dragging';
+        session.dragStartX = session.clientX;
+        session.dragStartY = session.clientY;
         // Capture only once the drag starts. With an earlier capture, a click without a drag
         // would target the capture element instead of the handle, so for example a click on
         // a column header would stop sorting the column.
@@ -258,6 +317,10 @@ export function usePointerDrag<TData>(
         }
         if (optionsRef.current.onDragStart?.(getPosition(session)) === false) {
           abortDrag(session);
+          return;
+        }
+        if (sessionRef.current === session && optionsRef.current.onDragFrame) {
+          session.frame = requestAnimationFrame(runFrame);
         }
       };
 
@@ -269,6 +332,17 @@ export function usePointerDrag<TData>(
         session.clientY = moveEvent.clientY;
 
         if (session.status === 'dragging') {
+          if (
+            !session.canAutoScroll &&
+            hasReachedAutoScrollDistance(
+              session.dragStartX,
+              session.dragStartY,
+              session.clientX,
+              session.clientY,
+            )
+          ) {
+            session.canAutoScroll = true;
+          }
           optionsRef.current.onDragMove?.(getPosition(session));
           return;
         }

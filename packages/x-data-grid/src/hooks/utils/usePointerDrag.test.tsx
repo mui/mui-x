@@ -396,6 +396,99 @@ describe('usePointerDrag', () => {
     });
   });
 
+  describe('frames', () => {
+    // Resolves after the animation frame callbacks requested before it
+    const nextFrame = () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+
+    it('should call onDragFrame on every frame of a started drag, also while the pointer holds still', async () => {
+      const onDragFrame = vi.fn();
+      render(<Test onDragFrame={onDragFrame} />);
+      const handle = screen.getByTestId('handle');
+
+      fireEvent.pointerDown(handle, pointer('mouse', 10, 10));
+      await nextFrame();
+      expect(onDragFrame).toHaveBeenCalledTimes(0);
+
+      fireEvent.pointerMove(handle, pointer('mouse', 30, 10));
+      await nextFrame();
+      await nextFrame();
+      expect(onDragFrame).toHaveBeenCalledTimes(2);
+      expect(onDragFrame.mock.calls[1][0]).toMatchObject({
+        data: 'item',
+        pointerType: 'mouse',
+        clientX: 30,
+        clientY: 10,
+      });
+
+      fireEvent.pointerUp(handle, pointer('mouse', 30, 10));
+      await nextFrame();
+      expect(onDragFrame).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not call onDragFrame when onDragStart refuses the drag', async () => {
+      const onDragFrame = vi.fn();
+      render(<Test onDragStart={() => false} onDragFrame={onDragFrame} />);
+      const handle = screen.getByTestId('handle');
+
+      fireEvent.pointerDown(handle, pointer('mouse', 10, 10));
+      fireEvent.pointerMove(handle, pointer('mouse', 30, 10));
+      await nextFrame();
+      expect(onDragFrame).toHaveBeenCalledTimes(0);
+    });
+
+    it('should stop calling onDragFrame on cancel and on unmount', async () => {
+      const onDragFrame = vi.fn();
+      const { unmount } = render(<Test onDragFrame={onDragFrame} />);
+      const handle = screen.getByTestId('handle');
+
+      fireEvent.pointerDown(handle, pointer('mouse', 10, 10));
+      fireEvent.pointerMove(handle, pointer('mouse', 30, 10));
+      await nextFrame();
+      expect(onDragFrame).toHaveBeenCalledTimes(1);
+      fireEvent.keyDown(document.body, { key: 'Escape' });
+      await nextFrame();
+      expect(onDragFrame).toHaveBeenCalledTimes(1);
+
+      fireEvent.pointerUp(handle, pointer('mouse', 30, 10));
+      fireEvent.pointerDown(handle, pointer('mouse', 10, 10));
+      fireEvent.pointerMove(handle, pointer('mouse', 30, 10));
+      await nextFrame();
+      expect(onDragFrame).toHaveBeenCalledTimes(2);
+      unmount();
+      await nextFrame();
+      expect(onDragFrame).toHaveBeenCalledTimes(2);
+    });
+
+    it('should allow auto-scroll once the pointer moved away from where the drag started', async () => {
+      const onDragFrame = vi.fn();
+      render(<Test onDragFrame={onDragFrame} mouseDistance={5} />);
+      const handle = screen.getByTestId('handle');
+      const lastFrame = () => onDragFrame.mock.calls[onDragFrame.mock.calls.length - 1][0];
+
+      fireEvent.pointerDown(handle, pointer('mouse', 10, 10));
+      // The drag starts here, not where the pointer was pressed
+      fireEvent.pointerMove(handle, pointer('mouse', 16, 10));
+      await nextFrame();
+      expect(lastFrame().canAutoScroll).to.equal(false);
+
+      fireEvent.pointerMove(handle, pointer('mouse', 25, 10));
+      await nextFrame();
+      expect(lastFrame().canAutoScroll).to.equal(false);
+
+      fireEvent.pointerMove(handle, pointer('mouse', 27, 10));
+      await nextFrame();
+      expect(lastFrame().canAutoScroll).to.equal(true);
+
+      // It stays on when the pointer comes back
+      fireEvent.pointerMove(handle, pointer('mouse', 16, 10));
+      await nextFrame();
+      expect(lastFrame().canAutoScroll).to.equal(true);
+    });
+  });
+
   // Hit-testing needs a real layout
   describe.skipIf(isJSDOM)('hit-testing', () => {
     it('should report the element under the pointer and whether it is inside the capture element', () => {

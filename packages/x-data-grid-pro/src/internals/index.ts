@@ -17,6 +17,7 @@ export {
   isPointerDownOnHandleControl,
   isPointerDragType,
 } from '../hooks/utils/useGridPointerDragRouting';
+export { autoScrollGridOnPointerDrag } from '../hooks/utils/gridPointerDragAutoScroll';
 export { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export {

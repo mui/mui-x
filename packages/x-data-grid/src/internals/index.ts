@@ -193,10 +193,10 @@ export {
   createDragPreview,
   getEdgeScrollDelta,
   getVisibleViewportBounds,
-  hasReachedAutoScrollDistance,
 } from '../hooks/utils/pointerDragUtils';
 export type { DragPreview, VisibleViewportBounds } from '../hooks/utils/pointerDragUtils';
 export type {
+  PointerDragFrame,
   PointerDragPosition,
   UsePointerDragOptions,
   UsePointerDragReturnValue,

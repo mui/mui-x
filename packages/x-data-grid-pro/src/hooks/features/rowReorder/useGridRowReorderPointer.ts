@@ -2,7 +2,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import useTimeout from '@mui/utils/useTimeout';
-import ownerWindow from '@mui/utils/ownerWindow';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getDataGridUtilityClass,
@@ -14,17 +13,14 @@ import {
 import type { GridRowId } from '@mui/x-data-grid';
 import {
   createDragPreview,
-  getEdgeScrollDelta,
   getElementAtPoint,
   getGridRowElement,
-  getVisibleViewportBounds,
-  gridDimensionsSelector,
   gridEditRowsStateSelector,
-  hasReachedAutoScrollDistance,
   usePointerDrag,
 } from '@mui/x-data-grid/internals';
 import type {
   DragPreview,
+  PointerDragFrame,
   PointerDragPosition,
   RowReorderDragDirection,
   RowReorderDropPosition,
@@ -32,6 +28,7 @@ import type {
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { isElementInGrid, useGridPointerDragRouting } from '../../utils/useGridPointerDragRouting';
+import { autoScrollGridOnPointerDrag } from '../../utils/gridPointerDragAutoScroll';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 import { addClasses, removeClasses } from '../../../utils/classListUtils';
 import { findCellElement } from './utils';
@@ -71,19 +68,14 @@ interface DragData {
 
 interface RowDragSession {
   rowId: GridRowId;
-  startClientX: number;
-  startClientY: number;
   clientX: number;
   clientY: number;
-  // Off until the pointer moves away from where the drag started
-  canAutoScroll: boolean;
   preview: DragPreview;
   dropTarget: RowReorderDropTarget | null;
   previousTargetId: GridRowId | null;
   previousDropPosition: RowReorderDropPosition | null;
   dragDirection: RowReorderDragDirection | null;
   pendingExpansion: { rowId: GridRowId; clientX: number; clientY: number } | null;
-  frame: number | undefined;
 }
 
 // The scroll areas of HTML drag and drop show while a row is dragged.
@@ -118,7 +110,6 @@ export const useGridRowReorderPointer = (
       expandTimeout.clear();
       return;
     }
-    cancelAnimationFrame(session.frame!);
     session.preview.remove();
     const isCurrent = sessionRef.current === session;
     const root = apiRef.current.rootElementRef?.current;
@@ -211,43 +202,8 @@ export const useGridRowReorderPointer = (
     setRowReorderDropTarget(apiRef, session.dropTarget ?? undefined);
   };
 
-  const autoScroll = (session: RowDragSession, root: HTMLElement, scroller: HTMLElement) => {
-    const rect = scroller.getBoundingClientRect();
-    if (session.clientX < rect.left || session.clientX > rect.right) {
-      return;
-    }
-
-    const dimensions = gridDimensionsSelector(apiRef);
-    // The edges of the scrollable rows: below the headers and the top pinned rows,
-    // above the bottom pinned rows and the horizontal scrollbar
-    const rowsTop = rect.top + dimensions.topContainerHeight;
-    const rowsBottom =
-      rect.bottom -
-      dimensions.bottomContainerHeight -
-      (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
-    // The page doesn't scroll during a touch drag, so a zone off-screen couldn't be reached
-    const win = ownerWindow(root);
-    const viewport = getVisibleViewportBounds(win);
-    const delta = getEdgeScrollDelta(
-      session.clientY,
-      Math.max(rowsTop, viewport.top),
-      Math.min(rowsBottom, viewport.bottom),
-    );
-    if (delta === 0) {
-      return;
-    }
-
-    const { top } = apiRef.current.getScrollPosition();
-    apiRef.current.scroll({ top: top + delta });
-    // The grid can't scroll further, or at all with `autoHeight`: scroll the page when the pointer is at the edge of the screen
-    const isAtScreenEdge = delta < 0 ? viewport.top > rowsTop : viewport.bottom < rowsBottom;
-    if (isAtScreenEdge && apiRef.current.getScrollPosition().top === top) {
-      win.scrollBy(0, delta);
-    }
-  };
-
   // Runs on every frame of the drag, like `dragover` in HTML drag and drop, which keeps firing while the pointer holds still
-  const onDragFrame = () => {
+  const onDragFrame = (frame: PointerDragFrame<DragData>) => {
     const session = sessionRef.current;
     const root = apiRef.current.rootElementRef?.current;
     const scroller = apiRef.current.virtualScrollerRef?.current;
@@ -255,8 +211,12 @@ export const useGridRowReorderPointer = (
       return;
     }
 
-    if (session.canAutoScroll) {
-      autoScroll(session, root, scroller);
+    if (frame.canAutoScroll) {
+      autoScrollGridOnPointerDrag(apiRef, scroller, {
+        clientX: session.clientX,
+        clientY: session.clientY,
+        axis: 'y',
+      });
       // The page can scroll under a still pointer: the preview is in the root, which moves with it
       session.preview.move(session.clientX, session.clientY);
     }
@@ -265,8 +225,6 @@ export const useGridRowReorderPointer = (
       session,
       getElementAtPoint(root, session.clientX, session.clientY, HIT_TEST_IGNORE_SELECTOR),
     );
-
-    session.frame = requestAnimationFrame(onDragFrame);
   };
 
   const startDrag = (position: PointerDragPosition<DragData>) => {
@@ -281,11 +239,8 @@ export const useGridRowReorderPointer = (
 
     const session: RowDragSession = {
       rowId,
-      startClientX: position.clientX,
-      startClientY: position.clientY,
       clientX: position.clientX,
       clientY: position.clientY,
-      canAutoScroll: false,
       // Replaces the drag image of HTML drag and drop
       preview: createDragPreview(handle, {
         container: root,
@@ -298,7 +253,6 @@ export const useGridRowReorderPointer = (
       previousDropPosition: null,
       dragDirection: null,
       pendingExpansion: null,
-      frame: undefined,
     };
     sessionRef.current = session;
 
@@ -316,7 +270,6 @@ export const useGridRowReorderPointer = (
     apiRef.current.setCellFocus(rowId, GRID_REORDER_COL_DEF.field);
 
     updateDropTarget(session, position.elementAtPoint);
-    session.frame = requestAnimationFrame(onDragFrame);
     return true;
   };
 
@@ -327,17 +280,6 @@ export const useGridRowReorderPointer = (
     }
     session.clientX = position.clientX;
     session.clientY = position.clientY;
-    if (
-      !session.canAutoScroll &&
-      hasReachedAutoScrollDistance(
-        session.startClientX,
-        session.startClientY,
-        session.clientX,
-        session.clientY,
-      )
-    ) {
-      session.canAutoScroll = true;
-    }
     session.preview.move(session.clientX, session.clientY);
     updateDropTarget(session, position.elementAtPoint);
   };
@@ -353,7 +295,6 @@ export const useGridRowReorderPointer = (
 
     logger.debug('End dragging row with a pointer');
     expandTimeout.clear();
-    cancelAnimationFrame(session.frame!);
     session.preview.remove();
 
     const { rowId, dropTarget, dragDirection } = session;
@@ -396,6 +337,7 @@ export const useGridRowReorderPointer = (
     onDragMove: moveDrag,
     onDragEnd: endDrag,
     onDragCancel: () => resetDrag(),
+    onDragFrame,
     hitTestIgnoreSelector: HIT_TEST_IGNORE_SELECTOR,
   });
 
@@ -418,7 +360,6 @@ export const useGridRowReorderPointer = (
       // The grid is unmounting: remove the preview without updating the state
       const session = sessionRef.current;
       if (session) {
-        cancelAnimationFrame(session.frame!);
         session.preview.remove();
         sessionRef.current = null;
       }
