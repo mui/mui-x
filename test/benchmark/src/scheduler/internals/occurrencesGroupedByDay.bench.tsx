@@ -1,18 +1,17 @@
-import { describe, test } from 'vitest';
+import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
-  addMinutes,
-  createDate,
-  EventBuilder,
-  getEventCalendarStateFromParameters,
-} from 'test/utils/scheduler';
-import { getDayListFromPlainDates } from '../get-day-list';
-import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
-import { getPlainDateWeekStart } from '../internals/utils/date-utils';
-import { createStartOfPlainDate } from '../internals/utils/plain-date-utils/date';
-import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
-import { createEventRangeIndex } from '../internals/utils/event-range-index';
-import { eventCalendarAgendaSelectors } from '../event-calendar-selectors';
-import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
+  createEventRangeIndex,
+  createStartOfPlainDate,
+  getPlainDateWeekStart,
+  isWeekendPlainDate,
+  toPlainDate,
+} from '@mui/x-scheduler-internals/internals';
+import { innerGetEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
+import { addMinutes, createDate } from 'test/utils/scheduler/dates';
+import { EventBuilder } from 'test/utils/scheduler/event-builder';
+import { getEventCalendarStateFromParameters } from 'test/utils/scheduler/state';
+import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
 
 const eventCount = 1_000;
 
@@ -85,29 +84,18 @@ function createAgendaState(displayTimezone: string) {
   });
 }
 
-export const benchmarkResult = { value: undefined as unknown };
+for (const timezone of ['default', 'America/New_York'] as const) {
+  const getMonthViewScenario = lazy(() => createMonthViewScenario(timezone));
 
-describe.each(['default', 'America/New_York'] as const)('%s display timezone', (timezone) => {
-  test('month view', { timeout: 0 }, async ({ bench }) => {
-    const scenario = createMonthViewScenario(timezone);
-    await bench('days, weekends and 1,000 events grouped by day', () => {
-      benchmarkResult.value = runMonthView(scenario);
-    }).run();
-  });
+  timeBenchmark(
+    `Month view - days, weekends and 1,000 events grouped by day (${timezone} display timezone)`,
+    () => runMonthView(getMonthViewScenario()),
+  );
 
-  test('agenda view', { timeout: 0 }, async ({ bench }) => {
-    let state = createAgendaState(timezone);
-    await bench(
-      '12 days with events, empty days hidden',
-      {
-        // A new state for each run, as the selector is memoized.
-        beforeEach: () => {
-          state = createAgendaState(timezone);
-        },
-      },
-      () => {
-        benchmarkResult.value = eventCalendarAgendaSelectors.visibleDays(state);
-      },
-    ).run();
-  });
-});
+  timeBenchmark(
+    `Agenda view - 12 days with events, empty days hidden (${timezone} display timezone)`,
+    (state) => eventCalendarAgendaSelectors.visibleDays(state),
+    // A new state for each call, as the selector is memoized.
+    { prepare: () => createAgendaState(timezone) },
+  );
+}

@@ -13,4 +13,5 @@ export {
   getDependencyLagIssue,
   getDependencyType,
   getEffectiveDependencyLag,
+  groupByEventId,
 } from './utils/dependency-utils';
