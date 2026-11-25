@@ -7,7 +7,6 @@ import type {
   GridRenderEditCellParams,
   GridValueSetter,
   GridPreProcessEditCellProps,
-  GridRowModesModel,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
@@ -175,6 +174,36 @@ describe('<DataGridPro /> - Row editing', () => {
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'usdgbp' }),
         );
         expect(renderEditCell1.mock.lastCall?.[0].value).to.equal('usdgbp');
+      });
+
+      it('should resolve if the column of a field that it validates again is removed', async () => {
+        let endValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => {
+            endValidation = () => resolve(props);
+          });
+        const columns = [
+          { field: 'id' },
+          { field: 'currencyPair', editable: true },
+          { field: 'price1M', editable: true, preProcessEditCellProps },
+        ];
+        const { setProps } = render(<TestCase columns={columns} />);
+        act(() => apiRef.current?.startRowEditMode({ id: 0 }));
+        let isValid: Promise<boolean> | void;
+        act(() => {
+          isValid = apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+          });
+        });
+        act(() => apiRef.current?.stopRowEditMode({ id: 0, ignoreModifications: true }));
+        setProps({ columns: columns.slice(0, 2) });
+        act(() => apiRef.current?.startRowEditMode({ id: 0 }));
+        await act(async () => {
+          endValidation();
+        });
+        expect(await isValid!).to.equal(true);
       });
 
       it('should pass to renderEditCell the row with the values updated', async () => {
@@ -1392,19 +1421,83 @@ describe('<DataGridPro /> - Row editing', () => {
         });
       });
 
-      it('should commit a debounced value after its validation ends with a controlled model', async () => {
+      it('should commit a debounced value after its validation ends if the controlled model asks for view mode', async () => {
         const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
-        function ControlledTestCase() {
-          const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
-          return (
-            <TestCase
-              column1Props={{ preProcessEditCellProps }}
-              rowModesModel={rowModesModel}
-              onRowModesModelChange={setRowModesModel}
-            />
-          );
-        }
-        render(<ControlledTestCase />);
+        const { setProps } = render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            rowModesModel={{ 0: { mode: GridRowModes.Edit } }}
+          />,
+        );
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        setProps({ rowModesModel: { 0: { mode: GridRowModes.View } } });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        });
+        expect(apiRef.current?.getRow(0).currencyPair).to.equal('USD GBP');
+      });
+
+      it('should keep the error of a new value if an older validation of the field ends later', async () => {
+        let endOldValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props, hasChanged }: GridPreProcessEditCellProps) =>
+          hasChanged
+            ? { ...props, error: true }
+            : new Promise((resolve) => {
+                endOldValidation = () => resolve({ ...props, error: false });
+              });
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column2Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'price1M',
+            value: -42,
+            debounceMs: 100,
+          });
+        });
+        // The currency change validates the old price again, and that validation ends last.
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await act(async () => {
+          endOldValidation();
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.Edit);
+      });
+
+      it('should not commit a newer value before its own validation ends', async () => {
+        const endValidation: Record<string, (error: boolean) => void> = {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => {
+            endValidation[props.value] = (error) => resolve({ ...props, error });
+          });
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1417,10 +1510,18 @@ describe('<DataGridPro /> - Row editing', () => {
           });
         });
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
-        await waitFor(() => {
-          expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'INVALID' });
         });
-        expect(apiRef.current?.getRow(0).currencyPair).to.equal('USD GBP');
+        // The validation of the old value ends first. It must not let the stop commit the new value.
+        await act(async () => {
+          endValidation['USD GBP'](false);
+        });
+        await act(async () => {
+          endValidation.INVALID(true);
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.Edit);
       });
     });
 

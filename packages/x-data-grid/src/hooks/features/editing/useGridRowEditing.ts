@@ -582,11 +582,16 @@ export const useGridRowEditing = (
 
       if (isSomeFieldProcessingProps) {
         prevRowModesModel.current[id].mode = GridRowModes.Edit;
-        // The validation of the debounced values that the stop ran can end later, so stop again then.
+        // The validation of the debounced values that the stop ran ends later.
+        // Finish the stop then, if the model still asks for it.
         if (flushedMutation) {
           flushedMutation.then(() => {
-            if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
-              apiRef.current.stopRowEditMode(params);
+            const modelParams = rowModesModelRef.current[id];
+            if (
+              modelParams?.mode === GridRowModes.View &&
+              apiRef.current.getRowMode(id) === GridRowModes.Edit
+            ) {
+              updateStateToStopRowEditMode({ id, ...modelParams });
             }
           });
         }
@@ -725,6 +730,13 @@ export const useGridRowEditing = (
             }
 
             editingState = gridEditRowsStateSelector(apiRef);
+            // A newer value replaced this one during the processing. Its own validation sets the result.
+            const currentProps = editingState[id][field];
+            if (!currentProps || !Object.is(currentProps.value, parsedValue)) {
+              resolve(false);
+              return;
+            }
+
             processedProps = { ...processedProps, isProcessingProps: false };
             // We don't reuse the value from the props pre-processing because when the
             // promise resolves it may be already outdated. The only exception to this rule
@@ -771,9 +783,13 @@ export const useGridRowEditing = (
             }
 
             editingState = gridEditRowsStateSelector(apiRef);
+            // The field changed or left the row during the processing, so the result is outdated.
+            const currentProps = editingState[id][thisField];
+            if (!currentProps || !Object.is(currentProps.value, fieldProps.value)) {
+              return;
+            }
+
             processedProps = { ...processedProps, isProcessingProps: false };
-            // Keep the latest value, because the field can change while its props are processed.
-            processedProps.value = editingState[id][thisField].value;
             updateOrDeleteFieldState(id, thisField, processedProps);
           });
 

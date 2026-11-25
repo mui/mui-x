@@ -464,16 +464,22 @@ export const useGridCellEditing = (
         // Attempt to change cell mode to "view" was not successful
         // Update previous mode to allow another attempt
         prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
-        // Revert the mode in the cellModesModel prop back to "edit"
-        updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
-        // The validation of a debounced value that the stop ran can end later, so stop again then.
+        // The validation of a debounced value that the stop ran ends later.
+        // Finish the stop then, if the model still asks for it.
         if (isProcessingProps && flushedMutation) {
           flushedMutation.then(() => {
-            if (apiRef.current.getCellMode(id, field) === GridCellModes.Edit) {
-              apiRef.current.stopCellEditMode(params);
+            const modelParams = cellModesModelRef.current[id]?.[field];
+            if (
+              modelParams?.mode === GridCellModes.View &&
+              apiRef.current.getCellMode(id, field) === GridCellModes.Edit
+            ) {
+              updateStateToStopCellEditMode({ id, field, ...modelParams });
             }
           });
+          return;
         }
+        // Revert the mode in the cellModesModel prop back to "edit"
+        updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
         return;
       }
 
@@ -589,6 +595,14 @@ export const useGridCellEditing = (
       }
 
       editingState = gridEditRowsStateSelector(apiRef);
+      // A newer value replaced this one during the processing. Its own validation sets the result.
+      if (
+        column.preProcessEditCellProps &&
+        !Object.is(editingState[id][field].value, parsedValue)
+      ) {
+        return false;
+      }
+
       newProps = { ...newProps, isProcessingProps: false };
       // We don't update the value with the one coming from the props pre-processing
       // because when the promise resolves it may be already outdated. The only
