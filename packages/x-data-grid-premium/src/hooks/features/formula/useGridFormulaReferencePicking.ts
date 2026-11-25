@@ -6,7 +6,7 @@ import { GRID_ACTIONS_COLUMN_TYPE, gridClasses, useGridEvent } from '@mui/x-data
 import type { GridEventListener, GridEvents } from '@mui/x-data-grid-pro';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { isPointerOnFillHandle } from '../cellSelection/useGridCellSelection';
+import { isPointerOnFillHandle } from '../cellSelection/fillHandleUtils';
 import { FORMULA_ARGUMENT_SEPARATOR, isFormulaPendingPickValid } from './engine';
 import type { FormulaPickMode } from './engine';
 import type { GridFormulaPickEditable } from './gridFormulaInterfaces';

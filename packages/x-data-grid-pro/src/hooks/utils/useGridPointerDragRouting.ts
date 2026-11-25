@@ -42,7 +42,7 @@ type GridRootNativeEventHandler<K extends keyof HTMLElementEventMap> = (
  * @param {Function} handler The listener. It must keep its identity, with `useEventCallback`.
  * @param {boolean} capture Whether to listen in the capture phase.
  */
-function useGridRootNativeEventListener<K extends keyof HTMLElementEventMap>(
+export function useGridRootNativeEventListener<K extends keyof HTMLElementEventMap>(
   apiRef: RefObject<GridPrivateApiPro>,
   eventName: K,
   handler: GridRootNativeEventHandler<K>,
@@ -79,7 +79,7 @@ function useGridRootNativeEventListener<K extends keyof HTMLElementEventMap>(
 }
 
 // Allowlist, not `!== 'mouse'`: an empty or missing `pointerType` must keep HTML drag and drop
-const isPointerDragType = (pointerType: string | null | undefined) =>
+export const isPointerDragType = (pointerType: string | null | undefined) =>
   pointerType === 'touch' || pointerType === 'pen';
 
 interface UseGridPointerDragRoutingOptions {

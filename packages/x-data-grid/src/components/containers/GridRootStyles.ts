@@ -4,6 +4,7 @@ import { styled, css } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c, gridClassesOverrides } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';
+import { FILL_HANDLE_IMMEDIATE_TOUCH_DRAG } from '../../constants/fillHandle';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -905,6 +906,18 @@ export const GridRootStyles = styled('div', {
         backgroundColor: vars.colors.interactive.focus,
         cursor: 'crosshair',
         zIndex: 50,
+      },
+      // A press on the handle starts a touch drag: it must not select text or open the iOS callout.
+      // Only on devices with a touch screen, so the cell text stays selectable with a mouse.
+      '@media (any-pointer: coarse)': {
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        WebkitTouchCallout: 'none',
+        touchAction: FILL_HANDLE_IMMEDIATE_TOUCH_DRAG ? 'none' : undefined,
+        '&::after': {
+          width: 11,
+          height: 11,
+        },
       },
     },
     // The cells a click can reference while a formula is edited. Pinned rows are outside
