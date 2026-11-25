@@ -305,6 +305,15 @@ export function createSendMessageActions<Cursor = string>(params: {
     await sendExistingMessage(message, input.attachments);
   }
 
+  // Returns `null` instead of silently dropping the message when a send is already in progress.
+  function sendMessageIfIdle(input: UseChatSendMessageInput): Promise<void> | null {
+    if (isSending || store.state.isStreaming) {
+      return null;
+    }
+
+    return sendMessage(input);
+  }
+
   async function retry(messageId: string): Promise<void> {
     // Hoist the streaming guard above any destructive work so retrying while a
     // stream is in flight is a clean no-op rather than wiping prior assistant
@@ -482,5 +491,5 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
   }
 
-  return { sendMessage, retry, regenerate, pruneAttachmentsByMessageIds };
+  return { sendMessage, sendMessageIfIdle, retry, regenerate, pruneAttachmentsByMessageIds };
 }

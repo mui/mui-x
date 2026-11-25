@@ -3,6 +3,7 @@ export * from './elGR';
 export * from './enUS';
 export * from './frFR';
 export * from './idID';
+export * from './koKR';
 export * from './ptBR';
 export * from './ptPT';
 export * from './svSE';

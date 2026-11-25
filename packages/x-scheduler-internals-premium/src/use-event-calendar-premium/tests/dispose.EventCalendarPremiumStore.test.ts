@@ -1,12 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  addDays,
-  DEFAULT_TESTING_VISIBLE_DATE,
-  EventBuilder,
-  processDay,
-} from 'test/utils/scheduler';
+import { addDays, DEFAULT_TESTING_VISIBLE_DATE, EventBuilder } from 'test/utils/scheduler';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { disposeSymbol } from '@mui/x-internals/disposable';
-import type { SchedulerEvent, SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   buildEvents,
   DEFAULT_PARAMS,
@@ -19,8 +16,10 @@ import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
 const buildViewDefinition = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
-  visibleDaysSelector: (state: any): SchedulerProcessedDay[] =>
-    Array.from({ length: 7 }, (_, i) => processDay(addDays(state.visibleDate, i))),
+  visibleDaysSelector: (state: any): BaseTemporal.PlainDate[] =>
+    Array.from({ length: 7 }, (_, i) =>
+      schedulerOtherSelectors.visiblePlainDate(state).add({ days: i }),
+    ),
 });
 
 describe('Dispose - EventCalendarPremiumStore', () => {

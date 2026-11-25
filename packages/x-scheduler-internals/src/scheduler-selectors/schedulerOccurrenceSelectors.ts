@@ -1,14 +1,11 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type {
-  SchedulerEventOccurrence,
-  SchedulerProcessedDate,
-  SchedulerResource,
-} from '../models';
+import type { SchedulerEventOccurrence, SchedulerResource } from '../models';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { getOccurrencesFromEvents, getEventResourceIds } from '../internals/utils/event-utils';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   schedulerEventSelectors.processedEventRangeIndex,
@@ -85,7 +82,9 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
 );
 
 export const schedulerOccurrenceSelectors = {
-  isStarted: (state: State, start: SchedulerProcessedDate) => start.timestamp <= state.nowTimestamp,
-  isEnded: (state: State, end: SchedulerProcessedDate) => end.timestamp < state.nowTimestamp,
+  isStarted: (state: State, start: BaseTemporal.ZonedDateTime) =>
+    start.epochMilliseconds <= state.nowTimestamp,
+  isEnded: (state: State, end: BaseTemporal.ZonedDateTime) =>
+    end.epochMilliseconds < state.nowTimestamp,
   groupedByResourceList: occurrencesGroupedByResourceListSelector,
 };

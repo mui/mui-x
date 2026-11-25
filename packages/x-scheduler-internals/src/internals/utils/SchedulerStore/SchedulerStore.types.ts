@@ -206,11 +206,11 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   eventCreation: Partial<SchedulerEventCreationConfig> | boolean;
   /**
-   * The timezone used to display events in the scheduler.
-   *
-   * Accepts any valid IANA timezone name
-   * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * "default" (the timezone of the system), or "UTC".
+   * The timezone used to display events in the scheduler: an IANA timezone name
+   * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"), "UTC", or an offset such as
+   * "+05:30".
+   * The `displayTimezone` parameter "default", the timezone of the system, is stored as the name
+   * of that timezone, or as the offset the system applies when that timezone has no name.
    *
    * Events keep their original data timezone. The visible range starts on the day of the visible
    * date in this timezone, and the next and previous navigation move the visible date on its days.

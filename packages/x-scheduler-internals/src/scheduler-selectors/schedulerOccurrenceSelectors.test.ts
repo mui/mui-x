@@ -7,7 +7,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { createProcessedDate } from '../process-date';
+import { toZonedDateTime } from '../internals/utils/plain-date-utils/timeZone';
 import { schedulerOccurrenceSelectors } from './schedulerOccurrenceSelectors';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
@@ -21,7 +21,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T08:00:00Z');
 
-      const start = createProcessedDate(Date.parse('2025-07-03T10:00:00Z'), 'default');
+      const start = toZonedDateTime(Date.parse('2025-07-03T10:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isStarted(state, start)).to.equal(false);
     });
@@ -33,7 +33,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T10:00:00Z');
 
-      const start = createProcessedDate(Date.parse('2025-07-03T10:00:00Z'), 'default');
+      const start = toZonedDateTime(Date.parse('2025-07-03T10:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isStarted(state, start)).to.equal(true);
     });
@@ -45,7 +45,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T10:30:00Z');
 
-      const start = createProcessedDate(Date.parse('2025-07-03T10:00:00Z'), 'default');
+      const start = toZonedDateTime(Date.parse('2025-07-03T10:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isStarted(state, start)).to.equal(true);
     });
@@ -59,7 +59,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T10:30:00Z');
 
-      const end = createProcessedDate(Date.parse('2025-07-03T11:00:00Z'), 'default');
+      const end = toZonedDateTime(Date.parse('2025-07-03T11:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(false);
     });
@@ -71,7 +71,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T11:00:00Z');
 
-      const end = createProcessedDate(Date.parse('2025-07-03T11:00:00Z'), 'default');
+      const end = toZonedDateTime(Date.parse('2025-07-03T11:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(false);
     });
@@ -83,7 +83,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T12:00:00Z');
 
-      const end = createProcessedDate(Date.parse('2025-07-03T11:00:00Z'), 'default');
+      const end = toZonedDateTime(Date.parse('2025-07-03T11:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(true);
     });
