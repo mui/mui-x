@@ -344,8 +344,8 @@ interface ChatBoxComposerSlotProps {
 interface ChatBoxWidgetSlots {
   /**
    * The typing indicator rendered between the message list and the composer.
-   * The default renders nothing while no one is typing in the active conversation;
-   * a custom component is always rendered, so read `useChatStatus().typingUserIds` to hide it.
+   * The default renders nothing while no one is typing in the active conversation.
+   * A custom component controls its own visibility: return `null` when `useChatStatus().typingUserIds` is empty to match the default.
    * Pass `null` to hide it.
    * @default ChatTypingIndicator
    */

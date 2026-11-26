@@ -82,7 +82,7 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 | `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                                  |
 
 :::info
-The `dateDivider` and `unreadMarker` slots are opt-in: `ChatBox` only renders them when the matching `features.dateDivider` / `features.unreadMarker` flag is enabled. The default `typingIndicator` renders nothing while no one is typing in the active conversation. A custom `typingIndicator` component is always rendered, so read `useChatStatus().typingUserIds` to hide it when the list is empty.
+The `dateDivider` and `unreadMarker` slots are opt-in: `ChatBox` only renders them when the matching `features.dateDivider` / `features.unreadMarker` flag is enabled. The default `typingIndicator` renders nothing while no one is typing in the active conversation. A custom `typingIndicator` controls its own visibility: return `null` when `useChatStatus().typingUserIds` is empty to match the default.
 :::
 
 ## Hiding a slot
