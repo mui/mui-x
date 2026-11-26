@@ -7,6 +7,7 @@ import { ChatProvider } from '../ChatProvider';
 import type { ChatProviderProps } from '../ChatProvider';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import type { ChatToolMessagePart } from '../types/chat-message-parts';
+import type { ChatRealtimeEvent } from '../types/chat-realtime';
 import { useChat } from './useChat';
 import { useChatStatus } from './useChatStatus';
 import { useChatStore } from './useChatStore';
@@ -881,98 +882,306 @@ describe('useChat', () => {
     });
   });
 
-  it('scopes a stream started without a conversation to the id the parent assigns', async () => {
-    const signals: AbortSignal[] = [];
-    const controlledStream = createControlledStream();
-    let messages: ChatMessage[] = [];
-    const onMessagesChange = (next: ChatMessage[]) => {
-      messages = next;
-    };
-    const adapter = createAdapter({
-      sendMessage: vi.fn(async ({ signal }) => {
-        signals.push(signal);
-        return controlledStream.stream;
-      }),
-      stop: vi.fn(),
-    });
-    const { Wrapper, setProps } = createProviderWrapper({
-      adapter,
-      messages,
-      onMessagesChange,
-      activeConversationId: undefined,
-    });
-    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+  describe('switching the conversation while a new chat streams its first reply', () => {
+    function renderStreamingChat({
+      controlledMessages = false,
+      controlledActiveConversation = true,
+      adapter: adapterOverrides,
+      ...props
+    }: Partial<Omit<ChatProviderProps, 'children' | 'adapter'>> & {
+      controlledMessages?: boolean;
+      controlledActiveConversation?: boolean;
+      adapter?: Partial<ChatAdapter>;
+    } = {}) {
+      const stream = createControlledStream();
+      const signals: AbortSignal[] = [];
+      const adapter = createAdapter({
+        sendMessage: vi.fn(async ({ signal }) => {
+          signals.push(signal);
+          return stream.stream;
+        }),
+        stop: vi.fn(),
+        ...adapterOverrides,
+      });
+      let messages: ChatMessage[] = [];
+      const getProps = (
+        overrides: Partial<ChatProviderProps> = {},
+      ): Omit<ChatProviderProps, 'children'> => ({
+        adapter,
+        ...(controlledActiveConversation ? { activeConversationId: undefined } : {}),
+        ...(controlledMessages
+          ? {
+              messages,
+              onMessagesChange: (next: ChatMessage[]) => {
+                messages = next;
+              },
+            }
+          : {}),
+        ...props,
+        ...overrides,
+      });
+      const { Wrapper, setProps } = createProviderWrapper(getProps());
+      const { result, rerender } = renderHook(() => ({ chat: useChat(), store: useChatStore() }), {
+        wrapper: Wrapper,
+      });
 
-    act(() => {
-      void result.current.sendMessage({ parts: [{ type: 'text', text: 'New chat' }] });
+      return {
+        adapter,
+        stream,
+        signals,
+        result,
+        getMessages: () => (controlledMessages ? messages : result.current.chat.messages),
+        async send() {
+          act(() => {
+            void result.current.chat.sendMessage({ parts: [{ type: 'text', text: 'New chat' }] });
+          });
+          await waitFor(() => {
+            expect(result.current.chat.isStreaming).toBe(true);
+          });
+        },
+        async switchTo(overrides: Partial<ChatProviderProps>) {
+          setProps(getProps(overrides));
+          rerender();
+          await waitFor(() => {
+            expect(result.current.chat.activeConversationId).toBe(overrides.activeConversationId);
+          });
+        },
+        async finish() {
+          await act(async () => {
+            await stream.enqueue({ type: 'text-delta', id: 'text-1', delta: ' there' });
+            await stream.enqueue({ type: 'finish', messageId: 'assistant-new' });
+          });
+          await waitFor(() => {
+            expect(result.current.chat.isStreaming).toBe(false);
+          });
+        },
+      };
+    }
+
+    async function startReply(
+      stream: ReturnType<typeof createControlledStream>,
+      conversationId?: string,
+    ) {
+      await act(async () => {
+        await stream.enqueue({ type: 'start', messageId: 'assistant-new', conversationId });
+        await stream.enqueue({ type: 'text-start', id: 'text-1' });
+        await stream.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Hi' });
+      });
+    }
+
+    function expectReplyIn(messages: ChatMessage[], conversationId: string) {
+      expect(messages.map((message) => [message.role, message.conversationId])).toEqual([
+        ['user', conversationId],
+        ['assistant', conversationId],
+      ]);
+      expect(messages[1].parts).toEqual([
+        expect.objectContaining({ type: 'text', text: 'Hi there' }),
+      ]);
+    }
+
+    it.each([
+      ['uncontrolled', false],
+      ['controlled', true],
+    ])(
+      'stops the stream when neither signal is present (%s messages)',
+      async (_, controlledMessages) => {
+        const view = renderStreamingChat({ controlledMessages });
+        await view.send();
+        await startReply(view.stream);
+
+        await view.switchTo({ activeConversationId: 'c-existing' });
+
+        expect(view.signals[0].aborted).toBe(true);
+        expect(view.adapter.stop).toHaveBeenCalledTimes(1);
+        expect(view.result.current.chat.isStreaming).toBe(false);
+        expect(view.getMessages().filter((message) => message.status === 'streaming')).toEqual([]);
+      },
+    );
+
+    it.each([
+      ['uncontrolled', false],
+      ['controlled', true],
+    ])(
+      'keeps the stream when the parent opens the conversation reported on `start` (%s messages)',
+      async (_, controlledMessages) => {
+        const listMessages = vi.fn(async () => ({ messages: [] }));
+        const view = renderStreamingChat({ controlledMessages, adapter: { listMessages } });
+        await view.send();
+        await startReply(view.stream, 'c-new');
+
+        await view.switchTo({ activeConversationId: 'c-new' });
+
+        expect(view.signals[0].aborted).toBe(false);
+        expect(view.adapter.stop).not.toHaveBeenCalled();
+        expect(view.result.current.chat.isStreaming).toBe(true);
+        expect(view.result.current.store.state.streamingConversationId).toBe('c-new');
+        expect(listMessages).not.toHaveBeenCalled();
+
+        await view.finish();
+        expectReplyIn(view.getMessages(), 'c-new');
+      },
+    );
+
+    it('stops the stream when the parent opens another conversation than the one reported on `start`', async () => {
+      const view = renderStreamingChat({ conversations: [] });
+      await view.send();
+      await startReply(view.stream, 'c-new');
+
+      // The reported id wins over a conversation added during the reply.
+      await view.switchTo({ activeConversationId: 'c-added', conversations: [{ id: 'c-added' }] });
+
+      expect(view.signals[0].aborted).toBe(true);
+      expect(view.result.current.chat.isStreaming).toBe(false);
     });
 
-    await waitFor(() => {
-      expect(result.current.isStreaming).toBe(true);
+    it.each([
+      ['uncontrolled', false],
+      ['controlled', true],
+    ])(
+      'keeps the stream when the parent adds the conversation to `conversations` as it opens it (%s messages)',
+      async (_, controlledMessages) => {
+        const existing = { id: 'c-existing' };
+        const view = renderStreamingChat({ controlledMessages, conversations: [existing] });
+        await view.send();
+        await startReply(view.stream);
+
+        await view.switchTo({
+          activeConversationId: 'c-new',
+          conversations: [existing, { id: 'c-new' }],
+        });
+
+        expect(view.signals[0].aborted).toBe(false);
+        expect(view.result.current.store.state.streamingConversationId).toBe('c-new');
+
+        await view.finish();
+        expectReplyIn(view.getMessages(), 'c-new');
+      },
+    );
+
+    it('keeps the stream when a realtime `conversation-added` announced the conversation', async () => {
+      let onEvent: (event: ChatRealtimeEvent) => void = () => {};
+      const view = renderStreamingChat({
+        adapter: {
+          subscribe: ({ onEvent: handler }) => {
+            onEvent = handler;
+            return () => {};
+          },
+        },
+      });
+      await view.send();
+      await startReply(view.stream);
+
+      act(() => {
+        onEvent({ type: 'conversation-added', conversation: { id: 'c-new' } });
+      });
+      await view.switchTo({ activeConversationId: 'c-new' });
+
+      expect(view.signals[0].aborted).toBe(false);
+      await view.finish();
+      expectReplyIn(view.getMessages(), 'c-new');
     });
 
-    setProps({ adapter, messages, onMessagesChange, activeConversationId: 'c-new' });
-    rerender();
+    it('stops the stream when the opened conversation was loaded by `listConversations` during the reply', async () => {
+      let resolveConversations: (value: { conversations: ChatConversation[] }) => void = () => {};
+      const view = renderStreamingChat({
+        adapter: {
+          listConversations: () =>
+            new Promise((resolve) => {
+              resolveConversations = resolve;
+            }),
+        },
+      });
+      await view.send();
 
-    await waitFor(() => {
-      expect(result.current.activeConversationId).toBe('c-new');
-    });
-    expect(signals[0].aborted).toBe(false);
-    expect(adapter.stop).not.toHaveBeenCalled();
-    expect(result.current.isStreaming).toBe(true);
+      await act(async () => {
+        resolveConversations({ conversations: [{ id: 'c-existing' }] });
+      });
+      await view.switchTo({ activeConversationId: 'c-existing' });
 
-    // The first chunk must keep the adopted scope.
-    await act(async () => {
-      await controlledStream.enqueue({ type: 'start', messageId: 'assistant-new' });
-      await controlledStream.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Hi' });
-    });
-    await waitFor(() => {
-      expect(messages.some((message) => message.id === 'assistant-new')).toBe(true);
-    });
-
-    setProps({ adapter, messages, onMessagesChange, activeConversationId: 'c-other' });
-    rerender();
-
-    await waitFor(() => {
-      expect(result.current.activeConversationId).toBe('c-other');
-    });
-    expect(signals[0].aborted).toBe(true);
-    expect(adapter.stop).toHaveBeenCalledTimes(1);
-  });
-
-  it('scopes a stream started without a conversation to the assigned id with uncontrolled messages', async () => {
-    const signals: AbortSignal[] = [];
-    const adapter = createAdapter({
-      sendMessage: vi.fn(async ({ signal }) => {
-        signals.push(signal);
-        return createPendingStream();
-      }),
-      stop: vi.fn(),
-    });
-    const { Wrapper, setProps } = createProviderWrapper({
-      adapter,
-      activeConversationId: undefined,
-    });
-    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
-
-    act(() => {
-      void result.current.sendMessage({ parts: [{ type: 'text', text: 'New chat' }] });
+      expect(view.signals[0].aborted).toBe(true);
     });
 
-    await waitFor(() => {
-      expect(result.current.isStreaming).toBe(true);
+    it('keeps the stream when `setActiveConversation` opens the conversation reported on `start`', async () => {
+      const listMessages = vi.fn(async () => ({ messages: [] }));
+      const view = renderStreamingChat({
+        controlledActiveConversation: false,
+        adapter: { listMessages },
+      });
+      await view.send();
+      await startReply(view.stream, 'c-new');
+
+      await act(async () => {
+        await view.result.current.chat.setActiveConversation('c-new');
+      });
+
+      expect(view.result.current.chat.activeConversationId).toBe('c-new');
+      expect(view.signals[0].aborted).toBe(false);
+      expect(view.result.current.store.state.streamingConversationId).toBe('c-new');
+      expect(listMessages).not.toHaveBeenCalled();
+
+      await view.finish();
+      expectReplyIn(view.getMessages(), 'c-new');
     });
 
-    setProps({ adapter, activeConversationId: 'c-new' });
-    rerender();
+    it('stops a kept stream when a realtime `conversation-removed` removes its conversation', async () => {
+      let onEvent: (event: ChatRealtimeEvent) => void = () => {};
+      const view = renderStreamingChat({
+        controlledActiveConversation: false,
+        adapter: {
+          subscribe: ({ onEvent: handler }) => {
+            onEvent = handler;
+            return () => {};
+          },
+        },
+      });
+      await view.send();
+      await startReply(view.stream, 'c-new');
+      await act(async () => {
+        await view.result.current.chat.setActiveConversation('c-new');
+      });
+      expect(view.signals[0].aborted).toBe(false);
 
-    await waitFor(() => {
-      expect(result.current.activeConversationId).toBe('c-new');
+      act(() => {
+        onEvent({ type: 'conversation-removed', conversationId: 'c-new' });
+      });
+
+      expect(view.signals[0].aborted).toBe(true);
+      expect(view.result.current.chat.activeConversationId).toBe(undefined);
+      expect(view.result.current.chat.isStreaming).toBe(false);
+      expect(view.result.current.chat.messages).toEqual([]);
     });
-    expect(signals[0].aborted).toBe(false);
-    expect(adapter.stop).not.toHaveBeenCalled();
-    expect(result.current.isStreaming).toBe(true);
-    expect(result.current.messages.some((message) => message.role === 'user')).toBe(true);
+
+    it('keeps a kept stream in its conversation across a reconnect', async () => {
+      const reconnectSignals: AbortSignal[] = [];
+      const view = renderStreamingChat({
+        adapter: {
+          reconnectToStream: vi.fn(async ({ signal }) => {
+            reconnectSignals.push(signal);
+            return createPendingStream();
+          }),
+        },
+      });
+      await view.send();
+      await startReply(view.stream, 'c-new');
+      await view.switchTo({ activeConversationId: 'c-new' });
+
+      // The first stream ends without a terminal chunk, so the run reconnects.
+      await act(async () => {
+        await view.stream.close();
+      });
+      await waitFor(() => {
+        expect(view.adapter.reconnectToStream).toHaveBeenCalledTimes(1);
+      });
+      expect(view.adapter.reconnectToStream).toHaveBeenCalledWith(
+        expect.objectContaining({ conversationId: 'c-new', messageId: 'assistant-new' }),
+      );
+      expect(view.result.current.store.state.streamingConversationId).toBe('c-new');
+
+      await view.switchTo({ activeConversationId: 'c-other' });
+
+      expect(reconnectSignals[0].aborted).toBe(true);
+      expect(view.adapter.stop).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('aborts a stream started without a conversation when uncontrolled messages switch to an existing conversation', async () => {
@@ -1081,64 +1290,6 @@ describe('useChat', () => {
     expect(result.current.isStreaming).toBe(false);
     expect(result.current.messages.map((message) => message.id)).toEqual(['existing-1']);
     expect(messages.some((message) => message.role === 'assistant')).toBe(false);
-  });
-
-  it('keeps the adopted scope of a stream across a reconnect', async () => {
-    const signals: AbortSignal[] = [];
-    const controlledStream = createControlledStream();
-    let messages: ChatMessage[] = [];
-    const onMessagesChange = (next: ChatMessage[]) => {
-      messages = next;
-    };
-    const adapter = createAdapter({
-      sendMessage: vi.fn(async () => controlledStream.stream),
-      reconnectToStream: vi.fn(async ({ signal }) => {
-        signals.push(signal);
-        return createPendingStream();
-      }),
-      stop: vi.fn(),
-    });
-    const { Wrapper, setProps } = createProviderWrapper({
-      adapter,
-      messages,
-      onMessagesChange,
-      activeConversationId: undefined,
-    });
-    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
-
-    act(() => {
-      void result.current.sendMessage({ parts: [{ type: 'text', text: 'New chat' }] });
-    });
-
-    await waitFor(() => {
-      expect(result.current.isStreaming).toBe(true);
-    });
-
-    setProps({ adapter, messages, onMessagesChange, activeConversationId: 'c-new' });
-    rerender();
-
-    await waitFor(() => {
-      expect(result.current.activeConversationId).toBe('c-new');
-    });
-
-    // The first stream ends without a terminal chunk, so the run reconnects.
-    await act(async () => {
-      await controlledStream.enqueue({ type: 'start', messageId: 'assistant-new' });
-      await controlledStream.close();
-    });
-    await waitFor(() => {
-      expect(adapter.reconnectToStream).toHaveBeenCalledTimes(1);
-    });
-    expect(result.current.isStreaming).toBe(true);
-
-    setProps({ adapter, messages, onMessagesChange, activeConversationId: 'c-other' });
-    rerender();
-
-    await waitFor(() => {
-      expect(result.current.activeConversationId).toBe('c-other');
-    });
-    expect(signals[0].aborted).toBe(true);
-    expect(adapter.stop).toHaveBeenCalledTimes(1);
   });
 
   it('does not leak a buffered delta of the aborted stream into the next conversation', async () => {

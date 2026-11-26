@@ -319,6 +319,7 @@ describe('createRealtimeActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         stopStreaming: vi.fn(),
+        keepStreamOnSwitch: () => false,
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef: { current: 0 },

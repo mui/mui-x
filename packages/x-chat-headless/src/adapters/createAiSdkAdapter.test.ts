@@ -195,6 +195,34 @@ describe('createAiSdkAdapter — { stream } branch', () => {
     expect(finish.messageId).toBe(start.messageId);
   });
 
+  it('passes the conversationId of a start chunk through, with or without a messageId', async () => {
+    const adapter = createAiSdkAdapter({
+      stream: () =>
+        makeReadableStream<AiSdkUIMessageChunk>([
+          { type: 'start', conversationId: 'c-new' },
+          { type: 'finish' },
+        ]),
+    });
+    const withIdAdapter = createAiSdkAdapter({
+      stream: () =>
+        makeReadableStream<AiSdkUIMessageChunk>([
+          { type: 'start', messageId: 'm1', conversationId: 'c-new' },
+          { type: 'finish', messageId: 'm1' },
+        ]),
+    });
+    const input = {
+      message: makeUserMessage('hi'),
+      messages: [],
+      signal: new AbortController().signal,
+    };
+
+    const [start] = await readAll(await adapter.sendMessage(input));
+    const [startWithId] = await readAll(await withIdAdapter.sendMessage(input));
+
+    expect(start).toMatchObject({ type: 'start', conversationId: 'c-new' });
+    expect(startWithId).toEqual({ type: 'start', messageId: 'm1', conversationId: 'c-new' });
+  });
+
   it('assigns a unique synthetic messageId to each stream', async () => {
     // Each send must get a *distinct* synthetic id. If the adapter reused the
     // same id across sends, processStream would key every reply to the same

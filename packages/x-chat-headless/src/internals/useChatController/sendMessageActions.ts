@@ -34,11 +34,14 @@ export interface SendMessageActionsRuntimeRef<Cursor = string> {
   onError?: ChatOnError;
 }
 
-/** The run started by `sendExistingMessage`; the controller rescopes it when it adopts the stream. */
+/** The run being streamed; the controller decides whether a conversation switch keeps it. */
 export interface InFlightRun {
-  userMessageId: string;
+  /** Set by the controller when it keeps an unscoped run on a switch to a new conversation. */
   conversationId: string | undefined;
-  existingConversationIds: ReadonlySet<string>;
+  /** The conversation the stream reported on its `start` chunk. */
+  reportedConversationId?: string;
+  /** Conversations that already existed when the run started, so cannot be the run's new one. */
+  knownConversationIds: Set<string>;
 }
 
 export function createSendMessageActions<Cursor = string>(params: {
@@ -79,16 +82,34 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
   }
 
+  function startRun(conversationId: string | undefined): InFlightRun {
+    const run: InFlightRun = {
+      conversationId,
+      knownConversationIds: new Set(store.state.conversationIds),
+    };
+    inFlightRunRef.current = run;
+    return run;
+  }
+
+  function endRun(run: InFlightRun) {
+    if (inFlightRunRef.current === run) {
+      inFlightRunRef.current = null;
+    }
+  }
+
   async function processStreamWithReconnect(
     stream: Awaited<ReturnType<ChatAdapter<Cursor>['sendMessage']>>,
-    conversationId: string | undefined,
+    run: InFlightRun,
     abortController: AbortController,
     fallbackMessageId: string,
   ): Promise<ProcessStreamResult> {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
     const processOptions = {
-      conversationId,
+      conversationId: run.conversationId,
+      onReportedConversationId: (reportedConversationId: string) => {
+        run.reportedConversationId = reportedConversationId;
+      },
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
@@ -107,7 +128,12 @@ export function createSendMessageActions<Cursor = string>(params: {
       }
 
       await runtimeRef.current.onFinish({
-        message: getFinishMessage(storeUnknown, result.messageId, conversationId, result.status),
+        message: getFinishMessage(
+          storeUnknown,
+          result.messageId,
+          run.conversationId,
+          result.status,
+        ),
         messages: getMessages(storeUnknown),
         isAbort: result.isAbort,
         isDisconnect: result.isDisconnect,
@@ -129,10 +155,10 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
 
     try {
-      // failStream already cleared streamingConversationId, so read an adopted scope from the run.
-      store.setStreaming(true, conversationId ?? inFlightRunRef.current?.conversationId);
+      // failStream cleared streamingConversationId; the run keeps a scope the controller assigned.
+      store.setStreaming(true, run.conversationId);
       const reconnectStream = await adapter.reconnectToStream({
-        conversationId,
+        conversationId: run.conversationId,
         messageId: result.messageId,
         signal: abortController.signal,
       });
@@ -145,6 +171,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       return await processStream(store, reconnectStream, {
         ...processOptions,
+        conversationId: run.conversationId,
         onFinish: runtimeRef.current.onFinish,
         messageId: result.messageId,
         reconnectFromSequence: result.nextSequence,
@@ -174,7 +201,7 @@ export function createSendMessageActions<Cursor = string>(params: {
           true,
           {
             messageId: result.messageId,
-            conversationId,
+            conversationId: run.conversationId,
           },
         ),
       );
@@ -221,12 +248,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
-    const run: InFlightRun = {
-      userMessageId: nextMessage.id,
-      conversationId,
-      existingConversationIds: new Set(store.state.conversationIds),
-    };
-    inFlightRunRef.current = run;
+    const run = startRun(conversationId);
 
     // Unique fallback id for this run; used only when the adapter's `start`
     // chunk carries no `messageId` of its own.
@@ -243,7 +265,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       const result = await processStreamWithReconnect(
         stream,
-        conversationId,
+        run,
         abortController,
         fallbackMessageId,
       );
@@ -309,9 +331,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       if (store.state.activeStreamAbortController === abortController) {
         store.setActiveStreamAbortController(null);
       }
-      if (inFlightRunRef.current === run) {
-        inFlightRunRef.current = null;
-      }
+      endRun(run);
     }
   }
 
@@ -446,6 +466,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
+    const run = startRun(conversationId);
 
     // Fresh fallback id: the prior assistant run was just removed above, so a
     // regenerated reply with no adapter-supplied id targets a new message.
@@ -462,7 +483,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       const result = await processStreamWithReconnect(
         stream,
-        conversationId,
+        run,
         abortController,
         fallbackMessageId,
       );
@@ -545,6 +566,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       if (store.state.activeStreamAbortController === abortController) {
         store.setActiveStreamAbortController(null);
       }
+      endRun(run);
     }
   }
 

@@ -185,6 +185,9 @@ The `stream` callback receives a `CreateAiSdkAdapterRequest`:
 AI SDK `error` chunks (`{ type: 'error', errorText }`) are converted to `ChatStreamError` and surfaced through the chat's built-in error UI.
 Unknown chunk types pass through unchanged so newer protocol additions don't require an adapter update.
 If `start`, `finish`, or `abort` chunks arrive without a `messageId`, the adapter synthesizes one so deltas still bind to the right assistant message.
+The other fields of a `start` chunk pass through unchanged, so a `conversationId` that your stream adds to it reaches the runtime.
+The AI SDK's own `start` chunk has no such field: to keep the first reply of a new chat when your app switches to the conversation your server created, add `conversationId` to the `start` chunk, or add the conversation to `conversations` before switching to it.
+See [Switching conversations while a reply streams](/x/react-chat/behavior/streaming/#switching-conversations-while-a-reply-streams).
 Malformed JSON mid-stream raises a `ChatStreamError` surfaced through the same error UI.
 
 ## See also

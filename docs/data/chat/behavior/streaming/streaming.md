@@ -216,6 +216,27 @@ const { stopStreaming } = useChat();
 stopStreaming();
 ```
 
+## Switching conversations while a reply streams
+
+Changing the active conversation while a reply streams stops that stream, so the reply does not continue in the conversation you open.
+This applies to `setActiveConversation()`, to a change of the controlled `activeConversationId` prop, and to a realtime `conversation-removed` event for the active conversation.
+
+There is one exception.
+A message sent from a new chat has no conversation yet, so its reply streams without one.
+When your app then moves the chat to the conversation the server created for it, the runtime keeps the stream, and the reply ends up in that conversation, if it can tell that conversation is the reply's own.
+It recognizes it in either of these ways:
+
+- **The `start` chunk reports it.** Send the new conversation's id as `conversationId` on the `start` chunk. Switching to that id keeps the stream; switching to any other id stops it.
+
+  ```ts
+  controller.enqueue({ type: 'start', messageId: 'msg-1', conversationId: 'c-new' });
+  ```
+
+- **The conversation was added while the reply streams.** Add the new conversation before switching to it, or in the same update: through the controlled `conversations` prop, or with a realtime `conversation-added` event. Conversations that existed when the message was sent, or that `listConversations()` loaded since, do not count.
+
+Without either signal, switching to the new conversation stops the stream, and the reply is lost.
+When both apply, the `start` chunk wins.
+
 ## Reconnecting to streams
 
 Implement the adapter's [`reconnectToStream()`](/x/react-chat/backend/adapters/#resuming-an-interrupted-stream) method to resume an interrupted stream — for example, when an SSE connection drops mid-response:
@@ -256,11 +277,11 @@ Skip to the table you need: [lifecycle](#lifecycle-chunks), [text](#text-chunks)
 
 ### Lifecycle chunks
 
-| Chunk type | Fields                       | Description                                                               |
-| :--------- | :--------------------------- | :------------------------------------------------------------------------ |
-| `start`    | `messageId`, `author?`       | Begin a new assistant message; `author` sets the assistant message author |
-| `finish`   | `messageId`, `finishReason?` | Complete the assistant message                                            |
-| `abort`    | `messageId`                  | Cancel the assistant message                                              |
+| Chunk type | Fields                                    | Description                                                                                                                                                                                                                                   |
+| :--------- | :---------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `start`    | `messageId`, `author?`, `conversationId?` | Begin a new assistant message; `author` sets the assistant message author, `conversationId` names the conversation the reply belongs to (see [Switching conversations while a reply streams](#switching-conversations-while-a-reply-streams)) |
+| `finish`   | `messageId`, `finishReason?`              | Complete the assistant message                                                                                                                                                                                                                |
+| `abort`    | `messageId`                               | Cancel the assistant message                                                                                                                                                                                                                  |
 
 The optional `finishReason` is an adapter-defined string (for example `'stop'` or `'length'`).
 The runtime doesn't interpret or display it — it forwards the value verbatim to the

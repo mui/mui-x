@@ -37,6 +37,11 @@ export interface ProcessStreamOptions {
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
   /**
+   * Called with the `conversationId` of the `start` chunk, when the stream reports one.
+   * @param {string} conversationId The conversation the stream reported.
+   */
+  onReportedConversationId?: (conversationId: string) => void;
+  /**
    * Lower-bound sequence value to accept on a reconnected stream.
    *
    * When a reconnect adapter resumes a previously broken stream, the server
@@ -192,17 +197,13 @@ export async function processStream<Cursor = string>(
       throw failStream('Stream processing requires a target assistant message id.');
     }
 
-    const message = getOrCreateMessage(
-      storeUnknown,
-      targetMessageId,
-      options.conversationId,
-      startAuthor,
-    );
+    // An unscoped stream may have been given a conversation by the controller since it started.
+    const conversationId = options.conversationId ?? store.state.streamingConversationId;
+    const message = getOrCreateMessage(storeUnknown, targetMessageId, conversationId, startAuthor);
 
     if (!didStartMessage) {
       didStartMessage = true;
-      // Keep a scope the controller assigned to an unscoped stream before its first chunk.
-      store.setStreaming(true, options.conversationId ?? store.state.streamingConversationId);
+      store.setStreaming(true, conversationId);
       store.setError(null);
 
       if (targetMessageId) {
@@ -302,6 +303,9 @@ export async function processStream<Cursor = string>(
         // let two ids-less responses merge into one assistant message.
         targetMessageId = chunk.messageId ?? targetMessageId;
         startAuthor = chunk.author;
+        if (chunk.conversationId) {
+          options.onReportedConversationId?.(chunk.conversationId);
+        }
         ensureAssistantMessage();
         return;
 

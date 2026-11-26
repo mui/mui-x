@@ -115,6 +115,48 @@ export function useChatController<Cursor = string>({
     runtimeRef.current.adapter.stop?.();
   }, [store]);
 
+  // Keeps an unscoped stream when the active conversation becomes the one it belongs to: the id its
+  // `start` chunk reported or, without one, a conversation added while it streams. Returns whether kept.
+  const keepStreamOnSwitch = React.useCallback(
+    (nextConversationId: string | undefined) => {
+      const run = inFlightRunRef.current;
+      const { isStreaming, streamingConversationId, conversationsById } = store.state;
+      if (!isStreaming || streamingConversationId != null || nextConversationId == null || !run) {
+        return false;
+      }
+
+      const belongsToRun =
+        run.reportedConversationId != null
+          ? run.reportedConversationId === nextConversationId
+          : conversationsById[nextConversationId] !== undefined &&
+            !run.knownConversationIds.has(nextConversationId);
+      if (!belongsToRun) {
+        return false;
+      }
+
+      run.conversationId = nextConversationId;
+      store.setStreaming(true, nextConversationId);
+      // Deferred because controlled messages may be syncing from props now, which drops writes.
+      queueMicrotask(() => {
+        if (inFlightRunRef.current !== run) {
+          return;
+        }
+        const messages = getMessages(storeUnknown);
+        if (messages.some((message) => message.conversationId == null)) {
+          store.setMessages(
+            messages.map((message) =>
+              message.conversationId == null
+                ? { ...message, conversationId: nextConversationId }
+                : message,
+            ),
+          );
+        }
+      });
+      return true;
+    },
+    [store, storeUnknown],
+  );
+
   const { loadConversationMessages, loadMoreHistory, setActiveConversation } = React.useMemo(
     () =>
       createConversationActions({
@@ -122,12 +164,13 @@ export function useChatController<Cursor = string>({
         runtimeRef,
         setRuntimeError,
         stopStreaming,
+        keepStreamOnSwitch,
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef,
       }),
 
-    [setRuntimeError, stopStreaming, store],
+    [setRuntimeError, stopStreaming, keepStreamOnSwitch, store],
   );
 
   const { sendMessage, sendMessageIfIdle, retry, regenerate, pruneAttachmentsByMessageIds } =
@@ -260,6 +303,10 @@ export function useChatController<Cursor = string>({
           return;
         }
 
+        // Loaded conversations already existed, so a stream in flight cannot belong to them.
+        result.conversations.forEach((conversation) =>
+          inFlightRunRef.current?.knownConversationIds.add(conversation.id),
+        );
         store.setConversations(result.conversations);
       })
       .catch((error) => {
@@ -341,20 +388,10 @@ export function useChatController<Cursor = string>({
         return;
       }
 
-      const { isStreaming, streamingConversationId, messagesById } = store.state;
+      const { isStreaming, streamingConversationId } = store.state;
       if (isStreaming && streamingConversationId !== nextActiveConversationId) {
-        // An unscoped stream adopts the id the parent assigns to the new chat: a conversation that
-        // did not exist when the run started, while the messages still hold the run.
-        const run = inFlightRunRef.current;
-        const adoptsInFlightRun =
-          streamingConversationId == null &&
-          nextActiveConversationId != null &&
-          run != null &&
-          !run.existingConversationIds.has(nextActiveConversationId) &&
-          messagesById[run.userMessageId] !== undefined;
-        if (adoptsInFlightRun) {
-          run.conversationId = nextActiveConversationId;
-          store.setStreaming(true, nextActiveConversationId);
+        // A kept stream is the new conversation's reply, so its messages are not reloaded.
+        if (keepStreamOnSwitch(nextActiveConversationId)) {
           return;
         }
         stopStreaming();
