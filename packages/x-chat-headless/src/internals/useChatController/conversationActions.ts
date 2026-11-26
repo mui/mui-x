@@ -97,11 +97,15 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
-      // Apply held messages on their own so the buffer never keeps a copy older than the store.
-      const messages = store.state.messageIds.map((id) => store.state.messagesById[id]);
-      const mergedMessages = realtimeMessageBuffer.flush(conversationId, messages, false);
-      if (mergedMessages !== messages) {
-        store.setMessages(mergedMessages);
+      // Append held messages the store lacks; copies the store already has (e.g. streamed) are newer.
+      const heldMessages = realtimeMessageBuffer
+        .flush(conversationId, [], false)
+        .filter((message) => !store.state.messagesById[message.id]);
+      if (heldMessages.length > 0) {
+        store.setMessages([
+          ...store.state.messageIds.map((id) => store.state.messagesById[id]),
+          ...heldMessages,
+        ]);
       }
       store.setHistoryStatus('error');
       setRuntimeError(

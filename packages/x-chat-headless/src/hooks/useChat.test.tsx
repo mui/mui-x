@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { act, renderHook, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import type { ChatAdapter } from '../adapters';
+import type { ChatAdapter, ChatSubscribeInput } from '../adapters';
 import { createEchoAdapter } from '../adapters/createEchoAdapter';
 import { ChatProvider } from '../ChatProvider';
 import type { ChatProviderProps } from '../ChatProvider';
@@ -1787,13 +1787,13 @@ describe('useChat', () => {
   });
 
   it('replays realtime messages for another conversation when it opens, until the adapter changes', async () => {
-    const onEventByAdapter: Array<(event: any) => void> = [];
+    const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
     function createSubscribingAdapter() {
       return createAdapter({
-        subscribe: vi.fn(({ onEvent }) => {
+        subscribe({ onEvent }) {
           onEventByAdapter.push(onEvent);
           return () => {};
-        }),
+        },
       });
     }
     const message = (id: string): ChatMessage => ({
@@ -1821,6 +1821,34 @@ describe('useChat', () => {
     setProps({ adapter: createSubscribingAdapter(), initialActiveConversationId: 'c1' });
     rerender();
     await waitFor(() => expect(onEventByAdapter).toHaveLength(2));
+
+    await act(() => result.current.setActiveConversation('c2'));
+    expect(result.current.messages).toEqual([]);
+  });
+
+  it('ignores events from a replaced adapter whose cleanup is still pending', async () => {
+    const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
+    const firstAdapter = createAdapter({
+      subscribe({ onEvent }) {
+        onEventByAdapter.push(onEvent);
+        return new Promise(() => {});
+      },
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: firstAdapter,
+      initialActiveConversationId: 'c1',
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+    setProps({ adapter: createAdapter(), initialActiveConversationId: 'c1' });
+    rerender();
+    act(() =>
+      onEventByAdapter[0]({
+        type: 'message-added',
+        message: { id: 'm1', role: 'user', conversationId: 'c2', parts: [] },
+      }),
+    );
 
     await act(() => result.current.setActiveConversation('c2'));
     expect(result.current.messages).toEqual([]);

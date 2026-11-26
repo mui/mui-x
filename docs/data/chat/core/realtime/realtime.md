@@ -62,6 +62,7 @@ The `onEvent` callback receives `ChatRealtimeEvent` objects, grouped into the fo
 
 When a conversation is active, `message-added` and `message-updated` events whose `message.conversationId` names a different conversation are not added to the visible thread.
 The runtime holds up to 50 of them per conversation, dropping the first received, and applies them when that conversation opens, on top of the `listMessages` result when the adapter implements it.
+See [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/#event-delivery-guarantees) for how held messages are merged with a partial page.
 `message-removed` and `conversation-removed` events discard them.
 With controlled `messages`, these events are ignored.
 Messages already in the store are updated whatever their conversation.

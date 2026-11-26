@@ -294,6 +294,18 @@ describe('createRealtimeActions', () => {
         expect(store.state.messageIds).toEqual([]);
       });
 
+      it('keeps the store copy over a held one when listMessages fails', async () => {
+        const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        const loading = setActiveConversation('c2');
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2', '') });
+        store.addMessage(createMessage('m1', 'c2', 'streamed'));
+        await loading;
+
+        expect(getTexts(store)).toEqual(['streamed']);
+      });
+
       it('message-removed: drops the message from the buffer', async () => {
         const { store, handleRealtimeEvent, setActiveConversation } = setup();
 
@@ -377,6 +389,44 @@ describe('createRealtimeActions', () => {
 
         // m1 and m0 may be older than the page; m4 was added while it loaded.
         expect(store.state.messageIds).toEqual(['m3', 'm4']);
+      });
+
+      it('merges a live update onto the listed copy, not onto the held one', async () => {
+        const { listMessages, resolvers } = createPendingListMessages();
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        handleRealtimeEvent({
+          type: 'message-added',
+          message: { ...createMessage('m1', 'c2'), author: { id: 'held' } },
+        });
+        const loading = setActiveConversation('c2');
+        handleRealtimeEvent({
+          type: 'message-updated',
+          message: createMessage('m1', 'c2', 'm1 edited'),
+        });
+        resolvers[0]([{ ...createMessage('m1', 'c2'), author: { id: 'listed' } }]);
+        await loading;
+
+        expect(getTexts(store)).toEqual(['m1 edited']);
+        expect(store.state.messagesById.m1.author).toEqual({ id: 'listed' });
+      });
+
+      it('does not append a held message to a partial page because it was updated live', async () => {
+        const listMessages = vi.fn().mockResolvedValue({
+          messages: [createMessage('m3', 'c2')],
+          hasMore: true,
+        });
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        const loading = setActiveConversation('c2');
+        handleRealtimeEvent({
+          type: 'message-updated',
+          message: createMessage('m1', 'c2', 'm1 edited'),
+        });
+        await loading;
+
+        expect(store.state.messageIds).toEqual(['m3']);
       });
 
       it('message-removed: drops the message from the buffer without a conversation id', async () => {

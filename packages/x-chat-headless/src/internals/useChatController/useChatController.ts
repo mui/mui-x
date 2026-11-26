@@ -14,6 +14,7 @@ import type {
   ChatOnToolCall,
 } from '../../types';
 import type { ChatError } from '../../types/chat-error';
+import type { ChatRealtimeEvent } from '../../types/chat-realtime';
 import type { UseChatSendMessageInput } from '../../types/chat-callbacks';
 import {
   getMessages,
@@ -292,7 +293,14 @@ export function useChatController<Cursor = string>({
       return undefined;
     }
 
-    void Promise.resolve(adapter.subscribe({ onEvent: handleRealtimeEvent }))
+    // A retired subscription may still deliver events until its cleanup has resolved.
+    function onEvent(event: ChatRealtimeEvent) {
+      if (!isDisposed) {
+        handleRealtimeEvent(event);
+      }
+    }
+
+    void Promise.resolve(adapter.subscribe({ onEvent }))
       .then((resolvedCleanup) => {
         if (isDisposed) {
           resolvedCleanup?.();
