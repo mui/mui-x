@@ -1,8 +1,10 @@
+// The builders of the Scheduler tests live outside of this package.
+/* eslint-disable import/no-relative-packages */
 import { getTimezoneId } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-import { createDate } from 'test/utils/scheduler/dates';
-import { createOccurrence, EventBuilder } from 'test/utils/scheduler/event-builder';
+import { createDate } from '../../../../utils/scheduler/dates';
+import { createOccurrence, EventBuilder } from '../../../../utils/scheduler/event-builder';
 import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
 
 const { deleteRecurringEvent, updateRecurringEvent } = schedulerRecurringEventsPlugin;

@@ -1,3 +1,5 @@
+// The builders of the Scheduler tests live outside of this package.
+/* eslint-disable import/no-relative-packages */
 import {
   computeElementPositionInCollection,
   getTimelineAxisDurationMs,
@@ -5,8 +7,14 @@ import {
   timelineAxisOffsetToTimestamp,
   toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
-import { addDays, addMinutes, createDate, endOfDay, startOfDay } from 'test/utils/scheduler/dates';
-import { createTimelineAxis } from 'test/utils/scheduler/timeline-axis';
+import {
+  addDays,
+  addMinutes,
+  createDate,
+  endOfDay,
+  startOfDay,
+} from '../../../../utils/scheduler/dates';
+import { createTimelineAxis } from '../../../../utils/scheduler/timeline-axis';
 import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
 
 const occurrenceCount = 1_000;

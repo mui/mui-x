@@ -1,8 +1,10 @@
+// The builders of the Scheduler tests live outside of this package.
+/* eslint-disable import/no-relative-packages */
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import { toEpochMs, toPlainDate } from '@mui/x-scheduler-internals/internals';
-import { createDate, startOfMonth, startOfWeek } from 'test/utils/scheduler/dates';
-import { getEventCalendarStateFromParameters } from 'test/utils/scheduler/state';
+import { createDate, startOfMonth, startOfWeek } from '../../../../utils/scheduler/dates';
+import { getEventCalendarStateFromParameters } from '../../../../utils/scheduler/state';
 import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
 
 for (const timezone of ['default', 'America/New_York'] as const) {

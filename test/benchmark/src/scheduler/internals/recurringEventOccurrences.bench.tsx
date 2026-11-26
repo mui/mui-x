@@ -1,3 +1,5 @@
+// The builders of the Scheduler tests live outside of this package.
+/* eslint-disable import/no-relative-packages */
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
   BaseTemporal,
@@ -11,7 +13,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import { innerGetEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-import { EventBuilder } from 'test/utils/scheduler/event-builder';
+import { EventBuilder } from '../../../../utils/scheduler/event-builder';
 import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
 
 const RULES: SchedulerEventRecurrenceRule[] = [

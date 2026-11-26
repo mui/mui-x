@@ -1,10 +1,12 @@
+// The builders of the Scheduler tests live outside of this package.
+/* eslint-disable import/no-relative-packages */
 import {
   computeAutoSchedulingCascade,
   groupByEventId,
 } from '@mui/x-scheduler-internals-premium/internals';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import { addDays } from 'test/utils/scheduler/dates';
-import { EventBuilder } from 'test/utils/scheduler/event-builder';
+import { addDays } from '../../../../utils/scheduler/dates';
+import { EventBuilder } from '../../../../utils/scheduler/event-builder';
 import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
 
 for (const [timezone, allDay] of [

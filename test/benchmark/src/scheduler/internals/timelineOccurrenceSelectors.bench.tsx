@@ -1,3 +1,5 @@
+// The builders of the Scheduler tests live outside of this package.
+/* eslint-disable import/no-relative-packages */
 import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
@@ -9,9 +11,12 @@ import {
   addTimelinePositionsToOccurrences,
   eventTimelinePremiumPresetSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import { DEFAULT_TESTING_VISIBLE_DATE_STR, EventBuilder } from 'test/utils/scheduler/event-builder';
-import { ResourceBuilder } from 'test/utils/scheduler/resource-builder';
-import { getEventTimelinePremiumStateFromParameters } from 'test/utils/scheduler/state';
+import {
+  DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
+} from '../../../../utils/scheduler/event-builder';
+import { ResourceBuilder } from '../../../../utils/scheduler/resource-builder';
+import { getEventTimelinePremiumStateFromParameters } from '../../../../utils/scheduler/state';
 import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
 
 const resourceCount = 100;

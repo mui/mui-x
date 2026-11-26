@@ -1,10 +1,12 @@
+// The builders of the Scheduler tests live outside of this package.
+/* eslint-disable import/no-relative-packages */
 import {
   createEventRangeIndex,
   EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD,
 } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
-import { addDays, addHours, createDate } from 'test/utils/scheduler/dates';
-import { EventBuilder } from 'test/utils/scheduler/event-builder';
+import { addDays, addHours, createDate } from '../../../../utils/scheduler/dates';
+import { EventBuilder } from '../../../../utils/scheduler/event-builder';
 import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
 
 const eventCount = 50_000;
