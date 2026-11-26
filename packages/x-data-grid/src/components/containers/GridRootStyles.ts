@@ -15,6 +15,7 @@ const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
 const focusOutlineWidth = 1;
+const rangeBorderWidth = 2;
 
 const separatorIconDragStyles = {
   width: 3,
@@ -33,6 +34,8 @@ const shouldShowBorderTopRightRadiusSelector = (apiRef: RefObject<GridApiCommuni
     : apiRef.current.state.dimensions.hasScrollX &&
       (!apiRef.current.state.dimensions.hasScrollY ||
         apiRef.current.state.dimensions.scrollbarSize === 0);
+
+const isRtlSelector = (apiRef: RefObject<GridApiCommunity>) => apiRef.current.state.isRtl;
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -62,6 +65,8 @@ export const GridRootStyles = styled('div', {
     apiRef,
     shouldShowBorderTopRightRadiusSelector,
   );
+  const isRtl = useGridSelector(apiRef, isRtlSelector);
+  const rangeInlineStartOffset = isRtl ? -rangeBorderWidth : rangeBorderWidth;
 
   const fillPreviewTint = `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`;
   const baseBackground = vars.colors.background.base;
@@ -620,6 +625,8 @@ export const GridRootStyles = styled('div', {
       '--range-bottom': '0 0 0 0 transparent',
       '--range-left': '0 0 0 0 transparent',
       '--range-right': '0 0 0 0 transparent',
+    },
+    [`& .${c.cell}.Mui-selected`]: {
       boxShadow: 'var(--range-top), var(--range-bottom), var(--range-left), var(--range-right)',
     },
     [`& .${c['cell--rangeTop']}`]: {
@@ -629,10 +636,10 @@ export const GridRootStyles = styled('div', {
       '--range-bottom': `inset 0 -2px 0 0 ${vars.colors.interactive.focus}`,
     },
     [`& .${c['cell--rangeLeft']}`]: {
-      '--range-left': `inset 2px 0 0 0 ${vars.colors.interactive.focus}`,
+      '--range-left': `inset ${rangeInlineStartOffset}px 0 0 0 ${vars.colors.interactive.focus}`,
     },
     [`& .${c['cell--rangeRight']}`]: {
-      '--range-right': `inset -2px 0 0 0 ${vars.colors.interactive.focus}`,
+      '--range-right': `inset ${-rangeInlineStartOffset}px 0 0 0 ${vars.colors.interactive.focus}`,
     },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
