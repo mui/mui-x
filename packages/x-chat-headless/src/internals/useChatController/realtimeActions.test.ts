@@ -304,10 +304,8 @@ describe('createRealtimeActions', () => {
         const { store, handleRealtimeEvent, setActiveConversation } = setup();
 
         handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
-        let redirected = false;
         const unsubscribe = store.subscribe((state) => {
-          if (!redirected && state.activeConversationId === 'c2') {
-            redirected = true;
+          if (state.activeConversationId === 'c2') {
             setActiveConversation('c1');
           }
         });
@@ -320,6 +318,62 @@ describe('createRealtimeActions', () => {
         await setActiveConversation('c2');
 
         expect(store.state.messageIds).toEqual(['m1']);
+      });
+      it('keeps a message sent from a change listener when held messages are replayed', async () => {
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({
+          initialMessages: [createMessage('old', 'c1')],
+        });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        let sent = false;
+        store.subscribe((state) => {
+          if (!sent && state.activeConversationId === 'c2' && state.messageIds.length === 0) {
+            sent = true;
+            store.addMessage(createMessage('sent', 'c2'));
+          }
+        });
+        await setActiveConversation('c2');
+
+        expect(store.state.messageIds).toEqual(['m1', 'sent']);
+      });
+      it('does not report a failed load after its replay opened another conversation', async () => {
+        const listMessages = vi
+          .fn()
+          .mockRejectedValueOnce(new Error('offline'))
+          .mockReturnValue(new Promise(() => {}));
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        let redirected = false;
+        store.subscribe((state) => {
+          if (!redirected && state.messagesById.m1) {
+            redirected = true;
+            setActiveConversation('c1');
+          }
+        });
+        await setActiveConversation('c2');
+
+        expect(store.state.activeConversationId).toBe('c1');
+        expect(store.state.historyStatus).toBe('loading');
+      });
+      it('replays the updated copy when a change listener opens the conversation', async () => {
+        const { store, handleRealtimeEvent, setActiveConversation } = setup();
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2', 'v1') });
+        await setActiveConversation(undefined);
+        let opened = false;
+        store.subscribe((state) => {
+          if (!opened && state.messagesById.m1) {
+            opened = true;
+            setActiveConversation('c2');
+          }
+        });
+        handleRealtimeEvent({
+          type: 'message-updated',
+          message: createMessage('m1', 'c2', 'v2'),
+        });
+
+        expect(getTexts(store)).toEqual(['v2']);
       });
       it('keeps held messages for the next load when another adapter was only rendered', async () => {
         const { listMessages, resolvers } = createPendingListMessages();

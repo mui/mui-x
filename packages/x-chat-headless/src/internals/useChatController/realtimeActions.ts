@@ -34,12 +34,13 @@ export function createRealtimeActions(params: {
           }
           return;
         }
+        // Before the store write: its change callback may open the conversation and replay the buffer.
+        realtimeMessageBuffer.updateIfPresent(message, isUpdate);
         if (isStored && isUpdate) {
           store.updateMessage(message.id, message);
         } else {
           store.addMessage(message);
         }
-        realtimeMessageBuffer.updateIfPresent(message, isUpdate);
         return;
       }
       case 'message-removed':
