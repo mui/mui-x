@@ -254,7 +254,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
    * work that's not necessary. Thus we store the context at the start of the scroll in `frozenContext`, and the rows
    * that are part of this old context will keep their same render context as to avoid re-rendering.
    */
-  const scrollPosition = React.useRef(initialState?.scroll ?? EMPTY_SCROLL_POSITION);
+  const scrollPosition = React.useRef(
+    initialState?.scroll
+      ? { top: initialState.scroll.top ?? 0, left: initialState.scroll.left ?? 0 }
+      : EMPTY_SCROLL_POSITION,
+  );
   const ignoreNextScrollEvent = React.useRef(false);
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
@@ -1173,17 +1177,18 @@ function getRowIndexesToRender(
   const firstPosition =
     (RowsMeta.getPosition(rowsMeta, renderContext.firstRowIndex) ?? 0) - bufferBefore;
   // `lastRowIndex` is exclusive: when it points past the last row, the window extends to
-  // the end of the content.
-  const lastPosition =
-    (RowsMeta.getPosition(rowsMeta, renderContext.lastRowIndex) ??
-      rowsMeta.currentPageTotalHeight) + bufferAfter;
+  // the end of the rows, trailing zero-height rows included.
+  const lastPosition = RowsMeta.getPosition(rowsMeta, renderContext.lastRowIndex);
 
   const firstIndexPadded = searchRows(rowsMeta, firstPosition, {
     atStart: true,
     lastPosition:
       (RowsMeta.getPosition(rowsMeta, rowsMeta.rowCount - 1) ?? 0) + inputs.lastRowHeight,
   });
-  const lastIndexPadded = searchRows(rowsMeta, lastPosition) + 1;
+  const lastIndexPadded =
+    lastPosition === undefined
+      ? inputs.rows.length
+      : searchRows(rowsMeta, lastPosition + bufferAfter) + 1;
 
   return [
     clamp(firstIndexPadded, 0, inputs.rows.length),

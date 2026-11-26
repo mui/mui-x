@@ -327,7 +327,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   // and the text origin, via the matching 10px padding — flush with the cell's.
   const minWidth = colDef.computedWidth + 1;
 
-  // The row's content-space block position — `rowsMeta.positions` below the sticky
+  // The row's content-space block position — `RowsMeta.getPosition` below the sticky
   // top container, the same recipe the reference overlay uses (both live in the
   // scroller's content space, so they can never disagree). Reactive: sorting or a
   // row-height change mid-edit re-derives it in the same commit. In row-portal

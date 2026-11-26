@@ -189,13 +189,18 @@ export const useGridScroll = (apiRef: RefObject<GridPrivateApiCommunity>): void 
       if (targetRowIndex !== undefined) {
         const rowsMeta = gridRowsMetaSelector(apiRef);
         const elementIndex = targetRowIndex - rowIndexOffset;
+        // A row added in the same tick has no position until `rowsMeta` is re-hydrated:
+        // leave the vertical scroll alone instead of jumping to the top.
+        const elementOffset = RowsMeta.getPosition(rowsMeta, elementIndex);
 
-        scrollCoordinates.top = scrollIntoView({
-          containerSize: dimensions.viewportInnerSize.height,
-          scrollPosition: virtualScrollerRef.current?.scrollTop ?? 0,
-          elementSize: RowsMeta.getSlotHeight(rowsMeta, elementIndex),
-          elementOffset: RowsMeta.getPosition(rowsMeta, elementIndex) ?? 0,
-        });
+        if (elementOffset !== undefined) {
+          scrollCoordinates.top = scrollIntoView({
+            containerSize: dimensions.viewportInnerSize.height,
+            scrollPosition: virtualScrollerRef.current?.scrollTop ?? 0,
+            elementSize: RowsMeta.getSlotHeight(rowsMeta, elementIndex),
+            elementOffset,
+          });
+        }
       }
 
       scrollCoordinates = apiRef.current.unstable_applyPipeProcessors(
