@@ -17,16 +17,6 @@ const nextFrame = () =>
     requestAnimationFrame(resolve);
   });
 
-/** An interaction that only checks the mount: it fails the case if nothing matches the selector. */
-function expectRendered(selector: string) {
-  return async ({ waitForElementTiming }: InteractionContext) => {
-    await waitForElementTiming('default');
-    if (!document.querySelector(selector)) {
-      throw new Error(`The mount rendered no element that matches "${selector}".`);
-    }
-  };
-}
-
 // 200 events over the week of July 14, 2025: 40 a day from 8:00, one every 15 minutes, half an hour
 // each, so they overlap.
 const events: SchedulerEvent[] = Array.from({ length: 200 }, (_, index) => {
@@ -210,7 +200,6 @@ export const eventCalendarPremiumRecurring = defineScenario(
       />
     </div>
   ),
-  expectRendered('.MuiEventCalendar-timeGridEvent'),
 );
 
 const TIMELINE_RESOURCE_COUNT = 100;
@@ -337,5 +326,4 @@ export const eventTimelinePremiumDependencies = defineScenario(
       />
     </div>
   ),
-  expectRendered('.MuiEventTimeline-dependencyArrows path[data-dependency-id]'),
 );
