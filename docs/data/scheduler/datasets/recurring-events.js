@@ -129,8 +129,8 @@ export const initialEvents = [
   // ALL-DAY AND SPANNING EVENTS
   {
     id: 'allday-monthly-1st-sat-weekend',
-    start: '2025-07-05T09:00:00',
-    end: '2025-07-05T23:00:00',
+    start: '2025-07-05',
+    end: '2025-07-06',
     title: 'First Saturday of the Month',
     allDay: true,
     resource: 'allday',
@@ -138,8 +138,8 @@ export const initialEvents = [
   },
   {
     id: 'allday-oncall-7day-every-4-weeks',
-    start: '2025-06-30T00:00:00',
-    end: '2025-07-06T00:00:00',
+    start: '2025-06-30',
+    end: '2025-07-07',
     title: '7 days every 4 weeks',
     allDay: true,
     resource: 'allday',

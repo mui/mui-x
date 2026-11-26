@@ -7,14 +7,14 @@ import {
   ResourceBuilder,
   startOfDay,
 } from 'test/utils/scheduler';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { describe } from 'vitest';
 
 describe('<TimelineGrid.EventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(startOfDay(new Date()), 'default');
-  const end = processDate(endOfDay(new Date()), 'default');
+  const start = toZonedDateTime(startOfDay(new Date()).getTime(), 'default');
+  const end = toZonedDateTime(endOfDay(new Date()).getTime(), 'default');
 
   describeConformance(<TimelineGrid.EventPlaceholder start={start} end={end} />, () => ({
     refInstanceof: window.HTMLDivElement,

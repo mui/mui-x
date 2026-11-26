@@ -1,5 +1,5 @@
 import ownerDocument from '@mui/utils/ownerDocument';
-import { loadStyleSheets } from '@mui/x-internals/export';
+import { loadStyleSheets, waitForFonts } from '@mui/x-internals/export';
 import { copyCanvasesContent, createExportIframe } from './common';
 import type { ChartPrintExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
@@ -52,6 +52,8 @@ export function printChart(
         });
 
         await onBeforeExport(printWindow);
+
+        await waitForFonts(printDoc);
 
         printWindow.contentWindow!.print();
       })().then(resolve, reject);

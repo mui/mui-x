@@ -97,6 +97,8 @@ export function useMessageListBehavior(parameters: {
   const topLoadInFlightRef = React.useRef(false);
   const resizeFrameRef = React.useRef(0);
   const isMountedRef = React.useRef(true);
+  const hasMountedRef = React.useRef(false);
+  const mountScrollTopRef = React.useRef<number | null>(null);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
@@ -302,12 +304,18 @@ export function useMessageListBehavior(parameters: {
       updateUnseenMessageCount(0);
     }
 
+    // Only the event still at the mount scroll's offset is skipped; a coalesced user scroll elsewhere loads.
+    const isMountScrollEvent = root.scrollTop === mountScrollTopRef.current;
+    mountScrollTopRef.current = null;
+
     if (root.scrollTop > estimatedItemSize) {
       topReachedRef.current = false;
       return;
     }
 
-    void maybeLoadMoreHistory();
+    if (!isMountScrollEvent) {
+      void maybeLoadMoreHistory();
+    }
   }, [
     captureAnchor,
     estimatedItemSize,
@@ -315,6 +323,22 @@ export function useMessageListBehavior(parameters: {
     updateIsAtBottom,
     updateUnseenMessageCount,
   ]);
+
+  React.useLayoutEffect(() => {
+    // Mount only. Runs before the first `updateIsAtBottom()` so the latch stays true and
+    // `onReachBottom` doesn't fire; `instant` overrides CSS smooth scrolling so the scroll is synchronous.
+    if (hasMountedRef.current) {
+      return;
+    }
+    hasMountedRef.current = true;
+    if (autoScrollEnabled && itemIdsRef.current.length > 0) {
+      const scrollTopBefore = rootRef.current?.scrollTop ?? 0;
+      scrollToBottom({ behavior: 'instant' });
+      // The scroll event this emits must not load history; none is emitted if the list did not move.
+      const scrollTop = rootRef.current?.scrollTop ?? 0;
+      mountScrollTopRef.current = scrollTop === scrollTopBefore ? null : scrollTop;
+    }
+  }, [autoScrollEnabled, scrollToBottom]);
 
   React.useLayoutEffect(() => {
     updateIsAtBottom();

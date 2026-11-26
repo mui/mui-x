@@ -18,7 +18,7 @@ import { EventSkeleton } from '../event-skeleton';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
 
-const EVENT_HEIGHT = 22;
+export const EVENT_HEIGHT = 22;
 
 const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
@@ -72,7 +72,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
-    day,
+    day.plainDate,
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day, row);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);

@@ -26,6 +26,13 @@ dayjs.extend(weekOfYearPlugin);
 dayjs.extend(isBetweenPlugin);
 dayjs.extend(advancedFormatPlugin);
 
+// The precisions `isSame` compares at, each including the ones before it.
+const PRECISION_YEAR = 0;
+const PRECISION_MONTH = 1;
+const PRECISION_DAY = 2;
+
+type Precision = typeof PRECISION_YEAR | typeof PRECISION_MONTH | typeof PRECISION_DAY;
+
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   YY: 'year',
@@ -178,10 +185,25 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   private hasTimezonePlugin = () => typeof dayjs.tz !== 'undefined';
 
-  private isSame = (value: Dayjs, comparing: Dayjs, comparisonTemplate: string) => {
+  private isSame = (value: Dayjs, comparing: Dayjs, precision: Precision) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
 
-    return value.format(comparisonTemplate) === comparingInValueTimezone.format(comparisonTemplate);
+    // Strict parsing can return an invalid date that keeps numeric fields, such as `02/31/2026`
+    // with those of March 3, so validity is checked first: with `valueOf()`, as `isValid()` calls
+    // `Date#toString()`, which is slow. An invalid date only matches another invalid one.
+    const valueTime = value.valueOf();
+    const comparingTime = comparingInValueTimezone.valueOf();
+    if (Number.isNaN(valueTime) || Number.isNaN(comparingTime)) {
+      return Object.is(valueTime, comparingTime);
+    }
+
+    // Compares the fields that `format('YYYY-MM-DD')` prints, without the cost of formatting, which
+    // calendars pay for every day they render.
+    return (
+      value.year() === comparingInValueTimezone.year() &&
+      (precision < PRECISION_MONTH || value.month() === comparingInValueTimezone.month()) &&
+      (precision < PRECISION_DAY || value.date() === comparingInValueTimezone.date())
+    );
   };
 
   /**
@@ -537,15 +559,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public isSameYear = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'YYYY');
+    return this.isSame(value, comparing, PRECISION_YEAR);
   };
 
   public isSameMonth = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'YYYY-MM');
+    return this.isSame(value, comparing, PRECISION_MONTH);
   };
 
   public isSameDay = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'YYYY-MM-DD');
+    return this.isSame(value, comparing, PRECISION_DAY);
   };
 
   public isSameHour = (value: Dayjs, comparing: Dayjs) => {

@@ -79,7 +79,9 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
   backgroundColor: (theme.vars || theme).palette.primary.main,
 }));
 
-export function TimeGridColumn(props: TimeGridColumnProps) {
+// Memoized, so that the grid's own updates, such as `hasScroll` right after it mounts, don't
+// re-render every event of every column. Its props are primitives and a memoized `day`.
+export const TimeGridColumn = React.memo(function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
   const store = useEventCalendarStoreContext();
@@ -102,8 +104,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
     () =>
       day.withoutPosition.filter(
         (occurrence) =>
-          occurrence.displayTimezone.end.timestamp > start &&
-          occurrence.displayTimezone.start.timestamp < end,
+          occurrence.end.epochMilliseconds > start && occurrence.start.epochMilliseconds < end,
       ),
     [day.withoutPosition, start, end],
   );
@@ -132,7 +133,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       />
     </DayTimeGridColumn>
   );
-}
+});
 
 function ColumnInteractiveLayer({
   showCurrentTimeIndicator,

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-premium",
-  "version": "9.0.0-beta.15",
+  "version": "9.0.0-beta.16",
   "author": "MUI Team",
   "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
@@ -12,6 +12,7 @@
     ".": "./src/index.ts",
     "./models": "./src/models/index.ts",
     "./agenda-view-premium": "./src/agenda-view-premium/index.ts",
+    "./base-temporal": "./src/base-temporal/index.ts",
     "./compact-day-view-premium": "./src/compact-day-view-premium/index.ts",
     "./compact-three-day-view-premium": "./src/compact-three-day-view-premium/index.ts",
     "./compact-week-view-premium": "./src/compact-week-view-premium/index.ts",
@@ -97,7 +98,6 @@
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
-    "date-fns": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"

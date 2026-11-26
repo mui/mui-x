@@ -10,7 +10,6 @@
       "required": true,
       "isProPlan": true
     },
-    "type": { "type": { "description": "'funnel'" }, "required": true, "isProPlan": true },
     "borderRadius": { "type": { "description": "number" }, "default": "8", "isProPlan": true },
     "curve": {
       "type": { "description": "FunnelCurveType" },
@@ -44,6 +43,7 @@
       "default": "{ vertical: 'middle', horizontal: 'center' }",
       "isProPlan": true
     },
+    "type": { "type": { "description": "'funnel'" }, "isProPlan": true },
     "valueFormatter": {
       "type": {
         "description": "SeriesValueFormatter&lt;ChartsSeriesConfig[SeriesType]['valueType']&gt;"

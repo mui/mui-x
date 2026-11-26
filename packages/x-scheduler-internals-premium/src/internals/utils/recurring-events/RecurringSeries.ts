@@ -1,6 +1,5 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import {
+  BaseTemporal,
   addMonthsToDayNumber,
   dayNumberToIsoDate,
   getDayNumber,
@@ -11,14 +10,16 @@ import {
   getStartOfWeekDayNumber,
   LAST_SUPPORTED_DAY,
   plainDateFromDayNumber,
-  toLocalDayNumber,
-  toMsInDay,
+  getMsInDay,
+  localToEpochMs,
+  MS_PER_DAY,
+  toEpochMs,
+  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
   SchedulerProcessedEvent,
   SchedulerProcessedEventRecurrenceRule,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
@@ -299,11 +300,11 @@ export interface RecurringSeriesParameters {
   /**
    * The timezone of the series.
    */
-  timezone: TemporalTimezone;
+  timezone: string;
   /**
-   * The excluded occurrences (EXDATE), read in the timezone of the series.
+   * The days of the excluded occurrences (EXDATE), in the timezone of the series.
    */
-  exDates?: readonly TemporalSupportedObject[];
+  excludedDays?: readonly BaseTemporal.PlainDate[];
 }
 
 /**
@@ -315,17 +316,12 @@ export interface RecurringSeriesParameters {
  * December 30th, 2011 in Pacific/Apia, has no occurrence and doesn't count toward COUNT.
  */
 export class RecurringSeries {
-  declare public readonly timezone: TemporalTimezone;
+  declare public readonly timezone: string;
 
   /**
-   * The date of the first occurrence (DTSTART).
+   * The date and wall-clock time of the first occurrence (DTSTART).
    */
-  declare public readonly startPlainDate: BaseTemporal.PlainDate;
-
-  /**
-   * The wall-clock time of the first occurrence, in milliseconds since midnight.
-   */
-  declare public readonly startMsInDay: number;
+  declare public readonly start: BaseTemporal.PlainDateTime;
 
   declare private readonly ruleDays: RuleDays;
 
@@ -340,33 +336,54 @@ export class RecurringSeries {
 
   constructor(parameters: RecurringSeriesParameters) {
     const { rule, timezone } = parameters;
-    const toDay = (date: TemporalSupportedObject) => toLocalDayNumber(date.getTime(), timezone);
-
-    const startDay = toLocalDayNumber(parameters.start, timezone);
-
     this.timezone = timezone;
-    this.startPlainDate = plainDateFromDayNumber(startDay);
-    this.startMsInDay = toMsInDay(parameters.start, timezone);
-    this.ruleDays = new RuleDays(rule, startDay);
+    this.start = toPlainDateTime(parameters.start, timezone);
+    this.ruleDays = new RuleDays(rule, getDayNumber(this.start.toPlainDate()));
     // A fractional COUNT is rounded up.
     this.count = Math.ceil(rule.count ?? Infinity);
-    this.untilDay = rule.until ? toDay(rule.until) : Infinity;
-    this.excludedDays = new Set(parameters.exDates?.map(toDay));
+    if (rule.until instanceof BaseTemporal.PlainDateTime) {
+      // A timed UNTIL is the last instant an occurrence can start at (RFC 5545): the day of
+      // UNTIL is excluded when its occurrence would start after it.
+      const untilDay = getDayNumber(rule.until.toPlainDate());
+      const occurrenceStartOnUntilDay = localToEpochMs(
+        untilDay * MS_PER_DAY + getMsInDay(this.start),
+        timezone,
+      );
+      this.untilDay =
+        untilDay - (occurrenceStartOnUntilDay > toEpochMs(rule.until, timezone) ? 1 : 0);
+    } else {
+      // A plain date UNTIL covers its whole day.
+      this.untilDay = rule.until ? getDayNumber(rule.until) : Infinity;
+    }
+    this.excludedDays = new Set(parameters.excludedDays?.map(getDayNumber));
   }
 
   /**
-   * Returns the series of a processed event, in its data timezone.
-   * `exDates` replaces the excluded occurrences of the event.
+   * Returns the series of a processed event: in its timezone for a timed event, and on its dates
+   * for an all-day one, the same in every display timezone.
+   * `excludedDays` replaces the days of the excluded occurrences of the event.
    */
   public static fromEvent(
     event: SchedulerProcessedEvent,
-    exDates: readonly TemporalSupportedObject[] | undefined = event.dataTimezone.exDates,
+    excludedDays: readonly BaseTemporal.PlainDate[] | undefined = event.exDates?.map((exDate) =>
+      exDate.toPlainDate(),
+    ),
   ): RecurringSeries {
+    if (event.allDay) {
+      // From the first date of the model, which a skipped day can't move, in a timezone with
+      // neither DST nor skipped days: the series counts the dates as they are.
+      return new RecurringSeries({
+        rule: event.rrule!,
+        start: toEpochMs(BaseTemporal.PlainDate.from(event.modelInBuiltInFormat.start), 'UTC'),
+        timezone: 'UTC',
+        excludedDays,
+      });
+    }
     return new RecurringSeries({
-      rule: event.dataTimezone.rrule!,
-      start: event.dataTimezone.start.timestamp,
-      timezone: event.dataTimezone.timezone,
-      exDates,
+      rule: event.rrule!,
+      start: event.start.epochMilliseconds,
+      timezone: event.timezone,
+      excludedDays,
     });
   }
 
@@ -497,7 +514,7 @@ export class RecurringSeries {
     }
     if (
       count === 0 ||
-      getSkippedDays(this.startPlainDate, plainDateFromDayNumber(lastDay + 1), this.timezone)
+      getSkippedDays(this.start.toPlainDate(), plainDateFromDayNumber(lastDay + 1), this.timezone)
         .size === 0
     ) {
       return count;

@@ -65,6 +65,12 @@ The model can be either:
 - **`type: 'include'`**: Only the rows with IDs in the `ids` set are selected
 - **`type: 'exclude'`**: All rows are selected except those with IDs in the `ids` set
 
+With an `exclude` model, the ID of a row that is removed from `rows` is removed from the model.
+If the row comes back, it is selected again.
+This applies only when all rows are on the client: no `dataSource`, and client-side filtering and pagination.
+Rows that are only filtered out keep their ID.
+To keep the IDs of removed rows, set the `keepNonExistentRowsSelected` prop.
+
 {{"demo": "ControlledSelectionGrid.js", "bg": "inline"}}
 
 ### Opting out of exclude model optimization

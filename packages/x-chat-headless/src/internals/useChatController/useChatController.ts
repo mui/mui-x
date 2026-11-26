@@ -40,6 +40,11 @@ export interface ChatRuntimeActions<Cursor = string> {
   addToolApprovalResponse(input: ChatAddToolApproveResponseInput): Promise<void>;
 }
 
+interface UseChatControllerReturnValue<Cursor = string> {
+  actions: ChatRuntimeActions<Cursor>;
+  sendMessageIfIdle(input: UseChatSendMessageInput): Promise<void> | null;
+}
+
 interface UseChatControllerParameters<Cursor = string> {
   store: ChatStore<Cursor>;
   adapter: ChatAdapter<Cursor>;
@@ -60,7 +65,7 @@ export function useChatController<Cursor = string>({
   onError,
   streamFlushInterval,
   features,
-}: UseChatControllerParameters<Cursor>): ChatRuntimeActions<Cursor> {
+}: UseChatControllerParameters<Cursor>): UseChatControllerReturnValue<Cursor> {
   const runtimeRef = React.useRef({
     adapter,
     onToolCall,
@@ -123,18 +128,19 @@ export function useChatController<Cursor = string>({
     [setRuntimeError, stopStreaming, store],
   );
 
-  const { sendMessage, retry, regenerate, pruneAttachmentsByMessageIds } = React.useMemo(
-    () =>
-      createSendMessageActions({
-        store,
-        storeUnknown,
-        runtimeRef,
-        setRuntimeError,
-        assistantMessageIdByUserMessageIdRef,
-      }),
+  const { sendMessage, sendMessageIfIdle, retry, regenerate, pruneAttachmentsByMessageIds } =
+    React.useMemo(
+      () =>
+        createSendMessageActions({
+          store,
+          storeUnknown,
+          runtimeRef,
+          setRuntimeError,
+          assistantMessageIdByUserMessageIdRef,
+        }),
 
-    [setRuntimeError, store, storeUnknown],
-  );
+      [setRuntimeError, store, storeUnknown],
+    );
 
   const setError = React.useCallback<ChatRuntimeActions<Cursor>['setError']>(
     (error) => {
@@ -367,7 +373,7 @@ export function useChatController<Cursor = string>({
     [store],
   );
 
-  return React.useMemo(
+  const actions = React.useMemo(
     () => ({
       sendMessage,
       stopStreaming,
@@ -389,4 +395,6 @@ export function useChatController<Cursor = string>({
       stopStreaming,
     ],
   );
+
+  return { actions, sendMessageIfIdle };
 }

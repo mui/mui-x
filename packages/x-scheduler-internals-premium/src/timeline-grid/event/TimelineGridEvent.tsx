@@ -48,7 +48,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     // Internal props
     start,
     end,
-    dataTimezone,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -88,7 +87,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     occurrenceKey,
     start,
     end,
-    dataTimezone,
   });
 
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
@@ -96,7 +94,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       // Measured on the axis so it stays consistent with the cursor offsets when a
       // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        -timestampToTimelineAxisOffsetMs(config, start.timestamp),
+        -timestampToTimelineAxisOffsetMs(config, start.epochMilliseconds),
         0,
       );
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
@@ -104,8 +102,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         eventId,
         occurrenceKey,
         originalOccurrence: getOriginalOccurrence(),
-        start: start.timestamp,
-        end: end.timestamp,
+        start: start.epochMilliseconds,
+        end: end.epochMilliseconds,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
         sourceResourceId: rowResourceId,
       };
@@ -208,8 +206,7 @@ export namespace TimelineGridEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters,
-      Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {
+      useDraggableEvent.PublicParameters {
     elementPosition?: useElementPositionInCollection.ReturnValue;
   }
 
