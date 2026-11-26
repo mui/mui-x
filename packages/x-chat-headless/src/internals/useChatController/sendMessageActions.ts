@@ -468,9 +468,9 @@ export function createSendMessageActions<Cursor = string>(params: {
       // original predecessor (or before the first survivor), keeping changes made meanwhile.
       const removedById = new Map(removedMessages.map((message) => [message.id, message]));
       const { messagesById } = store.state;
-      const liveMessages = getMessages(storeUnknown).filter(
-        (message) => !removedById.has(message.id),
-      );
+      const currentMessages = getMessages(storeUnknown);
+      const currentById = new Map(currentMessages.map((message) => [message.id, message]));
+      const liveMessages = currentMessages.filter((message) => !removedById.has(message.id));
       const liveIds = new Set(liveMessages.map((message) => message.id));
       const restoredAfter = new Map<string | undefined, ChatMessage[]>();
       let previousLiveId: string | undefined;
@@ -478,10 +478,10 @@ export function createSendMessageActions<Cursor = string>(params: {
         const removedMessage = removedById.get(id);
         if (removedMessage) {
           const group = restoredAfter.get(previousLiveId) ?? [];
-          // The id check rejects inherited keys (e.g. "constructor") and the partial entries
-          // the store writes for them; `in`/`hasOwn` would miss a "__proto__" entry.
-          const liveMessage = messagesById[id];
-          group.push(liveMessage?.id === id ? liveMessage : removedMessage);
+          // An unlisted id can still have an own entry (addMessage does not list "constructor");
+          // the id check skips the id-less patch updateMessage writes for such ids.
+          const ownMessage = Object.hasOwn(messagesById, id) ? messagesById[id] : undefined;
+          group.push(currentById.get(id) ?? (ownMessage?.id === id ? ownMessage : removedMessage));
           restoredAfter.set(previousLiveId, group);
         } else if (liveIds.has(id)) {
           previousLiveId = id;

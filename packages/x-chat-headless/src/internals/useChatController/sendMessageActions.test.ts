@@ -1276,6 +1276,36 @@ describe('createSendMessageActions', () => {
       expect(store.state.messagesById[reply.id]).toBe(edited);
     });
 
+    it('does not restore a property of a "__proto__" message in place of a removed reply when regenerating rejects', async () => {
+      const [u1, a1] = makeThread();
+      const reply: ChatMessage = { ...a1, id: 'author' };
+      const protoMessage: ChatMessage = {
+        ...u1,
+        id: '__proto__',
+        author: { id: 'author', displayName: 'Alex' },
+      };
+      const store = new ChatStore({ initialMessages: [u1, reply] });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          store.setMessages([u1, protoMessage]);
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('author');
+
+      expect(store.state.messageIds).toEqual(['u1', 'author', '__proto__']);
+      expect(store.state.messagesById.author).toBe(reply);
+    });
+
     it('restores a reply with no surviving predecessor before the first message in the live order when regenerating rejects', async () => {
       const [u1, a1] = makeThread();
       const u2: ChatMessage = { ...u1, id: 'u2' };
