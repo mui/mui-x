@@ -421,7 +421,10 @@ describe('createSendMessageActions', () => {
     it('calls onFinish once with isError when the first stream cannot be read and reconnectToStream is set', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
-      const onFinish = vi.fn();
+      let isStreamingDuringFinish: boolean | undefined;
+      const onFinish = vi.fn().mockImplementation(() => {
+        isStreamingDuringFinish = store.state.isStreaming;
+      });
       const setRuntimeError = vi.fn();
       const lockedStream = createStream([{ type: 'start', messageId: 'a1' }]);
       lockedStream.getReader();
@@ -442,6 +445,7 @@ describe('createSendMessageActions', () => {
 
       expect(setRuntimeError.mock.calls[0][0].code).toBe('SEND_ERROR');
       expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(isStreamingDuringFinish).toBe(false);
       expect(onFinish.mock.calls[0][0]).toMatchObject({
         isAbort: false,
         isDisconnect: false,

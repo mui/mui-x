@@ -126,6 +126,7 @@ export function createSendMessageActions<Cursor = string>(params: {
           await runtimeRef.current.onFinish?.(capturedFinishPayload);
         } else {
           // The stream threw before finishing (e.g. a locked stream): still report the run once.
+          store.setStreaming(false);
           const isAbort = abortController.signal.aborted;
           await emitDeferredFinish({
             messageId: fallbackMessageId,
