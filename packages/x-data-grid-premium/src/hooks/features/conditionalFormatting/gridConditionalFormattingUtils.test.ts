@@ -3,13 +3,10 @@ import {
   getConditionalFormattingExcelOptions,
   getConditionalFormattingExcelStyle,
   getConditionalFormattingStyles,
-  matchesConditionalFormattingValue,
   sanitizeConditionalFormattingStyle,
 } from './gridConditionalFormattingUtils';
-import type {
-  GridConditionalFormattingCondition,
-  GridConditionalFormattingModel,
-} from './gridConditionalFormattingInterfaces';
+import type { GridConditionalFormattingModel } from './gridConditionalFormattingInterfaces';
+import type { GridCellCondition } from '../cellCondition/gridCellConditionInterfaces';
 
 const layout = {
   fieldToColumnLetter: new Map([
@@ -25,7 +22,7 @@ const layout = {
   rowRuns: [[2, 5]] as [number, number][],
 };
 
-const getFormula = (condition: GridConditionalFormattingCondition, field = 'price') => {
+const getFormula = (condition: GridCellCondition, field = 'price') => {
   const [options] = getConditionalFormattingExcelOptions(
     [{ type: 'highlight', fields: [field], condition, style: { color: '#f00' } }],
     layout,
@@ -35,84 +32,6 @@ const getFormula = (condition: GridConditionalFormattingCondition, field = 'pric
 };
 
 describe('gridConditionalFormattingUtils', () => {
-  describe('matchesConditionalFormattingValue', () => {
-    it('compares numbers and only matches number cells', () => {
-      const condition = { type: 'cell', operator: 'greaterThan', value: 10 } as const;
-      expect(matchesConditionalFormattingValue(condition, 11)).to.equal(true);
-      expect(matchesConditionalFormattingValue(condition, 10)).to.equal(false);
-      expect(matchesConditionalFormattingValue(condition, '11')).to.equal(false);
-      expect(matchesConditionalFormattingValue(condition, null)).to.equal(false);
-    });
-
-    it('supports between, notBetween and notEqual', () => {
-      const between = { type: 'cell', operator: 'between', value: 1, valueTo: 3 } as const;
-      expect(matchesConditionalFormattingValue(between, 1)).to.equal(true);
-      expect(matchesConditionalFormattingValue(between, 3)).to.equal(true);
-      expect(matchesConditionalFormattingValue(between, 4)).to.equal(false);
-      expect(matchesConditionalFormattingValue({ ...between, operator: 'notBetween' }, 4)).to.equal(
-        true,
-      );
-      expect(
-        matchesConditionalFormattingValue({ type: 'cell', operator: 'notEqual', value: 1 }, null),
-      ).to.equal(true);
-    });
-
-    it('never compares numbers with dates', () => {
-      expect(
-        matchesConditionalFormattingValue(
-          { type: 'cell', operator: 'greaterThan', value: 0 },
-          new Date(2026, 0, 1),
-        ),
-      ).to.equal(false);
-    });
-
-    it('compares dates and strings', () => {
-      expect(
-        matchesConditionalFormattingValue(
-          { type: 'cell', operator: 'lessThan', value: new Date(2026, 0, 1) },
-          new Date(2025, 5, 1),
-        ),
-      ).to.equal(true);
-      expect(
-        matchesConditionalFormattingValue(
-          { type: 'cell', operator: 'equal', value: 'Apple' },
-          'apple',
-        ),
-      ).to.equal(true);
-    });
-
-    it('matches text case-insensitively', () => {
-      expect(
-        matchesConditionalFormattingValue(
-          { type: 'text', operator: 'contains', value: 'AN' },
-          'Banana',
-        ),
-      ).to.equal(true);
-      expect(
-        matchesConditionalFormattingValue(
-          { type: 'text', operator: 'startsWith', value: 'ba' },
-          'Banana',
-        ),
-      ).to.equal(true);
-      expect(
-        matchesConditionalFormattingValue(
-          { type: 'text', operator: 'endsWith', value: 'x' },
-          'Banana',
-        ),
-      ).to.equal(false);
-      expect(
-        matchesConditionalFormattingValue({ type: 'text', operator: 'isEmpty' }, ' '),
-      ).to.equal(true);
-      // Like Excel's `TRIM`, only spaces are blank.
-      expect(
-        matchesConditionalFormattingValue({ type: 'text', operator: 'isEmpty' }, '\t'),
-      ).to.equal(false);
-      expect(
-        matchesConditionalFormattingValue({ type: 'text', operator: 'isNotEmpty' }, null),
-      ).to.equal(false);
-    });
-  });
-
   describe('sanitizeConditionalFormattingStyle', () => {
     it('drops invalid values', () => {
       let style;

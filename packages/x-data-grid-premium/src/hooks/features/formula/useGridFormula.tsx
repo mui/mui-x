@@ -99,11 +99,11 @@ import { findComputedColumnCellCycle } from './gridFormulaDraftCycles';
 import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 import { useGridFormulaReferencePicking } from './useGridFormulaReferencePicking';
 import { clearFormulaPickSession } from './gridFormulaReferencePicking';
-import type { GridConditionalFormattingPrivateApi } from '../conditionalFormatting/gridConditionalFormattingInterfaces';
+import type { GridCellConditionPrivateApi } from '../cellCondition/gridCellConditionInterfaces';
 import {
-  evaluateConditionalFormattingFormula,
-  getConditionalFormattingExcelFormula,
-} from './gridConditionalFormattingFormula';
+  evaluateCellFormulaCondition,
+  getCellFormulaConditionExcelFormula,
+} from './gridCellConditionFormula';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
@@ -737,19 +737,19 @@ export const useGridFormula = (
 
   useGridApiMethod(apiRef, formulaPrivateApi, 'private');
 
-  const conditionalFormattingPrivateApi: GridConditionalFormattingPrivateApi = {
-    evaluateConditionalFormattingFormula: React.useCallback(
-      (formula, row, id) => evaluateConditionalFormattingFormula(apiRef, formula, row, id),
+  const cellConditionPrivateApi: GridCellConditionPrivateApi = {
+    evaluateCellFormulaCondition: React.useCallback(
+      (formula, row) => evaluateCellFormulaCondition(apiRef, formula, row),
       [apiRef],
     ),
-    getConditionalFormattingExcelFormula: React.useCallback(
+    getCellFormulaConditionExcelFormula: React.useCallback(
       (formula, fieldToColumnLetter, rowNumber) =>
-        getConditionalFormattingExcelFormula(apiRef, formula, fieldToColumnLetter, rowNumber),
+        getCellFormulaConditionExcelFormula(apiRef, formula, fieldToColumnLetter, rowNumber),
       [apiRef],
     ),
   };
 
-  useGridApiMethod(apiRef, conditionalFormattingPrivateApi, 'private');
+  useGridApiMethod(apiRef, cellConditionPrivateApi, 'private');
 
   const validateComputedColumnDefinitionMethod = React.useCallback<
     GridComputedColumnsPrivateApi['validateComputedColumnDefinition']

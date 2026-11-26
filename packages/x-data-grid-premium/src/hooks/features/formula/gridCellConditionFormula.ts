@@ -1,5 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
-import type { GridRowId, GridValidRowModel } from '@mui/x-data-grid-pro';
+import { gridRowIdSelector } from '@mui/x-data-grid-pro';
+import type { GridValidRowModel } from '@mui/x-data-grid-pro';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   evaluateFormula,
@@ -33,11 +34,10 @@ function getSameRowAst(cache: GridFormulaInternalCache, formula: string): Formul
   return ast;
 }
 
-export function evaluateConditionalFormattingFormula(
+export function evaluateCellFormulaCondition(
   apiRef: RefObject<GridPrivateApiPremium>,
   formula: string,
   row: GridValidRowModel,
-  id: GridRowId,
 ): boolean {
   const cache = apiRef.current.caches.formula;
   if (cache === undefined || typeof formula !== 'string') {
@@ -48,6 +48,7 @@ export function evaluateConditionalFormattingFormula(
     return false;
   }
   // The condition belongs to the row, not to a cell: no field of its own.
+  const id = gridRowIdSelector(apiRef, row);
   const result = evaluateFormula(ast, createSameRowEvaluationContext(apiRef, cache, row, id, ''));
   return result.type === 'value' && toFormulaBoolean(result.value) === true;
 }
@@ -56,7 +57,7 @@ export function evaluateConditionalFormattingFormula(
  * Returns `null` when the formula calls a function missing from the registry:
  * the model can come from untrusted data, and Excel would evaluate the call.
  */
-export function getConditionalFormattingExcelFormula(
+export function getCellFormulaConditionExcelFormula(
   apiRef: RefObject<GridPrivateApiPremium>,
   formula: string,
   fieldToColumnLetter: Map<string, string>,

@@ -40,10 +40,8 @@ import type {
   GridComputedColumnsApi,
   GridComputedColumnsPrivateApi,
 } from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
-import type {
-  GridConditionalFormattingApi,
-  GridConditionalFormattingPrivateApi,
-} from '../hooks/features/conditionalFormatting/gridConditionalFormattingInterfaces';
+import type { GridConditionalFormattingApi } from '../hooks/features/conditionalFormatting/gridConditionalFormattingInterfaces';
+import type { GridCellConditionPrivateApi } from '../hooks/features/cellCondition/gridCellConditionInterfaces';
 
 /**
  * The api of Data Grid Premium.
@@ -84,7 +82,7 @@ export interface GridPrivateApiPremium
     // Registered by the formula feature as well: validation needs the engine.
     Partial<GridComputedColumnsPrivateApi>,
     // Registered by the formula feature: formula conditions need the engine.
-    Partial<GridConditionalFormattingPrivateApi>,
+    Partial<GridCellConditionPrivateApi>,
     GridDetailPanelPrivateApi,
     GridRowReorderPrivateApi,
     GridKeyboardReorderPrivateApi,

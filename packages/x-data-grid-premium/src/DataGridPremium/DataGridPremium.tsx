@@ -553,6 +553,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
         fontWeight: PropTypes.oneOf(['bold']),
         textDecoration: PropTypes.oneOf(['line-through', 'underline']),
       }).isRequired,
+      type: PropTypes.oneOf(['highlight']).isRequired,
     }),
   ),
   /**

@@ -1,11 +1,4 @@
 export type {
-  GridConditionalFormattingCellOperator,
-  GridConditionalFormattingTextOperator,
-  GridConditionalFormattingValue,
-  GridConditionalFormattingCellCondition,
-  GridConditionalFormattingTextCondition,
-  GridConditionalFormattingFormulaCondition,
-  GridConditionalFormattingCondition,
   GridConditionalFormattingStyle,
   GridConditionalFormattingHighlightRule,
   GridConditionalFormattingRule,

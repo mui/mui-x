@@ -25,8 +25,8 @@ import {
   getConditionalFormattingClassName,
   isConditionalFormattingRow,
   isConditionalFormattingHighlightRule,
-  matchesConditionalFormattingValue,
 } from './gridConditionalFormattingUtils';
+import { matchesGridCellCondition } from '../cellCondition/gridCellConditionUtils';
 
 export const conditionalFormattingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'conditionalFormatting' | 'initialState'>,
@@ -82,15 +82,11 @@ export const useGridConditionalFormatting = (
       field: string,
     ) => {
       const { condition } = rule;
-      if (condition.type === 'formula') {
-        return (
-          apiRef.current.evaluateConditionalFormattingFormula?.(condition.formula, row, id) ?? false
-        );
-      }
-      return matchesConditionalFormattingValue(
-        condition,
-        getConditionalFormattingCellValue(apiRef, row, id, field),
-      );
+      const value =
+        condition.type === 'formula'
+          ? undefined
+          : getConditionalFormattingCellValue(apiRef, row, id, field);
+      return matchesGridCellCondition(condition, value, row, apiRef);
     },
     [apiRef],
   );
@@ -185,7 +181,7 @@ export const useGridConditionalFormatting = (
   React.useEffect(() => {
     if (
       process.env.NODE_ENV !== 'production' &&
-      apiRef.current.evaluateConditionalFormattingFormula === undefined &&
+      apiRef.current.evaluateCellFormulaCondition === undefined &&
       model.some(
         (rule) => isConditionalFormattingHighlightRule(rule) && rule.condition.type === 'formula',
       )
