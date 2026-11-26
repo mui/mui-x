@@ -64,7 +64,6 @@ const selectors = {
   minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
   rowPositions: (state: BaseState) => state.rowsMeta.positions,
-  rowPosition: (state: BaseState, index: number) => RowsMeta.getPosition(state.rowsMeta, index),
   // Memoized on the columns alone.
   // Without an input selector, the whole state is the memoization key.
   columnPositions: createSelectorMemoized(
