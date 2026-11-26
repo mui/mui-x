@@ -1336,6 +1336,29 @@ describe('useChat', () => {
       );
     });
 
+    it('does not keep a stream that already finished when `onFinish` opens its conversation', async () => {
+      const listMessages = vi.fn(async () => ({ messages: [] }));
+      const view = renderStreamingChat({
+        controlledActiveConversation: false,
+        adapter: { listMessages },
+        onFinish: () => {
+          void view.result.current.chat.setActiveConversation('c-new');
+        },
+      });
+      await view.send();
+      await startReply(view.stream, 'c-new');
+
+      await view.finish();
+
+      await waitFor(() => {
+        expect(listMessages).toHaveBeenCalledWith(
+          expect.objectContaining({ conversationId: 'c-new' }),
+        );
+      });
+      expect(view.result.current.chat.activeConversationId).toBe('c-new');
+      expect(view.result.current.chat.isStreaming).toBe(false);
+    });
+
     it('keeps a kept stream in its conversation across a reconnect', async () => {
       const reconnectSignals: AbortSignal[] = [];
       const view = renderStreamingChat({

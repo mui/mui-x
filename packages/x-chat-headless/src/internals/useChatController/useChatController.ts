@@ -120,10 +120,13 @@ export function useChatController<Cursor = string>({
   const keepStreamOnSwitch = React.useCallback(
     (nextConversationId: string | undefined) => {
       const run = inFlightRunRef.current;
-      const { streamingConversationId, activeStreamAbortController, conversationIds } = store.state;
-      // A run already stopped (controller cleared or aborted) is never kept.
+      const { isStreaming, streamingConversationId, activeStreamAbortController, conversationIds } =
+        store.state;
+      // A run already finished, or stopped (controller cleared or aborted), is never kept.
       const isLive =
-        activeStreamAbortController != null && !activeStreamAbortController.signal.aborted;
+        isStreaming &&
+        activeStreamAbortController != null &&
+        !activeStreamAbortController.signal.aborted;
       if (!isLive || streamingConversationId != null || nextConversationId == null || !run) {
         return false;
       }
