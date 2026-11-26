@@ -455,18 +455,12 @@ describe('createSendMessageActions', () => {
       store.setActiveConversation('c1');
       const onFinish = vi.fn().mockRejectedValue(new Error('consumer failed'));
       const setRuntimeError = vi.fn();
-      const lockedStream = createStream([{ type: 'start', messageId: 'a1' }]);
-      lockedStream.getReader();
-      const lockedMessage = (() => {
-        try {
-          lockedStream.getReader();
-          return '';
-        } catch (error) {
-          return (error as Error).message;
-        }
-      })();
+      const unreadableStream = createStream([{ type: 'start', messageId: 'a1' }]);
+      vi.spyOn(unreadableStream, 'getReader').mockImplementation(() => {
+        throw new Error('reader failed');
+      });
       const adapter = createAdapter({
-        sendMessage: vi.fn().mockResolvedValue(lockedStream),
+        sendMessage: vi.fn().mockResolvedValue(unreadableStream),
         reconnectToStream: vi.fn(),
       });
 
@@ -481,10 +475,9 @@ describe('createSendMessageActions', () => {
       await sendMessage(userMessageInput);
 
       expect(onFinish).toHaveBeenCalledTimes(1);
-      expect(lockedMessage).not.toBe('');
       expect(setRuntimeError.mock.calls[0][0]).toMatchObject({
         code: 'SEND_ERROR',
-        message: lockedMessage,
+        message: 'reader failed',
       });
     });
 
