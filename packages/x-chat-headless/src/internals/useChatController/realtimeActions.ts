@@ -16,7 +16,7 @@ export function createRealtimeActions(params: {
    * Keeps a message that is not in the store out of the visible thread when it belongs to another
    * conversation, or to the active one while its history loads. Returns `false` to apply it now.
    */
-  function bufferMessage(message: ChatMessage): boolean {
+  function bufferMessage(message: ChatMessage, isUpdate: boolean): boolean {
     const { activeConversationId, historyStatus } = store.state;
 
     if (activeConversationId == null) {
@@ -32,12 +32,12 @@ export function createRealtimeActions(params: {
         return false;
       }
 
-      realtimeMessageBuffer.add(conversationId, message, true);
+      realtimeMessageBuffer.add(conversationId, message, { isLive: true, isUpdate });
       return true;
     }
 
     if (!isControlled) {
-      realtimeMessageBuffer.add(conversationId, message, false);
+      realtimeMessageBuffer.add(conversationId, message, { isLive: false, isUpdate });
     }
 
     return true;
@@ -47,19 +47,19 @@ export function createRealtimeActions(params: {
     switch (event.type) {
       case 'message-added':
         // Messages already stored are applied whatever their conversation.
-        if (store.state.messagesById[event.message.id] || !bufferMessage(event.message)) {
+        if (store.state.messagesById[event.message.id] || !bufferMessage(event.message, false)) {
           store.addMessage(event.message);
         }
         return;
       case 'message-updated':
         if (store.state.messagesById[event.message.id]) {
           store.updateMessage(event.message.id, event.message);
-        } else if (!bufferMessage(event.message)) {
+        } else if (!bufferMessage(event.message, true)) {
           store.addMessage(event.message);
         }
         return;
       case 'message-removed':
-        realtimeMessageBuffer.remove(event.messageId);
+        realtimeMessageBuffer.remove(event.messageId, event.conversationId);
         store.removeMessage(event.messageId);
         return;
       case 'conversation-added':

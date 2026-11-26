@@ -275,7 +275,7 @@ The runtime performs no reordering or de-duplication beyond this — if strict o
 | `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store |
 
 When a conversation is active, `message-added` and `message-updated` events whose `message.conversationId` names a different conversation are not added to the visible thread.
-The runtime keeps the 50 most recent of them per conversation and applies them when that conversation opens, on top of the `listMessages` result when the adapter implements it.
+The runtime holds up to 50 of them per conversation, dropping the first received, and applies them when that conversation opens, on top of the `listMessages` result when the adapter implements it.
 `message-removed` and `conversation-removed` events discard them.
 With controlled `messages`, these events are ignored.
 Messages already in the store are updated whatever their conversation.

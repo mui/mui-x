@@ -265,9 +265,9 @@ Re-delivering events after a reconnect is safe: `*-added` and `*-updated` events
 When a conversation is active, `message-added` and `message-updated` events for a different conversation are kept out of the visible thread and held until the user opens that conversation.
 Set `message.conversationId` on every message: a message without it is treated as part of the active conversation.
 
-- **Replay:** held messages are applied after `listMessages` loads the conversation, or on their own when the adapter doesn't implement `listMessages`. Messages already in the page keep their position, and new ones are appended in arrival order.
-- **Conflicts:** when the page contains a held message, the page's copy wins, because it was fetched after the event arrived. Events that arrive while the conversation is loading win over the page.
-- **Bound:** the runtime holds the 50 most recent messages per conversation and clears them once applied. `message-removed` discards a held message, and `conversation-removed` discards everything held for that conversation.
+- **Replay:** held messages are applied after `listMessages` loads the conversation, or on their own when the adapter doesn't implement `listMessages` or the request fails. Messages already in the page keep their position, and new ones are appended in arrival order. When the page reports `hasMore`, a held message missing from it may be older than the page, so it is left to history pagination unless it was added while the page loaded. A `message-updated` event is merged into the message it updates, as it is for messages in the store.
+- **Conflicts:** when the page contains a held message, the page's copy wins, because it was fetched after the event arrived. Messages held while the page loads are newer than it, so they win.
+- **Bound:** the runtime holds up to 50 messages per conversation and drops the first received when a new one arrives; updating a held message does not move it. Held messages are cleared once applied, and all of them are discarded when the `adapter` changes. `message-removed` discards a held message, and `conversation-removed` discards everything held for that conversation.
 - **Controlled `messages`:** nothing is held or replayed, because your app owns the thread. Route other conversations' message events to your own state in `subscribe()` before calling `onEvent`.
 
 Messages already in the store are updated whatever their conversation.

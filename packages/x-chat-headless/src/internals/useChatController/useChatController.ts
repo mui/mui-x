@@ -320,8 +320,10 @@ export function useChatController<Cursor = string>({
     return () => {
       isDisposed = true;
       cleanup?.();
+      // Buffered messages came from this subscription; a new adapter may be another backend.
+      realtimeMessageBuffer.clearAll();
     };
-  }, [adapter, handleRealtimeEvent, setRuntimeError]);
+  }, [adapter, handleRealtimeEvent, setRuntimeError, realtimeMessageBuffer]);
 
   useStoreEffect(
     store,

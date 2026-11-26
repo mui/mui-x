@@ -52,7 +52,7 @@ export function createConversationActions<Cursor = string>(params: {
     if (!runtimeRef.current.adapter.listMessages) {
       if (shouldResetMessages) {
         store.resetMessages();
-        const bufferedMessages = realtimeMessageBuffer.flush(conversationId, []);
+        const bufferedMessages = realtimeMessageBuffer.flush(conversationId, [], false);
         if (bufferedMessages.length > 0) {
           store.setMessages(bufferedMessages);
         }
@@ -84,11 +84,9 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
-      store.setMessages(realtimeMessageBuffer.flush(conversationId, result.messages));
-      store.setHistoryState({
-        cursor: result.cursor,
-        hasMore: result.hasMore ?? false,
-      });
+      const hasMore = result.hasMore ?? false;
+      store.setMessages(realtimeMessageBuffer.flush(conversationId, result.messages, hasMore));
+      store.setHistoryState({ cursor: result.cursor, hasMore });
       store.setHistoryStatus('loaded');
       store.setError(null);
     } catch (error) {
@@ -99,6 +97,12 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
+      // Apply held messages on their own so the buffer never keeps a copy older than the store.
+      const messages = store.state.messageIds.map((id) => store.state.messagesById[id]);
+      const mergedMessages = realtimeMessageBuffer.flush(conversationId, messages, false);
+      if (mergedMessages !== messages) {
+        store.setMessages(mergedMessages);
+      }
       store.setHistoryStatus('error');
       setRuntimeError(
         createRuntimeError(

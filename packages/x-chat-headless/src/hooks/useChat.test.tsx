@@ -1785,4 +1785,44 @@ describe('useChat', () => {
 
     expect(result.current.status.typingUserIds).toEqual(['u2']);
   });
+
+  it('replays realtime messages for another conversation when it opens, until the adapter changes', async () => {
+    const onEventByAdapter: Array<(event: any) => void> = [];
+    function createSubscribingAdapter() {
+      return createAdapter({
+        subscribe: vi.fn(({ onEvent }) => {
+          onEventByAdapter.push(onEvent);
+          return () => {};
+        }),
+      });
+    }
+    const message = (id: string): ChatMessage => ({
+      id,
+      role: 'user',
+      conversationId: 'c2',
+      parts: [{ type: 'text', text: id }],
+    });
+    const firstAdapter = createSubscribingAdapter();
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: firstAdapter,
+      initialActiveConversationId: 'c1',
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+    act(() => onEventByAdapter[0]({ type: 'message-added', message: message('m1') }));
+    expect(result.current.messages).toEqual([]);
+
+    await act(() => result.current.setActiveConversation('c2'));
+    expect(result.current.messages.map((item) => item.id)).toEqual(['m1']);
+
+    await act(() => result.current.setActiveConversation('c1'));
+    act(() => onEventByAdapter[0]({ type: 'message-added', message: message('m2') }));
+    setProps({ adapter: createSubscribingAdapter(), initialActiveConversationId: 'c1' });
+    rerender();
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(2));
+
+    await act(() => result.current.setActiveConversation('c2'));
+    expect(result.current.messages).toEqual([]);
+  });
 });
