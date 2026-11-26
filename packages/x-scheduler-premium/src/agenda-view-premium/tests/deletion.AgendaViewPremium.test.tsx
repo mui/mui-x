@@ -212,7 +212,7 @@ describe('<EventCalendarPremium /> - Agenda view recurring event deletion (focus
     document.addEventListener('focusin', recordFocus);
 
     try {
-      await user.keyboard(' ');
+      await user.keyboard('{Shift>}{F10}{/Shift}');
       await user.click(await screen.findByRole('menuitem', { name: /delete/i }));
       const dialog = await screen.findByRole('dialog', { name: /apply this change to/i });
       await user.click(within(dialog).getByRole('button', { name: /confirm/i }));

@@ -221,7 +221,7 @@ describe('<MonthView />', () => {
         await act(async () => {
           getPopoverEvent(other.popover, title).focus();
         });
-        await other.user.keyboard(' ');
+        await other.user.keyboard('{Shift>}{F10}{/Shift}');
         await screen.findByRole('menu');
       }
 
@@ -270,28 +270,31 @@ describe('<MonthView />', () => {
       });
     });
 
-    it('should allow Enter key to activate events in the popover', async () => {
+    it.each([
+      { name: 'Enter', keys: '{Enter}' },
+      { name: 'Space', keys: ' ' },
+    ])('should allow $name to activate events in the popover', async ({ keys }) => {
       const { user, popover } = await renderAndOpenPopover();
 
       const firstEventButton = within(popover).getAllByRole('button')[0];
       firstEventButton.focus();
       expect(firstEventButton).to.equal(document.activeElement);
 
-      await user.keyboard('{Enter}');
+      await user.keyboard(keys);
 
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
       });
     });
 
-    it('should open the event context menu on Space, and Edit from there activates the event', async () => {
+    it('should open the event context menu on Shift+F10, and Edit from there activates the event', async () => {
       const { user, popover } = await renderAndOpenPopover();
 
       const firstEventButton = within(popover).getAllByRole('button')[0];
       firstEventButton.focus();
       expect(firstEventButton).to.equal(document.activeElement);
 
-      await user.keyboard(' ');
+      await user.keyboard('{Shift>}{F10}{/Shift}');
 
       await waitFor(() => {
         expect(screen.queryByRole('menu')).not.to.equal(null);

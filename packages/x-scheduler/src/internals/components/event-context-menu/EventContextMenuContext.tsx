@@ -125,17 +125,22 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
   );
 }
 
+/** Shift+F10 or the Menu key, the keyboard shortcuts for a context menu. */
+function isContextMenuKey(event: React.KeyboardEvent) {
+  return event.key === 'ContextMenu' || (event.key === 'F10' && event.shiftKey);
+}
+
 /**
  * Wraps an element so it edits its occurrence on click (same as `EventEditingTrigger`) and opens
- * the event context menu on right-click or on `Space` while it is focused. `onEditingCanceled` and
- * `stableAnchor` behave exactly as they do on `EventEditingTrigger` — forwarded to `startEditing`
- * both for the direct click and for Edit chosen from the menu. Unmounting closes the menu opened
+ * the event context menu on right-click, or on Shift+F10 or the Menu key while it is focused.
+ * `onEditingCanceled` and `stableAnchor` behave exactly as they do on `EventEditingTrigger` —
+ * forwarded to `startEditing` both for the direct click and for Edit chosen from the menu. Unmounting closes the menu opened
  * from it, and moves focus to the event's cell, column or row (or the next agenda event) when it
  * was focused.
  *
  * On a coarse pointer, activation arms the toolbar instead of opening the dialog directly
  * (`editingModePolicy.ts`), and that toolbar already exposes Edit and Delete — so right-click and
- * Space fall through to their default behavior (arm/re-arm) here instead of also opening a
+ * the keyboard shortcuts fall through to their default behavior here instead of also opening a
  * redundant menu whose own Edit item would otherwise just re-arm a no-op.
  */
 export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
@@ -155,13 +160,22 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
   // The "+N more" popover, which passes `getFocusFallback`, moves focus out of its own items.
   useMoveFocusOutOnUnmount(editing.ref, occurrence, getFocusFallback == null);
 
-  return React.cloneElement(children as React.ReactElement<any>, {
+  const openedFromKeyboardRef = React.useRef(false);
+  const child = children as React.ReactElement<any>;
+  const childProps = child.props as React.HTMLAttributes<HTMLElement>;
+
+  return React.cloneElement(child, {
     ref: editing.ref,
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
       editing.onClick(event);
     },
     onContextMenu: (event: React.MouseEvent<HTMLElement>) => {
+      if (openedFromKeyboardRef.current) {
+        openedFromKeyboardRef.current = false;
+        event.preventDefault();
+        return;
+      }
       if (!menuContext || isCoarsePointer()) {
         return;
       }
@@ -173,20 +187,19 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
         getFocusFallback,
       });
     },
-    onKeyUp: (event: React.KeyboardEvent<HTMLElement>) => {
-      if (event.key !== ' ' || !menuContext || isCoarsePointer()) {
+    onPointerDown: (event: React.PointerEvent<HTMLElement>) => {
+      childProps.onPointerDown?.(event);
+      // A right-click fires `pointerdown` first, so it is never mistaken for the keyboard one.
+      openedFromKeyboardRef.current = false;
+    },
+    onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
+      childProps.onKeyDown?.(event);
+      if (!isContextMenuKey(event) || !menuContext || isCoarsePointer()) {
         return;
       }
-      // Suppresses Base UI's `useButton` Space->click synthesis (which would open Edit instead) for
-      // this keyup. `useButton`'s own `onKeyUp` calls `makeEventPreventable(event)`, then this
-      // external handler — every render path this trigger wraps merges `elementProps` (what it
-      // clones onto the child) before its own `getButtonProps`, whether that's the calendar-grid
-      // day/time primitives, `EventItem` (agenda view, "+N more" popover) via `@base-ui/react/button`,
-      // or the timeline event — and only afterward checks `event.baseUIHandlerPrevented` before
-      // firing the click. Calling `preventBaseUIHandler` here, before that check runs, is what
-      // suppresses it.
-      (event as unknown as { preventBaseUIHandler?: () => void }).preventBaseUIHandler?.();
       event.preventDefault();
+      // The browser can still fire `contextmenu` for this key (on key up on Windows).
+      openedFromKeyboardRef.current = true;
       menuContext.openMenu(occurrence, event.currentTarget, {
         onEditingCanceled,
         stableAnchor,
