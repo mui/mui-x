@@ -65,22 +65,18 @@ export function createConversationActions<Cursor = string>(params: {
       store.state.activeConversationId === conversationId
         ? held.buffer.flush(conversationId, messages, hasMore)
         : messages;
-    // Held messages predate what the store holds now (e.g. a message sent from a change
-    // callback). For duplicate ids `setMessages` keeps the first position and the last value.
-    const prependHeldMessages = () => {
-      const heldMessages = flushHeldMessages([], false);
-      if (heldMessages.length > 0) {
-        store.setMessages([
-          ...heldMessages,
-          ...store.state.messageIds.map((id) => store.state.messagesById[id]),
-        ]);
-      }
-    };
-
     if (!runtimeRef.current.adapter.listMessages) {
       if (shouldResetMessages) {
         store.resetMessages();
-        prependHeldMessages();
+        // Held messages predate what the store holds now (e.g. a message sent from a change
+        // callback). For duplicate ids `setMessages` keeps the first position and the last value.
+        const heldMessages = flushHeldMessages([], false);
+        if (heldMessages.length > 0) {
+          store.setMessages([
+            ...heldMessages,
+            ...store.state.messageIds.map((id) => store.state.messagesById[id]),
+          ]);
+        }
       }
       store.setHistoryStatus('idle');
       return;
@@ -134,8 +130,6 @@ export function createConversationActions<Cursor = string>(params: {
           },
         ),
       );
-      // Last: a change callback fired by the replay may open another conversation.
-      prependHeldMessages();
     } finally {
       if (historyRequestId === historyLoadRequestIdRef.current) {
         store.setHistoryLoading(false);

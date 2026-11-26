@@ -265,40 +265,22 @@ describe('createRealtimeActions', () => {
 
         expect(store.state.messageIds).toEqual(['m0', 'm1']);
       });
-      it('applies held messages when listMessages fails', async () => {
-        const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
+      it('keeps held messages for the next open when listMessages fails', async () => {
+        const listMessages = vi
+          .fn()
+          .mockRejectedValueOnce(new Error('offline'))
+          .mockResolvedValue({ messages: [] });
         const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
 
         handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
         await setActiveConversation('c2');
 
+        expect(store.state.messageIds).toEqual([]);
+
+        await setActiveConversation('c1');
+        await setActiveConversation('c2');
+
         expect(store.state.messageIds).toEqual(['m1']);
-      });
-      it('puts held messages before those received while listMessages fails', async () => {
-        const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
-        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
-
-        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
-        const loading = setActiveConversation('c2');
-        handleRealtimeEvent({ type: 'message-added', message: createMessage('m2', 'c2') });
-        await loading;
-
-        expect(store.state.messageIds).toEqual(['m1', 'm2']);
-      });
-      it('keeps the order of held messages when one is updated while listMessages fails', async () => {
-        const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
-        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
-
-        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
-        handleRealtimeEvent({ type: 'message-added', message: createMessage('m2', 'c2') });
-        const loading = setActiveConversation('c2');
-        handleRealtimeEvent({
-          type: 'message-updated',
-          message: createMessage('m1', 'c2', 'edited'),
-        });
-        await loading;
-
-        expect(getTexts(store)).toEqual(['edited', 'm2']);
       });
       it('keeps held messages for the next open when a change listener leaves the conversation', async () => {
         const { store, handleRealtimeEvent, setActiveConversation } = setup();
@@ -335,26 +317,6 @@ describe('createRealtimeActions', () => {
         await setActiveConversation('c2');
 
         expect(store.state.messageIds).toEqual(['m1', 'sent']);
-      });
-      it('does not report a failed load after its replay opened another conversation', async () => {
-        const listMessages = vi
-          .fn()
-          .mockRejectedValueOnce(new Error('offline'))
-          .mockReturnValue(new Promise(() => {}));
-        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
-
-        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
-        let redirected = false;
-        store.subscribe((state) => {
-          if (!redirected && state.messagesById.m1) {
-            redirected = true;
-            setActiveConversation('c1');
-          }
-        });
-        await setActiveConversation('c2');
-
-        expect(store.state.activeConversationId).toBe('c1');
-        expect(store.state.historyStatus).toBe('loading');
       });
       it('replays the updated copy when a change listener opens the conversation', async () => {
         const { store, handleRealtimeEvent, setActiveConversation } = setup();
@@ -427,17 +389,6 @@ describe('createRealtimeActions', () => {
           expect(store.state.messageIds).toEqual([]);
         },
       );
-      it('keeps the store copy over a held one when listMessages fails', async () => {
-        const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
-        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
-
-        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2', '') });
-        const loading = setActiveConversation('c2');
-        store.addMessage(createMessage('m1', 'c2', 'streamed'));
-        await loading;
-
-        expect(getTexts(store)).toEqual(['streamed']);
-      });
       it('message-removed: drops the message from the buffer', async () => {
         const { store, handleRealtimeEvent, setActiveConversation } = setup();
 
