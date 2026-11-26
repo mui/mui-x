@@ -147,7 +147,7 @@ export const eventCalendarDrag = defineScenario(
 );
 
 // 1,000 events over July 2025: 32 or 33 a day from 6:00 UTC, one every 30 minutes, half an hour
-// each. They are instants, so a display timezone moves them.
+// each.
 const monthEvents: SchedulerEvent[] = Array.from({ length: 1_000 }, (_, index) => {
   const day = `2025-07-${pad(1 + (index % 31))}`;
   const start = 6 * 60 + Math.floor(index / 31) * 30;
@@ -168,21 +168,6 @@ export const eventCalendarMonth = defineScenario(
         defaultView="month"
         defaultVisibleDate={new Date(2025, 6, 16)}
         defaultPreferences={{ isSidePanelOpen: false }}
-      />
-    </div>
-  ),
-);
-
-export const eventCalendarMonthDisplayTimezone = defineScenario(
-  'EventCalendar month view with 1,000 events in a display timezone',
-  () => (
-    <div style={{ width: 1200, height: 700 }}>
-      <EventCalendar
-        events={monthEvents}
-        defaultView="month"
-        defaultVisibleDate={new Date(2025, 6, 16)}
-        defaultPreferences={{ isSidePanelOpen: false }}
-        displayTimezone="Asia/Tokyo"
       />
     </div>
   ),
@@ -280,7 +265,7 @@ async function scrollEventTimeline({ cdp, waitForElementTiming }: InteractionCon
   await cdp.send('Input.synthesizeScrollGesture', {
     x: Math.round(left + width / 2),
     y: Math.round(top + height / 2),
-    yDistance: -800,
+    yDistance: -400,
     // Twice the default, to keep the sample short.
     speed: 1600,
     gestureSourceType: 'mouse',

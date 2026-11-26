@@ -20,13 +20,6 @@ timeBenchmark('Event Timeline horizontal window lookup - build an index of 50k o
 });
 
 timeBenchmark(
-  'Event Timeline horizontal window lookup - linear scan of 50k occurrences',
-  () =>
-    getOccurrences().filter((occurrence) => occurrence.end > start && occurrence.start < end)
-      .length,
-);
-
-timeBenchmark(
   'Event Timeline horizontal window lookup - indexed lookup of 50k occurrences',
   () => getOccurrenceIndex()(start, end).length,
 );

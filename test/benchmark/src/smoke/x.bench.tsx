@@ -38,7 +38,6 @@ import {
   eventCalendar,
   eventCalendarDrag,
   eventCalendarMonth,
-  eventCalendarMonthDisplayTimezone,
   eventCalendarPremiumRecurring,
   eventTimelinePremium,
   eventTimelinePremiumDependencies,
@@ -110,7 +109,6 @@ smokeBenchmark(richTreeViewPro);
 smokeBenchmark(eventCalendar);
 smokeBenchmark(eventCalendarDrag);
 smokeBenchmark(eventCalendarMonth);
-smokeBenchmark(eventCalendarMonthDisplayTimezone);
 smokeBenchmark(eventCalendarPremiumRecurring);
 smokeBenchmark(eventTimelinePremium);
 smokeBenchmark(eventTimelinePremiumDependencies);

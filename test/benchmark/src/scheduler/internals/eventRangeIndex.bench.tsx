@@ -63,20 +63,12 @@ timeBenchmark('Event range index - build index of 50k events', () =>
   createEventRangeIndex(getData().events, false),
 );
 
-timeBenchmark('Event range index - linear narrow query of 50k events', () =>
-  numericLinearQuery(getData().events, start, end),
-);
-
 timeBenchmark('Event range index - indexed narrow query of 50k chronological events', () =>
   getData().eventRangeIndex.getEventsForRange(start.getTime(), end.getTime()),
 );
 
 timeBenchmark('Event range index - indexed narrow query of 50k shuffled events', () =>
   getData().shuffledEventRangeIndex.getEventsForRange(start.getTime(), end.getTime()),
-);
-
-timeBenchmark('Event range index - numeric linear query matching 20% of 50k shuffled events', () =>
-  numericLinearQuery(getData().shuffledEvents, mediumStart, mediumBelowThresholdEnd),
 );
 
 timeBenchmark('Event range index - indexed query matching 20% of 50k shuffled events', () =>
@@ -86,19 +78,11 @@ timeBenchmark('Event range index - indexed query matching 20% of 50k shuffled ev
   ),
 );
 
-timeBenchmark('Event range index - numeric linear query matching 30% of 50k shuffled events', () =>
-  numericLinearQuery(getData().shuffledEvents, mediumStart, mediumAboveThresholdEnd),
-);
-
 timeBenchmark('Event range index - indexed query matching 30% of 50k shuffled events', () =>
   getData().shuffledEventRangeIndex.getEventsForRange(
     mediumStart.getTime(),
     mediumAboveThresholdEnd.getTime(),
   ),
-);
-
-timeBenchmark('Event range index - numeric linear broad query of 50k events', () =>
-  numericLinearQuery(getData().shuffledEvents, broadStart, broadEnd),
 );
 
 timeBenchmark('Event range index - indexed broad query of 50k chronological events', () =>
