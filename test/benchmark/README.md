@@ -19,7 +19,7 @@ The run builds the packages itself (`pnpm release:build`), writes `.benchmark/re
 
 - `src/smoke/x.bench.tsx` holds the benchmarks of all of MUI X, in one page: the runner loads a file's page once per round, so they run warm, and settle in far fewer rounds than in a page each. They are there to catch big regressions: 30 rounds each, alarming once a change is past 10% with 99% confidence.
 - `src/<product>/scenarios.tsx`, and `src/charts/<Chart>/scenarios.tsx` for a chart, named after the folder its source lives in, define the cases with `defineScenario()`, which takes `reactBenchmark()`'s arguments. A scenario module registers nothing itself; the smoke file registers each case with `smokeBenchmark()`.
-- `src/scheduler/interactions.bench.tsx` registers the Scheduler scenarios with an interaction, a drag and a scroll, with `reactBenchmark()`'s defaults. They are too long for the smoke file, so CI doesn't run them: run them by hand.
+- `src/scheduler/interactions.bench.tsx` registers the Scheduler scenarios with an interaction, a drag and a scroll. They are too long for the smoke file, so CI doesn't run them.
 - `package.json` also lists dependencies no file imports: `@mui/material` and `@emotion/styled` are peer dependencies of the packages, and `@playwright/test` of `@mui/internal-benchmark`.
 
 ## In CI
