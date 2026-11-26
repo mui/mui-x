@@ -1,7 +1,6 @@
 {
   "interfaceDescription": "",
   "propertiesDescriptions": {
-    "type": { "description": "" },
     "barLabel": {
       "description": "If provided, the function will be used to format the label of the bar.<br />It can be set to &#39;value&#39; to display the current value."
     },
@@ -35,6 +34,7 @@
     "stackOrder": {
       "description": "The order in which series&#39; of the same group are stacked together."
     },
+    "type": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },

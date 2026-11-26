@@ -41,7 +41,22 @@
       "type": { "description": "readonly GridFilterOperator&lt;R, V, F, any&gt;[]" }
     },
     "flex": { "type": { "description": "number" } },
+    "getActions": {
+      "type": {
+        "description": "(params: GridRowParams&lt;R&gt;) =&gt; readonly React.ReactElement&lt;GridActionsCellItemProps&gt;[]"
+      }
+    },
     "getApplyQuickFilterFn": { "type": { "description": "GetApplyQuickFilterFn&lt;R, V&gt;" } },
+    "getOptionLabel": {
+      "type": { "description": "(value: ValueOptions) =&gt; string" },
+      "default": "{defaultGetOptionLabel}"
+    },
+    "getOptionValue": {
+      "type": {
+        "description": "((value: ValueOptions) =&gt; any) | ((value: ValueOptions) =&gt; string | number)"
+      },
+      "default": "{defaultGetOptionValue}"
+    },
     "getSortComparator": {
       "type": {
         "description": "(sortDirection: GridSortDirection) =&gt; GridComparatorFn&lt;V&gt; | undefined"
@@ -96,12 +111,18 @@
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
     "rowHeader": { "type": { "description": "boolean" }, "default": "false" },
     "rowSpanValueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
+    "separator": { "type": { "description": "string" }, "default": "','" },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
     "type": { "type": { "description": "GridColType" }, "default": "'string'" },
     "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
     "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
+    "valueOptions": {
+      "type": {
+        "description": "((params: GridValueOptionsParams&lt;R&gt;) =&gt; ValueOptions[]) | ValueOptions[]"
+      }
+    },
     "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },
     "valueSetter": { "type": { "description": "GridValueSetter&lt;R, V, F&gt;" } },
     "width": { "type": { "description": "number" }, "default": "100" }
