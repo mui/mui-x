@@ -1509,9 +1509,8 @@ describe('createSendMessageActions', () => {
 
       await regenerate('a1');
 
-      expect(store.state.messagesById.a1).toBeDefined();
-      expect(store.state.messagesById.u2).toBeDefined();
-      expect(store.state.messagesById.a3).toBeDefined();
+      // a1 goes back to its original position, before the messages that arrived meanwhile.
+      expect(store.state.messageIds).toEqual(['u1', 'a1', 'u2', 'a3']);
       expect(setRuntimeError).toHaveBeenCalledTimes(1);
       expect(setRuntimeError.mock.calls[0][0].code).toBe('REGENERATE_ERROR');
       expect(store.state.isStreaming).toBe(false);
