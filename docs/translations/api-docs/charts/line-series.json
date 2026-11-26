@@ -1,7 +1,6 @@
 {
   "interfaceDescription": "",
   "propertiesDescriptions": {
-    "type": { "description": "" },
     "area": {
       "description": "If <code>true</code>, the series is rendered as an area instead of a line."
     },
@@ -49,6 +48,7 @@
     "strictStepCurve": {
       "description": "If <code>true</code>, step curve starts and end at the first and last point.<br />By default the line is extended to fill the space before and after."
     },
+    "type": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },

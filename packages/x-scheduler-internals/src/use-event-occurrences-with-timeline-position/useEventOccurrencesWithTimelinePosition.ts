@@ -160,7 +160,7 @@ function buildOccurrenceIndexLookups(occurrences: SchedulerEventOccurrence[], ma
 
   for (let occurrenceIndex = 0; occurrenceIndex < occurrences.length; occurrenceIndex += 1) {
     const occurrence = occurrences[occurrenceIndex];
-    const startTimestamp = occurrence.start.timestamp;
+    const startTimestamp = occurrence.start.epochMilliseconds;
 
     while (activeOccurrences[0]?.endTimestamp <= startTimestamp) {
       const endedOccurrence = popHeap(activeOccurrences)!;
@@ -201,7 +201,7 @@ function buildOccurrenceIndexLookups(occurrences: SchedulerEventOccurrence[], ma
     }
 
     pushHeap(activeOccurrences, {
-      endTimestamp: occurrence.end.timestamp,
+      endTimestamp: occurrence.end.epochMilliseconds,
       index,
     });
   }

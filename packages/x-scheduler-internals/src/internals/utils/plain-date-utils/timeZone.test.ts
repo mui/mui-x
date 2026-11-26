@@ -5,7 +5,9 @@ import { BaseTemporal } from '../base-temporal';
 import {
   addDaysOnWallClock,
   getEndOfDayMs,
+  getPlainDateRangeMs,
   getStartOfDayMs,
+  getTimezoneId,
   toEpochMs,
   toLocalMs,
   toMsInDay,
@@ -27,6 +29,33 @@ function epochMsOf(date: string, time: string, timezone: string) {
 }
 
 describe('timeZone', () => {
+  describe('getTimezoneId', () => {
+    it('should return the identifier of a named timezone as is', () => {
+      expect(getTimezoneId('Europe/Paris')).to.equal('Europe/Paris');
+    });
+
+    it.skipIf(!isJSDOM)('should read the default timezone as the timezone of the system', () => {
+      setSystemTimezone('America/New_York');
+      expect(getTimezoneId('default')).to.equal('America/New_York');
+    });
+
+    // `Intl` names none of these, or names them with the opposite offset (`+05:00` for `GMT+5`).
+    // `Date` applies the same offset all year to them.
+    it.skipIf(!isJSDOM).each([
+      ['UTC+3', '-03:00'],
+      ['UTC-5', '+05:00'],
+      ['GMT+5', '-05:00'],
+      ['Foo/Bar', '+00:00'],
+      ['Etc/Unknown', '+00:00'],
+    ])('should read the default timezone of TZ=%s as the offset Date applies, %s', (tz, id) => {
+      setSystemTimezone(tz);
+      expect(getTimezoneId('default')).to.equal(id);
+      expect(toPlainDateTime(Date.UTC(2025, 6, 1, 12), id).toString()).to.equal(
+        toPlainDateTime(Date.UTC(2025, 6, 1, 12), 'default').toString(),
+      );
+    });
+  });
+
   describe('toLocalMs', () => {
     const getOffsetMs = (timezone: string, epochMs: number) =>
       toLocalMs(epochMs, timezone) - epochMs;
@@ -179,6 +208,38 @@ describe('timeZone', () => {
       // Pacific/Apia skipped December 30th, 2011, going from -10:00 to +14:00.
       expect(bounds('2011-12-29T12:00:00Z', 'Pacific/Apia')[1]).to.equal(
         '2011-12-30T09:59:59.999Z', // December 29th, 23:59:59.999 -10:00
+      );
+    });
+  });
+
+  describe('getPlainDateRangeMs', () => {
+    const range = (first: string, last: string, timezone: string) => {
+      const { start, end } = getPlainDateRangeMs(
+        BaseTemporal.PlainDate.from(first),
+        BaseTemporal.PlainDate.from(last),
+        timezone,
+      );
+      return [start, end].map((ms) => new Date(ms).toISOString());
+    };
+
+    it('should return the first instant of the first day and the last instant of the last day', () => {
+      expect(range('2025-07-01', '2025-07-07', 'America/New_York')).to.deep.equal([
+        '2025-07-01T04:00:00.000Z',
+        '2025-07-08T03:59:59.999Z',
+      ]);
+    });
+
+    it('should cover a single day across a DST transition', () => {
+      // Europe/Paris springs forward from 02:00 to 03:00 on March 29th, 2026: the day lasts 23 hours.
+      const [start, end] = range('2026-03-29', '2026-03-29', 'Europe/Paris');
+      expect([start, end]).to.deep.equal(['2026-03-28T23:00:00.000Z', '2026-03-29T21:59:59.999Z']);
+      expect(Date.parse(end) - Date.parse(start) + 1).to.equal(23 * HOUR);
+    });
+
+    it('should start on a day whose midnight a DST transition skips at the end of the gap', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+      expect(range('2026-03-08', '2026-03-09', 'America/Havana')[0]).to.equal(
+        '2026-03-08T05:00:00.000Z', // 01:00 CDT
       );
     });
   });

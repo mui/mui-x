@@ -15,6 +15,7 @@ import {
   BaseTemporal,
   extractStandaloneEvent,
   getAllDayDayCount,
+  getAllDayUntil,
   getDayTimezone,
   getLastInstant,
   getOccurrenceEnd,
@@ -27,6 +28,7 @@ import {
   toEpochMs,
   toLocalDayNumber,
   toPlainDate,
+  toPlainDateTime,
   untilToEventString,
   getUntilReferenceString,
 } from '@mui/x-scheduler-internals/internals';
@@ -90,7 +92,13 @@ export function applyRecurringUpdateFollowing(
   const occurrenceStart = getOccurrenceStart(occurrence, displayTimezone);
 
   // 1) New event: apply changes, decide RRULE for the new series
-  const newRRule = decideSplitRRule(originalEvent, occurrenceStart, changes, displayTimezone);
+  const newRRule = decideSplitRRule(
+    originalEvent,
+    occurrenceStart,
+    changes,
+    displayTimezone,
+    getOccurrencePlainDate(occurrence),
+  );
 
   const originalModel = originalEvent.modelInBuiltInFormat;
   // When start/end are not explicitly changed, the new series must start at the occurrence
@@ -113,6 +121,7 @@ export function applyRecurringUpdateFollowing(
       start: occurrenceStart,
       end: occurrenceEnd,
     }),
+    ...getAllDayOccurrenceDates(originalEvent, occurrence, changes),
   };
   const dataTimezone = stringified.timezone ?? originalModel.timezone ?? 'default';
 
@@ -127,6 +136,7 @@ export function applyRecurringUpdateFollowing(
           newRRule.until,
           getUntilReferenceString(originalModel),
           dataTimezone,
+          newChanges.allDay ?? originalModel.allDay ?? false,
         ),
       };
     } else {
@@ -146,7 +156,7 @@ export function applyRecurringUpdateFollowing(
   // 2) Old series: truncated to end the day before the edited occurrence, like a deletion.
   return {
     created: [newEvent],
-    ...applyRecurringDeleteFollowing(originalEvent, occurrence, displayTimezone),
+    ...applyRecurringDeleteFollowing(originalEvent, occurrence),
   };
 }
 
@@ -197,7 +207,7 @@ export function applyRecurringUpdateAll(
     );
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const seriesStartMs = originalEvent.start.timestamp;
+  const seriesStartMs = originalEvent.start.epochMilliseconds;
   const seriesStartPlainDate = toPlainDate(seriesStartMs, dayTimezone);
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
   const displayedDaysShift = getDisplayedDaysShift(
@@ -269,7 +279,7 @@ export function applyRecurringUpdateAll(
         eventUpdatedProperties.end = new Date(
           moveEndToPlainDate(
             changes.end.getTime(),
-            toPlainDate(originalEvent.end.timestamp, dayTimezone),
+            toPlainDate(originalEvent.end.epochMilliseconds, dayTimezone),
             startMs,
             dayTimezone,
           ),
@@ -297,10 +307,24 @@ export function applyRecurringUpdateAll(
         nextDayTimezone,
       );
     }
-    rrule = shiftUntilToDisplayedDay(rrule, displayedDaysShift);
+    // Without a moved day, the store writes the `until` of the stored rule as a date, in its own
+    // format (`stringifyEventDateChanges()`).
+    if (
+      !originalAllDay &&
+      allDay &&
+      (displayedDaysShift != null || rrule !== originalEvent.rrule)
+    ) {
+      rrule = shiftUntilToDisplayedDay(rrule, originalEvent, displayedDaysShift);
+    }
     if (rrule !== originalEvent.rrule) {
       eventUpdatedProperties.rrule = rrule;
     }
+  } else if (hasExplicitRRule && !originalAllDay && allDay) {
+    eventUpdatedProperties.rrule = getAllDayGivenRRule(
+      changes.rrule,
+      originalEvent,
+      displayedDaysShift,
+    );
   }
 
   // 5) Return the updated event
@@ -334,12 +358,38 @@ export function applyRecurringUpdateOnlyThis(
       start: occurrenceStart,
       end: occurrenceEnd,
     }),
+    ...getAllDayOccurrenceDates(originalEvent, occurrence, changes),
   };
 
   // The original series excludes the occurrence, like a deletion.
   return {
     created: [extractStandaloneEvent(originalEvent, stringifiedChanges)],
-    ...applyRecurringDeleteOnlyThis(originalEvent, occurrence, displayTimezone),
+    ...applyRecurringDeleteOnlyThis(originalEvent, occurrence),
+  };
+}
+
+/**
+ * The dates of an all-day occurrence that stays all-day and gets no new bounds: its own date and
+ * the day count of its series, even on a date the display timezone skips, where its start is on the
+ * next day.
+ */
+function getAllDayOccurrenceDates(
+  originalEvent: SchedulerProcessedEvent,
+  occurrence: SchedulerEventOccurrence,
+  changes: SchedulerEventUpdatedProperties,
+): { start: string; end: string } | null {
+  if (
+    !originalEvent.allDay ||
+    changes.allDay === false ||
+    changes.start != null ||
+    changes.end != null
+  ) {
+    return null;
+  }
+  const date = getOccurrencePlainDate(occurrence);
+  return {
+    start: date.toString(),
+    end: date.add({ days: getAllDayDayCount(originalEvent) }).toString(),
   };
 }
 
@@ -390,19 +440,44 @@ function shiftToDisplayedDay(
 }
 
 /**
- * The rule of a timed series made all-day on a given day, with its last day on its displayed day.
+ * The rule of a timed series made all-day: its `until` becomes the last date it covers, on its
+ * displayed day when the series is made all-day on a given day.
  */
 function shiftUntilToDisplayedDay(
   rrule: SchedulerProcessedEventRecurrenceRule,
+  originalEvent: SchedulerProcessedEvent,
   shift: DisplayedDaysShift | null,
 ): SchedulerProcessedEventRecurrenceRule {
-  if (shift == null || rrule.until == null) {
+  if (rrule.until == null) {
     return rrule;
   }
-  const untilDay =
-    rrule.until instanceof BaseTemporal.PlainDateTime ? rrule.until.toPlainDate() : rrule.until;
+  const untilDay = getAllDayUntil(
+    rrule.until,
+    toPlainDateTime(originalEvent.start.epochMilliseconds, originalEvent.timezone),
+    originalEvent.timezone,
+  );
   const shiftedUntilDay = shiftToDisplayedDay(untilDay, shift);
-  return shiftedUntilDay.equals(untilDay) ? rrule : { ...rrule, until: shiftedUntilDay };
+  return !(rrule.until instanceof BaseTemporal.PlainDateTime) && shiftedUntilDay.equals(rrule.until)
+    ? rrule
+    : { ...rrule, until: shiftedUntilDay };
+}
+
+/**
+ * A rule given with the changes that make a timed series all-day, like the rule the dialog edits:
+ * a date-time `until`, still the one of the timed series, becomes the last date it covers, like
+ * the `until` of the inherited rule. A date picked for it stays.
+ */
+function getAllDayGivenRRule(
+  rrule: SchedulerEventUpdatedProperties['rrule'],
+  originalEvent: SchedulerProcessedEvent,
+  shift: DisplayedDaysShift | null,
+): SchedulerEventUpdatedProperties['rrule'] {
+  if (rrule == null || typeof rrule !== 'object') {
+    return rrule;
+  }
+  return rrule.until instanceof BaseTemporal.PlainDateTime
+    ? shiftUntilToDisplayedDay(rrule, originalEvent, shift)
+    : rrule;
 }
 
 /**
@@ -499,12 +574,16 @@ function realignMonthlyRule(
  *   * Boundaries:
  *       - If original had COUNT: set COUNT = remaining occurrences from the split day.
  *       - If original had UNTIL: keep the same UNTIL.
+ *
+ * The split day is `occurrencePlainDate`, the date of the edited occurrence, or else the day of
+ * `splitStart`.
  */
 export function decideSplitRRule(
   originalEvent: SchedulerProcessedEvent,
   splitStart: number,
   changes: Partial<SchedulerEventUpdatedProperties>,
   displayTimezone: string,
+  occurrencePlainDate?: BaseTemporal.PlainDate,
 ): SchedulerProcessedEventRecurrenceRule | string | undefined {
   const originalRule = originalEvent.rrule!;
   const dayTimezone = getDayTimezone(originalEvent, displayTimezone);
@@ -516,6 +595,13 @@ export function decideSplitRRule(
 
   // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
   if (hasRRuleProp && changesRRule) {
+    if (!originalEvent.allDay && changes.allDay) {
+      return getAllDayGivenRRule(
+        changesRRule,
+        originalEvent,
+        getDisplayedDaysShift(originalEvent, splitStart, changes, displayTimezone),
+      );
+    }
     return changesRRule;
   }
 
@@ -528,7 +614,7 @@ export function decideSplitRRule(
   let realignedRule: SchedulerProcessedEventRecurrenceRule = { ...originalRule };
 
   // Changing the representation alone moves no day: the new series keeps the days of the rule.
-  const splitPlainDate = toPlainDate(splitStart, dayTimezone);
+  const splitPlainDate = occurrencePlainDate ?? toPlainDate(splitStart, dayTimezone);
 
   // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
   if (originalRule.freq === 'WEEKLY' && realignedRule.byDay?.length && changes.start) {
@@ -547,15 +633,18 @@ export function decideSplitRRule(
     );
   }
 
-  realignedRule = shiftUntilToDisplayedDay(
-    realignedRule,
-    getDisplayedDaysShift(originalEvent, splitStart, changes, displayTimezone),
-  );
+  if (!originalEvent.allDay && changes.allDay) {
+    realignedRule = shiftUntilToDisplayedDay(
+      realignedRule,
+      originalEvent,
+      getDisplayedDaysShift(originalEvent, splitStart, changes, displayTimezone),
+    );
+  }
 
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
     // The excluded occurrences still count toward COUNT.
-    const series = RecurringSeries.fromEvent(originalEvent, displayTimezone);
+    const series = RecurringSeries.fromEvent(originalEvent);
     const remaining = originalRule.count - series.countOccurrencesBefore(splitPlainDate);
     // If no occurrences remain, the split segment is non-recurring.
     if (remaining <= 0) {

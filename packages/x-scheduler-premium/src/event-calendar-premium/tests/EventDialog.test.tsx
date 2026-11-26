@@ -25,6 +25,7 @@ import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
@@ -2338,11 +2339,13 @@ describe('<EventDialogContent open />', () => {
       });
 
       it.each([
-        { allDay: false, until: '2025-07-10T08:00:00' },
-        { allDay: true, until: '2025-07-10' },
+        // The occurrences start at 09:00: the last one before 08:00 on July 10th is on July 9th.
+        { allDay: false, until: '2025-07-10T08:00:00', expectedUntil: '2025-07-09' },
+        // The last day becomes its last instant in the display timezone, UTC.
+        { allDay: true, until: '2025-07-10', expectedUntil: '2025-07-10T23:59:59' },
       ])(
-        "should keep the UNTIL of a series when toggling all-day from allDay=$allDay with scope 'all'",
-        async ({ allDay, until }) => {
+        "should keep the last day of a series when toggling all-day from allDay=$allDay with scope 'all'",
+        async ({ allDay, until, expectedUntil }) => {
           const onEventsChange = vi.fn();
           const builder = EventBuilder.new()
             .withDataTimezone('UTC')
@@ -2373,13 +2376,56 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByText(/All events/i));
           await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-          // The stored UNTIL is read again with the new all-day flag: a timed cutoff becomes its
-          // day, and a day stays the whole day.
+          // A timed cutoff becomes the last day it covers, and a day stays the whole day.
           const updated = onEventsChange.mock.lastCall?.[0].find(
             (item: SchedulerEvent) => item.id === event.id,
           )!;
           expect(Boolean(updated.allDay)).to.equal(!allDay);
-          expect(updated.rrule).to.deep.equal(event.rrule);
+          expect(updated.rrule).to.deep.equal({ freq: 'DAILY', until: expectedUntil });
+        },
+      );
+
+      it.each([/All events/i, /This and following events/i])(
+        'should write the until of a series made all-day with an edited rule as a date with the scope %s',
+        async (scopeLabel) => {
+          const onEventsChange = vi.fn();
+          // The occurrences start at 09:00: the last one before 08:00 on July 10th is on July 9th.
+          const builder = EventBuilder.new()
+            .withDataTimezone('UTC')
+            .span('2025-07-01T09:00:00', '2025-07-01T10:00:00')
+            .rrule({ freq: 'DAILY', until: '2025-07-10T08:00:00' });
+          const event = builder.build();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[event]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+              displayTimezone="UTC"
+              onEventsChange={onEventsChange}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+              <RecurringScopeDialog />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('switch', { name: /all day/i }));
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          const intervalInput = within(screen.getByRole('group', { name: /repeat/i })).getByRole(
+            'spinbutton',
+          );
+          // The field puts back 1 when cleared.
+          fireEvent.change(intervalInput, { target: { value: '2' } });
+          await user.click(screen.getByRole('button', { name: /save/i }));
+          await screen.findByText(/Apply this change to:/i);
+          await user.click(screen.getByText(scopeLabel));
+          await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+          const updated: SchedulerEvent = onEventsChange.mock.lastCall?.[0].find(
+            (item: SchedulerEvent) => item.allDay,
+          )!;
+          expect(updated.rrule).to.deep.include({ interval: 2, until: '2025-07-09' });
+          expect(() => processEvent(updated, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
         },
       );
 
@@ -2545,7 +2591,7 @@ describe('<EventDialogContent open />', () => {
         // An all-day occurrence is identified by the day it is displayed on: July 4th in New York.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy.mock.lastCall[0];
-        expect(payload.occurrence.start.timestamp).to.equal(
+        expect(payload.occurrence.start.epochMilliseconds).to.equal(
           createDate('2025-07-04T00:00:00', 'America/New_York').getTime(),
         );
       });
@@ -2637,7 +2683,7 @@ describe('<EventDialogContent open />', () => {
         // November 7th in UTC, the display timezone, whatever the New York offset.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.occurrence.start.timestamp).to.equal(
+        expect(payload.occurrence.start.epochMilliseconds).to.equal(
           createDate('2025-11-07T00:00:00', 'UTC').getTime(),
         );
       });
@@ -4729,7 +4775,7 @@ describe('<EventDialogContent open />', () => {
         const event = builder.build();
         const occurrence = builder.toOccurrence();
         // One more day.
-        const resizedEnd = addDays(new Date(occurrence.end.timestamp), 1);
+        const resizedEnd = addDays(new Date(occurrence.end.epochMilliseconds), 1);
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({

@@ -15,6 +15,7 @@ import {
   snapAllDayBounds,
   snapToOwnDays,
   toLocalDayNumber,
+  toLocalMs,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import type { SchedulerDependency } from '../../models';
@@ -55,7 +56,10 @@ export interface ComputeAutoSchedulingCascadeParameters {
    */
   enforcedDependencies?: readonly SchedulerDependency[];
   /**
-   * The timezone the days of the all-day events are read in.
+   * The display timezone as the `displayTimezone` parameter gives it, `"default"` included: the
+   * `Date`s of all-day entries are read and written in it, and an all-day event made timed takes
+   * it. Between an all-day event and a timed event, the dates of the all-day event are read in it
+   * only when the timed event has no timezone.
    */
   displayTimezone: string;
 }
@@ -108,8 +112,8 @@ function resolveProcessedEventDates(
   // day.
   const allDay = !!processedEvent.allDay;
   return {
-    start: processedEvent.start.timestamp,
-    end: getLastInstant(processedEvent.end.timestamp, allDay),
+    start: processedEvent.start.epochMilliseconds,
+    end: getLastInstant(processedEvent.end.epochMilliseconds, allDay),
     timezone: getDayTimezone(processedEvent, displayTimezone),
     allDay,
   };
@@ -120,18 +124,41 @@ const MAX_TIMESTAMP = 8.64e15;
 
 /**
  * The earliest instant `dependency` allows for the successor's bounded edge, or `null` when
- * the lag runs past the supported date range. The lag is added in the successor's timezone.
+ * the lag runs past the supported date range. The lag is added in the timezone the bound is read
+ * in: the successor's, or the display timezone for a successor without one after an all-day
+ * predecessor.
  */
 function getDependencyBound(
   dependency: SchedulerDependency,
   sourceDates: ResolvedDates,
   targetDates: ResolvedDates,
+  displayTimezone: string,
 ): number | null {
   const edges = getDependencyEdges(dependency.type);
+  let sourceEdge = sourceDates[edges.source];
+  let lagTimezone = targetDates.timezone;
+  if (sourceDates.allDay !== targetDates.allDay) {
+    // Between an all-day and a timed event, the dates of the all-day event are read in the
+    // timezone of the timed one, or in the display timezone when it has none, like a calendar
+    // reads its floating dates (RFC 4791): the same edge of its date there, or the wall time of
+    // the timed predecessor on the days of the all-day successor.
+    const timedTimezone = sourceDates.allDay ? targetDates.timezone : sourceDates.timezone;
+    const timezone = timedTimezone === 'default' ? displayTimezone : timedTimezone;
+    if (sourceDates.allDay) {
+      sourceEdge = getAllDayEdgeMs(
+        toLocalDayNumber(sourceEdge, sourceDates.timezone),
+        edges.source,
+        timezone,
+      );
+      lagTimezone = timezone;
+    } else {
+      sourceEdge = localToEpochMs(toLocalMs(sourceEdge, timezone), targetDates.timezone);
+    }
+  }
   const timestamp = addDependencyLag(
-    sourceDates[edges.source],
+    sourceEdge,
     getEffectiveDependencyLag(dependency, targetDates.allDay),
-    targetDates.timezone,
+    lagTimezone,
   );
   // `NaN` fails the comparison too.
   return Math.abs(timestamp) <= MAX_TIMESTAMP ? timestamp : null;
@@ -196,6 +223,7 @@ export function getDependencyViolation(
     dependency,
     resolveProcessedEventDates(processedEventLookup.get(dependency.source)!, displayTimezone),
     targetDates,
+    displayTimezone,
   );
   if (bound === null) {
     return 0;
@@ -216,7 +244,9 @@ export function getDependencyViolation(
  *
  * Each dependency bounds one edge of the successor by one edge of the predecessor plus
  * the lag (FS: `start >= pred.end`, SS: `start >= pred.start`, FF: `end >= pred.end`,
- * SF: `end >= pred.start`), the lag being added in the successor's timezone.
+ * SF: `end >= pred.start`), the lag being added in the successor's timezone. Between an all-day
+ * and a timed event, the dates of the all-day event are read in the timezone of the timed one, or
+ * in the display timezone when it has none.
  *
  * Push-only: events only move later, and pre-existing violations stay as-is unless their
  * dependency is enforced. A seed whose entry moves `start` is being placed by the user and
@@ -324,9 +354,13 @@ export function computeAutoSchedulingCascade(
     let entryStart = resolveEntryTimestamp(
       entry.start,
       model.start,
-      processedEvent.start.timestamp,
+      processedEvent.start.epochMilliseconds,
     );
-    let entryEnd = resolveEntryTimestamp(entry.end, model.end, processedEvent.end.timestamp);
+    let entryEnd = resolveEntryTimestamp(
+      entry.end,
+      model.end,
+      processedEvent.end.epochMilliseconds,
+    );
     if (allDay && !processedEvent.allDay && entry.start == null && entry.end == null) {
       // Like the store, a timed event made all-day without bounds keeps the dates of its timezone.
       const ownDays = snapToOwnDays(entryStart, entryEnd, dataTimezone, displayTimezone);
@@ -538,7 +572,10 @@ export function computeAutoSchedulingCascade(
         enforcedIds.has(dependency.id)
       ) {
         const sourceDates = newDates.get(sourceId) ?? currentDates;
-        bound = sourceDates === null ? null : getDependencyBound(dependency, sourceDates, base);
+        bound =
+          sourceDates === null
+            ? null
+            : getDependencyBound(dependency, sourceDates, base, displayTimezone);
       } else {
         const sourceDates =
           (processed.has(sourceId) ? newDates.get(sourceId) : undefined) ?? currentDates;
@@ -547,11 +584,11 @@ export function computeAutoSchedulingCascade(
           continue;
         }
         if (sourceDates !== null) {
-          const nextBound = getDependencyBound(dependency, sourceDates, base);
+          const nextBound = getDependencyBound(dependency, sourceDates, base, displayTimezone);
           const previousBound =
             currentDates === null || current === null
               ? null
-              : getDependencyBound(dependency, currentDates, current);
+              : getDependencyBound(dependency, currentDates, current, displayTimezone);
           if (nextBound !== null && (previousBound === null || nextBound > previousBound)) {
             bound = nextBound;
           }

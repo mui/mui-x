@@ -3,7 +3,6 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
-  createProcessedDate,
   getAllDayDayCount,
   getDayNumber,
   getLastInstant,
@@ -14,6 +13,7 @@ import {
   MS_PER_DAY,
   toLocalDayNumber,
   toPlainDate,
+  toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { RecurringSeries } from './RecurringSeries';
 
@@ -22,7 +22,8 @@ import { RecurringSeries } from './RecurringSeries';
  * `start` to the timestamp `end`, both included.
  *
  * The series of a timed event finds the days of the occurrences in the event timezone, and each
- * day is translated back to dates. The series of an all-day event runs on the displayed days.
+ * day is translated back to dates. The series of an all-day event runs on its dates, the same in
+ * every display timezone.
  * The occurrences that don't overlap the range are left out before their dates are built, and so
  * are the ones that don't overlap `visibleRanges` when it's given.
  */
@@ -33,7 +34,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
   displayTimezone: string,
   visibleRanges?: readonly { start: number; end: number }[],
 ): SchedulerEventOccurrence[] {
-  const series = RecurringSeries.fromEvent(event, displayTimezone);
+  const series = RecurringSeries.fromEvent(event);
   // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
   // slower.
   const occurrenceProperties = { ...event, exDates: undefined };
@@ -58,8 +59,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
       occurrences.push({
         ...occurrenceProperties,
         key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
-        start: createProcessedDate(startMs, displayTimezone),
-        end: createProcessedDate(endMs, displayTimezone),
+        start: toZonedDateTime(startMs, displayTimezone),
+        end: toZonedDateTime(endMs, displayTimezone),
       });
     }
     return occurrences;
@@ -68,11 +69,11 @@ export function getRecurringEventOccurrencesForVisibleDays(
   // The occurrences of a timed event are computed in its timezone to avoid DST issues; the display
   // timezone only presents them.
   const dataTimezone = series.timezone;
-  const durationMs = event.end.timestamp - event.start.timestamp;
+  const durationMs = event.end.epochMilliseconds - event.start.epochMilliseconds;
 
   // Adjust scan range to catch multi-day events starting before visible range
   const durationInDays =
-    toLocalDayNumber(event.end.timestamp, dataTimezone) -
+    toLocalDayNumber(event.end.epochMilliseconds, dataTimezone) -
     getDayNumber(series.start.toPlainDate()) +
     1;
   const scanFirstDay = toPlainDate(start, dataTimezone).add({ days: 1 - durationInDays });
@@ -97,8 +98,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
     occurrences.push({
       ...occurrenceProperties,
       key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
-      start: createProcessedDate(startMs, displayTimezone),
-      end: createProcessedDate(endMs, displayTimezone),
+      start: toZonedDateTime(startMs, displayTimezone),
+      end: toZonedDateTime(endMs, displayTimezone),
     });
   }
   return occurrences;

@@ -28,14 +28,14 @@ interface SchedulerProcessedEventBase {
    * The start date and time of the event, as rendered in the display timezone.
    * For all-day events, the first instant of their first day in the display timezone.
    */
-  start: SchedulerProcessedDate;
+  start: BaseTemporal.ZonedDateTime;
 
   /**
    * The end date and time of the event, as rendered in the display timezone.
    * For all-day events, this value is exclusive: the start of the day after the last day,
    * in the display timezone.
    */
-  end: SchedulerProcessedDate;
+  end: BaseTemporal.ZonedDateTime;
 
   /**
    * Whether the event is an all-day event.
@@ -62,7 +62,7 @@ interface SchedulerProcessedEventBase {
  *
  * - `start` and `end` are read in the display timezone, for rendering.
  * - `timezone`, `rrule` and `exDates` are the event's own data, read in its timezone for a timed
- *   event and on the displayed days for an all-day one.
+ *   event and on its dates for an all-day one, the same in every display timezone.
  * - Always includes `modelInBuiltInFormat` (unlike drafts/placeholders).
  */
 export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
@@ -73,7 +73,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
 
   /**
    * The timezone of the event, which its recurrence rule and exception dates are read in.
-   * Ignored for all-day events, except for a date-time `until` of their rule.
+   * An all-day event only uses it to read a date-time `until` as its date.
    */
   timezone: string;
 
@@ -179,9 +179,8 @@ export interface SchedulerEvent {
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
    * "default" (the timezone of the system), or "UTC".
-   * Ignored for all-day events, which cover the same days in every timezone, except for a
-   * date-time `until` of their recurrence rule. An all-day event made timed takes the display
-   * timezone.
+   * All-day events cover the same days in every timezone: they only use it to read a date-time
+   * `until` as its date. An all-day event made timed takes the display timezone.
    * @default "default"
    */
   timezone?: string;
@@ -382,38 +381,6 @@ export type SchedulerOccurrencePlaceholder =
   | SchedulerOccurrencePlaceholderInternalDragOrResize
   | SchedulerOccurrencePlaceholderExternalDrag;
 
-export interface SchedulerProcessedDate {
-  /**
-   * The date and wall-clock time, in the display timezone.
-   */
-  plainDateTime: BaseTemporal.PlainDateTime;
-  /**
-   * The instant, in milliseconds since the Unix epoch, like `Date.getTime()`.
-   */
-  timestamp: number;
-}
-
-/**
- * A day of a view: a cell, a column or a row, starting at the first instant of its date.
- * Its date is `plainDate`, so it has no time of day.
- */
-export interface SchedulerProcessedDay {
-  /**
-   * The date of the day in the display timezone, which the day list is built in: consumers compare
-   * its day number, from `getDayNumber()`, with the day numbers of instants in that timezone, from
-   * `toLocalDayNumber()`.
-   */
-  plainDate: BaseTemporal.PlainDate;
-  /**
-   * The key of `plainDate`, from `getPlainDateKey()`, which keys the maps of the views by day.
-   */
-  key: string;
-  /**
-   * The timestamp of the first instant of the day in the display timezone.
-   */
-  timestamp: number;
-}
-
 /**
  * Properties to pass to the methods that update an event (recurring or not).
  * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
@@ -433,9 +400,10 @@ export type SchedulerEventUpdatedProperties = Omit<
    */
   end?: Date;
   /**
-   * For an all-day event, the first instants of its days in the display timezone.
+   * For an all-day event, the first instants of its days in the display timezone, or its
+   * `YYYY-MM-DD` dates. A string is written as is.
    */
-  exDates?: Date[];
+  exDates?: (string | Date)[];
   rrule?: SchedulerProcessedEventRecurrenceRule | string;
 };
 

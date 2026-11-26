@@ -83,13 +83,40 @@ describe('date-utils', () => {
 
   describe('untilToEventString', () => {
     it.each([
-      ['2025-01-01', '2025-01-12'],
+      ['2025-01-01', '2025-01-12T23:59:59'],
       ['2025-01-01T09:00:00', '2025-01-12T23:59:59'],
       ['2025-01-01T08:00:00Z', '2025-01-12T22:59:59.999Z'],
     ])('should write a plain date covering its whole day after %s', (original, expected) => {
       expect(
-        untilToEventString(BaseTemporal.PlainDate.from('2025-01-12'), original, 'Europe/Paris'),
+        untilToEventString(
+          BaseTemporal.PlainDate.from('2025-01-12'),
+          original,
+          'Europe/Paris',
+          false,
+        ),
       ).to.equal(expected);
+    });
+
+    it('should write a plain date-time as its date on an all-day event', () => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30'),
+          '2025-01-01T09:00:00',
+          'Europe/Paris',
+          true,
+        ),
+      ).to.equal('2025-01-12');
+    });
+
+    it('should write a plain date as a date on an all-day event', () => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDate.from('2025-01-12'),
+          '2025-01-01T09:00:00',
+          'Europe/Paris',
+          true,
+        ),
+      ).to.equal('2025-01-12');
     });
 
     it.each([
@@ -102,6 +129,7 @@ describe('date-utils', () => {
           BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30'),
           original,
           'Europe/Paris',
+          false,
         ),
       ).to.equal(expected);
     });
@@ -113,6 +141,7 @@ describe('date-utils', () => {
           BaseTemporal.PlainDate.from('2024-04-06'),
           '2024-04-01T09:00:00Z',
           'America/Santiago',
+          false,
         ),
       ).to.equal('2024-04-07T03:59:59.999Z');
     });

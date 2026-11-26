@@ -19,6 +19,7 @@ import { addClasses, removeClasses } from '../../../utils/classListUtils';
 import {
   finishColumnReorder,
   getColumnReorderTargetIndex,
+  getCursorMoveDirectionX,
   hasCursorPositionChanged,
   setColumnReorderDragCol,
   startColumnReorder,
@@ -193,8 +194,7 @@ export const useGridColumnReorder = (
         const targetIndex = getColumnReorderTargetIndex(apiRef, {
           dragField: dragColField,
           targetField: params.field,
-          previousPosition: cursorPosition.current,
-          position: coordinates,
+          direction: getCursorMoveDirectionX(cursorPosition.current, coordinates),
           isRtl,
           forbiddenIndexes: forbiddenIndexes.current,
         });

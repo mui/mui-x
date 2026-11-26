@@ -1,16 +1,21 @@
 import type { SchedulerEvent, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import { BaseTemporal } from './base-temporal';
-import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
-import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import {
+  getStartOfWeekDayNumber,
+  isoDateToDayNumber,
+  MS_PER_DAY,
+} from './plain-date-utils/dayNumber';
+import { getDayNumber, getMsInDay, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import {
   addDaysToDayStart,
   getStartOfDayMs,
+  localToEpochMs,
   toEpochMs,
   toPlainDate,
   toPlainDateTime,
 } from './plain-date-utils/timeZone';
-import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
+import { isInstantString } from './plain-date-utils/date';
 
 /**
  * Converts an instant back to an event date string, respecting the format of `originalString`:
@@ -30,27 +35,51 @@ export function timestampToEventString(
 }
 
 /**
- * Writes the `until` of a processed rule in the format of `originalString`, like
- * `timestampToEventString()`. A plain date covers its whole day: it stays date-only after a
- * date-only string, and is written as the last instant of its day otherwise. A plain date-time is
- * written as its instant.
+ * Writes the `until` of a processed rule with the type of the start of the event: a date on an
+ * all-day event, and a date-time on a timed one, in the format of `originalString` like
+ * `timestampToEventString()`. A plain date covers its whole day, so on a timed event it is written
+ * as the last instant of its day. A plain date-time is written as its instant, or as its date on
+ * an all-day event.
  */
 export function untilToEventString(
   until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
   originalString: string,
   dataTimezone: string,
+  allDay: boolean,
 ): string {
+  if (allDay) {
+    return (until instanceof BaseTemporal.PlainDateTime ? until.toPlainDate() : until).toString();
+  }
   if (until instanceof BaseTemporal.PlainDateTime) {
     return timestampToEventString(toEpochMs(until, dataTimezone), originalString, dataTimezone);
-  }
-  if (isDateOnlyString(originalString)) {
-    return until.toString();
   }
   return timestampToEventString(
     toEpochMs(until.add({ days: 1 }), dataTimezone) - 1,
     originalString,
     dataTimezone,
   );
+}
+
+/**
+ * The `until` of a timed series made all-day: the last date with an occurrence on or before it.
+ * That is the date of a date-time `until`, or the day before when the occurrence of that date, at
+ * the time of the start of the series in `timezone`, starts after it.
+ */
+export function getAllDayUntil(
+  until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
+  seriesStart: BaseTemporal.PlainDateTime,
+  timezone: string,
+): BaseTemporal.PlainDate {
+  if (!(until instanceof BaseTemporal.PlainDateTime)) {
+    return until;
+  }
+  const date = until.toPlainDate();
+  // Resolved like the series does, so a time a DST gap skips starts after the gap.
+  const occurrenceStart = localToEpochMs(
+    getDayNumber(date) * MS_PER_DAY + getMsInDay(seriesStart),
+    timezone,
+  );
+  return occurrenceStart > toEpochMs(until, timezone) ? date.add({ days: -1 }) : date;
 }
 
 /**
@@ -117,7 +146,7 @@ export function getOccurrenceEnd({
   if (event.allDay) {
     return addDaysToDayStart(occurrenceStart, getAllDayDayCount(event), displayTimezone);
   }
-  return occurrenceStart + event.end.timestamp - event.start.timestamp;
+  return occurrenceStart + event.end.epochMilliseconds - event.start.epochMilliseconds;
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {

@@ -109,16 +109,16 @@ describe('<WeekView /> event creation', () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridColumn);
 
       // The creation starts at noon.
-      expect(getMinutesInDay(occurrence.start.plainDateTime)).to.equal(12 * 60);
+      expect(getMinutesInDay(occurrence.start)).to.equal(12 * 60);
     });
 
     it('should pass a creation in the day grid to `onEventEditingStart` in the display timezone', async () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridAllDayEventsCell);
 
       // The all-day creation ends at the start of the next day.
-      expect(getMinutesInDay(occurrence.end.plainDateTime)).to.equal(0);
-      expect(occurrence.end.plainDateTime.toPlainDate().toString()).to.equal(
-        occurrence.start.plainDateTime.toPlainDate().add({ days: 1 }).toString(),
+      expect(getMinutesInDay(occurrence.end)).to.equal(0);
+      expect(occurrence.end.toPlainDate().toString()).to.equal(
+        occurrence.start.toPlainDate().add({ days: 1 }).toString(),
       );
     });
   });

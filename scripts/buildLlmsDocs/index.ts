@@ -308,7 +308,7 @@ function findNonComponentMarkdownFiles(
 /**
  * Process a single component by combining its markdown and API documentation
  */
-function processComponent(component: ComponentDocInfo): string | null {
+async function processComponent(component: ComponentDocInfo): Promise<string | null> {
   // Skip if no markdown file found
   if (!component.markdownPath) {
     console.error(`Warning: No markdown file found for component: ${component.name}`);
@@ -316,7 +316,7 @@ function processComponent(component: ComponentDocInfo): string | null {
   }
 
   // Process the markdown file with demo replacement
-  let processedMarkdown = processMarkdownFile(component.markdownPath);
+  let processedMarkdown = await processMarkdownFile(component.markdownPath);
 
   // Read the frontmatter to get all components listed in this markdown file
   const markdownContent = fs.readFileSync(component.markdownPath, 'utf-8');
@@ -470,13 +470,13 @@ async function processApiSection(
         apiMarkdown = processApiFile(jsonFilePathDouble);
       } else if (fs.existsSync(markdownFilePath)) {
         // Process the markdown file from docs/data
-        apiMarkdown = processMarkdownFile(markdownFilePath);
+        apiMarkdown = await processMarkdownFile(markdownFilePath);
       } else if (fs.existsSync(markdownFilePathPages)) {
         // Process the markdown file from docs/pages
-        apiMarkdown = processMarkdownFile(markdownFilePathPages);
+        apiMarkdown = await processMarkdownFile(markdownFilePathPages);
       } else if (fs.existsSync(markdownFilePathPagesIndex)) {
         // Process the markdown file from docs/pages
-        apiMarkdown = processMarkdownFile(markdownFilePathPagesIndex);
+        apiMarkdown = await processMarkdownFile(markdownFilePathPagesIndex);
       } else {
         throw new Error(
           `Warning: API file not found (tried JSON and markdown in multiple patterns): ${apiItem.pathname}
@@ -836,7 +836,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     // Process each component
     for (const component of components) {
       try {
-        const processedMarkdown = processComponent(component);
+        const processedMarkdown = await processComponent(component);
 
         if (!processedMarkdown) {
           continue;
@@ -900,7 +900,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     for (const file of nonComponentFiles) {
       try {
         // Process the markdown file with demo replacement
-        const processedMarkdown = processMarkdownFile(file.markdownPath);
+        const processedMarkdown = await processMarkdownFile(file.markdownPath);
 
         const outputPath = path.join(outputDir, file.outputPath);
 

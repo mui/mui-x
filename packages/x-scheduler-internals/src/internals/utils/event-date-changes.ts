@@ -1,8 +1,18 @@
 import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../models';
 import { resolveEventTimestamp } from '../../process-event/resolveEventTimestamp';
-import { allDayBoundToEventString, timestampToEventString } from './date-utils';
+import {
+  allDayBoundToEventString,
+  getAllDayUntil,
+  timestampToEventString,
+  untilToEventString,
+} from './date-utils';
 import { isDateOnlyString, snapAllDayBounds } from './plain-date-utils/date';
-import { moveTimestampToPlainDate, toEpochMs, toPlainDate } from './plain-date-utils/timeZone';
+import {
+  moveTimestampToPlainDate,
+  toEpochMs,
+  toPlainDate,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
 import { BaseTemporal } from './base-temporal';
 
 export interface EventDateChangeStrings {
@@ -13,31 +23,106 @@ export interface EventDateChangeStrings {
   timezone?: string;
 }
 
+// The date-time forms of UNTIL: `20250709T030000Z` (UTC) or `20250709T030000` (event timezone).
+const UNTIL_DATE_TIME_REGEX = /(UNTIL\s*=\s*)(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)/i;
+
 /**
- * The rule of an all-day event made timed: a date-time `until`, read as its date in the event
- * timezone while the event is all-day, is written as that date.
+ * Rewrites the date-time UNTIL of an RRULE string, read on the wall clock of `dataTimezone`, as a
+ * date.
+ */
+function replaceDateTimeUntil(
+  rrule: string,
+  dataTimezone: string,
+  getDate: (until: BaseTemporal.PlainDateTime) => BaseTemporal.PlainDate,
+): string {
+  return rrule.replace(
+    UNTIL_DATE_TIME_REGEX,
+    (match, prefix, year, month, day, hour, minute, second, utc) => {
+      const wallTime = BaseTemporal.PlainDateTime.from({
+        year: +year,
+        month: +month,
+        day: +day,
+        hour: +hour,
+        minute: +minute,
+        second: +second,
+      });
+      const until = utc ? toPlainDateTime(toEpochMs(wallTime, 'UTC'), dataTimezone) : wallTime;
+      return `${prefix}${getDate(until).toString().replaceAll('-', '')}`;
+    },
+  );
+}
+
+// The date form of UNTIL, like `20250708`, not followed by a time.
+const UNTIL_DATE_REGEX = /(UNTIL\s*=\s*)(\d{4})(\d{2})(\d{2})(?![T\d])/i;
+
+/**
+ * The time parts of an RRULE string that RFC 5545 ignores on a rule whose start is a date, and that
+ * a timed rule does not support.
+ */
+export const ALL_DAY_IGNORED_RRULE_KEYS: ReadonlySet<string> = new Set([
+  'BYHOUR',
+  'BYMINUTE',
+  'BYSECOND',
+]);
+
+/**
+ * The rule of an all-day event made timed: the date of its `until` is written as the last instant
+ * of that date in `timezone`, the timezone the event is written in, and the time parts an all-day
+ * RRULE string ignores are dropped. A date-time `until` counts by its date in `dataTimezone`, like
+ * the all-day series reads it.
  */
 function getTimedRRule(
   rrule: NonNullable<SchedulerEvent['rrule']>,
+  start: string,
+  dataTimezone: string,
+  timezone: string,
+): NonNullable<SchedulerEvent['rrule']> {
+  if (typeof rrule === 'object') {
+    if (rrule.until == null) {
+      return rrule;
+    }
+    const until = isDateOnlyString(rrule.until)
+      ? BaseTemporal.PlainDate.from(rrule.until)
+      : toPlainDate(resolveEventTimestamp(rrule.until, dataTimezone), dataTimezone);
+    return { ...rrule, until: untilToEventString(until, start, timezone, false) };
+  }
+  const parts = rrule.split(';');
+  const timedParts = parts.filter(
+    (part) => !ALL_DAY_IGNORED_RRULE_KEYS.has(part.split('=')[0].trim().toUpperCase()),
+  );
+  const timedRRule = replaceDateTimeUntil(
+    timedParts.length === parts.length ? rrule : timedParts.join(';'),
+    dataTimezone,
+    (until) => until.toPlainDate(),
+  );
+  return timedRRule.replace(UNTIL_DATE_REGEX, (match, prefix, year, month, day) => {
+    const until = BaseTemporal.PlainDate.from({ year: +year, month: +month, day: +day });
+    const lastSecond = Math.floor((toEpochMs(until.add({ days: 1 }), timezone) - 1) / 1000);
+    // The UTC date-time form, like `20250708T145959Z`.
+    const utc = new Date(lastSecond * 1000).toISOString().replace(/[-:]|\.000/g, '');
+    return `${prefix}${utc}`;
+  });
+}
+
+/**
+ * The rule of a timed event made all-day: a date-time `until` is written as the last date it
+ * covers in the event timezone.
+ */
+function getAllDayRRule(
+  rrule: NonNullable<SchedulerEvent['rrule']>,
+  start: string,
   dataTimezone: string,
 ): NonNullable<SchedulerEvent['rrule']> {
+  const seriesStart = toPlainDateTime(resolveEventTimestamp(start, dataTimezone), dataTimezone);
   if (typeof rrule === 'object') {
     if (rrule.until == null || isDateOnlyString(rrule.until)) {
       return rrule;
     }
-    const until = toPlainDate(resolveEventTimestamp(rrule.until, dataTimezone), dataTimezone);
-    return { ...rrule, until: until.toString() };
+    const until = toPlainDateTime(resolveEventTimestamp(rrule.until, dataTimezone), dataTimezone);
+    return { ...rrule, until: getAllDayUntil(until, seriesStart, dataTimezone).toString() };
   }
-  // The date-time forms of UNTIL: `20250709T030000Z` (UTC) or `20250709T030000` (event timezone).
-  return rrule.replace(
-    /(UNTIL\s*=\s*)(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)/i,
-    (match, prefix, year, month, day, hour, minute, second, utc) => {
-      if (!utc) {
-        return `${prefix}${year}${month}${day}`;
-      }
-      const instant = Date.UTC(+year, +month - 1, +day, +hour, +minute, +second);
-      return `${prefix}${toPlainDate(instant, dataTimezone).toString().replaceAll('-', '')}`;
-    },
+  return replaceDateTimeUntil(rrule, dataTimezone, (until) =>
+    getAllDayUntil(until, seriesStart, dataTimezone),
   );
 }
 
@@ -45,9 +130,12 @@ function getTimedRRule(
  * Writes the date changes of an event as the strings of its model: the days of an all-day event
  * in the display timezone, the instants of a timed event in the format of its stored strings.
  * `bounds` are the instants written when the changes give none. A timed event made all-day without
- * bounds gets the whole days of its timezone, and so do its exception dates. An all-day event made
- * timed moves to the display timezone, from 00:00 of its days when the changes give no bounds,
- * excludes its occurrences at its new time, and keeps the last day of its rule.
+ * bounds gets the whole days of its timezone, and so do its exception dates and the `until` of its
+ * rule. An all-day event made timed moves to the display timezone, from 00:00 of its days when the
+ * changes give no bounds, excludes its occurrences at its new time, and the date of its `until`
+ * becomes the last instant of that date.
+ * `displayTimezone` is the parameter as given: with `"default"`, an event made timed keeps no
+ * `timezone`, and follows the timezone of the system like the other events.
  */
 export function stringifyEventDateChanges(
   changes: Pick<
@@ -82,9 +170,16 @@ export function stringifyEventDateChanges(
       result.end = timestampToEventString(end, model.end, timezone);
     }
     if (changes.exDates != null) {
-      // A new exception date matches the format of the one it replaces, or of start.
+      // A new exception date matches the format of the one it replaces, or of start. A string is
+      // written as is.
       result.exDates = changes.exDates.map((exDate, index) =>
-        timestampToEventString(exDate.getTime(), model.exDates?.[index] ?? model.start, timezone),
+        typeof exDate === 'string'
+          ? exDate
+          : timestampToEventString(
+              exDate.getTime(),
+              model.exDates?.[index] ?? model.start,
+              timezone,
+            ),
       );
     } else if (becomesTimed && model.exDates != null && start != null) {
       const timedStart = start;
@@ -101,7 +196,13 @@ export function stringifyEventDateChanges(
       model.rrule != null &&
       !Object.prototype.hasOwnProperty.call(changes, 'rrule')
     ) {
-      const rrule = getTimedRRule(model.rrule, dataTimezone);
+      // In the timezone the written wall times are read in, a given one included.
+      const rrule = getTimedRRule(
+        model.rrule,
+        model.start,
+        dataTimezone,
+        changes.timezone ?? timezone,
+      );
       if (rrule !== model.rrule) {
         result.rrule = rrule;
       }
@@ -134,13 +235,25 @@ export function stringifyEventDateChanges(
   }
   if (changes.exDates != null) {
     result.exDates = changes.exDates.map((exDate) =>
-      allDayBoundToEventString(exDate.getTime(), displayTimezone),
+      typeof exDate === 'string'
+        ? exDate
+        : allDayBoundToEventString(exDate.getTime(), displayTimezone),
     );
   } else if (becomesAllDay && model.exDates != null) {
     // An exception date keeps its day in the event timezone.
     result.exDates = model.exDates.map((exDate) =>
       toPlainDate(resolveEventTimestamp(exDate, dataTimezone), dataTimezone).toString(),
     );
+  }
+  if (
+    becomesAllDay &&
+    model.rrule != null &&
+    !Object.prototype.hasOwnProperty.call(changes, 'rrule')
+  ) {
+    const rrule = getAllDayRRule(model.rrule, model.start, dataTimezone);
+    if (rrule !== model.rrule) {
+      result.rrule = rrule;
+    }
   }
   return result;
 }
