@@ -6,7 +6,6 @@
     "import { BarSeries } from '@mui/x-charts'"
   ],
   "properties": {
-    "type": { "type": { "description": "'bar'" }, "required": true },
     "barLabel": {
       "type": {
         "description": "'value' | ((item: BarItem, context: BarLabelContext) =&gt; string | null | undefined)"
@@ -33,6 +32,7 @@
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
+    "type": { "type": { "description": "'bar'" } },
     "valueFormatter": {
       "type": {
         "description": "SeriesValueFormatter&lt;ChartsSeriesConfig[SeriesType]['valueType']&gt;"

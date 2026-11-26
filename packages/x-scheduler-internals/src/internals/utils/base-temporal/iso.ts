@@ -65,6 +65,21 @@ export function getIsoDayOfWeek(dayNumber: number): number {
   return ((((dayNumber + 3) % 7) + 7) % 7) + 1;
 }
 
+/**
+ * Returns the first day of the week containing `dayNumber`. Weekdays use ISO numbering.
+ */
+export function getStartOfWeek(dayNumber: number, firstDayOfWeek: number): number {
+  return dayNumber - getWeekDayIndex(getIsoDayOfWeek(dayNumber), firstDayOfWeek);
+}
+
+/**
+ * Returns the zero-based weekday index relative to `firstDayOfWeek`.
+ * Weekdays use ISO numbering, with 0 also accepted for Sunday.
+ */
+export function getWeekDayIndex(dayOfWeek: number, firstDayOfWeek: number): number {
+  return (dayOfWeek - firstDayOfWeek + 7) % 7;
+}
+
 export function getDaysInMonth(year: number, month: number): number {
   if (month === 2) {
     return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28;
@@ -81,9 +96,17 @@ export function isValidIsoDate(year: number, month: number, day: number): boolea
 }
 
 /**
- * Formats a date as `YYYY-MM-DD`, using a signed six-digit year outside years 0 to 9999.
+ * Formats a number with leading zeros, up to `length` characters.
  */
-export function formatIsoDate(year: number, month: number, day: number) {
+export function padNumber(value: number, length: number = 2): string {
+  return String(value).padStart(length, '0');
+}
+
+/**
+ * Formats a day number as `YYYY-MM-DD`, using a signed six-digit year outside years 0 to 9999.
+ */
+export function formatIsoDate(dayNumber: number) {
+  const { year, month, day } = fromDayNumber(dayNumber);
   let yearString: string;
   if (year < 0 || year > 9999) {
     yearString = `${year < 0 ? '-' : '+'}${String(Math.abs(year)).padStart(6, '0')}`;
@@ -111,14 +134,9 @@ export const TIME_FIELD_MAXIMUMS: Readonly<IsoTimeFields> = {
   nanosecond: 999,
 };
 
-export const TIME_FIELDS = [
-  'hour',
-  'minute',
-  'second',
-  'millisecond',
-  'microsecond',
-  'nanosecond',
-] as const;
+export const TIME_FIELDS = /* @__PURE__ */ Object.keys(
+  TIME_FIELD_MAXIMUMS,
+) as readonly (keyof IsoTimeFields)[];
 
 export function isValidIsoTime(time: IsoTimeFields): boolean {
   return TIME_FIELDS.every(
@@ -140,11 +158,11 @@ export function getTimeNumber(time: IsoTimeFields): number {
 
 export function formatIsoTime(time: IsoTimeFields): string {
   const fraction =
-    `${String(time.millisecond).padStart(3, '0')}${String(time.microsecond).padStart(3, '0')}${String(time.nanosecond).padStart(3, '0')}`.replace(
+    `${padNumber(time.millisecond, 3)}${padNumber(time.microsecond, 3)}${padNumber(time.nanosecond, 3)}`.replace(
       /0+$/,
       '',
     );
-  return `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}:${String(time.second).padStart(2, '0')}${fraction ? `.${fraction}` : ''}`;
+  return `${padNumber(time.hour)}:${padNumber(time.minute)}:${padNumber(time.second)}${fraction ? `.${fraction}` : ''}`;
 }
 
 /**
@@ -155,7 +173,7 @@ export function toInteger(value: unknown, field: string): number {
   const number = +(value as number);
   if (!Number.isFinite(number)) {
     throw new Error(
-      `Base UI Plus: A temporal value received ${String(value)} as the ${field}, which isn't a finite number. ` +
+      `MUI X Scheduler: A temporal value received ${String(value)} as the ${field}, which isn't a finite number. ` +
         'A temporal value cannot represent a non-finite field. ' +
         'Pass finite numbers for its date and time fields.',
     );
@@ -176,7 +194,7 @@ export function readOverflow(
   }
   if (typeof options !== 'object' || options === null) {
     throw new TypeError(
-      `Base UI Plus: The options of \`BaseTemporal.${apiName}\` are ${String(options)}, which isn't an object. ` +
+      `MUI X Scheduler: The options of \`BaseTemporal.${apiName}\` are ${String(options)}, which isn't an object. ` +
         "The method can't read the `overflow` option from them. " +
         "Pass an object such as `{ overflow: 'reject' }`, or no options.",
     );
@@ -184,7 +202,7 @@ export function readOverflow(
   const overflow = options.overflow ?? 'constrain';
   if (overflow !== 'constrain' && overflow !== 'reject') {
     throw new Error(
-      `Base UI Plus: The \`overflow\` option of \`BaseTemporal.${apiName}\` is ${String(overflow)}, which isn't supported. ` +
+      `MUI X Scheduler: The \`overflow\` option of \`BaseTemporal.${apiName}\` is ${String(overflow)}, which isn't supported. ` +
         "The method can't tell whether to adjust or reject a field above its range. " +
         "Pass `'constrain'` or `'reject'`.",
     );
@@ -212,8 +230,8 @@ export function readWithFields<T extends object>(
     )
   ) {
     throw new TypeError(
-      `Base UI Plus: \`BaseTemporal.${apiName}\` received ${String(fields)}, which isn't an object of fields. ` +
-        '`with()` replaces the fields of an object, and keeps the calendar of the value, so it rejects temporal values and objects with a calendar or a time zone. ' +
+      `MUI X Scheduler: \`BaseTemporal.${apiName}\` received ${String(fields)}, which isn't an object of fields. ` +
+        '`with()` replaces the fields of an object, and keeps the calendar of the value, so it rejects temporal values and objects with a calendar or a timezone. ' +
         'Pass only the fields to replace, such as `{ day: 1 }` for a date or `{ hour: 9 }` for a time.',
     );
   }
@@ -226,7 +244,7 @@ export function readWithFields<T extends object>(
   }
   if (Object.keys(read).length === 0) {
     throw new TypeError(
-      `Base UI Plus: \`BaseTemporal.${apiName}\` received no field the value reads. ` +
+      `MUI X Scheduler: \`BaseTemporal.${apiName}\` received no field the value reads. ` +
         "`with()` can't tell which fields to replace. " +
         'Pass at least one field of the value, such as `{ day: 1 }` for a date or `{ hour: 9 }` for a time. Only calendars with eras, unlike the ISO calendar, read `era` and `eraYear`.',
     );
@@ -243,7 +261,7 @@ export function compareOrder(a: number | bigint, b: number | bigint): -1 | 0 | 1
 
 export function throwOnPrimitiveConversion(name: string): never {
   throw new TypeError(
-    `Base UI Plus: A \`${name}\` was converted to a primitive value, for example by \`<\`, \`>\` or \`+\`. ` +
+    `MUI X Scheduler: A \`${name}\` was converted to a primitive value, for example by \`<\`, \`>\` or \`+\`. ` +
       "Comparing or adding temporal values this way gives meaningless results, so it isn't allowed. " +
       'Use the static `compare()` method or `equals()` to compare them, and `toString()` to get them as a string.',
   );

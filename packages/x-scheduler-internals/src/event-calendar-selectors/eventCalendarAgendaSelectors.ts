@@ -7,10 +7,11 @@ import {
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import { eventCalendarViewSelectors } from './eventCalendarViewSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models';
+import type { EventCalendarFetchRange } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayListFromPlainDates } from '../get-day-list';
 import { BaseTemporal } from '../internals/utils/base-temporal';
+import { getPlainDateKey } from '../internals/utils/plain-date-utils/plainDate';
 
 /**
  * The span of days the agenda displays: `dayCount` days from the visible date,
@@ -103,8 +104,8 @@ const visibleDays = createSelectorMemoized(
       recurringEventsPlugin,
     });
 
-    const hasEvents = (day: SchedulerProcessedDate) =>
-      (occurrenceMap.get(day.key)?.length ?? 0) > 0;
+    const hasEvents = (day: BaseTemporal.PlainDate) =>
+      (occurrenceMap.get(getPlainDateKey(day))?.length ?? 0) > 0;
 
     let daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
 
@@ -166,12 +167,11 @@ export const eventCalendarAgendaSelectors = {
     (range, baseDays, horizonPlainDate, showEmptyDaysInAgenda): EventCalendarFetchRange => {
       // The day list is empty when a short `dayCount` only covers hidden weekend days,
       // so fall back to the bounds of the range.
-      const firstPlainDate = baseDays.length > 0 ? baseDays[0].plainDate : range.start;
+      const firstPlainDate = baseDays.length > 0 ? baseDays[0] : range.start;
       if (!showEmptyDaysInAgenda) {
         return { start: firstPlainDate, end: horizonPlainDate };
       }
-      const lastPlainDate =
-        baseDays.length > 0 ? baseDays[baseDays.length - 1].plainDate : range.end;
+      const lastPlainDate = baseDays.length > 0 ? baseDays[baseDays.length - 1] : range.end;
       return { start: firstPlainDate, end: lastPlainDate };
     },
   ),

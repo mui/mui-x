@@ -389,11 +389,8 @@ ChartsTooltipContainer.propTypes /* remove-proptypes */ = {
    * It's used to set the position of the popper.
    * The return value will passed as the reference object of the Popper instance.
    */
-  anchorEl: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    HTMLElementType,
-    PropTypes.object,
-    PropTypes.func,
-  ]),
+  anchorEl: PropTypes /* @typescript-to-proptypes-ignore */
+    .oneOfType([HTMLElementType, PropTypes.object, PropTypes.func]),
   /**
    * Popper render function or node.
    */

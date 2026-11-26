@@ -339,6 +339,15 @@ export function createSendMessageActions<Cursor = string>(params: {
     await sendExistingMessage(message, input.attachments);
   }
 
+  // Returns `null` instead of silently dropping the message when a send is already in progress.
+  function sendMessageIfIdle(input: UseChatSendMessageInput): Promise<void> | null {
+    if (isSending || store.state.isStreaming) {
+      return null;
+    }
+
+    return sendMessage(input);
+  }
+
   async function retry(messageId: string): Promise<void> {
     // Hoist the streaming guard above any destructive work so retrying while a
     // stream is in flight is a clean no-op rather than wiping prior assistant
@@ -433,6 +442,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     const removedMessages = assistantMessageIds
       .map((id) => store.state.messagesById[id])
       .filter((message): message is ChatMessage => message != null);
+    const originalMessageIds = store.state.messageIds;
 
     removeAssistantMessageIds(
       storeUnknown,
@@ -493,11 +503,43 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      // Restore the snapshot assistant messages (D4) unless this run already added its
-      // reply. A later failure (e.g. a throwing onFinish) must not overwrite it.
-      if (!replyMessageId || !store.state.messagesById[replyMessageId]) {
-        for (const removedMessage of removedMessages) {
-          store.addMessage(removedMessage);
+      // Restore the removed messages (D4) unless this run already added its reply; a later
+      // failure (e.g. a throwing onFinish) must not overwrite it. Each goes back after its
+      // nearest surviving original predecessor (or before the first survivor).
+      const removedById = new Map(removedMessages.map((message) => [message.id, message]));
+      const currentMessages = getMessages(storeUnknown);
+      // A Map lookup avoids inherited keys (e.g. an id of "constructor") on `messagesById`.
+      const currentById = new Map(currentMessages.map((message) => [message.id, message]));
+      const hasReply = replyMessageId !== undefined && currentById.has(replyMessageId);
+      const liveMessages = currentMessages.filter((message) => !removedById.has(message.id));
+      const liveIds = new Set(liveMessages.map((message) => message.id));
+      const restoredAfter = new Map<string | undefined, ChatMessage[]>();
+      let previousLiveId: string | undefined;
+      let firstLiveId: string | undefined;
+      for (const id of originalMessageIds) {
+        const removedMessage = removedById.get(id);
+        if (removedMessage) {
+          const group = restoredAfter.get(previousLiveId) ?? [];
+          group.push(currentById.get(id) ?? removedMessage);
+          restoredAfter.set(previousLiveId, group);
+        } else if (liveIds.has(id)) {
+          previousLiveId = id;
+          firstLiveId ??= id;
+        }
+      }
+      // No original message survived (e.g. the thread was replaced): leave it untouched.
+      if (!hasReply && firstLiveId !== undefined) {
+        const nextMessages = liveMessages.flatMap((message) => [
+          ...(message.id === firstLiveId ? (restoredAfter.get(undefined) ?? []) : []),
+          message,
+          ...(restoredAfter.get(message.id) ?? []),
+        ]);
+        const currentIds = store.state.messageIds;
+        if (
+          nextMessages.length !== currentIds.length ||
+          nextMessages.some((message, index) => message.id !== currentIds[index])
+        ) {
+          store.setMessages(nextMessages);
         }
       }
 
@@ -523,5 +565,5 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
   }
 
-  return { sendMessage, retry, regenerate, pruneAttachmentsByMessageIds };
+  return { sendMessage, sendMessageIfIdle, retry, regenerate, pruneAttachmentsByMessageIds };
 }

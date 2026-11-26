@@ -115,8 +115,8 @@ export const initialEvents = [
   },
   {
     id: 'admin-2',
-    start: '2025-07-04T00:00:00',
-    end: '2025-07-05T00:00:00',
+    start: '2025-07-04',
+    end: '2025-07-06',
     title: 'Independence Day — Campus Closed',
     resource: 'administration',
     allDay: true,
@@ -309,8 +309,8 @@ export const initialEvents = [
   },
   {
     id: 'cs-9',
-    start: '2025-07-26T00:00:00',
-    end: '2025-07-27T00:00:00',
+    start: '2025-07-26',
+    end: '2025-07-28',
     title: 'Hackathon',
     resource: 'computer-science',
     allDay: true,

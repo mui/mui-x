@@ -141,7 +141,7 @@ const selectorChartsHighlightStateImpl = createSelectorMemoized(
  */
 export function selectorChartsHighlightState(
   state: Parameters<typeof selectorChartsHighlightStateImpl>[0],
-  item: Parameters<typeof selectorChartsHighlightStateImpl>[1],
+  item: HighlightItemIdentifierWithType<ChartSeriesType> | null,
 ): HighlightState {
   return selectorChartsHighlightStateImpl(state, item);
 }

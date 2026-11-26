@@ -1,6 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
-  TemporalSupportedObject,
   RecurringEventPresetKey,
   RecurringEventScope,
   SchedulerEventOccurrence,
@@ -18,22 +16,29 @@ export interface SchedulerRecurringEventsPluginInterface {
    * Parses a recurrence rule into a canonical `SchedulerProcessedEventRecurrenceRule`
    * expressed in the given timezone. String inputs are validated against RFC5545; object
    * inputs are trusted and normalized.
+   * The `until` has the type of the start of the series: a date on an all-day series, and on a
+   * timed one (`allDay` false, the default) a date-time, its exact cutoff. The other type is read
+   * leniently, with a warning: a date-time on an all-day series counts by its date in `timezone`,
+   * and a date on a timed series covers its whole day.
    */
   parseRRule(
     input: string | SchedulerEventRecurrenceRule,
-    timezone: TemporalTimezone,
+    timezone: string,
+    allDay?: boolean,
   ): SchedulerProcessedEventRecurrenceRule;
 
   /**
    * Expands a recurring event into the occurrences that fall within the visible range, from the
    * timestamp `start` to the timestamp `end`, both included, honoring COUNT/UNTIL boundaries and
-   * EXDATE exclusions.
+   * EXDATE exclusions. When `visibleRanges`, the sorted and disjoint ranges of the visible days, is
+   * given, the occurrences that don't overlap one of them are left out too.
    */
   getOccurrencesForVisibleDays(
     event: SchedulerProcessedEvent,
     start: number,
     end: number,
-    displayTimezone: TemporalTimezone,
+    displayTimezone: string,
+    visibleRanges?: readonly { start: number; end: number }[],
   ): SchedulerEventOccurrence[];
 
   /**
@@ -42,9 +47,10 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   updateRecurringEvent(
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: TemporalSupportedObject,
+    occurrence: SchedulerEventOccurrence,
     changes: SchedulerEventUpdatedProperties,
     scope: RecurringEventScope,
+    displayTimezone: string,
   ): UpdateEventsParameters;
 
   /**
@@ -53,7 +59,7 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   deleteRecurringEvent(
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: TemporalSupportedObject,
+    occurrence: SchedulerEventOccurrence,
     scope: RecurringEventScope,
   ): UpdateEventsParameters;
 

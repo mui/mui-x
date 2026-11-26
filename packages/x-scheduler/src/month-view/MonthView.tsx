@@ -3,11 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
-import type {
-  EventCalendarViewDefinition,
-  GridRowType,
-  SchedulerProcessedDay,
-} from '@mui/x-scheduler-internals/models';
+import type { EventCalendarViewDefinition, GridRowType } from '@mui/x-scheduler-internals/models';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
   formatWeekdayShort,
@@ -16,6 +12,7 @@ import {
   getStartOfMonthDayNumber,
   plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
@@ -173,7 +170,7 @@ export const MonthView = React.memo(
 
     const weeks = React.useMemo(() => {
       const chunkSize = 7 - hiddenWeekdays.length;
-      const result: SchedulerProcessedDay[][] = [];
+      const result: BaseTemporal.PlainDate[][] = [];
       for (let i = 0; i < days.length; i += chunkSize) {
         result.push(days.slice(i, i + chunkSize));
       }
@@ -228,12 +225,12 @@ export const MonthView = React.memo(
               {weeks[0].map((weekDay, dayIdx) => (
                 <MonthViewHeaderCell
                   className={classes.monthViewHeaderCell}
-                  key={weekDay.key}
+                  key={weekDay.toString()}
                   date={weekDay}
                   aria-colindex={dayIdx + 1}
                   skipDataCurrent
                 >
-                  {formatWeekdayShort(locale, weekDay.plainDate)}
+                  {formatWeekdayShort(locale, weekDay)}
                 </MonthViewHeaderCell>
               ))}
             </MonthViewHeader>

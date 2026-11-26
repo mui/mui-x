@@ -103,6 +103,23 @@ function useContainerWidth(element: HTMLElement | null): number | null {
   return width;
 }
 
+// Default layout slots: styled so theme `styleOverrides` and `slotProps.*.sx` apply.
+// Sizing stays in the inline styles set below so custom slots keep it too.
+const ChatBoxLayout = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'Layout',
+})({});
+
+const ChatBoxConversationsPane = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'ConversationsPane',
+})({});
+
+const ChatBoxThreadPane = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'ThreadPane',
+})({});
+
 const ChatBoxEmptyState = styled('div', {
   name: 'MuiChatBox',
   slot: 'EmptyState',
@@ -407,6 +424,7 @@ function mergeLayoutSlotProps(
     style?: React.CSSProperties;
     role?: string;
     'aria-label'?: string;
+    ownerState?: { variant?: ChatVariant };
   },
 ) {
   return mergeSlotProps(internalProps, slotProp);
@@ -902,21 +920,26 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   );
   const chatLayoutSlots = React.useMemo(
     () => ({
-      root: slots.layout,
-      conversationsPane: slots.conversationsPane,
-      threadPane: slots.threadPane,
+      root: slots.layout ?? ChatBoxLayout,
+      conversationsPane: slots.conversationsPane ?? ChatBoxConversationsPane,
+      threadPane: slots.threadPane ?? ChatBoxThreadPane,
     }),
     [slots.conversationsPane, slots.layout, slots.threadPane],
   );
-  const chatLayoutSlotProps = React.useMemo(
-    () => ({
+  const chatLayoutSlotProps = React.useMemo(() => {
+    // Default slots share the root's ownerState so variant-based theme overrides match;
+    // custom slots keep receiving the headless ownerState only.
+    const variantOwnerState = { ownerState: { variant } };
+    return {
       root: mergeLayoutSlotProps(slotProps.layout, {
         className: layoutClassName,
         style: { flex: 1, minHeight: 0 },
+        ...(slots.layout ? {} : variantOwnerState),
       }),
       conversationsPane: mergeLayoutSlotProps(slotProps.conversationsPane, {
         className: conversationsPaneClassName,
         style: conversationsPaneStyle,
+        ...(slots.conversationsPane ? {} : variantOwnerState),
         // Landmark for the conversations sidebar, so assistive technology can
         // jump between the sidebar, the thread region, and the composer form.
         role: 'navigation',
@@ -925,20 +948,24 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       threadPane: mergeLayoutSlotProps(slotProps.threadPane, {
         className: threadPaneClassName,
         style: threadPaneStyle,
+        ...(slots.threadPane ? {} : variantOwnerState),
       }),
-    }),
-    [
-      conversationsPaneClassName,
-      conversationsPaneStyle,
-      layoutClassName,
-      localeText.conversationListLandmarkLabel,
-      slotProps.conversationsPane,
-      slotProps.layout,
-      slotProps.threadPane,
-      threadPaneClassName,
-      threadPaneStyle,
-    ],
-  );
+    };
+  }, [
+    conversationsPaneClassName,
+    conversationsPaneStyle,
+    layoutClassName,
+    localeText.conversationListLandmarkLabel,
+    slotProps.conversationsPane,
+    slotProps.layout,
+    slotProps.threadPane,
+    slots.conversationsPane,
+    slots.layout,
+    slots.threadPane,
+    threadPaneClassName,
+    threadPaneStyle,
+    variant,
+  ]);
 
   return (
     <ChatLayout slots={chatLayoutSlots} slotProps={chatLayoutSlotProps}>

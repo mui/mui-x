@@ -78,6 +78,11 @@ const TEST_RULES: RouteRule[] = [
     enabled: false,
   },
   {
+    test: '/test-regressions-charts/ReversedBandAxis',
+    // A dedicated test hovers a bar and screenshots the tooltips rendered outside the testcase.
+    enabled: false,
+  },
+  {
     test: '/docs-charts-map/MarsMap',
     // `MapImagePlot` renders its `<image>` only after the texture loads and is
     // reprojected. The `<img>` wait below does not see that load.
@@ -443,6 +448,41 @@ async function main() {
       await sleep(300);
 
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
+    test('should resolve the clicked bar on a reversed band axis', async ({
+      pooled,
+      onTestFinished,
+    }) => {
+      const { page } = pooled;
+      const route = '/test-regressions-charts/ReversedBandAxis';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}BarClick.png`);
+
+      const testcase = await navigateToTest(page, route);
+      // Pooled pages can keep the scroll position of a previous test.
+      await page.evaluate(() => window.scrollTo(0, 0));
+
+      await enablePointerDot(page, onTestFinished);
+
+      // Bar D is the fourth bar of the first chart, drawn on the left of the reversed axis.
+      // Clicking it keeps it highlighted, unlike a hover that later pointer events can clear.
+      const testcaseLocator = page.locator(`[data-testpath="${route}"]`);
+      await testcaseLocator.locator('rect.MuiBarChart-element').nth(3).click();
+      await testcaseLocator.getByText('Clicked: D').waitFor();
+
+      const tooltips = page.getByRole('tooltip');
+      await tooltips.filter({ hasText: 'G2' }).waitFor();
+      await tooltips.filter({ hasText: 'G7' }).waitFor();
+      // Let the poppers settle on their final position.
+      await sleep(300);
+
+      // Clip a viewport screenshot instead of an element one, which would scroll.
+      // It still captures the zoom slider tooltips rendered outside the testcase.
+      const clip = await testcase.boundingBox();
+      if (!clip) {
+        throw new Error('The reversed band axis testcase is not visible.');
+      }
+      await page.screenshot({ path: screenshotPath, type: 'png', clip });
     });
 
     test('should export a chart as PNG', async ({ pooled }) => {

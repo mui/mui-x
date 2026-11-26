@@ -281,6 +281,9 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * The color of the component.
