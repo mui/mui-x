@@ -7,11 +7,11 @@ Render benchmarks, run with the `benchmark` CLI from [`@mui/internal-benchmark`]
 ```bash
 pnpm test:benchmark smoke/                             # what CI runs, against the parent commit
 pnpm test:benchmark smoke/ --baseline master           # against another revision
-pnpm test:benchmark scheduler/ --baseline master       # the Scheduler's internal functions
 pnpm test:benchmark smoke/ -t "LineChart"              # only benchmarks whose name matches
+pnpm test:benchmark scheduler/internals/               # the benchmark files of another folder
 ```
 
-Without a path, the run builds and samples every benchmark file: the smoke file and the Scheduler's internal functions.
+Without a path, the run includes every benchmark file, not only the smoke one.
 
 The run builds the packages itself (`pnpm release:build`), writes `.benchmark/results/report.json` and prints a table per benchmark. While it runs, it pins the packed builds in the repository's `pnpm-workspace.yaml` and puts it back at the end, so don't commit or build in the same checkout meanwhile.
 
