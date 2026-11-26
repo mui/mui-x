@@ -300,12 +300,22 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       );
     }
 
-    const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+    const timestamp = value.toDate().getTime();
+    let offset: number | undefined;
+    // `tz()` is slow. From 1970, the native `Date` gives the same system offset, with its seconds.
+    // Before 1970, `tz()` gives other offsets, for example it adds a second to an instant with milliseconds.
+    if (timezone === 'system' && timestamp >= 0) {
+      offset = (this.getWallTime(dayjs(timestamp)) - timestamp) / 60_000 || undefined;
+    } else {
+      // @ts-expect-error Dayjs does not expose its internal UTC offset in its public types.
+      offset = value.tz(this.cleanTimezone(timezone), true).$offset;
+    }
+
     // An offset of `0` equals no offset, and before dayjs 1.11.12 assigning `0` breaks UTC values.
     // @ts-expect-error Dayjs does not expose its internal UTC offset in its public types.
-    if ((fixedValue.$offset ?? 0) !== (value.$offset ?? 0)) {
+    if ((offset ?? 0) !== (value.$offset ?? 0)) {
       // @ts-expect-error Dayjs does not expose its internal UTC offset in its public types.
-      value.$offset = fixedValue.$offset;
+      value.$offset = offset;
     }
     return value;
   };

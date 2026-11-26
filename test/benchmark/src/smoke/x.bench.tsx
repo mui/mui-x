@@ -33,7 +33,12 @@ import {
 import { sparkLineChartGrid } from '../charts/SparkLineChart/scenarios';
 import { chatBox } from '../chat/scenarios';
 import { dataGrid, dataGridPremium, dataGridPro } from '../dataGrid/scenarios';
-import { dateCalendar, dateRangeCalendar } from '../datePickers/scenarios';
+import {
+  dateCalendar,
+  dateCalendarNamedTimezone,
+  dateCalendarSystemTimezone,
+  dateRangeCalendar,
+} from '../datePickers/scenarios';
 import { eventCalendar } from '../scheduler/scenarios';
 import { richTreeView, richTreeViewPro } from '../treeView/scenarios';
 
@@ -47,14 +52,16 @@ import { richTreeView, richTreeViewPro } from '../treeView/scenarios';
 const SMOKE_OPTIONS = { sampleSize: 30, alarm: { error: 0.1 } };
 
 /** Registers a scenario as a smoke benchmark. */
-function smokeBenchmark([name, render, interaction]: Scenario) {
-  // Only an interaction is kept: the smoke options replace a scenario's own.
-  reactBenchmark(
-    name,
-    render,
-    typeof interaction === 'function' ? interaction : undefined,
-    SMOKE_OPTIONS,
-  );
+function smokeBenchmark([name, render, interactionOrOptions, maybeOptions]: Scenario) {
+  const [interaction, options] =
+    typeof interactionOrOptions === 'function'
+      ? [interactionOrOptions, maybeOptions]
+      : [undefined, interactionOrOptions];
+  // The smoke options replace a scenario's own, except where its recording starts.
+  reactBenchmark(name, render, interaction, {
+    ...SMOKE_OPTIONS,
+    reactRecordingPaused: options?.reactRecordingPaused,
+  });
 }
 
 // Charts
@@ -92,6 +99,8 @@ smokeBenchmark(dataGridPremium);
 
 // Date and Time Pickers
 smokeBenchmark(dateCalendar);
+smokeBenchmark(dateCalendarNamedTimezone);
+smokeBenchmark(dateCalendarSystemTimezone);
 smokeBenchmark(dateRangeCalendar);
 
 // Tree View
