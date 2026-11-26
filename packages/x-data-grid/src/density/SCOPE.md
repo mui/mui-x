@@ -27,6 +27,7 @@ Totals: **85 components in scope** (5 DYNAMIC → defaultProps lines), 41 compon
 
 - A few emissions reach a material child through a nested selector, so a user's override of that child's own slot loses inside the X part: picker small-field adornment `IconButton` size, columns panel `FormControlLabel` gap, date range `DayCalendar` min height, tree loader icon container width, charts tooltip `caption` and `span`, header `Badge` top. Material avoids this with a private variable on the parent; these are kept because the child has no X-owned slot to put a plain declaration on.
 - Header sort and filter counter badges keep material's standard badge (24px). The badge `top` is moved down so the 40px header doesn't clip it.
+- Under `modularCssLayers`, values set through `sx` keep master's size (accepted 2026-11-26). An `sx` value lives in the `mui.sx` layer, above every theme rule, so the nested selectors that reach `sx` (Decisions, "No source changes in this PR") only apply without layers or with the single `@layer mui`. Affected: the desktop date time and date time range pickers' clocks and the shortcuts list keep master's caps (336, 360) next to a calendar of 300px at the default scale and 432px at low, and the Charts Pro zoom slider tooltip keeps `paddingX: 0.5` (4px instead of 8px at low). Fixing it would mean moving those values out of `sx`, a source change this PR does not make.
 
 ## Follow-ups (need source changes, not part of the enhancers)
 
@@ -37,7 +38,6 @@ Totals: **85 components in scope** (5 DYNAMIC → defaultProps lines), 41 compon
 - Tree data depth indent: `GridTreeDataGroupingCell` sets `marginLeft: vars.spacing(depth * offsetMultiplier)` inline and ignores `--DataGrid-cellOffsetMultiplier`, so it stays 16px per level. A source change would read the variable as the row grouping cells do.
 - Chart type illustrations in the charts panel: `style={{ width: 32, height: 32 }}` inline.
 - Under `modularCssLayers`: the prompt entry's template-literal `styled` (needed for its keyframes) lands directly in `@layer mui`, above `mui.theme`, so its `padding` beats the theme (10px instead of `small`); the edit multi-select's unnamed `styled(GridMultiSelectChips)` lands in `mui.custom` and keeps `0 10px`. Both render as the theme says without layers or with a single layer.
-- Under `modularCssLayers`, an `sx` value lives in the `mui.sx` layer, above every theme rule, so the ADR 0017 nested selectors cannot beat it there. Seen on the coverage page (2026-11-26): the desktop date time and date time range pickers' clocks and the shortcuts list keep master's `sx` caps (336, 360) next to a calendar of 300px at the default scale and 432px at low; the Charts Pro zoom slider tooltip keeps `sx` `paddingX: 0.5` (4px instead of 8px at low). Without layers or with a single layer the caps apply. Only a source change (the value out of `sx`) fixes the modular case. Open for decision.
 - Not scanned: `x-chat`, `x-scheduler`, `x-scheduler-premium`.
 
 ## Fixes uncovered (chain-only breakage, fixed in the enhancers)
