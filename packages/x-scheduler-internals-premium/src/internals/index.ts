@@ -15,3 +15,5 @@ export {
   getEffectiveDependencyLag,
   groupByEventId,
 } from './utils/dependency-utils';
+export { iterate as iterateTimelineGridHeader } from '../timeline-grid/header/iterate';
+export type { IteratedRange as TimelineGridHeaderIteratedRange } from '../timeline-grid/header/iterate';

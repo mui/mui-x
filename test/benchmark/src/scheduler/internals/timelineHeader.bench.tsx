@@ -1,10 +1,10 @@
 import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
-import { iterate } from '@mui/x-scheduler-internals-premium/timeline-grid';
-import type { IteratedRange } from '@mui/x-scheduler-internals-premium/timeline-grid';
+import { iterateTimelineGridHeader as iterate } from '@mui/x-scheduler-internals-premium/internals';
+import type { TimelineGridHeaderIteratedRange as IteratedRange } from '@mui/x-scheduler-internals-premium/internals';
 import { timeBenchmark } from '../../utils/timeBenchmark';
 
-// The walk reads no timezone: the ranges are dates.
-// The header rows of the presets, with the ranges they display.
+// The header rows of the presets, with the ranges they display. The walk reads no timezone: the
+// ranges are dates.
 const visiblePlainDate = BaseTemporal.PlainDate.from('2026-03-04');
 const monthStartPlainDate = visiblePlainDate.with({ day: 1 });
 const toRange = (

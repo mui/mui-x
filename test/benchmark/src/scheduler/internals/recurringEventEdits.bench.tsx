@@ -1,12 +1,11 @@
 import { getTimezoneId } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
-import {
-  deleteRecurringEvent,
-  updateRecurringEvent,
-} from '@mui/x-scheduler-internals-premium/internals';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { createDate } from 'test/utils/scheduler/dates';
 import { createOccurrence, EventBuilder } from 'test/utils/scheduler/event-builder';
 import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
+
+const { deleteRecurringEvent, updateRecurringEvent } = schedulerRecurringEventsPlugin;
 
 const TIMEZONE = 'America/New_York';
 

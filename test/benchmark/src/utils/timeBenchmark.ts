@@ -7,15 +7,16 @@ const duration = new ScalarMetric({
   alarm: {},
 });
 
-// A sample repeats the function for this long, to measure more than the resolution of the timer.
+// A sample repeats the function for this long, in milliseconds, to measure more than the
+// resolution of the timer.
 const SAMPLE_DURATION = 20;
 
 // Keeps the results reachable, so that the calls are not optimized away.
-export const lastResult = { value: undefined as unknown };
+const lastResult = { value: undefined as unknown };
 
 /**
  * Registers a benchmark of a function that renders nothing. A sample calls it repeatedly and
- * records the mean duration of a call as `duration`.
+ * records the mean duration of a call, in milliseconds, as `duration`.
  * With `prepare`, each call gets a new input, built outside of the measure.
  */
 export function timeBenchmark<TInput = void>(
@@ -42,11 +43,20 @@ export function timeBenchmark<TInput = void>(
           calls += 1;
         }
       } else {
+        // A fast function is called in growing batches, so that reading the clock is not what
+        // the sample measures.
+        let batch = 1;
         const start = performance.now();
         while (elapsed < SAMPLE_DURATION) {
-          lastResult.value = run(undefined as TInput);
-          elapsed = performance.now() - start;
-          calls += 1;
+          for (let call = 0; call < batch; call += 1) {
+            lastResult.value = run(undefined as TInput);
+          }
+          calls += batch;
+          const now = performance.now() - start;
+          if (now - elapsed < 1) {
+            batch *= 2;
+          }
+          elapsed = now;
         }
       }
       duration.record(elapsed / calls);

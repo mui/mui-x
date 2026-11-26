@@ -10,10 +10,7 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import { innerGetEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
-import {
-  getRecurringEventOccurrencesForVisibleDays,
-  schedulerRecurringEventsPlugin,
-} from '@mui/x-scheduler-internals-premium/internals';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 import { lazy, timeBenchmark } from '../../utils/timeBenchmark';
 
@@ -82,7 +79,7 @@ function expandAll(
   const rangeEnd = Date.parse(end);
   let count = 0;
   for (const event of events) {
-    count += getRecurringEventOccurrencesForVisibleDays(
+    count += schedulerRecurringEventsPlugin.getOccurrencesForVisibleDays(
       event,
       rangeStart,
       rangeEnd,
