@@ -395,21 +395,6 @@ describe('createRealtimeActions', () => {
 
         expect(store.state.messageIds).toEqual([]);
       });
-          const { store, handleRealtimeEvent, setActiveConversation, realtimeMessageBufferRef } =
-            setup({ listMessages });
-
-          handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
-          const loading = setActiveConversation('c2');
-          realtimeMessageBufferRef.current = {
-            adapter: { sendMessage: vi.fn() },
-            buffer: createRealtimeMessageBuffer(),
-          };
-          settleLoad();
-          await loading;
-
-          expect(store.state.messageIds).toEqual([]);
-        },
-      );
       it('message-removed: drops the message from the buffer', async () => {
         const { store, handleRealtimeEvent, setActiveConversation } = setup();
 
