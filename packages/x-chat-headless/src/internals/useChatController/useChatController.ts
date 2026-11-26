@@ -14,7 +14,6 @@ import type {
   ChatOnToolCall,
 } from '../../types';
 import type { ChatError } from '../../types/chat-error';
-import type { ChatRealtimeEvent } from '../../types/chat-realtime';
 import type { UseChatSendMessageInput } from '../../types/chat-callbacks';
 import {
   getMessages,
@@ -25,6 +24,7 @@ import {
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
 import { createRealtimeMessageBuffer } from './realtimeMessageBuffer';
+import type { RealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { createSendMessageActions } from './sendMessageActions';
 import { createTypingActions } from './typingActions';
 import type { ChatFeatures } from '../../ChatProvider';
@@ -82,16 +82,11 @@ export function useChatController<Cursor = string>({
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
   const historyLoadRequestIdRef = React.useRef(0);
-  const realtimeMessageBuffer = useRefWithInit(createRealtimeMessageBuffer).current;
-  const realtimeMessageBufferAdapterRef = React.useRef(adapter);
+  // Each subscription registers its buffer under its adapter, so a load never reads another backend's.
+  const realtimeMessageBuffers = useRefWithInit(
+    () => new WeakMap<object, RealtimeMessageBuffer>(),
+  ).current;
   const storeUnknown = asCursorAgnosticChatStore(store);
-
-  // Cleared during render, before any child effect can open a conversation under a new
-  // adapter, which may be another backend.
-  if (realtimeMessageBufferAdapterRef.current !== adapter) {
-    realtimeMessageBufferAdapterRef.current = adapter;
-    realtimeMessageBuffer.clearAll();
-  }
 
   runtimeRef.current = {
     adapter,
@@ -135,10 +130,10 @@ export function useChatController<Cursor = string>({
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef,
-        realtimeMessageBuffer,
+        realtimeMessageBuffers,
       }),
 
-    [setRuntimeError, stopStreaming, store, realtimeMessageBuffer],
+    [setRuntimeError, stopStreaming, store, realtimeMessageBuffers],
   );
 
   const { sendMessage, sendMessageIfIdle, retry, regenerate, pruneAttachmentsByMessageIds } =
@@ -239,16 +234,6 @@ export function useChatController<Cursor = string>({
     [setRuntimeError, store, storeUnknown],
   );
 
-  const { handleRealtimeEvent } = React.useMemo(
-    () =>
-      createRealtimeActions({
-        store: storeUnknown,
-        conversationNavigationRequestIdRef,
-        realtimeMessageBuffer,
-      }),
-    [storeUnknown, conversationNavigationRequestIdRef, realtimeMessageBuffer],
-  );
-
   const {
     handleComposerValueChange,
     handleActiveConversationChange,
@@ -301,14 +286,15 @@ export function useChatController<Cursor = string>({
       return undefined;
     }
 
-    // A retired subscription may still deliver events until its cleanup has resolved.
-    function onEvent(event: ChatRealtimeEvent) {
-      if (!isDisposed) {
-        handleRealtimeEvent(event);
-      }
-    }
+    const realtimeMessageBuffer = createRealtimeMessageBuffer();
+    realtimeMessageBuffers.set(adapter, realtimeMessageBuffer);
+    const { handleRealtimeEvent } = createRealtimeActions({
+      store: storeUnknown,
+      conversationNavigationRequestIdRef,
+      realtimeMessageBuffer,
+    });
 
-    void Promise.resolve(adapter.subscribe({ onEvent }))
+    void Promise.resolve(adapter.subscribe({ onEvent: handleRealtimeEvent }))
       .then((resolvedCleanup) => {
         if (isDisposed) {
           resolvedCleanup?.();
@@ -335,9 +321,13 @@ export function useChatController<Cursor = string>({
 
     return () => {
       isDisposed = true;
+      // Late events from this subscription only reach its dropped buffer.
+      if (realtimeMessageBuffers.get(adapter) === realtimeMessageBuffer) {
+        realtimeMessageBuffers.delete(adapter);
+      }
       cleanup?.();
     };
-  }, [adapter, handleRealtimeEvent, setRuntimeError]);
+  }, [adapter, realtimeMessageBuffers, setRuntimeError, storeUnknown]);
 
   useStoreEffect(
     store,

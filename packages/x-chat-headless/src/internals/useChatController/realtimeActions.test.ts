@@ -125,7 +125,7 @@ describe('createRealtimeActions', () => {
           conversationNavigationRequestIdRef,
           conversationLoadRequestIdRef: { current: 0 },
           historyLoadRequestIdRef: { current: 0 },
-          realtimeMessageBuffer,
+          realtimeMessageBuffers: new WeakMap([[adapter, realtimeMessageBuffer]]),
         });
         const { handleRealtimeEvent } = createRealtimeActions({
           store: asUnknown(store),
@@ -269,6 +269,17 @@ describe('createRealtimeActions', () => {
 
         expect(store.state.messageIds).toEqual(['m1']);
       });
+      it('puts held messages before those received while listMessages fails', async () => {
+        const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        const loading = setActiveConversation('c2');
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m2', 'c2') });
+        await loading;
+
+        expect(store.state.messageIds).toEqual(['m1', 'm2']);
+      });
       it('keeps the store copy over a held one when listMessages fails', async () => {
         const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
         const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
@@ -359,6 +370,22 @@ describe('createRealtimeActions', () => {
         await setActiveConversation('c2');
 
         expect(getTexts(store)).toEqual(['v3']);
+      });
+
+      it('keeps a held copy in step with an update without a conversation id', async () => {
+        const { listMessages, resolvers } = createPendingListMessages();
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2', 'v1') });
+        const loading = setActiveConversation('c2');
+        handleRealtimeEvent({
+          type: 'message-updated',
+          message: { ...createMessage('m1', 'c2', 'v2'), conversationId: undefined },
+        });
+        resolvers[0]([]);
+        await loading;
+
+        expect(getTexts(store)).toEqual(['v2']);
       });
 
       it('message-removed: drops the message from the buffer without a conversation id', async () => {
@@ -591,7 +618,7 @@ describe('createRealtimeActions', () => {
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),

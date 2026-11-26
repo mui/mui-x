@@ -64,7 +64,7 @@ When a conversation is active, `message-added` and `message-updated` events whos
 The runtime holds up to 50 of them per conversation, dropping the first received, and applies them when that conversation opens, on top of the `listMessages` result when the adapter implements it.
 See [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/#event-delivery-guarantees) for how held messages are merged with a partial page.
 `message-removed` and `conversation-removed` events discard them.
-With controlled `messages`, these events are ignored.
+With controlled `messages`, the runtime ignores adds and updates for another conversation when the message is not in the store.
 Messages already in the store are updated whatever their conversation.
 
 ### Typing events

@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ChatStore } from '../../store/ChatStore';
 import { createConversationActions } from './conversationActions';
-import { createRealtimeMessageBuffer } from './realtimeMessageBuffer';
 import type { ChatAdapter } from '../../adapters';
 import type { ChatMessage } from '../../types/chat-entities';
 
@@ -47,7 +46,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadConversationMessages(undefined);
@@ -65,7 +64,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadConversationMessages(undefined, { resetWhenUndefined: false });
@@ -88,7 +87,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       // Should not throw and should not add messages
@@ -110,7 +109,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadConversationMessages('c2');
@@ -132,7 +131,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadConversationMessages('c1', { resetWhenUndefined: false });
@@ -161,7 +160,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadConversationMessages('c1');
@@ -199,7 +198,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const promise = loadConversationMessages('c2');
@@ -243,7 +242,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const promise = loadConversationMessages('c1');
@@ -277,7 +276,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const promise = loadConversationMessages('c1');
@@ -306,7 +305,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadConversationMessages('c1');
@@ -340,7 +339,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const promise = loadConversationMessages('c1');
@@ -365,7 +364,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadMoreHistory();
@@ -396,7 +395,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadMoreHistory();
@@ -432,7 +431,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadMoreHistory();
@@ -458,7 +457,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await loadMoreHistory();
@@ -483,7 +482,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await setActiveConversation('c1');
@@ -511,7 +510,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await setActiveConversation('c2');
@@ -536,7 +535,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
       return { store, setRuntimeError, ...actions };
     }
@@ -617,7 +616,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       expect(store.state.isLoadingHistory).toBe(false);
@@ -654,7 +653,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const promise = loadConversationMessages('c1');
@@ -687,7 +686,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const promise = loadMoreHistory();
@@ -725,7 +724,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const promise = loadMoreHistory();
@@ -765,7 +764,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const promise = loadMoreHistory();
@@ -795,7 +794,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       // conversationId == null
@@ -821,7 +820,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await actionsWithoutConversation.loadMoreHistory();
@@ -842,7 +841,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       await actionsWithBareAdapter.loadMoreHistory();
@@ -872,7 +871,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const firstLoad = loadConversationMessages('c1');
@@ -916,7 +915,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const firstLoad = loadConversationMessages('c1');
@@ -952,7 +951,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const loadMorePromise = loadMoreHistory();
@@ -988,7 +987,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffer: createRealtimeMessageBuffer(),
+        realtimeMessageBuffers: new WeakMap(),
       });
 
       const firstLoad = loadConversationMessages('c1');

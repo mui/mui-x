@@ -32,17 +32,22 @@ export function createRealtimeMessageBuffer() {
     }
   }
 
+  // Without a conversation id, any conversation may hold the message.
+  function getConversationIds(conversationId: string | undefined) {
+    return conversationId != null ? [conversationId] : byConversation.keys();
+  }
+
   // Keeps a buffered copy in step with an event applied to the store instead.
   function updateIfPresent(message: ChatMessage, isUpdate: boolean) {
-    const { conversationId } = message;
-
-    if (conversationId != null && byConversation.get(conversationId)?.has(message.id)) {
-      add(conversationId, message, isUpdate);
+    for (const id of getConversationIds(message.conversationId)) {
+      if (byConversation.get(id)?.has(message.id)) {
+        add(id, message, isUpdate);
+      }
     }
   }
 
   function remove(messageId: string, conversationId: string | undefined) {
-    for (const id of conversationId != null ? [conversationId] : byConversation.keys()) {
+    for (const id of getConversationIds(conversationId)) {
       const messages = byConversation.get(id);
 
       if (messages?.delete(messageId) && messages.size === 0) {
@@ -53,10 +58,6 @@ export function createRealtimeMessageBuffer() {
 
   function clear(conversationId: string) {
     byConversation.delete(conversationId);
-  }
-
-  function clearAll() {
-    byConversation.clear();
   }
 
   /**
@@ -74,13 +75,12 @@ export function createRealtimeMessageBuffer() {
       return messages;
     }
 
-    const ids = new Set(messages.map((message) => message.id));
-    const missing = Array.from(buffered.values()).filter((message) => !ids.has(message.id));
+    messages.forEach((message) => buffered.delete(message.id));
 
-    return missing.length > 0 ? [...messages, ...missing] : messages;
+    return buffered.size > 0 ? [...messages, ...buffered.values()] : messages;
   }
 
-  return { add, updateIfPresent, remove, clear, clearAll, flush };
+  return { add, updateIfPresent, remove, clear, flush };
 }
 
 export type RealtimeMessageBuffer = ReturnType<typeof createRealtimeMessageBuffer>;

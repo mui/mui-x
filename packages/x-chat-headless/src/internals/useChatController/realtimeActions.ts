@@ -39,22 +39,23 @@ export function createRealtimeActions(params: {
   function handleRealtimeEvent(event: ChatRealtimeEvent): void {
     switch (event.type) {
       case 'message-added':
+      case 'message-updated': {
+        const { message } = event;
+        const isUpdate = event.type === 'message-updated';
+        const isStored = Boolean(store.state.messagesById[message.id]);
+
         // Messages already stored are applied whatever their conversation.
-        if (store.state.messagesById[event.message.id] || !bufferMessage(event.message, false)) {
-          store.addMessage(event.message);
-          realtimeMessageBuffer.updateIfPresent(event.message, false);
-        }
-        return;
-      case 'message-updated':
-        if (store.state.messagesById[event.message.id]) {
-          store.updateMessage(event.message.id, event.message);
-        } else if (bufferMessage(event.message, true)) {
+        if (!isStored && bufferMessage(message, isUpdate)) {
           return;
-        } else {
-          store.addMessage(event.message);
         }
-        realtimeMessageBuffer.updateIfPresent(event.message, true);
+        if (isStored && isUpdate) {
+          store.updateMessage(message.id, message);
+        } else {
+          store.addMessage(message);
+        }
+        realtimeMessageBuffer.updateIfPresent(message, isUpdate);
         return;
+      }
       case 'message-removed':
         realtimeMessageBuffer.remove(event.messageId, event.conversationId);
         store.removeMessage(event.messageId);

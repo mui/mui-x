@@ -1,6 +1,7 @@
 import type * as React from 'react';
 import type { ChatAdapter, ChatListMessagesResult } from '../../adapters';
 import type { ChatStore } from '../../store';
+import type { ChatMessage } from '../../types/chat-entities';
 import type { ChatError } from '../../types/chat-error';
 import type { RealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { createRuntimeError, getErrorMessage } from './useChatControllerHelpers';
@@ -17,7 +18,7 @@ export function createConversationActions<Cursor = string>(params: {
   conversationNavigationRequestIdRef: React.MutableRefObject<number>;
   conversationLoadRequestIdRef: React.MutableRefObject<number>;
   historyLoadRequestIdRef: React.MutableRefObject<number>;
-  realtimeMessageBuffer: RealtimeMessageBuffer;
+  realtimeMessageBuffers: WeakMap<object, RealtimeMessageBuffer>;
 }) {
   const {
     store,
@@ -27,8 +28,17 @@ export function createConversationActions<Cursor = string>(params: {
     conversationNavigationRequestIdRef,
     conversationLoadRequestIdRef,
     historyLoadRequestIdRef,
-    realtimeMessageBuffer,
+    realtimeMessageBuffers,
   } = params;
+
+  // Only the subscription of the adapter that serves this load holds messages for it.
+  function flushRealtimeMessages(conversationId: string, messages: ChatMessage[], hasMore = false) {
+    return (
+      realtimeMessageBuffers
+        .get(runtimeRef.current.adapter)
+        ?.flush(conversationId, messages, hasMore) ?? messages
+    );
+  }
 
   async function loadConversationMessages(
     conversationId: string | undefined,
@@ -52,7 +62,7 @@ export function createConversationActions<Cursor = string>(params: {
     if (!runtimeRef.current.adapter.listMessages) {
       if (shouldResetMessages) {
         store.resetMessages();
-        const bufferedMessages = realtimeMessageBuffer.flush(conversationId, [], false);
+        const bufferedMessages = flushRealtimeMessages(conversationId, []);
         if (bufferedMessages.length > 0) {
           store.setMessages(bufferedMessages);
         }
@@ -84,7 +94,7 @@ export function createConversationActions<Cursor = string>(params: {
       }
 
       const hasMore = result.hasMore ?? false;
-      store.setMessages(realtimeMessageBuffer.flush(conversationId, result.messages, hasMore));
+      store.setMessages(flushRealtimeMessages(conversationId, result.messages, hasMore));
       store.setHistoryState({ cursor: result.cursor, hasMore });
       store.setHistoryStatus('loaded');
       store.setError(null);
@@ -96,14 +106,14 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
-      // Append held messages the store lacks; copies the store already has (e.g. streamed) are newer.
-      const heldMessages = realtimeMessageBuffer
-        .flush(conversationId, [], false)
-        .filter((message) => !store.state.messagesById[message.id]);
+      // Held messages predate the request; copies that reached the store during it (e.g. streamed) are newer.
+      const heldMessages = flushRealtimeMessages(conversationId, []).filter(
+        (message) => !store.state.messagesById[message.id],
+      );
       if (heldMessages.length > 0) {
         store.setMessages([
-          ...store.state.messageIds.map((id) => store.state.messagesById[id]),
           ...heldMessages,
+          ...store.state.messageIds.map((id) => store.state.messagesById[id]),
         ]);
       }
       store.setHistoryStatus('error');

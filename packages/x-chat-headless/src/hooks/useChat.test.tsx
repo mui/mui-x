@@ -1870,7 +1870,12 @@ describe('useChat', () => {
       ({ open }: { open: boolean }) => {
         const chat = useChat();
         React.useLayoutEffect(() => {
-          if (open) {
+          if (open && chat.activeConversationId === 'c1') {
+            // The replaced subscription is still live until the passive cleanup.
+            onEventByAdapter[0]({
+              type: 'message-added',
+              message: { id: 'm2', role: 'user', conversationId: 'c2', parts: [] },
+            });
             void chat.setActiveConversation('c2');
           }
         }, [chat, open]);
@@ -1891,5 +1896,51 @@ describe('useChat', () => {
 
     await waitFor(() => expect(result.current.activeConversationId).toBe('c2'));
     expect(result.current.messages).toEqual([]);
+  });
+
+  it('keeps held messages when an adapter change is never committed', async () => {
+    const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
+    const firstAdapter = createAdapter({
+      subscribe({ onEvent }) {
+        onEventByAdapter.push(onEvent);
+        return () => {};
+      },
+    });
+    const secondAdapter = createAdapter();
+    let setProps: (props: { adapter: ChatAdapter }) => void = () => {};
+    function SuspendWith({ adapter }: { adapter: ChatAdapter }) {
+      if (adapter === secondAdapter) {
+        throw new Promise(() => {});
+      }
+      return null;
+    }
+    function Wrapper({ children }: React.PropsWithChildren) {
+      const [{ adapter }, setPropsState] = React.useState({ adapter: firstAdapter });
+      setProps = setPropsState;
+      return (
+        <React.Suspense fallback={null}>
+          <ChatProvider adapter={adapter} initialActiveConversationId="c1">
+            <SuspendWith adapter={adapter} />
+            {children}
+          </ChatProvider>
+        </React.Suspense>
+      );
+    }
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+    act(() =>
+      onEventByAdapter[0]({
+        type: 'message-added',
+        message: { id: 'm1', role: 'user', conversationId: 'c2', parts: [] },
+      }),
+    );
+    // The transition suspends, so the first adapter stays committed; then the provider re-renders with it.
+    act(() => React.startTransition(() => setProps({ adapter: secondAdapter })));
+    act(() => setProps({ adapter: firstAdapter }));
+
+    await act(() => result.current.setActiveConversation('c2'));
+    expect(result.current.messages.map((message) => message.id)).toEqual(['m1']);
+    expect(onEventByAdapter).toHaveLength(1);
   });
 });
