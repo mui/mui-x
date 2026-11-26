@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ChatStore } from '../../store/ChatStore';
 import { createConversationActions } from './conversationActions';
-import { createRealtimeMessageBuffer } from './realtimeMessageBuffer';
 import type { ChatAdapter } from '../../adapters';
 import type { ChatMessage } from '../../types/chat-entities';
 
@@ -253,35 +252,6 @@ describe('createConversationActions', () => {
       await promise;
 
       // Stale response is ignored
-      expect(store.state.messageIds).toEqual([]);
-    });
-
-    it('does not replay held messages when the adapter was replaced before its subscription', async () => {
-      const store = new ChatStore();
-      store.setActiveConversation('c1');
-      const deferred = createDeferred<{ messages: ChatMessage[]; hasMore: boolean }>();
-      const adapter = createAdapter({ listMessages: vi.fn().mockReturnValue(deferred.promise) });
-      const runtimeRef = { current: { adapter } };
-      const buffer = createRealtimeMessageBuffer();
-      buffer.add('c1', { ...userMessage, id: 'held', conversationId: 'c1' }, false);
-
-      const { loadConversationMessages } = createConversationActions({
-        store,
-        runtimeRef,
-        setRuntimeError: vi.fn(),
-        stopStreaming: vi.fn(),
-        conversationNavigationRequestIdRef: { current: 0 },
-        conversationLoadRequestIdRef: { current: 0 },
-        historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBufferRef: { current: { adapter, buffer } },
-      });
-
-      const promise = loadConversationMessages('c1');
-      // The new adapter is rendered, but its subscribe effect has not replaced the buffer yet.
-      runtimeRef.current = { adapter: createAdapter() };
-      deferred.resolve({ messages: [], hasMore: false });
-      await promise;
-
       expect(store.state.messageIds).toEqual([]);
     });
 

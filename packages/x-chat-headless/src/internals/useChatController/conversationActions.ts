@@ -55,12 +55,14 @@ export function createConversationActions<Cursor = string>(params: {
       realtimeMessageBufferRef.current?.adapter === runtimeRef.current.adapter
         ? realtimeMessageBufferRef.current
         : null;
-    // Discarded if the adapter changed while the request was pending. `runtimeRef` names the
-    // new adapter before its subscribe effect replaces the buffer.
+    // Not replayed (and kept for the next open) when this load is no longer the latest, e.g. a
+    // change callback opened another conversation, or when another adapter was rendered meanwhile.
     const flushHeldMessages = (messages: ChatMessage[], hasMore: boolean) =>
       held &&
       realtimeMessageBufferRef.current === held &&
-      held.adapter === runtimeRef.current.adapter
+      held.adapter === runtimeRef.current.adapter &&
+      requestId === conversationLoadRequestIdRef.current &&
+      store.state.activeConversationId === conversationId
         ? held.buffer.flush(conversationId, messages, hasMore)
         : messages;
 

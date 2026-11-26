@@ -300,6 +300,27 @@ describe('createRealtimeActions', () => {
 
         expect(getTexts(store)).toEqual(['edited', 'm2']);
       });
+      it('keeps held messages for the next open when a change listener leaves the conversation', async () => {
+        const { store, handleRealtimeEvent, setActiveConversation } = setup();
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        let redirected = false;
+        const unsubscribe = store.subscribe((state) => {
+          if (!redirected && state.activeConversationId === 'c2') {
+            redirected = true;
+            setActiveConversation('c1');
+          }
+        });
+        await setActiveConversation('c2');
+        unsubscribe();
+
+        expect(store.state.activeConversationId).toBe('c1');
+        expect(store.state.messageIds).toEqual([]);
+
+        await setActiveConversation('c2');
+
+        expect(store.state.messageIds).toEqual(['m1']);
+      });
       it('keeps held messages for the next load when another adapter was only rendered', async () => {
         const { listMessages, resolvers } = createPendingListMessages();
         const { store, handleRealtimeEvent, setActiveConversation, runtimeRef } = setup({
