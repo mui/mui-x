@@ -269,6 +269,28 @@ function getGroupingCriteriaProperties(
   return properties;
 }
 
+/**
+ * The column a row grouping column sorts and filters with: the `mainGroupingCriteria` when the
+ * column groups by it, else the `leafField` when it is a column, else the first criterion.
+ * `criteria` holds the criteria the grouping column takes care of: all of them in the `single`
+ * mode, its own one in the `multiple` mode.
+ */
+export const getGroupingColumnSource = (
+  colDefOverride:
+    Pick<GridGroupingColDefOverride, 'leafField' | 'mainGroupingCriteria'> | null | undefined,
+  criteria: readonly string[],
+  columnsLookup: GridColumnRawLookup,
+): { field: string; kind: 'criterion' | 'leaf' } => {
+  const { leafField, mainGroupingCriteria } = colDefOverride ?? {};
+  if (mainGroupingCriteria && criteria.includes(mainGroupingCriteria)) {
+    return { field: mainGroupingCriteria, kind: 'criterion' };
+  }
+  if (leafField && columnsLookup[leafField]) {
+    return { field: leafField, kind: 'leaf' };
+  }
+  return { field: criteria[0], kind: 'criterion' };
+};
+
 interface CreateGroupingColDefMonoCriteriaParams {
   columnsLookup: GridColumnRawLookup;
   /**
@@ -373,22 +395,21 @@ export const createGroupingColDefForOneGroupingCriteria = ({
     },
   };
 
+  // The sorting / filtering use the properties of the source column (see `getGroupingColumnSource`):
+  //
   // If we have a `mainGroupingCriteria` defined and matching the `groupingCriteria`
-  // Then we apply the sorting / filtering on the groups of this column's grouping criteria based on the properties of `groupedByColDef`.
+  // Then they apply on the groups of this column's grouping criteria, based on `groupedByColDef`.
   // It can be useful to define a `leafField` for leaves rendering but still use the grouping criteria for the sorting / filtering
   //
   // If we have a `leafField` defined and matching an existing column
-  // Then we apply the sorting / filtering on the leaves based on the properties of `leavesColDef`
+  // Then they apply on the leaves, based on the column of the `leafField`.
   //
-  // By default, we apply the sorting / filtering on the groups of this column's grouping criteria based on the properties of `groupedColDef`.
-  let sourceProperties: Partial<GridColDef>;
-  if (mainGroupingCriteria && mainGroupingCriteria === groupingCriteria) {
-    sourceProperties = getGroupingCriteriaProperties(groupedByColDef, 'multiple');
-  } else if (leafColDef) {
-    sourceProperties = getLeafProperties(leafColDef);
-  } else {
-    sourceProperties = getGroupingCriteriaProperties(groupedByColDef, 'multiple');
-  }
+  // By default, they apply on the groups of this column's grouping criteria, based on `groupedByColDef`.
+  const source = getGroupingColumnSource(colDefOverride, [groupingCriteria], columnsLookup);
+  const sourceProperties: Partial<GridColDef> =
+    source.kind === 'leaf'
+      ? getLeafProperties(columnsLookup[source.field])
+      : getGroupingCriteriaProperties(groupedByColDef, 'multiple');
 
   // A `sortComparator` override would be ignored by the grid next to the generated `getSortComparator`
   if (colDefOverrideProperties.sortComparator && !colDefOverrideProperties.getSortComparator) {
@@ -506,32 +527,26 @@ export const createGroupingColDefForAllGroupingCriteria = ({
     },
   };
 
-  // If we have a `mainGroupingCriteria` defined and matching one of the `orderedGroupedByFields`
-  // Then we apply the sorting / filtering on the groups of this column's grouping criteria based on the properties of `columnsLookup[mainGroupingCriteria]`.
+  // The sorting / filtering use the properties of the source column (see `getGroupingColumnSource`):
+  //
+  // If we have a `mainGroupingCriteria` defined and matching one of the grouping criteria
+  // Then they apply on the groups of that grouping criteria, based on `columnsLookup[mainGroupingCriteria]`.
   // It can be useful to use another grouping criteria than the top level one for the sorting / filtering
   //
   // If we have a `leafField` defined and matching an existing column
-  // Then we apply the sorting / filtering on the leaves based on the properties of `leavesColDef`
+  // Then they apply on the leaves, based on the column of the `leafField`.
   //
-  // By default, we apply the sorting / filtering on the groups of the top level grouping criteria based on the properties of `columnsLookup[orderedGroupedByFields[0]]`.
-  let sourceProperties: Partial<GridColDef>;
-  if (mainGroupingCriteria && rowGroupingModel.includes(mainGroupingCriteria)) {
-    sourceProperties = getGroupingCriteriaProperties(
-      columnsLookup[mainGroupingCriteria],
-      'single',
-      rowGroupingModel,
-      columnsLookup,
-    );
-  } else if (leafColDef) {
-    sourceProperties = getLeafProperties(leafColDef);
-  } else {
-    sourceProperties = getGroupingCriteriaProperties(
-      columnsLookup[rowGroupingModel[0]],
-      'single',
-      rowGroupingModel,
-      columnsLookup,
-    );
-  }
+  // By default, they apply on the groups of the top level grouping criteria, based on `columnsLookup[rowGroupingModel[0]]`.
+  const source = getGroupingColumnSource(colDefOverride, rowGroupingModel, columnsLookup);
+  const sourceProperties: Partial<GridColDef> =
+    source.kind === 'leaf'
+      ? getLeafProperties(columnsLookup[source.field])
+      : getGroupingCriteriaProperties(
+          columnsLookup[source.field],
+          'single',
+          rowGroupingModel,
+          columnsLookup,
+        );
 
   // A `sortComparator` override would be ignored by the grid next to the generated `getSortComparator`
   if (colDefOverrideProperties.sortComparator && !colDefOverrideProperties.getSortComparator) {

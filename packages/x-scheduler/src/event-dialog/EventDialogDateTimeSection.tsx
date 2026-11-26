@@ -7,12 +7,16 @@ import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
 import type { EventDialogFormValues } from '../internals/components/event-dialog/utils';
 import {
   computeRange,
   findInvalidRangeField,
+  getDefaultTimedFields,
   getInvalidValueErrorMessage,
   getRangeErrorMessage,
   validateRange,
@@ -105,6 +109,23 @@ export function EventDialogDateTimeSection() {
   });
   const allDay = useEventDialogFormField('allDay');
 
+  const handleAllDayChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    formStore.clearErrors(RANGE_ERROR_KEYS);
+    if (event.target.checked || formStore.hasTimedValues()) {
+      allDay.setValue(event.target.checked);
+      return;
+    }
+    formStore.setValues({
+      allDay: false,
+      ...getDefaultTimedFields(
+        Date.now(),
+        schedulerEventSelectors.defaultEventDuration(store.state),
+        displayTimezone,
+      ),
+    });
+    formStore.markTimedValues();
+  };
+
   const createHandleChangeDateOrTimeField =
     (field: { setValue: (value: string) => void }) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -192,10 +213,7 @@ export function EventDialogDateTimeSection() {
             <Switch
               id={`${schedulerId}-enable-all-day-switch-${sectionId}`}
               checked={allDay.value}
-              onChange={(event) => {
-                formStore.clearErrors(RANGE_ERROR_KEYS);
-                allDay.setValue(event.target.checked);
-              }}
+              onChange={handleAllDayChange}
               disabled={allDay.readOnly}
             />
           }

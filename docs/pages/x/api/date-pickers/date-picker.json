@@ -1,7 +1,6 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."

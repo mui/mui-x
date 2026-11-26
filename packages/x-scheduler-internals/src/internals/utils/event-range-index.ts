@@ -1,4 +1,12 @@
 import type { SchedulerProcessedEvent } from '../../models';
+import { getLastInstant } from './event-utils';
+
+/**
+ * The last instant of an event: the index works on inclusive instants.
+ */
+function getEventLastInstant(event: SchedulerProcessedEvent): number {
+  return getLastInstant(event.end.epochMilliseconds, event.allDay);
+}
 
 export const EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD = 0.25;
 
@@ -101,6 +109,8 @@ export function createEventRangeIndex(
   events: SchedulerProcessedEvent[],
   expandRecurringEvents: boolean,
 ): SchedulerEventRangeIndex {
+  // The entries of every event, in the input order, for the queries that scan them all.
+  const entries: EventRangeEntry[] = [];
   const recurringEntries: EventRangeEntry[] = [];
   const rangeEntries: EventRangeEntry[] = [];
   let earliestRangeEnd = Infinity;
@@ -109,11 +119,12 @@ export function createEventRangeIndex(
     const entry: EventRangeEntry = [
       event,
       index,
-      event.displayTimezone.start.timestamp,
-      event.displayTimezone.end.timestamp,
+      event.start.epochMilliseconds,
+      getEventLastInstant(event),
     ];
+    entries.push(entry);
 
-    if (expandRecurringEvents && event.dataTimezone.rrule) {
+    if (expandRecurringEvents && event.rrule) {
       recurringEntries.push(entry);
     } else {
       rangeEntries.push(entry);
@@ -143,12 +154,17 @@ export function createEventRangeIndex(
         matches,
       );
       if (matches.length > rangeEntries.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD) {
-        return events.filter(
-          (event) =>
-            (expandRecurringEvents && Boolean(event.dataTimezone.rrule)) ||
-            (event.displayTimezone.start.timestamp <= endTimestamp &&
-              event.displayTimezone.end.timestamp >= startTimestamp),
-        );
+        // Reads the bounds the entries hold rather than the dates of the events.
+        const scanned: SchedulerProcessedEvent[] = [];
+        for (const entry of entries) {
+          if (
+            (expandRecurringEvents && Boolean(entry[0].rrule)) ||
+            (entry[2] <= endTimestamp && entry[3] >= startTimestamp)
+          ) {
+            scanned.push(entry[0]);
+          }
+        }
+        return scanned;
       }
 
       const allMatches = matches.concat(recurringEntries);

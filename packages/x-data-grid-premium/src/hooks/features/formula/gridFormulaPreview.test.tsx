@@ -223,6 +223,49 @@ describe('previewFormulaResult', () => {
     ).to.deep.equal({ type: 'value', value: 20 });
   });
 
+  it('reports a cycle closed through another formula cell as #CYCLE!', async () => {
+    render(
+      <Test
+        rows={[
+          { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=price * quantity' },
+          { id: 1, item: 'Banana', price: 1, quantity: 5, total: '=REF(COLUMN("total"), ROW(0))' },
+        ]}
+      />,
+    );
+    await microtasks();
+    const result = previewFormulaResult(
+      privateApi(),
+      { id: 0, field: 'total' },
+      '=REF(COLUMN("total"), ROW(1)) + 1',
+      { a1Notation: false },
+    );
+    expect((result as { code: string }).code).to.equal('#CYCLE!');
+  });
+
+  it('reports a cycle closed through a computed column with a static result as #CYCLE!', async () => {
+    render(
+      <Test
+        initialState={{
+          computedColumns: {
+            model: [
+              {
+                field: 'bad',
+                headerName: 'Bad',
+                formula: '=quantity + SUM(COLUMN_VALUES("price"))',
+                type: 'number',
+              },
+            ],
+          },
+        }}
+      />,
+    );
+    await microtasks();
+    const result = previewFormulaResult(privateApi(), { id: 0, field: 'quantity' }, '=bad', {
+      a1Notation: false,
+    });
+    expect((result as { code: string }).code).to.equal('#CYCLE!');
+  });
+
   it('writes nothing to the evaluation cache', async () => {
     render(<Test />);
     await microtasks();

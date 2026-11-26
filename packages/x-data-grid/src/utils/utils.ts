@@ -87,3 +87,17 @@ export const runIf =
       fn(...params);
     }
   };
+
+/**
+ * Picks the `data-*` props so they can be forwarded to the root element.
+ * Build-time annotation plugins (for example, Sentry and FullStory) add them to every component.
+ */
+export function pickDataAttributes(props: object) {
+  const dataAttributes: Record<`data-${string}`, unknown> = {};
+  for (const key of Object.keys(props)) {
+    if (key.startsWith('data-')) {
+      dataAttributes[key as `data-${string}`] = props[key as keyof typeof props];
+    }
+  }
+  return dataAttributes;
+}

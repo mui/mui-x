@@ -1,10 +1,14 @@
 import { describe, test } from 'vitest';
 import type { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
-import { createDate, EventBuilder } from 'test/utils/scheduler';
+import { getTimezoneId } from '@mui/x-scheduler-internals/internals';
+import { createDate, createOccurrence, EventBuilder } from 'test/utils/scheduler';
 import { updateRecurringEvent } from './updateRecurringEvent';
 import { deleteRecurringEvent } from './deleteRecurringEvent';
 
 const TIMEZONE = 'America/New_York';
+
+// The timezone of the system, as the store holds it: by its identifier.
+const DISPLAY_TIMEZONE = getTimezoneId('default');
 
 /**
  * Long series started in January 2024, edited at an occurrence in June 2026.
@@ -48,9 +52,10 @@ describe('recurring event edits', () => {
           for (const { event, occurrenceStart } of cases) {
             updateRecurringEvent(
               event,
-              occurrenceStart,
+              createOccurrence(event, occurrenceStart, DISPLAY_TIMEZONE),
               { id: event.id, title: 'Renamed' },
               'this-and-following',
+              DISPLAY_TIMEZONE,
             );
           }
         }
@@ -58,14 +63,22 @@ describe('recurring event edits', () => {
       bench('delete only this', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
-            deleteRecurringEvent(event, occurrenceStart, 'only-this');
+            deleteRecurringEvent(
+              event,
+              createOccurrence(event, occurrenceStart, DISPLAY_TIMEZONE),
+              'only-this',
+            );
           }
         }
       }),
       bench('delete this and following', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
-            deleteRecurringEvent(event, occurrenceStart, 'this-and-following');
+            deleteRecurringEvent(
+              event,
+              createOccurrence(event, occurrenceStart, DISPLAY_TIMEZONE),
+              'this-and-following',
+            );
           }
         }
       }),

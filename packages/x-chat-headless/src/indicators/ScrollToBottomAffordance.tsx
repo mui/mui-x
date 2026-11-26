@@ -21,7 +21,7 @@ export interface ScrollToBottomAffordanceSlots {
   badge: React.ElementType;
   /**
    * The component that renders the icon.
-   * @default null, which renders a text label instead; an arrow icon in `ChatScrollToBottomAffordance`
+   * @default A text label; an arrow icon in `ChatScrollToBottomAffordance`.
    */
   icon?: React.ElementType;
 }

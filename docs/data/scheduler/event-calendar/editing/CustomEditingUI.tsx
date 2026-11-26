@@ -60,8 +60,13 @@ export default function CustomEditingUI() {
         {
           id: `custom-${Date.now()}`,
           title,
-          start: new Date(occurrence.displayTimezone.start.timestamp).toISOString(),
-          end: new Date(occurrence.displayTimezone.end.timestamp).toISOString(),
+          // The dates of an all-day event are `YYYY-MM-DD` strings, with an exclusive end.
+          start: occurrence.allDay
+            ? occurrence.start.toPlainDate().toString()
+            : new Date(occurrence.start.epochMilliseconds).toISOString(),
+          end: occurrence.allDay
+            ? occurrence.end.toPlainDate().toString()
+            : new Date(occurrence.end.epochMilliseconds).toISOString(),
           allDay: occurrence.allDay,
         },
       ]);

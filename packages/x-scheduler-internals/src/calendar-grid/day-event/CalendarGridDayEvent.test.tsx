@@ -2,22 +2,20 @@ import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import {
-  addHours,
   createDate,
   createSchedulerRenderer,
   describeConformance,
   endOfDay,
 } from 'test/utils/scheduler';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(new Date(), 'default');
-  const eventEnd = processDate(addHours(eventStart.value, 1), 'default');
+  const eventStart = toZonedDateTime(Date.now(), 'default');
+  const eventEnd = toZonedDateTime(eventStart.epochMilliseconds + 3_600_000, 'default');
 
   type ProviderProps = React.ComponentProps<typeof EventCalendarProvider>;
 
@@ -25,25 +23,21 @@ describe('<CalendarGrid.DayEvent />', () => {
   function renderEvent(
     node: React.ReactElement,
     options: Partial<Pick<ProviderProps, 'events' | 'resources'>> & {
-      rowStart?: TemporalSupportedObject;
-      rowEnd?: TemporalSupportedObject;
+      rowStart?: Date;
+      rowEnd?: Date;
     } = {},
   ) {
     const {
       events = [],
       resources = [],
-      rowStart = eventStart.value,
-      rowEnd = eventEnd.value,
+      rowStart = new Date(eventStart.epochMilliseconds),
+      rowEnd = new Date(eventEnd.epochMilliseconds),
     } = options;
     const cellDate = toPlainDate(rowStart.getTime(), 'default');
     return render(
       <EventCalendarProvider events={events} resources={resources}>
         <CalendarGrid.Root>
-          <CalendarGrid.DayRow
-            start={rowStart.getTime()}
-            end={rowEnd.getTime()}
-            days={[{ plainDate: cellDate }]}
-          >
+          <CalendarGrid.DayRow start={rowStart.getTime()} end={rowEnd.getTime()} days={[cellDate]}>
             <CalendarGrid.DayCell value={cellDate}>{node}</CalendarGrid.DayCell>
           </CalendarGrid.DayRow>
         </CalendarGrid.Root>
@@ -55,7 +49,6 @@ describe('<CalendarGrid.DayEvent />', () => {
     <CalendarGrid.DayEvent
       eventId="fake-id"
       occurrenceKey="fake-key"
-      dataTimezone={undefined}
       start={eventStart}
       end={eventEnd}
       renderDragPreview={() => null}
@@ -78,9 +71,8 @@ describe('<CalendarGrid.DayEvent />', () => {
         <CalendarGrid.DayEvent
           eventId="fake-id"
           occurrenceKey="fake-key"
-          dataTimezone={undefined}
-          start={processDate(createDate(start), 'default')}
-          end={processDate(createDate(end), 'default')}
+          start={toZonedDateTime(createDate(start).getTime(), 'default')}
+          end={toZonedDateTime(createDate(end).getTime(), 'default')}
           renderDragPreview={() => null}
           data-testid="event"
         />,
@@ -106,7 +98,6 @@ describe('<CalendarGrid.DayEvent />', () => {
       <CalendarGrid.DayEvent
         eventId="fake-id"
         occurrenceKey="fake-key"
-        dataTimezone={undefined}
         start={eventStart}
         end={eventEnd}
         renderDragPreview={() => null}

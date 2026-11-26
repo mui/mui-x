@@ -18,12 +18,10 @@ describe.each([
     const withTimezone = timezone === 'default' ? builder : builder.withDataTimezone(timezone);
     if (allDay) {
       // Every other day: the next task starts right after the lag.
-      const day = new Date(Date.UTC(2026, 0, 5) + index * 2 * 86_400_000)
-        .toISOString()
-        .slice(0, 10);
-      return withTimezone
-        .span(`${day}T00:00:00`, `${day}T23:59:59.999`, { allDay: true })
-        .toProcessed();
+      const dayStart = Date.UTC(2026, 0, 5) + index * 2 * 86_400_000;
+      const day = new Date(dayStart).toISOString().slice(0, 10);
+      const nextDay = new Date(dayStart + 86_400_000).toISOString().slice(0, 10);
+      return withTimezone.span(day, nextDay, { allDay: true }).toProcessed();
     }
     // 8-hour tasks, each starting one day after the previous one ends.
     const start = new Date(Date.UTC(2026, 0, 5, 9) + index * 32 * 3_600_000);
@@ -46,12 +44,13 @@ describe.each([
     activeDependenciesByTarget: groupByEventId(dependencies, 'target'),
     isEventReadOnly: () => false,
     deleted: new Set<number>(),
+    displayTimezone: 'default',
     // Moving the first task 3 days later pushes the whole chain.
     updated: [
       {
         id: 0,
-        start: addDays(events[0].dataTimezone.start.value, 3),
-        end: addDays(events[0].dataTimezone.end.value, 3),
+        start: addDays(new Date(events[0].start.epochMilliseconds), 3),
+        end: addDays(new Date(events[0].end.epochMilliseconds), 3),
       },
     ],
   };
