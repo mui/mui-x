@@ -5,8 +5,7 @@ import type { MessageListRootOwnerState } from './messageList.types';
 
 type ScrollAnchor = {
   id: string;
-  // Measured from the viewport top so a viewport resize (e.g. the typing indicator mounting) doesn't skew it.
-  rowBottomFromTop: number;
+  offsetFromBottom: number;
 };
 
 type ChangeKind = 'none' | 'append' | 'prepend' | 'other';
@@ -97,24 +96,17 @@ export function useMessageListBehavior(parameters: {
   const topReachedRef = React.useRef(false);
   const topLoadInFlightRef = React.useRef(false);
   const resizeFrameRef = React.useRef(0);
-  // Last viewport height seen by the viewport ResizeObserver.
-  const viewportHeightRef = React.useRef<number | null>(null);
   const isMountedRef = React.useRef(true);
   const hasMountedRef = React.useRef(false);
   const mountScrollTopRef = React.useRef<number | null>(null);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
-  const autoScrollEnabledRef = React.useRef(autoScrollEnabled);
-  autoScrollEnabledRef.current = autoScrollEnabled;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
   const [unseenMessageCount, setUnseenMessageCount] = React.useState(0);
   const isAtBottomRef = React.useRef(true);
   const unseenMessageCountRef = React.useRef(0);
-  // Mirrored in state so the resize observer re-attaches when the scroller node changes.
-  const [rootElement, setRootElementState] = React.useState<HTMLDivElement | null>(null);
   const setRootElement = React.useCallback((node: HTMLDivElement | null) => {
     rootRef.current = node;
-    setRootElementState(node);
   }, []);
   const messageById = React.useMemo(() => {
     const nextMap = new Map<string, ChatMessage>();
@@ -183,7 +175,7 @@ export function useMessageListBehavior(parameters: {
 
       return {
         id,
-        rowBottomFromTop: rect.bottom - containerRect.top,
+        offsetFromBottom: containerRect.bottom - rect.bottom,
       };
     }
 
@@ -203,10 +195,10 @@ export function useMessageListBehavior(parameters: {
       return false;
     }
 
-    const containerTop = root.getBoundingClientRect().top;
-    const nextRowBottomFromTop = element.getBoundingClientRect().bottom - containerTop;
+    const containerBottom = root.getBoundingClientRect().bottom;
+    const nextOffsetFromBottom = containerBottom - element.getBoundingClientRect().bottom;
 
-    root.scrollTop += nextRowBottomFromTop - anchor.rowBottomFromTop;
+    root.scrollTop += anchor.offsetFromBottom - nextOffsetFromBottom;
 
     return true;
   }, []);
@@ -359,19 +351,6 @@ export function useMessageListBehavior(parameters: {
 
     if (changeKind === 'prepend' || changeKind === 'other') {
       restoreAnchor(anchorRef.current);
-      // The viewport shrank in the same frame and its observer hasn't re-pinned yet: re-pin here.
-      const viewportHeight = viewportHeightRef.current;
-      const viewportShrank =
-        viewportHeight != null &&
-        (rootRef.current?.clientHeight ?? viewportHeight) < viewportHeight;
-      if (
-        changeKind === 'prepend' &&
-        viewportShrank &&
-        autoScrollEnabled &&
-        isAtBottomRef.current
-      ) {
-        scrollToBottom();
-      }
     } else if (changeKind === 'append') {
       const appendedIds = itemIds.slice(previousItemIds.length);
       const lastAppendedMessage = appendedIds.length
@@ -404,41 +383,6 @@ export function useMessageListBehavior(parameters: {
     updateIsAtBottom,
     updateUnseenMessageCount,
   ]);
-
-  React.useEffect(() => {
-    const root = rootElement;
-
-    if (!root || typeof globalThis.ResizeObserver === 'undefined') {
-      return undefined;
-    }
-
-    // A viewport resize (e.g. a widget mounting above the composer) fires no scroll
-    // event, so re-pin to the bottom here or the newest message ends up clipped.
-    viewportHeightRef.current = root.clientHeight;
-    const observer = new globalThis.ResizeObserver(() => {
-      // Hidden (e.g. a `display: none` ancestor): keep the last visible state until it shows again.
-      if (root.clientHeight === 0) {
-        return;
-      }
-      if (root.clientHeight !== viewportHeightRef.current) {
-        if (autoScrollEnabledRef.current && isAtBottomRef.current) {
-          root.scrollTop = root.scrollHeight;
-        } else if (!isAtBottomRef.current) {
-          // Apply any pending row-resize restore before the anchor is replaced below.
-          restoreAnchor(anchorRef.current);
-        }
-        // The resize moved the viewport bottom, so refresh the bottom state and the anchor.
-        if (updateIsAtBottom()) {
-          updateUnseenMessageCount(0);
-        }
-        anchorRef.current = captureAnchor(itemIdsRef.current);
-      }
-      viewportHeightRef.current = root.clientHeight;
-    });
-    observer.observe(root);
-
-    return () => observer.disconnect();
-  }, [captureAnchor, restoreAnchor, rootElement, updateIsAtBottom, updateUnseenMessageCount]);
 
   React.useEffect(() => {
     // Restore on (re)mount so the resize-driven auto-scroll keeps working after

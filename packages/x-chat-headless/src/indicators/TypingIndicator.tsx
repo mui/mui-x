@@ -4,7 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useChatStatus } from '../hooks/useChatStatus';
-import type { ChatMessage, ChatUser } from '../types/chat-entities';
+import type { ChatUser } from '../types/chat-entities';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import type { TypingIndicatorOwnerState } from './indicators.types';
@@ -12,11 +12,11 @@ import type { TypingIndicatorOwnerState } from './indicators.types';
 function resolveTypingUser(
   userId: string,
   participants: ChatUser[] | undefined,
-  messages: ChatMessage[],
+  messageAuthors: ChatUser[],
 ) {
   return (
     participants?.find((participant) => participant.id === userId) ??
-    messages.find((message) => message.author?.id === userId)?.author ?? { id: userId }
+    messageAuthors.find((author) => author.id === userId) ?? { id: userId }
   );
 }
 
@@ -70,12 +70,23 @@ export const TypingIndicator = React.forwardRef(function TypingIndicator(
         : (conversations.find((candidate) => candidate.id === activeConversationId) ?? null),
     [activeConversationId, conversations],
   );
+  const messageAuthors = React.useMemo(
+    () =>
+      messages.reduce<ChatUser[]>((authors, message) => {
+        if (message.author && !authors.some((author) => author.id === message.author!.id)) {
+          authors.push(message.author);
+        }
+
+        return authors;
+      }, []),
+    [messages],
+  );
   const users = React.useMemo(
     () =>
       typingUserIds.map((userId) =>
-        resolveTypingUser(userId, conversation?.participants, messages),
+        resolveTypingUser(userId, conversation?.participants, messageAuthors),
       ),
-    [conversation?.participants, messages, typingUserIds],
+    [conversation?.participants, messageAuthors, typingUserIds],
   );
   const label = React.useMemo(
     () => (users.length === 0 ? '' : localeText.typingIndicatorLabel(users)),

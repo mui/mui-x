@@ -4,8 +4,6 @@ import { describe, expect, it } from 'vitest';
 import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 const { render } = createRenderer();
 
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
@@ -112,68 +110,5 @@ describe('ChatTypingIndicator', () => {
     view.setProps({ slots: { typingIndicator: null } });
 
     expect(document.querySelector('.MuiChatTypingIndicator-root')).to.equal(null);
-  });
-
-  async function renderScrolledToBottom(props: Partial<React.ComponentProps<typeof ChatBox>> = {}) {
-    const view = renderChatBox({
-      style: { height: 400 },
-      initialMessages: Array.from({ length: 30 }, (_, index) => ({
-        id: `m${index}`,
-        conversationId: 'c1',
-        role: 'user' as const,
-        parts: [{ type: 'text' as const, text: `Message ${index}` }],
-      })),
-      ...props,
-    });
-    const scroller = document.querySelector<HTMLElement>('[role="log"]')!;
-    const getDistanceFromBottom = () =>
-      scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop;
-
-    await waitFor(() => {
-      expect(scroller.scrollHeight).to.be.greaterThan(scroller.clientHeight);
-    });
-    act(() => {
-      scroller.scrollTop = scroller.scrollHeight;
-      scroller.dispatchEvent(new Event('scroll'));
-    });
-    expect(getDistanceFromBottom()).to.be.at.most(1);
-
-    return { ...view, scroller, getDistanceFromBottom };
-  }
-
-  it.skipIf(isJSDOM)('keeps the message list pinned to the bottom when typing starts', async () => {
-    const { startTyping, getDistanceFromBottom } = await renderScrolledToBottom();
-
-    startTyping();
-
-    await waitFor(() => {
-      expect(document.querySelector('.MuiChatTypingIndicator-root')).not.to.equal(null);
-    });
-    await waitFor(() => {
-      expect(getDistanceFromBottom()).to.be.at.most(1);
-    });
-  });
-
-  it.skipIf(isJSDOM)('does not re-pin the message list when autoScroll is disabled', async () => {
-    const { startTyping, scroller } = await renderScrolledToBottom({
-      features: { autoScroll: false },
-    });
-    const scrollTop = scroller.scrollTop;
-
-    startTyping();
-
-    await waitFor(() => {
-      expect(document.querySelector('.MuiChatTypingIndicator-root')).not.to.equal(null);
-    });
-    // Let the ResizeObserver callback run before asserting.
-    await act(
-      () =>
-        new Promise<void>((resolve) => {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => resolve());
-          });
-        }),
-    );
-    expect(scroller.scrollTop).to.equal(scrollTop);
   });
 });
