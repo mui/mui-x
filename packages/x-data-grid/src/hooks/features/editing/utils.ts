@@ -63,6 +63,15 @@ export const deleteProcessingProps = (
   }
 };
 
+/**
+ * Returns `true` when the current value of the cell has a validation with `hasChanged: true`.
+ */
+export const hasValueValidation = (
+  lookup: GridProcessingPropsLookup,
+  id: GridRowId,
+  field: string,
+) => (lookup.get(String(id))?.get(field)?.generation ?? 0) > 0;
+
 const runCall = <T>(
   lookup: GridProcessingPropsLookup,
   id: GridRowId,

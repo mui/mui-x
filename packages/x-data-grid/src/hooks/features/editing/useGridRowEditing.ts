@@ -53,6 +53,7 @@ import {
   deleteProcessingProps,
   getDefaultCellValue,
   getProcessingPropsRow,
+  hasValueValidation,
   processEditCellProps,
 } from './utils';
 import type { GridProcessingPropsLookup } from './utils';
@@ -520,8 +521,8 @@ export const useGridRowEditing = (
         })
         .forEach((column) => {
           const field = column.field;
-          // A validator of an earlier column set this field, so a newer validation runs
-          if (processingPropsLookup.current.get(String(id))?.has(field)) {
+          // A validator of an earlier column set a new value, which has its own validation
+          if (hasValueValidation(processingPropsLookup.current, id, field)) {
             return;
           }
           const value = apiRef.current.getCellValue(id, field);
@@ -533,13 +534,18 @@ export const useGridRowEditing = (
             id,
             field,
             hasChanged,
-            (hasValueChanged) =>
-              column.preProcessEditCellProps!({
+            (hasValueChanged) => {
+              // A call that runs again gets the latest props
+              const { [field]: fieldProps, ...otherFieldsProps } =
+                gridEditRowsStateSelector(apiRef)[id];
+              return column.preProcessEditCellProps!({
                 id,
                 row,
-                props: gridEditRowsStateSelector(apiRef)[id][field],
+                props: fieldProps,
                 hasChanged: hasValueChanged,
-              }),
+                otherFieldsProps,
+              });
+            },
             (processedProps, isProcessingProps) => {
               // Check if still in edit mode before updating
               if (apiRef.current.getRowMode(id) !== GridRowModes.Edit) {

@@ -859,6 +859,90 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
       });
 
+      it('should validate a deleted value when a validator of an earlier column sets another field', async () => {
+        const preProcessEditCellProps1 = ({
+          props,
+          otherFieldsProps,
+        }: GridPreProcessEditCellProps) => {
+          if (otherFieldsProps?.price2M.value !== 99) {
+            apiRef.current?.setEditCellValue({ id: 0, field: 'price2M', value: 99 });
+          }
+          return props;
+        };
+        const preProcessEditCellProps2 = ({ props, hasChanged }: GridPreProcessEditCellProps) =>
+          hasChanged ? { ...props, error: props.value == null } : props;
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columns={[
+              {
+                field: 'currencyPair',
+                editable: true,
+                preProcessEditCellProps: preProcessEditCellProps1,
+              },
+              {
+                field: 'price1M',
+                type: 'number',
+                editable: true,
+                preProcessEditCellProps: preProcessEditCellProps2,
+              },
+              { field: 'price2M', type: 'number', editable: true },
+            ]}
+          />,
+        );
+        act(() =>
+          apiRef.current?.startRowEditMode({ id: 0, fieldToFocus: 'price1M', deleteValue: true }),
+        );
+        await act(() => Promise.resolve());
+
+        act(() => apiRef.current?.stopRowEditMode({ id: 0 }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
+      });
+
+      it('should validate a deleted value again with the current values of the other fields', async () => {
+        let resolveValidation: () => void;
+        const preProcessEditCellProps = ({
+          props,
+          hasChanged,
+          row,
+          otherFieldsProps,
+        }: GridPreProcessEditCellProps) => {
+          const currencyPair = otherFieldsProps?.currencyPair.value ?? row.currencyPair;
+          const processedProps = {
+            ...props,
+            error: currencyPair === 'USDEUR' && props.value == null,
+          };
+          if (!hasChanged) {
+            return processedProps;
+          }
+          return new Promise((resolve) => {
+            resolveValidation = () => resolve(processedProps);
+          });
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            column2Props={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() =>
+          apiRef.current?.startRowEditMode({ id: 0, fieldToFocus: 'price1M', deleteValue: true }),
+        );
+        await act(() =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USDEUR' }),
+        );
+        await act(async () => resolveValidation!());
+
+        act(() => apiRef.current?.stopRowEditMode({ id: 0 }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
+      });
+
       it('should ignore a pending validation of a removed row in a new row with the same id', async () => {
         let resolveValidation: () => void;
         const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
@@ -1345,6 +1429,19 @@ describe('<DataGridPro /> - Row editing', () => {
           value: '',
           error: false,
           isProcessingProps: true,
+        });
+      });
+
+      it('should pass the props of the other fields to preProcessEditCellProps', async () => {
+        const preProcessEditCellProps = vi.fn(({ props }: GridPreProcessEditCellProps) => props);
+        const { user } = render(<TestCase column1Props={{ preProcessEditCellProps }} />);
+
+        const cell = getCell(0, 1);
+        await user.click(cell);
+        await user.keyboard('{Delete}');
+
+        expect(preProcessEditCellProps.mock.lastCall?.[0].otherFieldsProps).to.deep.equal({
+          price1M: { value: 1, error: false, isProcessingProps: false },
         });
       });
     });
