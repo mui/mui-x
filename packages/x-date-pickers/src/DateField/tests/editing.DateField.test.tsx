@@ -847,6 +847,38 @@ describe('<DateField /> - Editing', () => {
         await view.user.keyboard('{ArrowDown}');
         expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
       });
+
+      // dayjs can't parse a date from a week day only
+      it.skipIf(adapter.lib === 'dayjs')(
+        'should not loose date information when using the weekday format and value is provided',
+        async () => {
+          const onChange = vi.fn();
+
+          const view = renderWithProps({
+            format: adapter.formats.weekday,
+            defaultValue: adapter.date('2010-04-03T03:03:03'),
+            onChange,
+          });
+
+          await view.selectSection('weekDay');
+          await view.user.keyboard('{ArrowDown}');
+          expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2010, 3, 2, 3, 3, 3));
+        },
+      );
+
+      it('should not loose time information when editing the weekday and value is provided', async () => {
+        const onChange = vi.fn();
+
+        const view = renderWithProps({
+          format: `${adapter.formats.weekday} ${adapter.formats.keyboardDate}`,
+          defaultValue: adapter.date('2010-04-03T03:03:03'),
+          onChange,
+        });
+
+        await view.selectSection('weekDay');
+        await view.user.keyboard('{ArrowDown}');
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2010, 3, 2, 3, 3, 3));
+      });
     },
   );
 
