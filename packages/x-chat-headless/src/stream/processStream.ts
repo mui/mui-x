@@ -203,12 +203,17 @@ export async function processStream<Cursor = string>(
       throw failStream('Stream processing requires a target assistant message id.');
     }
 
-    const conversationId = getConversationId();
-    const message = getOrCreateMessage(storeUnknown, targetMessageId, conversationId, startAuthor);
+    const message = getOrCreateMessage(
+      storeUnknown,
+      targetMessageId,
+      getConversationId(),
+      startAuthor,
+    );
 
     if (!didStartMessage) {
       didStartMessage = true;
-      store.setStreaming(true, conversationId);
+      // Read again: `onMessagesChange` may have switched to the run's new conversation.
+      store.setStreaming(true, getConversationId());
       store.setError(null);
 
       if (targetMessageId) {

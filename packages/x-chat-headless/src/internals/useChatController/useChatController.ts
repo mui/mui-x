@@ -120,14 +120,16 @@ export function useChatController<Cursor = string>({
   const keepStreamOnSwitch = React.useCallback(
     (nextConversationId: string | undefined) => {
       const run = inFlightRunRef.current;
-      const { isStreaming, streamingConversationId, activeStreamAbortController, conversationIds } =
-        store.state;
-      // A run already finished, or stopped (controller cleared or aborted), is never kept.
-      const isLive =
-        isStreaming &&
-        activeStreamAbortController != null &&
-        !activeStreamAbortController.signal.aborted;
-      if (!isLive || streamingConversationId != null || nextConversationId == null || !run) {
+      const { activeStreamAbortController: controller, conversationIds } = store.state;
+      // A run that finished or was stopped is never kept; one waiting to reconnect still is.
+      if (
+        !run ||
+        run.isFinished ||
+        run.conversationId != null ||
+        !controller ||
+        controller.signal.aborted ||
+        nextConversationId == null
+      ) {
         return false;
       }
 
@@ -136,13 +138,16 @@ export function useChatController<Cursor = string>({
         run.reportedConversationId != null
           ? run.reportedConversationId === nextConversationId
           : conversationIds.includes(nextConversationId) &&
-            !run.knownConversationIds.has(nextConversationId);
+            run.isAddedById.get(nextConversationId) !== false;
       if (!belongsToRun) {
         return false;
       }
 
       run.conversationId = nextConversationId;
-      store.setStreaming(true, nextConversationId);
+      // While reconnecting, the reconnect sets the streaming scope from the run.
+      if (store.state.isStreaming) {
+        store.setStreaming(true, nextConversationId);
+      }
       // Deferred because controlled messages may be syncing from props now, which drops writes.
       queueMicrotask(() => {
         // Skip when the user has moved on, so another conversation's messages are not relabelled.
@@ -315,16 +320,16 @@ export function useChatController<Cursor = string>({
           return;
         }
 
-        // Loaded conversations already existed, so a stream in flight cannot belong to them.
-        // Ones already added during the run (props or realtime) keep counting as added.
+        // Conversations present now were added during the run; loaded ones already existed.
         const run = inFlightRunRef.current;
         if (run && run.conversationId == null) {
-          const presentIds = new Set(store.state.conversationIds);
-          result.conversations.forEach((conversation) => {
-            if (!presentIds.has(conversation.id)) {
-              run.knownConversationIds.add(conversation.id);
+          const markSeen = (id: string, isAdded: boolean) => {
+            if (!run.isAddedById.has(id)) {
+              run.isAddedById.set(id, isAdded);
             }
-          });
+          };
+          store.state.conversationIds.forEach((id) => markSeen(id, true));
+          result.conversations.forEach(({ id }) => markSeen(id, false));
         }
         store.setConversations(result.conversations);
       })

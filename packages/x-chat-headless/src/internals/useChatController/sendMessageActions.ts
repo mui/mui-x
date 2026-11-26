@@ -40,8 +40,10 @@ export interface InFlightRun {
   conversationId: string | undefined;
   /** The conversation the stream reported on its `start` chunk. */
   reportedConversationId?: string;
-  /** Conversations that already existed when the run started, so cannot be the run's new one. */
-  knownConversationIds: Set<string>;
+  /** Whether each conversation the run has seen appeared during the reply; the first sighting wins. */
+  isAddedById: Map<string, boolean>;
+  /** Set before `onFinish`, so a switch made from it is not kept. */
+  isFinished?: boolean;
 }
 
 export function createSendMessageActions<Cursor = string>(params: {
@@ -86,7 +88,9 @@ export function createSendMessageActions<Cursor = string>(params: {
     // Only an unscoped run can be kept on a switch, so only it needs the snapshot.
     const run: InFlightRun = {
       conversationId,
-      knownConversationIds: new Set(conversationId == null ? store.state.conversationIds : []),
+      isAddedById: new Map(
+        conversationId == null ? store.state.conversationIds.map((id) => [id, false]) : [],
+      ),
     };
     inFlightRunRef.current = run;
     return run;
@@ -106,6 +110,10 @@ export function createSendMessageActions<Cursor = string>(params: {
   ): Promise<ProcessStreamResult> {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
+    const finishRun: ChatOnFinish = (payload) => {
+      run.isFinished = true;
+      return runtimeRef.current.onFinish?.(payload);
+    };
     const processOptions = {
       conversationId: run.conversationId,
       getConversationId: () => run.conversationId,
@@ -115,7 +123,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
-      onFinish: shouldDeferFinish ? undefined : runtimeRef.current.onFinish,
+      onFinish: shouldDeferFinish ? undefined : finishRun,
       onData: runtimeRef.current.onData,
       // Unique-per-run fallback the stream binds to when the adapter omits a
       // `messageId` on `start`. A backend-supplied id still overrides it (see
@@ -125,11 +133,11 @@ export function createSendMessageActions<Cursor = string>(params: {
       messageId: fallbackMessageId,
     };
     const emitDeferredFinish = async (result: ProcessStreamResult) => {
-      if (!shouldDeferFinish || !runtimeRef.current.onFinish) {
+      if (!shouldDeferFinish) {
         return;
       }
 
-      await runtimeRef.current.onFinish({
+      await finishRun({
         message: getFinishMessage(
           storeUnknown,
           result.messageId,
@@ -173,7 +181,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       return await processStream(store, reconnectStream, {
         ...processOptions,
-        onFinish: runtimeRef.current.onFinish,
+        onFinish: finishRun,
         messageId: result.messageId,
         reconnectFromSequence: result.nextSequence,
         seenEventIds: result.seenEventIds,
