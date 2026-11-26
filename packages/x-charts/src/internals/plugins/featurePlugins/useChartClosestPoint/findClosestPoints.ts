@@ -2,6 +2,7 @@ import type { ScatterValueType } from '../../../../models/seriesType/scatter';
 import type { Flatbush } from '../../../Flatbush';
 import type { D3Scale } from '../../../../models/axis';
 import { isOrdinalScale } from '../../../scaleGuards';
+import { getDataIndexForOrdinalScaleValue } from '../../../invertScale';
 
 // Arbitrary large number to be sure we don't pull the entire dataset from flatbush when radius is not fixed.
 const LARGE_NUMBER = 50;
@@ -106,12 +107,7 @@ export function findClosestPoints(
 
 function invertScale<T>(scale: D3Scale, value: number, getDataPoint: (dataIndex: number) => T) {
   if (isOrdinalScale(scale)) {
-    const dataIndex =
-      scale.bandwidth() === 0
-        ? Math.floor((value - Math.min(...scale.range()) + scale.step() / 2) / scale.step())
-        : Math.floor((value - Math.min(...scale.range())) / scale.step());
-
-    return getDataPoint(dataIndex);
+    return getDataPoint(getDataIndexForOrdinalScaleValue(scale, value));
   }
 
   return scale.invert(value);
