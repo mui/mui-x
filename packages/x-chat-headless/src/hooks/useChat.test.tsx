@@ -1601,6 +1601,86 @@ describe('useChat', () => {
       });
       expect(onFinishB).not.toHaveBeenCalled();
     });
+
+    it('keeps the stream when `onConversationsChange` opens a conversation a realtime `conversation-added` announced', async () => {
+      let onEvent: (event: ChatRealtimeEvent) => void = () => {};
+      let didSwitch = false;
+      const view = renderStreamingChat({
+        controlledActiveConversation: false,
+        adapter: {
+          subscribe: ({ onEvent: handler }) => {
+            onEvent = handler;
+            return () => {};
+          },
+        },
+        onConversationsChange: (conversations) => {
+          if (!didSwitch && conversations.some((conversation) => conversation.id === 'c-new')) {
+            didSwitch = true;
+            void view.result.current.chat.setActiveConversation('c-new');
+          }
+        },
+      });
+      await view.send();
+      await startReply(view.stream);
+
+      await act(async () => {
+        onEvent({ type: 'conversation-added', conversation: { id: 'c-new' } });
+      });
+
+      expect(view.result.current.chat.activeConversationId).toBe('c-new');
+      expect(view.signals[0].aborted).toBe(false);
+    });
+
+    it('restores a regenerated reply in the kept conversation when the adapter rejects', async () => {
+      let onEvent: (event: ChatRealtimeEvent) => void = () => {};
+      let rejectRegenerate: (error: Error) => void = () => {};
+      const onError = vi.fn();
+      const view = renderStreamingChat({
+        controlledActiveConversation: false,
+        initialMessages: [
+          { id: 'u1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] },
+          { id: 'a1', role: 'assistant', parts: [{ type: 'text', text: 'Hi' }] },
+        ],
+        adapter: {
+          subscribe: ({ onEvent: handler }) => {
+            onEvent = handler;
+            return () => {};
+          },
+          regenerate: () =>
+            new Promise((_, reject) => {
+              rejectRegenerate = reject;
+            }),
+        },
+        onError,
+      });
+      act(() => {
+        void view.result.current.chat.regenerate('a1');
+      });
+      await waitFor(() => {
+        expect(view.result.current.chat.isStreaming).toBe(true);
+      });
+      act(() => {
+        onEvent({ type: 'conversation-added', conversation: { id: 'c-new' } });
+      });
+      await act(async () => {
+        await view.result.current.chat.setActiveConversation('c-new');
+      });
+
+      await act(async () => {
+        rejectRegenerate(new Error('Unavailable'));
+      });
+
+      await waitFor(() => {
+        expect(view.result.current.chat.isStreaming).toBe(false);
+      });
+      expect(
+        view.result.current.chat.messages.map((message) => [message.id, message.conversationId]),
+      ).toEqual([
+        ['u1', 'c-new'],
+        ['a1', 'c-new'],
+      ]);
+      expect(onError.mock.calls[0][0].details).toMatchObject({ conversationId: 'c-new' });
+    });
   });
 
   it('aborts a stream started without a conversation when uncontrolled messages switch to an existing conversation', async () => {

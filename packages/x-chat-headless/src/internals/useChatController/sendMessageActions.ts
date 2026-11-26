@@ -328,7 +328,7 @@ export function createSendMessageActions<Cursor = string>(params: {
             true,
             {
               messageId: nextMessage.id,
-              conversationId,
+              conversationId: run.conversationId,
             },
           );
 
@@ -536,7 +536,13 @@ export function createSendMessageActions<Cursor = string>(params: {
         const removedMessage = removedById.get(id);
         if (removedMessage) {
           const group = restoredAfter.get(previousLiveId) ?? [];
-          group.push(currentById.get(id) ?? removedMessage);
+          const message = currentById.get(id) ?? removedMessage;
+          // A kept run moved the user message to its new conversation; keep the reply beside it.
+          group.push(
+            message.conversationId == null && run.conversationId !== conversationId
+              ? { ...message, conversationId: run.conversationId }
+              : message,
+          );
           restoredAfter.set(previousLiveId, group);
         } else if (liveIds.has(id)) {
           previousLiveId = id;
@@ -569,7 +575,7 @@ export function createSendMessageActions<Cursor = string>(params: {
           true,
           {
             messageId,
-            conversationId,
+            conversationId: run.conversationId,
           },
         ),
       );

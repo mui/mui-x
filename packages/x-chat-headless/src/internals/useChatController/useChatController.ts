@@ -138,7 +138,7 @@ export function useChatController<Cursor = string>({
         run.reportedConversationId != null
           ? run.reportedConversationId === nextConversationId
           : conversationIds.includes(nextConversationId) &&
-            run.isAddedById.get(nextConversationId) === true;
+            run.isAddedById.get(nextConversationId) !== false;
       if (!belongsToRun) {
         return false;
       }
