@@ -17,14 +17,14 @@ import { gridFormulaLookupSelector } from '../formula/gridFormulaSelectors';
 import { gridComputedColumnsRevisionSelector } from '../computedColumns/gridComputedColumnsSelectors';
 import type {
   GridConditionalFormattingApi,
-  GridConditionalFormattingRule,
+  GridConditionalFormattingHighlightRule,
 } from './gridConditionalFormattingInterfaces';
 import { gridConditionalFormattingSelector } from './gridConditionalFormattingSelectors';
 import {
   getConditionalFormattingCellValue,
   getConditionalFormattingClassName,
   isConditionalFormattingRow,
-  isValidConditionalFormattingRule,
+  isConditionalFormattingHighlightRule,
   matchesConditionalFormattingValue,
 } from './gridConditionalFormattingUtils';
 
@@ -75,7 +75,12 @@ export const useGridConditionalFormatting = (
   useGridApiMethod(apiRef, { setConditionalFormatting }, 'public');
 
   const matchesRule = React.useCallback(
-    (rule: GridConditionalFormattingRule, row: GridValidRowModel, id: GridRowId, field: string) => {
+    (
+      rule: GridConditionalFormattingHighlightRule,
+      row: GridValidRowModel,
+      id: GridRowId,
+      field: string,
+    ) => {
       const { condition } = rule;
       if (condition.type === 'formula') {
         return (
@@ -131,7 +136,7 @@ export const useGridConditionalFormatting = (
         for (let i = 0; i < model.length; i += 1) {
           const rule = model[i];
           if (
-            isValidConditionalFormattingRule(rule) &&
+            isConditionalFormattingHighlightRule(rule) &&
             rule.fields.includes(field) &&
             matchesRule(rule, row, id, field)
           ) {
@@ -181,7 +186,9 @@ export const useGridConditionalFormatting = (
     if (
       process.env.NODE_ENV !== 'production' &&
       apiRef.current.evaluateConditionalFormattingFormula === undefined &&
-      model.some((rule) => rule?.condition?.type === 'formula')
+      model.some(
+        (rule) => isConditionalFormattingHighlightRule(rule) && rule.condition.type === 'formula',
+      )
     ) {
       warnOnce(
         [

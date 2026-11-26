@@ -7,7 +7,16 @@ title: Data Grid - Conditional formatting
 <p class="description">Style the cells that match a condition, and export the rules to Excel as conditional formats.</p>
 
 Pass a list of rules to the `conditionalFormatting` prop.
-Each rule names the columns it applies to, a condition, and the style of the cells that match it.
+Each `highlight` rule names the columns it applies to, a condition, and the style of the cells that match it.
+
+```ts
+{
+  type: 'highlight',
+  fields: ['stock'],
+  condition: { type: 'cell', operator: 'lessThan', value: 10 },
+  style: { color: '#c62828', fontWeight: 'bold' },
+}
+```
 
 The demo below has three rules:
 

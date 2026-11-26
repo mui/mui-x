@@ -27,7 +27,7 @@ const layout = {
 
 const getFormula = (condition: GridConditionalFormattingCondition, field = 'price') => {
   const [options] = getConditionalFormattingExcelOptions(
-    [{ fields: [field], condition, style: { color: '#f00' } }],
+    [{ type: 'highlight', fields: [field], condition, style: { color: '#f00' } }],
     layout,
     undefined,
   );
@@ -131,11 +131,13 @@ describe('gridConditionalFormattingUtils', () => {
     it('writes the first rule last and keeps the background off selected cells', () => {
       const model: GridConditionalFormattingModel = [
         {
+          type: 'highlight',
           fields: ['a'],
           condition: { type: 'text', operator: 'isEmpty' },
           style: { color: '#111' },
         },
         {
+          type: 'highlight',
           fields: ['a'],
           condition: { type: 'text', operator: 'isEmpty' },
           style: { backgroundColor: '#222' },
@@ -188,7 +190,12 @@ describe('gridConditionalFormattingUtils', () => {
       );
       expect(
         getConditionalFormattingExcelOptions(
-          [{ fields: 'price' } as any, null as any],
+          [
+            { type: 'highlight', fields: 'price' } as any,
+            null as any,
+            // A rule type from a newer version.
+            { type: 'colorScale', fields: ['price'] } as any,
+          ],
           layout,
           undefined,
         ),
@@ -210,11 +217,13 @@ describe('gridConditionalFormattingUtils', () => {
         getConditionalFormattingExcelOptions(
           [
             {
+              type: 'highlight',
               fields: ['name', 'missing'],
               condition: { type: 'text', operator: 'isEmpty' },
               style: {},
             },
             {
+              type: 'highlight',
               fields: ['name', 'price', 'missing'],
               condition: { type: 'formula', formula: '=price > 1' },
               style: { backgroundColor: '#abc', fontWeight: 'bold' },
@@ -260,6 +269,7 @@ describe('gridConditionalFormattingUtils', () => {
     it('skips formula conditions without the formula feature and empty exports', () => {
       const model: GridConditionalFormattingModel = [
         {
+          type: 'highlight',
           fields: ['price'],
           condition: { type: 'formula', formula: '=price > 1' },
           style: { color: '#000' },

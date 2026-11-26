@@ -7,6 +7,7 @@ export type {
   GridConditionalFormattingFormulaCondition,
   GridConditionalFormattingCondition,
   GridConditionalFormattingStyle,
+  GridConditionalFormattingHighlightRule,
   GridConditionalFormattingRule,
   GridConditionalFormattingModel,
   GridConditionalFormattingState,

@@ -26,6 +26,7 @@ const columns = [
 
 const expensive: GridConditionalFormattingModel = [
   {
+    type: 'highlight',
     fields: ['price'],
     condition: { type: 'cell', operator: 'greaterThan', value: 5 },
     style: { color: '#ff0000', fontWeight: 'bold' },
@@ -68,6 +69,7 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
         conditionalFormatting={[
           ...expensive,
           {
+            type: 'highlight',
             fields: ['item', 'quantity'],
             condition: { type: 'text', operator: 'contains', value: 'an' },
             style: { backgroundColor: '#00ff00' },
@@ -161,6 +163,7 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
         ]}
         conditionalFormatting={[
           {
+            type: 'highlight',
             fields: ['status'],
             condition: { type: 'text', operator: 'contains', value: 'disc' },
             style: { color: '#000000' },
@@ -208,6 +211,7 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
   describe('formula conditions', () => {
     const formulaRule: GridConditionalFormattingModel = [
       {
+        type: 'highlight',
         fields: ['item', 'price'],
         condition: { type: 'formula', formula: '=price * quantity > 40' },
         style: { backgroundColor: '#ffff00' },
@@ -237,6 +241,7 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
           ]}
           conditionalFormatting={[
             {
+              type: 'highlight',
               fields: ['total'],
               condition: { type: 'cell', operator: 'greaterThan', value: 40 },
               style: { color: '#000000' },
@@ -283,11 +288,13 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
           conditionalFormatting={[
             ...expensive,
             {
+              type: 'highlight',
               fields: ['item'],
               condition: { type: 'formula', formula: '=price > quantity' },
               style: { backgroundColor: '#ffff00' },
             },
             {
+              type: 'highlight',
               fields: ['item'],
               condition: { type: 'formula', formula: '=WEBSERVICE("https://example.com")' },
               style: { backgroundColor: '#ffff00' },

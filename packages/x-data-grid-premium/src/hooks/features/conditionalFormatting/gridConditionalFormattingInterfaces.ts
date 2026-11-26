@@ -69,7 +69,11 @@ export interface GridConditionalFormattingStyle {
   textDecoration?: 'underline' | 'line-through';
 }
 
-export interface GridConditionalFormattingRule {
+/**
+ * Applies `style` to the cells of `fields` that match `condition`.
+ */
+export interface GridConditionalFormattingHighlightRule {
+  type: 'highlight';
   /**
    * The fields of the columns the rule applies to.
    */
@@ -77,6 +81,12 @@ export interface GridConditionalFormattingRule {
   condition: GridConditionalFormattingCondition;
   style: GridConditionalFormattingStyle;
 }
+
+/**
+ * A conditional formatting rule. `type` tells the kinds of rules apart.
+ * Rules of an unknown `type` are ignored.
+ */
+export type GridConditionalFormattingRule = GridConditionalFormattingHighlightRule;
 
 /**
  * The conditional formatting rules, in priority order: when several rules

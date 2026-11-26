@@ -12,7 +12,7 @@ import type { ConditionalFormattingOptions, Style } from '@mui/x-internal-excelj
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridConditionalFormattingSelector } from './gridConditionalFormattingSelectors';
 import type {
-  GridConditionalFormattingRule,
+  GridConditionalFormattingHighlightRule,
   GridConditionalFormattingCellCondition,
   GridConditionalFormattingCondition,
   GridConditionalFormattingModel,
@@ -22,16 +22,18 @@ import type {
 } from './gridConditionalFormattingInterfaces';
 
 /**
- * Rules restored from untrusted data may not have the expected shape.
+ * Rules restored from untrusted data may not have the expected shape,
+ * and rules saved by a newer version may have an unknown `type`.
  */
-export const isValidConditionalFormattingRule = (
+export const isConditionalFormattingHighlightRule = (
   rule: unknown,
-): rule is GridConditionalFormattingRule =>
+): rule is GridConditionalFormattingHighlightRule =>
   typeof rule === 'object' &&
   rule !== null &&
-  Array.isArray((rule as GridConditionalFormattingRule).fields) &&
-  typeof (rule as GridConditionalFormattingRule).condition === 'object' &&
-  (rule as GridConditionalFormattingRule).condition !== null;
+  (rule as GridConditionalFormattingHighlightRule).type === 'highlight' &&
+  Array.isArray((rule as GridConditionalFormattingHighlightRule).fields) &&
+  typeof (rule as GridConditionalFormattingHighlightRule).condition === 'object' &&
+  (rule as GridConditionalFormattingHighlightRule).condition !== null;
 
 const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
 
@@ -98,10 +100,11 @@ export function getConditionalFormattingStyles(
     Omit<GridConditionalFormattingStyle, 'fontWeight'> & { fontWeight?: string }
   > = {};
   for (let i = model.length - 1; i >= 0; i -= 1) {
-    if (!isValidConditionalFormattingRule(model[i])) {
+    const rule = model[i];
+    if (!isConditionalFormattingHighlightRule(rule)) {
       continue;
     }
-    const { backgroundColor, ...textStyle } = sanitizeConditionalFormattingStyle(model[i].style);
+    const { backgroundColor, ...textStyle } = sanitizeConditionalFormattingStyle(rule.style);
     const cell = `.${gridClasses.cell}.${getConditionalFormattingClassName(instanceId, i)}`;
     if (Object.keys(textStyle).length > 0) {
       styles[`.${gridClasses.root} ${cell}`] = textStyle;
@@ -398,7 +401,7 @@ export function getConditionalFormattingExcelOptions(
   const { fieldToColumnLetter, fieldToColumnType, rowRuns } = layout;
   const options: ConditionalFormattingOptions[] = [];
   model.forEach((rule, index) => {
-    if (!isValidConditionalFormattingRule(rule)) {
+    if (!isConditionalFormattingHighlightRule(rule)) {
       return;
     }
     const style = getConditionalFormattingExcelStyle(rule.style);

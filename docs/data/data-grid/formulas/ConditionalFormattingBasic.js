@@ -69,16 +69,19 @@ const rows = [
 
 const conditionalFormatting = [
   {
+    type: 'highlight',
     fields: ['stock'],
     condition: { type: 'cell', operator: 'lessThan', value: 10 },
     style: { color: '#c62828', fontWeight: 'bold' },
   },
   {
+    type: 'highlight',
     fields: ['product', 'status'],
     condition: { type: 'formula', formula: '=status = "Discontinued"' },
     style: { color: '#757575', textDecoration: 'line-through' },
   },
   {
+    type: 'highlight',
     fields: ['product', 'price'],
     condition: { type: 'formula', formula: '=price > cost * 2' },
     style: { backgroundColor: '#c8e6c9' },
