@@ -20,6 +20,7 @@ const StyledDataGridPremium = styled(DataGridPremium)(({ theme }) => {
     },
     [`& .${gridClasses.cell}.Mui-selected`]: {
       borderColor: alpha(theme.palette.primary.main, 0.1),
+      boxShadow: 'none',
     },
     [`& .${gridClasses.cell}.Mui-selected.${gridClasses['cell--rangeTop']}`]: {
       borderTopColor: selectedCellBorder,
