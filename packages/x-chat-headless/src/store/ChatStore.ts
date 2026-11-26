@@ -1,3 +1,4 @@
+import { areArraysEqual } from '@base-ui/utils/areArraysEqual';
 import { Store } from '@base-ui/utils/store';
 import type {
   ChatConversation,
@@ -36,8 +37,7 @@ function haveAuthorParametersChanged<Cursor>(
   }
   if (
     prev.members !== next.members &&
-    (prev.members?.length !== next.members?.length ||
-      prev.members?.some((member, index) => !isSameAuthorUser(member, next.members?.[index])))
+    !areArraysEqual(prev.members ?? [], next.members ?? [], isSameAuthorUser)
   ) {
     return true;
   }

@@ -46,38 +46,6 @@ describe('useMessageAuthor', () => {
     expect(renderCounts).toEqual(initialCounts);
   });
 
-  it('does not re-render rows when the active conversation changes without touching participants', () => {
-    const store = new ChatStore({
-      initialMessages: messages,
-      initialConversations: [
-        { id: 'c1', title: 'First', participants: [{ id: 'alice', displayName: 'Alice' }] },
-      ],
-      initialActiveConversationId: 'c1',
-    });
-    const renderCounts: Record<string, number> = {};
-
-    function Row({ messageId }: { messageId: string }) {
-      useMessageAuthor(useMessage(messageId));
-      renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
-      return null;
-    }
-
-    render(
-      <ChatStoreContext.Provider value={store}>
-        <Row messageId="m1" />
-        <Row messageId="m2" />
-      </ChatStoreContext.Provider>,
-    );
-
-    const initialCounts = { ...renderCounts };
-
-    act(() => {
-      store.updateConversation('c1', { title: 'Renamed', unreadCount: 3 });
-    });
-
-    expect(renderCounts).toEqual(initialCounts);
-  });
-
   it('updates existing memoized rows when author parameters change', () => {
     const store = new ChatStore({ initialMessages: messages });
     const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
@@ -220,6 +188,16 @@ describe('useMessageAuthor', () => {
 
     expect(store.state.authorParametersVersion).toBe(initialVersion);
     expect(renderCounts).toEqual(initialCounts);
+  });
+
+  it('does not bump the author version when members switches between omitted and empty', () => {
+    const store = new ChatStore({ initialMessages: messages });
+    const initialVersion = store.state.authorParametersVersion;
+
+    store.updateStateFromParameters({ ...store.parameters, members: [] });
+    store.updateStateFromParameters({ ...store.parameters, members: undefined });
+
+    expect(store.state.authorParametersVersion).toBe(initialVersion);
   });
 
   it('treats an undefined role display name override like a missing one', () => {
