@@ -35,12 +35,7 @@ export function createRealtimeActions(params: {
           return;
         }
         // Before the store write: its change callback may open the conversation and replay the buffer.
-        if (message.conversationId != null && message.conversationId === activeConversationId) {
-          // The visible thread owns the message now; a held copy could undo a later local delete.
-          realtimeMessageBuffer.remove(message.id, message.conversationId);
-        } else {
-          realtimeMessageBuffer.updateIfPresent(message, isUpdate);
-        }
+        realtimeMessageBuffer.updateIfPresent(message, isUpdate);
         if (isStored && isUpdate) {
           store.updateMessage(message.id, message);
         } else {

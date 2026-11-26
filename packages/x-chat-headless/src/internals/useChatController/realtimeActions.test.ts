@@ -281,7 +281,7 @@ describe('createRealtimeActions', () => {
 
         expect(store.state.messageIds).toEqual([]);
       });
-      it('keeps held messages for the next open when listMessages fails', async () => {
+      it('drops held messages when listMessages fails, leaving them to the next load', async () => {
         const listMessages = vi
           .fn()
           .mockRejectedValueOnce(new Error('offline'))
@@ -296,7 +296,7 @@ describe('createRealtimeActions', () => {
         await setActiveConversation('c1');
         await setActiveConversation('c2');
 
-        expect(store.state.messageIds).toEqual(['m1']);
+        expect(store.state.messageIds).toEqual([]);
       });
       it('keeps held messages for the next open when a change listener leaves the conversation', async () => {
         const { store, handleRealtimeEvent, setActiveConversation } = setup();

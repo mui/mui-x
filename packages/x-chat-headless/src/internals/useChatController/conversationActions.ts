@@ -117,6 +117,9 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
+      // Nothing stays held for an open conversation: the retry fetches these from the backend,
+      // and a kept copy could later undo a change made to the visible thread.
+      flushHeldMessages([], false);
       store.setHistoryStatus('error');
       setRuntimeError(
         createRuntimeError(
