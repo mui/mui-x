@@ -300,18 +300,29 @@ describe('createRealtimeActions', () => {
 
         expect(getTexts(store)).toEqual(['edited', 'm2']);
       });
-      it('replays the buffer of the adapter that served the load', async () => {
+      it('keeps held messages for the next load when another adapter was only rendered', async () => {
         const { listMessages, resolvers } = createPendingListMessages();
         const { store, handleRealtimeEvent, setActiveConversation, runtimeRef } = setup({
           listMessages,
         });
+        const committedRuntime = runtimeRef.current;
 
         handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
         const loading = setActiveConversation('c2');
-        // e.g. a render with another adapter that never commits
+        // A render with another adapter: not replayed, as it may be about to commit.
         runtimeRef.current = { adapter: { sendMessage: vi.fn() } };
         resolvers[0]([]);
         await loading;
+
+        expect(store.state.messageIds).toEqual([]);
+
+        // That render never committed: the buffer was not consumed.
+        runtimeRef.current = committedRuntime;
+        const leaving = setActiveConversation('c1');
+        const reloading = setActiveConversation('c2');
+        resolvers[1]([]);
+        resolvers[2]([]);
+        await Promise.all([leaving, reloading]);
 
         expect(store.state.messageIds).toEqual(['m1']);
       });
