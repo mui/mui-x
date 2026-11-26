@@ -1,6 +1,11 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { useGridApiRef, DataGridPremium } from '@mui/x-data-grid-premium';
+import {
+  useGridApiRef,
+  DataGridPremium,
+  GridCellEditStopReasons,
+  GridRowEditStopReasons,
+} from '@mui/x-data-grid-premium';
 import type {
   GridApi,
   DataGridPremiumProps,
@@ -12,7 +17,7 @@ import type {
 } from '@mui/x-data-grid-premium';
 import { createRenderer, waitFor, act, fireEvent, screen } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
-import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
+import { getCell, getColumnValues, raf, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
@@ -106,11 +111,12 @@ describe('<DataGridPremium /> - History', () => {
           pageSizeOptions={[3]}
         />,
       );
-      const originalValue = apiRef.current!.getRow(3).currencyPair;
+      const originalValue = apiRef.current!.getRow(3).price1M;
       const cell = getCell(3, 2);
       await user.dblClick(cell);
       await user.keyboard('10000');
       await user.click(getCell(4, 2));
+      expect(apiRef.current!.getRow(3).price1M).not.to.equal(originalValue);
 
       let result: boolean | undefined;
       await act(async () => {
@@ -118,8 +124,77 @@ describe('<DataGridPremium /> - History', () => {
       });
 
       expect(result).to.equal(true);
-      expect(apiRef.current!.getRow(3).currencyPair).to.equal(originalValue);
+      expect(apiRef.current!.getRow(3).price1M).to.equal(originalValue);
     });
+
+    it('should undo a row edit that stops on a click in another row', async () => {
+      const { user } = render(<Test editMode="row" />);
+      const originalValue = apiRef.current!.getRow(0).price1M;
+
+      await user.dblClick(getCell(0, 2));
+      await user.keyboard('10000');
+      await user.click(getCell(1, 2));
+      // The row edit stops in a timeout after the focus leaves the row
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).price1M).not.to.equal(originalValue);
+      });
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+    });
+
+    it.each(['cell', 'row'] as const)(
+      'should preserve undo and redo history when a %s edit is discarded on focus-out',
+      async (editMode) => {
+        const { user } = render(
+          <Test
+            editMode={editMode}
+            onCellEditStop={({ id, field, reason }, event) => {
+              if (reason === 'cellFocusOut') {
+                event.defaultMuiPrevented = true;
+                apiRef.current!.stopCellEditMode({ id, field, ignoreModifications: true });
+              }
+            }}
+            onRowEditStop={({ id, reason }, event) => {
+              if (reason === 'rowFocusOut') {
+                event.defaultMuiPrevented = true;
+                apiRef.current!.stopRowEditMode({ id, ignoreModifications: true });
+              }
+            }}
+          />,
+        );
+
+        const originalValue = apiRef.current!.getRow(0).price1M;
+        await user.dblClick(getCell(0, 2));
+        await user.keyboard('123{Enter}');
+        await user.dblClick(getCell(1, 2));
+        await user.keyboard('456{Enter}');
+        // Leave one committed edit on each side of the history cursor.
+        await act(async () => {
+          expect(await apiRef.current!.history.undo()).to.equal(true);
+          await raf();
+        });
+
+        const beforeDiscard = apiRef.current!.getRow(2).price1M;
+        await user.dblClick(getCell(2, 2));
+        await act(async () => {
+          await apiRef.current!.setEditCellValue({ id: 2, field: 'price1M', value: 789 });
+        });
+        await user.click(getCell(3, 2));
+        await waitFor(() => expect(apiRef.current!.getCellMode(2, 'price1M')).to.equal('view'));
+        expect(apiRef.current!.getRow(2).price1M).to.equal(beforeDiscard);
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+        await act(async () => {
+          expect(await apiRef.current!.history.undo()).to.equal(true);
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+      },
+    );
   });
 
   describe('Row updates through API', () => {
@@ -598,6 +673,134 @@ describe('<DataGridPremium /> - History', () => {
       // undo and redo are not available anymore
       expect(apiRef.current!.history.canUndo()).to.equal(false);
       expect(apiRef.current!.history.canRedo()).to.equal(false);
+    });
+  });
+
+  describe('Edit validation and cancellation', () => {
+    const validatedColumns = data.columns.map((column) =>
+      column.field === 'price1M'
+        ? {
+            ...column,
+            preProcessEditCellProps: ({ props }) => ({
+              ...props,
+              error: Number(props.value) > 1000,
+            }),
+          }
+        : column,
+    ) as DataGridPremiumProps['columns'];
+
+    it.each(['cell', 'row'] as const)(
+      'should keep the redo steps when an edit is canceled with Escape in %s mode',
+      async (editMode) => {
+        const { user } = render(<Test editMode={editMode} />);
+        const originalValue = apiRef.current!.getRow(0).price1M;
+
+        await user.dblClick(getCell(0, 2));
+        await user.keyboard('123{Enter}');
+        await user.dblClick(getCell(1, 2));
+        await user.keyboard('456{Enter}');
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        // The undo focuses the cell in the next frame
+        await act(() => raf());
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+        await user.dblClick(getCell(2, 2));
+        await user.keyboard('789{Escape}');
+
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+        let result: boolean | undefined;
+        await act(async () => {
+          result = await apiRef.current!.history.undo();
+        });
+        expect(result).to.equal(true);
+        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+      },
+    );
+
+    it.each(['cell', 'row'] as const)(
+      'should undo a %s edit that commits after its validation ends',
+      async (editMode) => {
+        const { user } = render(<Test columns={validatedColumns} editMode={editMode} />);
+        const originalValue = apiRef.current!.getRow(0).price1M;
+        await user.dblClick(getCell(0, 2));
+
+        // The stop applies the debounced value, so the validation runs while the edit stops.
+        // The grid checks the stop in a later render, after the synchronous validation ends.
+        await act(async () => {
+          apiRef.current!.setEditCellValue({ id: 0, field: 'price1M', value: 5, debounceMs: 200 });
+          if (editMode === 'cell') {
+            apiRef.current!.publishEvent('cellEditStop', {
+              ...apiRef.current!.getCellParams(0, 'price1M'),
+              reason: GridCellEditStopReasons.cellFocusOut,
+            });
+          } else {
+            apiRef.current!.publishEvent('rowEditStop', {
+              ...apiRef.current!.getRowParams(0),
+              field: 'price1M',
+              reason: GridRowEditStopReasons.rowFocusOut,
+            });
+          }
+        });
+
+        expect(apiRef.current!.getRow(0).price1M).to.equal(5);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+      },
+    );
+
+    it.each(['cell', 'row'] as const)(
+      'should leave an imperative %s edit out of history',
+      async (editMode) => {
+        const { user } = render(<Test editMode={editMode} />);
+        await user.dblClick(getCell(0, 2));
+        await act(async () => {
+          await apiRef.current!.setEditCellValue({ id: 0, field: 'price1M', value: 42 });
+          if (editMode === 'cell') {
+            apiRef.current!.stopCellEditMode({ id: 0, field: 'price1M' });
+          } else {
+            apiRef.current!.stopRowEditMode({ id: 0 });
+          }
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(42);
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      },
+    );
+
+    it('should pass a canceled edit to a custom stop handler', async () => {
+      const store = vi.fn<GridHistoryEventHandler['store']>(() => null);
+      const handler: GridHistoryEventHandler = { store, undo: () => {}, redo: () => {} };
+      const historyEventHandlers = { cellEditStop: handler } as Record<
+        GridEvents,
+        GridHistoryEventHandler
+      >;
+      const { user } = render(<Test historyEventHandlers={historyEventHandlers} />);
+      await user.dblClick(getCell(0, 2));
+      await user.keyboard('{Escape}');
+      expect(store.mock.calls).to.have.length(1);
+      expect(store.mock.calls[0][0].reason).to.equal('escapeKeyDown');
+    });
+
+    it('should not store an edit with an invalid value in cell mode', async () => {
+      const { user } = render(<Test columns={validatedColumns} />);
+
+      await user.dblClick(getCell(0, 2));
+      await user.keyboard('99999');
+      await waitFor(() => {
+        expect(apiRef.current!.state.editRows[0].price1M.error).to.equal(true);
+      });
+      await user.click(getCell(1, 2));
+      await act(() => raf());
+
+      expect(apiRef.current!.getCellMode(0, 'price1M')).to.equal('edit');
+      expect(apiRef.current!.history.canUndo()).to.equal(false);
     });
   });
 

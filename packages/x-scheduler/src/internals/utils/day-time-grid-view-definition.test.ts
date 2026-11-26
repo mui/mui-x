@@ -25,29 +25,29 @@ describe('createDayTimeGridViewDefinition', () => {
   describe('contiguous day counts', () => {
     it('renders a single day starting from the visible date for dayCount=1', () => {
       const days = createDayTimeGridViewDefinition(1).visibleDaysSelector(getState());
-      expect(days).to.have.length(1);
-      expect(days[0].value).toEqualDateTime(visibleDate);
+      expect(days.map((day) => day.toString())).to.deep.equal(['2025-07-03']);
     });
 
-    it('starts the days at midnight when the visible date has a time of day', () => {
+    it('starts the days on the date of the visible date when it has a time of day', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
         visibleDate: createDate('2025-07-03T14:30:00Z'),
       });
       const days = createDayTimeGridViewDefinition(3).visibleDaysSelector(state);
-      expect(days.map((day) => day.value.toISOString())).to.deep.equal([
-        '2025-07-03T00:00:00.000Z',
-        '2025-07-04T00:00:00.000Z',
-        '2025-07-05T00:00:00.000Z',
+      expect(days.map((day) => day.toString())).to.deep.equal([
+        '2025-07-03',
+        '2025-07-04',
+        '2025-07-05',
       ]);
     });
 
     it('renders 3 consecutive days starting from the visible date for dayCount=3', () => {
       const days = createDayTimeGridViewDefinition(3).visibleDaysSelector(getState());
-      expect(days).to.have.length(3);
-      days.forEach((day, index) => {
-        expect(day.value).toEqualDateTime(addDays(visibleDate, index));
-      });
+      expect(days.map((day) => day.toString())).to.deep.equal([
+        '2025-07-03',
+        '2025-07-04',
+        '2025-07-05',
+      ]);
     });
   });
 
@@ -58,7 +58,7 @@ describe('createDayTimeGridViewDefinition', () => {
       );
       expect(days).to.have.length(7);
       // Thursday, July 3rd, 2025 is in the week that starts on Sunday, June 29th.
-      expect(days[0].plainDate).toEqualPlainDate('2025-06-29');
+      expect(days[0]).toEqualPlainDate('2025-06-29');
     });
 
     it('excludes weekends (5 columns) when showWeekends is false', () => {
@@ -72,7 +72,7 @@ describe('createDayTimeGridViewDefinition', () => {
       const getDayKeys = (dateLocale: string) =>
         createDayTimeGridViewDefinition(7)
           .visibleDaysSelector(getState({ showWeekends: false }, dateLocale))
-          .map((day) => day.key);
+          .map((day) => day.toString());
 
       // Saudi Arabia: the weeks start on Sunday, and the weekend is Friday and Saturday.
       expect(getDayKeys('ar-SA')).to.deep.equal([
@@ -100,8 +100,8 @@ describe('createDayTimeGridViewDefinition', () => {
       const mondayStart = createDayTimeGridViewDefinition(7).visibleDaysSelector(
         getState({ showWeekends: true, weekStartsOn: 1 }),
       );
-      expect(sundayStart[0].plainDate).toEqualPlainDate('2025-06-29');
-      expect(mondayStart[0].plainDate).toEqualPlainDate('2025-06-30');
+      expect(sundayStart[0]).toEqualPlainDate('2025-06-29');
+      expect(mondayStart[0]).toEqualPlainDate('2025-06-30');
     });
   });
 

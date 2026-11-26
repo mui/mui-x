@@ -1,8 +1,11 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 
 const isDevEnvironment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
+// React 17 can commit layout changes synchronously during resize delivery.
+const shouldDefer = isDevEnvironment || !isReactVersionAtLeast(18);
 
 const noop = () => {};
 
@@ -24,9 +27,9 @@ export function useResizeObserver(
     const target = ref.current;
     const observer = new ResizeObserver((entries) => {
       // See https://github.com/mui/mui-x/issues/8733
-      // In dev, we avoid the React warning by moving the task to the next frame.
-      // In prod, we want the task to run in the same frame as to avoid tear.
-      if (isDevEnvironment) {
+      // Keep production measurements in the same frame on React 18 and later.
+      if (shouldDefer) {
+        cancelAnimationFrame(frameID);
         frameID = requestAnimationFrame(() => {
           fnRef.current(entries);
         });

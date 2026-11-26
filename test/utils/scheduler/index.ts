@@ -3,7 +3,6 @@ import type { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-ca
 export * from './absorb-observer-frames';
 export * from './createSchedulerRenderer';
 export * from './describeConformance';
-export * from './adapters';
 export * from './dates';
 export * from './StateWatcher';
 export * from './SchedulerStoreRunner';
@@ -11,7 +10,6 @@ export * from './StoreSpy';
 export * from './state';
 export * from './event-builder';
 export * from './fixtures';
-export * from './days';
 export * from './timeline-axis';
 export * from './resource-builder';
 export * from './storeClasses';

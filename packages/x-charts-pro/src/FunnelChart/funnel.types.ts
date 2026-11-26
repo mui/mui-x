@@ -1,3 +1,5 @@
+import '../typeOverloads';
+
 import type { ChartsLabelMarkProps } from '@mui/x-charts/ChartsLabel';
 import type {
   CommonSeriesType,

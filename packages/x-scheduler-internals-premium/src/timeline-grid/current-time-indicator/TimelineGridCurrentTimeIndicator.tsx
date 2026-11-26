@@ -4,9 +4,10 @@ import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import {
-  createProcessedDate,
-  useElementPositionInCollection,
+  getMinutesInDay,
   isStartMinuteOutsideAxisWindow,
+  useElementPositionInCollection,
+  toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerNowSelectors,
@@ -35,15 +36,15 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
     const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
-    const processedNow = React.useMemo(
-      () => createProcessedDate(nowTimestamp, displayTimezone),
+    const now = React.useMemo(
+      () => toZonedDateTime(nowTimestamp, displayTimezone),
       [nowTimestamp, displayTimezone],
     );
 
     const { position } = useElementPositionInCollection({
       // Only the position is read, which depends on the start alone.
-      start: processedNow,
-      end: processedNow,
+      start: now,
+      end: now,
       collection: config,
       durationMs: config.durationMs,
     });
@@ -51,7 +52,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const isOutOfRange =
       nowTimestamp < config.start ||
       nowTimestamp > config.end ||
-      isStartMinuteOutsideAxisWindow(config, processedNow.minutesInDay);
+      isStartMinuteOutsideAxisWindow(config, getMinutesInDay(now));
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

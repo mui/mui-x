@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-internals-premium",
-  "version": "9.0.0-beta.15",
+  "version": "9.0.0-beta.16",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Scheduler internals.",
   "license": "SEE LICENSE IN LICENSE",
@@ -62,11 +62,9 @@
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@date-fns/tz": "catalog:",
     "@mui/internal-test-utils": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
-    "date-fns": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"

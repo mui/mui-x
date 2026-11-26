@@ -4,6 +4,7 @@ import { act, screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { vi, describe, it, expect } from 'vitest';
+import { getMinutesInDay } from '@mui/x-scheduler-internals/internals';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
@@ -51,11 +52,33 @@ describe('<WeekView /> event creation', () => {
     expect(store!.state.occurrencePlaceholder).to.equal(null);
   });
 
+  it('should restore the slot times of a time grid creation made all-day and timed again', async () => {
+    const { user } = render(
+      <EventCalendarProvider events={[]} resources={[]}>
+        <EventDialogProvider>
+          <WeekView />
+        </EventDialogProvider>
+      </EventCalendarProvider>,
+    );
+
+    act(() => {
+      document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridColumn}`)!.focus();
+    });
+    await user.keyboard('{Enter}');
+    const allDaySwitch = await screen.findByRole('switch', { name: /all day/i });
+    await user.click(allDaySwitch);
+    await user.click(allDaySwitch);
+
+    // The keyboard creation starts at noon, while the file's clock is at midnight.
+    expect(screen.getByLabelText(/start time/i)).to.have.value('12:00');
+    expect(screen.getByLabelText(/end time/i)).to.have.value('12:30');
+  });
+
   describe.each([
     // Without a display timezone, the creations keep the `'default'` timezone of the occurrences.
     { displayTimezone: undefined, timezone: 'default' },
     { displayTimezone: 'America/New_York', timezone: 'America/New_York' },
-  ])('in the $timezone display timezone', ({ displayTimezone, timezone }) => {
+  ])('in the $timezone display timezone', ({ displayTimezone }) => {
     async function createWithKeyboard(className: string) {
       const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
         eventDetails.cancel(),
@@ -85,17 +108,18 @@ describe('<WeekView /> event creation', () => {
     it('should pass a creation in the time grid to `onEventEditingStart` in the display timezone', async () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridColumn);
 
-      expect(occurrence.displayTimezone.timezone).to.equal(timezone);
       // The creation starts at noon.
-      expect(occurrence.displayTimezone.start.minutesInDay).to.equal(12 * 60);
+      expect(getMinutesInDay(occurrence.start)).to.equal(12 * 60);
     });
 
     it('should pass a creation in the day grid to `onEventEditingStart` in the display timezone', async () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridAllDayEventsCell);
 
-      expect(occurrence.displayTimezone.timezone).to.equal(timezone);
-      // The creation ends on the last minute of its day.
-      expect(occurrence.displayTimezone.end.minutesInDay).to.equal(24 * 60 - 1);
+      // The all-day creation ends at the start of the next day.
+      expect(getMinutesInDay(occurrence.end)).to.equal(0);
+      expect(occurrence.end.toPlainDate().toString()).to.equal(
+        occurrence.start.toPlainDate().add({ days: 1 }).toString(),
+      );
     });
   });
 });

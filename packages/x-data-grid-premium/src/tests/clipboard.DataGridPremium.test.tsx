@@ -11,7 +11,7 @@ import { vi, describe, it, expect, afterEach } from 'vitest';
 import type { MockInstance } from 'vitest';
 
 describe('<DataGridPremium /> - Clipboard', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -1823,6 +1823,48 @@ describe('<DataGridPremium /> - Clipboard', () => {
         await waitFor(() => {
           expect(rowsInStateOnPasteEnd).to.deep.equal(['A', 'C']);
         });
+      });
+
+      describe('when live updates arrive during a throttled paste', () => {
+        clock.withFakeTimers();
+
+        it.each(['throttle timeout', 'rows prop change'] as const)(
+          'should report surviving created rows when a %s ends the batch',
+          async (flush) => {
+            const onClipboardPasteEnd = vi.fn();
+            const { setProps } = render(
+              <Test
+                throttleRowsMs={100}
+                clipboardPasteOptions={{ createRows: createNewRows }}
+                onClipboardPasteEnd={onClipboardPasteEnd}
+              />,
+            );
+            const cell = getCell(3, 1);
+            await act(() => cell.focus());
+            fireEvent.click(cell);
+            paste(cell, clipboardData);
+            await clock.tickAsync(0);
+            expect(onClipboardPasteEnd.mock.calls).to.have.length(0);
+
+            act(() =>
+              apiRef.current!.updateRows([
+                { id: 'new-0', _action: 'delete' },
+                { id: 'new-1', currencyPair: 'UPDATED' },
+              ]),
+            );
+            if (flush === 'rows prop change') {
+              await act(() => setProps({ rows: getBasicGridData(4, 3).rows }));
+            } else {
+              await clock.tickAsync(100);
+            }
+
+            expect(onClipboardPasteEnd.mock.calls).to.have.length(1);
+            const { createdRows } = onClipboardPasteEnd.mock.calls[0][0];
+            expect(Array.from(createdRows.values())).to.deep.equal([
+              { id: 'new-1', currencyPair: 'UPDATED', price1M: '3' },
+            ]);
+          },
+        );
       });
 
       it('should keep the class of the rows that `createRows()` returns', async () => {

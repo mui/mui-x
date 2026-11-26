@@ -43,7 +43,7 @@ function revokeAttachmentPreviewUrl(previewUrl: string) {
 
 export function useChatComposer<Cursor = string>(): UseChatComposerValue {
   const store = useChatStore<Cursor>();
-  const { actions } = useChatRuntimeContext<Cursor>();
+  const { sendMessageIfIdle } = useChatRuntimeContext<Cursor>();
   // URLs the composer currently owns (still attached to the draft).
   const ownedPreviewUrlsRef = React.useRef(new Map<string, string>());
   // URLs that have been transferred to a sent message (#7). Each entry is
@@ -234,23 +234,7 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
     }
     store.clearComposer();
 
-    await actions.sendMessage({
-      id: messageId,
-      parts,
-      attachments: [...nextAttachments],
-      author: store.currentUser,
-    });
-
-    // If the send errored, restore the draft so the user can retry —
-    // but only when the composer is still empty (the user hasn't started
-    // typing a new message while the send was in flight).
-    const messageStatus = store.state.messagesById[messageId]?.status;
-
-    if (
-      messageStatus === 'error' &&
-      store.state.composerValue === '' &&
-      store.state.composerAttachments.length === 0
-    ) {
+    const restoreDraft = () => {
       // Reclaim ownership of the transferred URLs back to the composer so
       // they're cleaned up via the composer-attachment lifecycle if the user
       // eventually removes them.
@@ -269,8 +253,49 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       if (previouslyTransferred?.size === 0) {
         messageOwnedPreviewUrlsRef.current.delete(messageId);
       }
+    };
+
+    const sendPromise = sendMessageIfIdle({
+      id: messageId,
+      parts,
+      attachments: [...nextAttachments],
+      author: store.currentUser,
+    });
+
+    // Restore only into an empty composer, so a newer draft is never overwritten.
+    const isComposerEmpty = () =>
+      store.state.composerValue === '' && store.state.composerAttachments.length === 0;
+
+    if (!sendPromise) {
+      if (isComposerEmpty()) {
+        restoreDraft();
+      }
+      // The message never entered the store, so hand URLs still shown in the composer back to it and revoke the rest.
+      const attachmentIdByPreviewUrl = new Map(
+        store.state.composerAttachments.map((attachment) => [
+          attachment.previewUrl,
+          attachment.localId,
+        ]),
+      );
+      for (const url of messageOwnedPreviewUrlsRef.current.get(messageId)?.values() ?? []) {
+        const localId = attachmentIdByPreviewUrl.get(url);
+        if (localId) {
+          ownedPreviewUrlsRef.current.set(localId, url);
+        } else {
+          revokeAttachmentPreviewUrl(url);
+        }
+      }
+      messageOwnedPreviewUrlsRef.current.delete(messageId);
+      return;
     }
-  }, [actions, store]);
+
+    await sendPromise;
+
+    // If the send errored, restore the draft so the user can retry.
+    if (store.state.messagesById[messageId]?.status === 'error' && isComposerEmpty()) {
+      restoreDraft();
+    }
+  }, [sendMessageIfIdle, store]);
 
   return React.useMemo(
     () => ({
