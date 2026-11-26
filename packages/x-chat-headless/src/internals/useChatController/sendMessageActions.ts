@@ -467,29 +467,31 @@ export function createSendMessageActions<Cursor = string>(params: {
       // Pre-stream rejection: put each removed message back after its nearest surviving
       // original predecessor (or before the first survivor), keeping changes made meanwhile.
       const removedById = new Map(removedMessages.map((message) => [message.id, message]));
-      const currentMessages = getMessages(storeUnknown);
-      // A Map lookup avoids inherited keys (e.g. an id of "constructor") on `messagesById`.
-      const currentById = new Map(currentMessages.map((message) => [message.id, message]));
-      const liveMessages = currentMessages.filter((message) => !removedById.has(message.id));
+      const { messagesById } = store.state;
+      const liveMessages = getMessages(storeUnknown).filter(
+        (message) => !removedById.has(message.id),
+      );
       const liveIds = new Set(liveMessages.map((message) => message.id));
       const restoredAfter = new Map<string | undefined, ChatMessage[]>();
       let previousLiveId: string | undefined;
-      let firstLiveId: string | undefined;
       for (const id of originalMessageIds) {
         const removedMessage = removedById.get(id);
         if (removedMessage) {
           const group = restoredAfter.get(previousLiveId) ?? [];
-          group.push(currentById.get(id) ?? removedMessage);
+          // Own-property check: an id such as "constructor" must not resolve to an inherited key.
+          group.push(Object.hasOwn(messagesById, id) ? messagesById[id] : removedMessage);
           restoredAfter.set(previousLiveId, group);
         } else if (liveIds.has(id)) {
           previousLiveId = id;
-          firstLiveId ??= id;
         }
       }
+      // The first survivor in the live order, which may differ from the snapshot order.
+      const originalIds = new Set(originalMessageIds);
+      const firstSurvivorId = liveMessages.find((message) => originalIds.has(message.id))?.id;
       // No original message survived (e.g. the thread was replaced): leave it untouched.
-      if (firstLiveId !== undefined) {
+      if (firstSurvivorId !== undefined) {
         const nextMessages = liveMessages.flatMap((message) => [
-          ...(message.id === firstLiveId ? (restoredAfter.get(undefined) ?? []) : []),
+          ...(message.id === firstSurvivorId ? (restoredAfter.get(undefined) ?? []) : []),
           message,
           ...(restoredAfter.get(message.id) ?? []),
         ]);

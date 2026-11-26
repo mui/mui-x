@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { ChatStore } from '../../store/ChatStore';
 import { createSendMessageActions } from './sendMessageActions';
+import { createRealtimeActions } from './realtimeActions';
 import type { ChatAdapter } from '../../adapters';
 import type { ChatMessage } from '../../types/chat-entities';
 import type { ChatMessageChunk, ChatStreamEnvelope } from '../../types/chat-stream';
@@ -1187,6 +1188,64 @@ describe('createSendMessageActions', () => {
 
       expect(store.state.messageIds).toEqual(['u1', 'constructor']);
       expect(store.state.messagesById.constructor).toBe(reply);
+    });
+
+    it('restores a realtime edit to a reply whose id matches an Object.prototype key when regenerating rejects', async () => {
+      const [u1, a1] = makeThread();
+      const store = new ChatStore({ initialMessages: [u1, { ...a1, id: 'constructor' }] });
+      const { handleRealtimeEvent } = createRealtimeActions({
+        store: asUnknown(store),
+        conversationNavigationRequestIdRef: { current: 0 },
+      });
+      const edited: ChatMessage = {
+        ...a1,
+        id: 'constructor',
+        parts: [{ type: 'text', text: 'Edited' }],
+      };
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          handleRealtimeEvent({ type: 'message-added', message: edited });
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('constructor');
+
+      expect(store.state.messageIds).toEqual(['u1', 'constructor']);
+      expect(store.state.messagesById.constructor).toBe(edited);
+    });
+
+    it('restores a reply with no surviving predecessor before the first message in the live order when regenerating rejects', async () => {
+      const [u1, a1] = makeThread();
+      const u2: ChatMessage = { ...u1, id: 'u2' };
+      const u3: ChatMessage = { ...u1, id: 'u3' };
+      const store = new ChatStore({ initialMessages: [u1, a1, u2, u3] });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          store.setMessages([u3, u2]);
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messageIds).toEqual(['a1', 'u3', 'u2']);
     });
 
     it('does not write messages when a rejected regenerate had nothing to restore', async () => {
