@@ -36,6 +36,54 @@ function createProject(source: string) {
 }
 
 describe('buildInterfacesDocumentation', () => {
+  describe('existing behavior', () => {
+    it('documents an interface as declared', () => {
+      const { getType } = createProject(`
+        export interface Props { label: string; size?: number }
+      `);
+      const type = getType('Props');
+
+      expect(type.isUnion()).to.equal(false);
+      expect(type.getProperties().map((property) => property.name)).to.deep.equal([
+        'label',
+        'size',
+      ]);
+    });
+
+    it('keeps the source text of a property with a single declaration', async () => {
+      const { project, getType } = createProject(`
+        export interface Props {
+          size?: 'small' | 'medium';
+          format?: (value: number) => string;
+        }
+      `);
+      const type = getType('Props');
+      const stringify = (name: string) => {
+        const property = type.getProperty(name);
+        return property ? stringifyProperty([property], project) : undefined;
+      };
+
+      expect(await stringify('size')).to.equal("'small' | 'medium'");
+      expect(await stringify('format')).to.equal('(value: number) => string');
+    });
+
+    it('does not expand type parameters without a union constraint', () => {
+      const { getType } = createProject(`
+        export type Box<T extends string> = { value: T };
+      `);
+
+      expect(getType('Box').isUnion()).to.equal(false);
+    });
+
+    it('does not describe availability for a property shared by every member', () => {
+      const { project, getType } = createProject(`
+        export type Shared = { kind: 'a'; label: string } | { kind: 'b'; label: string };
+      `);
+
+      expect(getAvailability('label', getType('Shared'), project)).to.equal('');
+    });
+  });
+
   it('keeps null and boolean when merging property declarations', async () => {
     const { project, getType } = createProject(`
       interface A { flag?: boolean | null; size?: 'auto' | null }
