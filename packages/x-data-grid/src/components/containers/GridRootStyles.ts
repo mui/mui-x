@@ -615,7 +615,7 @@ export const GridRootStyles = styled('div', {
       '&.Mui-selected': selectedStyles,
     },
     /* Default range border styles using box-shadow to avoid layout shift */
-    [`& .${c.cell}.Mui-selected`]: {
+    [`& :where(.${c.cell}.Mui-selected)`]: {
       '--range-top': '0 0 0 0 transparent',
       '--range-bottom': '0 0 0 0 transparent',
       '--range-left': '0 0 0 0 transparent',

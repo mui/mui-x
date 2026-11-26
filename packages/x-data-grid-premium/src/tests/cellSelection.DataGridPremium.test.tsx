@@ -387,6 +387,62 @@ describe('<DataGridPremium /> - Cell selection', () => {
       expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeBottom']);
     });
 
+    describe.skipIf(isJSDOM)('range border', () => {
+      const getRangeEdges = (cell: HTMLElement) => {
+        const [top, bottom, left, right] = getComputedStyle(cell)
+          .boxShadow.split(/,(?![^(]*\))/)
+          .map((shadow) => shadow.trim());
+        return { top, bottom, left, right };
+      };
+      const isDrawn = (shadow: string) => !shadow.startsWith('rgba(0, 0, 0, 0)');
+
+      async function selectRange(user: ReturnType<typeof render>['user']) {
+        const cell = getCell(0, 0);
+        cell.focus();
+        await user.click(cell);
+        await user.keyboard('{Shift>}');
+        await user.click(getCell(1, 1));
+        await user.keyboard('{/Shift}');
+      }
+
+      it('should draw the outer edges of the range', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await selectRange(user);
+
+        const topLeft = getRangeEdges(getCell(0, 0));
+        expect(isDrawn(topLeft.top)).to.equal(true);
+        expect(isDrawn(topLeft.left)).to.equal(true);
+        expect(isDrawn(topLeft.bottom)).to.equal(false);
+        expect(isDrawn(topLeft.right)).to.equal(false);
+
+        const bottomRight = getRangeEdges(getCell(1, 1));
+        expect(isDrawn(bottomRight.bottom)).to.equal(true);
+        expect(isDrawn(bottomRight.right)).to.equal(true);
+        expect(isDrawn(bottomRight.top)).to.equal(false);
+        expect(isDrawn(bottomRight.left)).to.equal(false);
+      });
+
+      it('should apply theme style overrides of the range edges', async () => {
+        const theme = createTheme({
+          components: {
+            MuiDataGrid: {
+              styleOverrides: {
+                'cell--rangeTop': { '--range-top': 'inset 0 2px 0 0 rgb(255, 0, 0)' },
+              },
+            },
+          },
+        });
+        const { user } = render(
+          <ThemeProvider theme={theme}>
+            <TestDataGridSelection />
+          </ThemeProvider>,
+        );
+        await selectRange(user);
+
+        expect(getRangeEdges(getCell(0, 0)).top).to.equal('rgb(255, 0, 0) 0px 2px 0px 0px inset');
+      });
+    });
+
     it('should keep the focus on first clicked cell', async () => {
       const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
