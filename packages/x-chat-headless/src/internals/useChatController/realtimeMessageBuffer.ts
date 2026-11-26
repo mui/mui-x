@@ -84,3 +84,9 @@ export function createRealtimeMessageBuffer() {
 }
 
 export type RealtimeMessageBuffer = ReturnType<typeof createRealtimeMessageBuffer>;
+
+/** The buffer of the adapter whose subscription fills it. */
+export interface AdapterRealtimeMessageBuffer {
+  adapter: object;
+  buffer: RealtimeMessageBuffer;
+}

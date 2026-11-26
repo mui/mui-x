@@ -1826,7 +1826,7 @@ describe('useChat', () => {
     expect(result.current.messages).toEqual([]);
   });
 
-  it('ignores events from a replaced adapter whose cleanup is still pending', async () => {
+  it('does not replay a late message from a replaced adapter when its conversation opens', async () => {
     const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
     const firstAdapter = createAdapter({
       subscribe({ onEvent }) {
@@ -1896,6 +1896,43 @@ describe('useChat', () => {
 
     await waitFor(() => expect(result.current.activeConversationId).toBe('c2'));
     expect(result.current.messages).toEqual([]);
+  });
+
+  it('keeps held messages when the provider reconnects to the same adapter', async () => {
+    const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
+    const adapter = createAdapter({
+      subscribe({ onEvent }) {
+        onEventByAdapter.push(onEvent);
+        return () => {};
+      },
+    });
+    let setHidden: (hidden: boolean) => void = () => {};
+    function Wrapper({ children }: React.PropsWithChildren) {
+      const [hidden, setHiddenState] = React.useState(false);
+      setHidden = setHiddenState;
+      return (
+        <React.Activity mode={hidden ? 'hidden' : 'visible'}>
+          <ChatProvider adapter={adapter} initialActiveConversationId="c1">
+            {children}
+          </ChatProvider>
+        </React.Activity>
+      );
+    }
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+    act(() =>
+      onEventByAdapter[0]({
+        type: 'message-added',
+        message: { id: 'm1', role: 'user', conversationId: 'c2', parts: [] },
+      }),
+    );
+    act(() => setHidden(true));
+    act(() => setHidden(false));
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(2));
+
+    await act(() => result.current.setActiveConversation('c2'));
+    expect(result.current.messages.map((message) => message.id)).toEqual(['m1']);
   });
 
   it('keeps held messages when an adapter change is never committed', async () => {

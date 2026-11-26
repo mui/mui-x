@@ -117,22 +117,23 @@ describe('createRealtimeActions', () => {
           sendMessage: vi.fn().mockResolvedValue(new ReadableStream()),
           listMessages: options.listMessages,
         };
+        const runtimeRef = { current: { adapter } };
         const { setActiveConversation } = createConversationActions({
           store,
-          runtimeRef: { current: { adapter } },
+          runtimeRef,
           setRuntimeError: vi.fn(),
           stopStreaming: vi.fn(),
           conversationNavigationRequestIdRef,
           conversationLoadRequestIdRef: { current: 0 },
           historyLoadRequestIdRef: { current: 0 },
-          realtimeMessageBuffers: new WeakMap([[adapter, realtimeMessageBuffer]]),
+          realtimeMessageBufferRef: { current: { adapter, buffer: realtimeMessageBuffer } },
         });
         const { handleRealtimeEvent } = createRealtimeActions({
           store: asUnknown(store),
           conversationNavigationRequestIdRef,
           realtimeMessageBuffer,
         });
-        return { store, handleRealtimeEvent, setActiveConversation };
+        return { store, handleRealtimeEvent, setActiveConversation, runtimeRef };
       }
 
       // Each call returns a pending page that the test resolves by hand.
@@ -147,21 +148,16 @@ describe('createRealtimeActions', () => {
         return { listMessages, resolvers };
       }
 
-      it('message-added: keeps messages from another conversation out of the thread', () => {
-        const { store, handleRealtimeEvent } = setup();
+      it.each(['message-added', 'message-updated'] as const)(
+        '%s: keeps messages from another conversation out of the thread',
+        (type) => {
+          const { store, handleRealtimeEvent } = setup();
 
-        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+          handleRealtimeEvent({ type, message: createMessage('m1', 'c2') });
 
-        expect(store.state.messageIds).toEqual([]);
-      });
-
-      it('message-updated: keeps messages from another conversation out of the thread', () => {
-        const { store, handleRealtimeEvent } = setup();
-
-        handleRealtimeEvent({ type: 'message-updated', message: createMessage('m1', 'c2') });
-
-        expect(store.state.messageIds).toEqual([]);
-      });
+          expect(store.state.messageIds).toEqual([]);
+        },
+      );
 
       it('message-added: adds messages from the active conversation or without a conversation', () => {
         const { store, handleRealtimeEvent } = setup();
@@ -279,6 +275,36 @@ describe('createRealtimeActions', () => {
         await loading;
 
         expect(store.state.messageIds).toEqual(['m1', 'm2']);
+      });
+      it('keeps the order of held messages when one is updated while listMessages fails', async () => {
+        const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m2', 'c2') });
+        const loading = setActiveConversation('c2');
+        handleRealtimeEvent({
+          type: 'message-updated',
+          message: createMessage('m1', 'c2', 'edited'),
+        });
+        await loading;
+
+        expect(getTexts(store)).toEqual(['edited', 'm2']);
+      });
+      it('replays the buffer of the adapter that served the load', async () => {
+        const { listMessages, resolvers } = createPendingListMessages();
+        const { store, handleRealtimeEvent, setActiveConversation, runtimeRef } = setup({
+          listMessages,
+        });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        const loading = setActiveConversation('c2');
+        // e.g. a render with another adapter that never commits
+        runtimeRef.current = { adapter: { sendMessage: vi.fn() } };
+        resolvers[0]([]);
+        await loading;
+
+        expect(store.state.messageIds).toEqual(['m1']);
       });
       it('keeps the store copy over a held one when listMessages fails', async () => {
         const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
@@ -618,7 +644,7 @@ describe('createRealtimeActions', () => {
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef: { current: 0 },
-        realtimeMessageBuffers: new WeakMap(),
+        realtimeMessageBufferRef: { current: null },
       });
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),

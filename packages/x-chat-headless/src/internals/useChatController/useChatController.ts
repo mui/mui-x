@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import type { ChatAdapter } from '../../adapters';
 import { asCursorAgnosticChatStore } from '../../store';
@@ -24,7 +23,7 @@ import {
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
 import { createRealtimeMessageBuffer } from './realtimeMessageBuffer';
-import type { RealtimeMessageBuffer } from './realtimeMessageBuffer';
+import type { AdapterRealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { createSendMessageActions } from './sendMessageActions';
 import { createTypingActions } from './typingActions';
 import type { ChatFeatures } from '../../ChatProvider';
@@ -82,10 +81,7 @@ export function useChatController<Cursor = string>({
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
   const historyLoadRequestIdRef = React.useRef(0);
-  // Each subscription registers its buffer under its adapter, so a load never reads another backend's.
-  const realtimeMessageBuffers = useRefWithInit(
-    () => new WeakMap<object, RealtimeMessageBuffer>(),
-  ).current;
+  const realtimeMessageBufferRef = React.useRef<AdapterRealtimeMessageBuffer | null>(null);
   const storeUnknown = asCursorAgnosticChatStore(store);
 
   runtimeRef.current = {
@@ -130,10 +126,10 @@ export function useChatController<Cursor = string>({
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef,
-        realtimeMessageBuffers,
+        realtimeMessageBufferRef,
       }),
 
-    [setRuntimeError, stopStreaming, store, realtimeMessageBuffers],
+    [setRuntimeError, stopStreaming, store],
   );
 
   const { sendMessage, sendMessageIfIdle, retry, regenerate, pruneAttachmentsByMessageIds } =
@@ -282,12 +278,16 @@ export function useChatController<Cursor = string>({
     let isDisposed = false;
     let cleanup: (() => void) | undefined;
 
+    // Kept across reconnects to the same adapter (e.g. `<Activity>`), replaced when it changes.
+    if (realtimeMessageBufferRef.current?.adapter !== adapter) {
+      realtimeMessageBufferRef.current = { adapter, buffer: createRealtimeMessageBuffer() };
+    }
+    const realtimeMessageBuffer = realtimeMessageBufferRef.current.buffer;
+
     if (!adapter.subscribe) {
       return undefined;
     }
 
-    const realtimeMessageBuffer = createRealtimeMessageBuffer();
-    realtimeMessageBuffers.set(adapter, realtimeMessageBuffer);
     const { handleRealtimeEvent } = createRealtimeActions({
       store: storeUnknown,
       conversationNavigationRequestIdRef,
@@ -321,13 +321,9 @@ export function useChatController<Cursor = string>({
 
     return () => {
       isDisposed = true;
-      // Late events from this subscription only reach its dropped buffer.
-      if (realtimeMessageBuffers.get(adapter) === realtimeMessageBuffer) {
-        realtimeMessageBuffers.delete(adapter);
-      }
       cleanup?.();
     };
-  }, [adapter, realtimeMessageBuffers, setRuntimeError, storeUnknown]);
+  }, [adapter, setRuntimeError, storeUnknown]);
 
   useStoreEffect(
     store,
