@@ -700,19 +700,6 @@ describe('MessageListRoot', () => {
       expect(onReachBottom).toHaveBeenCalledTimes(0);
     });
 
-    it.skipIf(isJSDOM)('keeps the scroll position when scrolled up', async () => {
-      render(<ControlledMessageList />);
-      const log = screen.getByRole('log');
-      await waitForTwoFrames();
-      log.scrollTop = 40;
-      await waitForTwoFrames();
-
-      log.style.height = '120px';
-      await waitForTwoFrames();
-
-      expect(log.scrollTop).toBe(40);
-    });
-
     it.skipIf(isJSDOM)('does not re-pin when autoScroll is disabled', async () => {
       render(<ControlledMessageList autoScroll={false} />);
       const log = screen.getByRole('log');
@@ -725,22 +712,26 @@ describe('MessageListRoot', () => {
       expect(log.scrollTop).toBe(80);
     });
 
-    it.skipIf(isJSDOM)('preserves the viewport anchor on a later history prepend', async () => {
-      render(<ControlledMessageList />);
-      const log = screen.getByRole('log');
-      await waitForTwoFrames();
-      log.scrollTop = 40;
-      await waitForTwoFrames();
-      log.style.height = '120px';
-      await waitForTwoFrames();
+    it.skipIf(isJSDOM)(
+      'keeps the scroll position when scrolled up and the anchor for a later history prepend',
+      async () => {
+        render(<ControlledMessageList />);
+        const log = screen.getByRole('log');
+        await waitForTwoFrames();
+        log.scrollTop = 40;
+        await waitForTwoFrames();
+        log.style.height = '120px';
+        await waitForTwoFrames();
+        expect(log.scrollTop).toBe(40);
 
-      fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
+        fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
 
-      // Two 40px rows above the reader: the same rows stay in view.
-      await waitFor(() => {
-        expect(log.scrollTop).toBe(120);
-      });
-    });
+        // Two 40px rows above the reader: the same rows stay in view.
+        await waitFor(() => {
+          expect(log.scrollTop).toBe(120);
+        });
+      },
+    );
 
     it.skipIf(isJSDOM)(
       'keeps the scroll position and unseen count when the list is hidden and shown again',
@@ -823,6 +814,67 @@ describe('MessageListRoot', () => {
         expect.objectContaining({ cursor: 'cursor-1' }),
       );
     });
+
+    it.skipIf(isJSDOM)(
+      'preserves the viewport anchor when a row above grows in the same frame the viewport shrinks',
+      async () => {
+        render(<ControlledMessageList />);
+        const log = screen.getByRole('log');
+        // Isolate the hook's anchoring from the browser's native scroll anchoring (Safari has none).
+        log.style.overflowAnchor = 'none';
+        await waitForTwoFrames();
+        log.scrollTop = 40;
+        await waitForTwoFrames();
+
+        // Grows without a re-render (e.g. an image loading), so only the row observer sees it.
+        screen.getByTestId('message-m1').style.height = '240px';
+        log.style.height = '159px';
+        await waitForTwoFrames();
+        await waitForTwoFrames();
+
+        expect(log.scrollTop).toBe(240);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'keeps the scroll position inside the bottom buffer when the list is hidden and shown again',
+      async () => {
+        render(<ControlledMessageList autoScroll={{ buffer: 150 }} />);
+        const log = screen.getByRole('log');
+        await waitForTwoFrames();
+        log.scrollTop = 40;
+        await waitForTwoFrames();
+
+        log.parentElement!.style.display = 'none';
+        await waitForTwoFrames();
+        log.parentElement!.style.display = '';
+        await waitForTwoFrames();
+        await waitForTwoFrames();
+
+        expect(log.scrollTop).toBe(40);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'does not fire onReachBottom when the conversation switches while hidden',
+      async () => {
+        const onReachBottom = vi.fn();
+        render(<SwitchableConversationList onReachBottom={onReachBottom} />);
+        const log = screen.getByRole('log');
+        await waitForTwoFrames();
+        log.scrollTop = 45;
+        await waitForTwoFrames();
+
+        log.parentElement!.style.display = 'none';
+        await waitForTwoFrames();
+        fireEvent.click(screen.getByRole('button', { name: 'switch conversation' }));
+        log.parentElement!.style.display = '';
+        await waitForTwoFrames();
+        await waitForTwoFrames();
+
+        expect(onReachBottom).toHaveBeenCalledTimes(0);
+      },
+    );
 
     it.skipIf(isJSDOM)('does not scroll when the autoScroll buffer changes', async () => {
       const view = render(<ControlledMessageList />);
