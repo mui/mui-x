@@ -685,6 +685,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     await user.type(titleInput, ' edited');
     expect(titleInput).to.have.value('Running edited');
 
+    // Escape unmounts the focused input. Let the grid finish restoring focus
+    // before reopening the dialog so its update settles in both React 18 and 19.
     await user.keyboard('{Escape}');
     await waitFor(() => expect(eventButton).toHaveFocus());
     expect(screen.queryByLabelText(/event title/i)).to.equal(null);

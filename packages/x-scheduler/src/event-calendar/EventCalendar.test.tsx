@@ -242,6 +242,12 @@ describe('EventCalendar', () => {
       }
     }
 
+    async function activateWithoutFocus(button: HTMLElement) {
+      fireEvent.click(button);
+      // Let the queued focus move run before checking where focus stayed.
+      await Promise.resolve();
+    }
+
     it.each(['month', 'week'] as const)(
       'should focus the first event when opening a day from %s view and let Tab reach the next event',
       async (defaultView) => {
@@ -395,17 +401,54 @@ describe('EventCalendar', () => {
 
     it('should discard a declined controlled view change before a later switch to Day', async () => {
       const onViewChange = vi.fn();
-      const { user, setProps } = await renderSettled(
+      const { setProps } = await renderSettled(
         <EventCalendar events={[event1]} view="month" onViewChange={onViewChange} />,
       );
       const content = getContent();
-      await openDate(user, 'month', 26);
+      await activateWithoutFocus(within(content).getByRole('button', { name: '26' }));
       expect(onViewChange.mock.calls[0][0]).to.equal('day');
       expect(content).to.have.attribute('data-view', 'month');
+      expect(document.body).toHaveFocus();
 
       setProps({ view: 'day' });
       expect(content).to.have.attribute('data-view', 'day');
       expect(content.contains(document.activeElement)).to.equal(false);
+    });
+
+    it('should leave focus on the document when the view changes but the visible date is declined', async () => {
+      const visibleDate = new Date('2025-05-26T12:00:00Z');
+      const onVisibleDateChange = vi.fn();
+      await renderSettled(
+        <EventCalendar
+          events={[event1]}
+          defaultView="month"
+          visibleDate={visibleDate}
+          onVisibleDateChange={onVisibleDateChange}
+        />,
+      );
+      const content = getContent();
+      await activateWithoutFocus(within(content).getByRole('button', { name: '20' }));
+
+      expect(onVisibleDateChange).toHaveBeenCalledOnce();
+      expect(content).to.have.attribute('data-view', 'day');
+      expect(within(content).getByRole('columnheader')).toHaveAccessibleName('Monday, May 26');
+      expect(document.body).toHaveFocus();
+    });
+
+    it('should leave focus on the document when activating the date already open in Day view', async () => {
+      await renderSettled(
+        <EventCalendar
+          events={[event1]}
+          defaultView="day"
+          defaultVisibleDate={new Date('2025-05-26T12:00:00Z')}
+        />,
+      );
+      const content = getContent();
+      const header = within(content).getByRole('columnheader', { name: 'Monday, May 26' });
+      await activateWithoutFocus(within(header).getByRole('button'));
+
+      expect(content).to.have.attribute('data-view', 'day');
+      expect(document.body).toHaveFocus();
     });
   });
 
