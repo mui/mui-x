@@ -265,6 +265,22 @@ describe('createRealtimeActions', () => {
 
         expect(store.state.messageIds).toEqual(['m0', 'm1']);
       });
+      it('does not bring back a message deleted locally after it reached the open thread', async () => {
+        const listMessages = vi
+          .fn()
+          .mockRejectedValueOnce(new Error('offline'))
+          .mockResolvedValue({ messages: [] });
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        await setActiveConversation('c2');
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        store.removeMessage('m1');
+        await setActiveConversation('c1');
+        await setActiveConversation('c2');
+
+        expect(store.state.messageIds).toEqual([]);
+      });
       it('keeps held messages for the next open when listMessages fails', async () => {
         const listMessages = vi
           .fn()
@@ -363,17 +379,22 @@ describe('createRealtimeActions', () => {
 
         expect(store.state.messageIds).toEqual(['m1']);
       });
-      it.each(['resolves', 'rejects'] as const)(
-        'discards held messages when the adapter changes before listMessages %s',
-        async (outcome) => {
-          let settleLoad: () => void = () => {};
-          const listMessages = vi.fn(
-            () =>
-              new Promise<{ messages: ChatMessage[] }>((resolve, reject) => {
-                settleLoad = () =>
-                  outcome === 'resolves' ? resolve({ messages: [] }) : reject(new Error('offline'));
-              }),
-          );
+      it('discards held messages when the adapter changes before listMessages resolves', async () => {
+        const { listMessages, resolvers } = createPendingListMessages();
+        const { store, handleRealtimeEvent, setActiveConversation, realtimeMessageBufferRef } =
+          setup({ listMessages });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        const loading = setActiveConversation('c2');
+        realtimeMessageBufferRef.current = {
+          adapter: { sendMessage: vi.fn() },
+          buffer: createRealtimeMessageBuffer(),
+        };
+        resolvers[0]([]);
+        await loading;
+
+        expect(store.state.messageIds).toEqual([]);
+      });
           const { store, handleRealtimeEvent, setActiveConversation, realtimeMessageBufferRef } =
             setup({ listMessages });
 
