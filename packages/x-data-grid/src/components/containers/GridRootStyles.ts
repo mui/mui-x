@@ -1,6 +1,7 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type { CSSInterpolation } from '@mui/system';
 import { styled, css } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c, gridClassesOverrides } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';
@@ -35,8 +36,6 @@ const shouldShowBorderTopRightRadiusSelector = (apiRef: RefObject<GridApiCommuni
       (!apiRef.current.state.dimensions.hasScrollY ||
         apiRef.current.state.dimensions.scrollbarSize === 0);
 
-const isRtlSelector = (apiRef: RefObject<GridApiCommunity>) => apiRef.current.state.isRtl;
-
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Root',
@@ -65,7 +64,7 @@ export const GridRootStyles = styled('div', {
     apiRef,
     shouldShowBorderTopRightRadiusSelector,
   );
-  const isRtl = useGridSelector(apiRef, isRtlSelector);
+  const isRtl = useRtl();
   const rangeInlineStartOffset = isRtl ? -rangeBorderWidth : rangeBorderWidth;
 
   const fillPreviewTint = `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`;
