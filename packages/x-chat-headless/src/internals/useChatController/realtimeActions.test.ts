@@ -235,77 +235,51 @@ describe('createRealtimeActions', () => {
         expect(getTexts(store)).toEqual(['m0', 'm1 listed', 'm2']);
       });
 
-      it('applies events received while the conversation loads over the listed page', async () => {
-        const { listMessages, resolvers } = createPendingListMessages();
+      it('applies events for the active conversation at once, even while it loads', async () => {
+        const { listMessages } = createPendingListMessages();
         const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
 
-        const loading = setActiveConversation('c2');
-        handleRealtimeEvent({
-          type: 'message-updated',
-          message: createMessage('m1', 'c2', 'm1 edited'),
-        });
-        handleRealtimeEvent({ type: 'message-added', message: { ...baseMessage, id: 'm2' } });
-        expect(store.state.messageIds).toEqual([]);
+        void setActiveConversation('c2');
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
 
-        resolvers[0]([createMessage('m1', 'c2')]);
-        await loading;
-
-        expect(getTexts(store)).toEqual(['m1 edited', 'Hello']);
+        expect(store.state.messageIds).toEqual(['m1']);
       });
-
-      it('treats events as stale once a newer load of their conversation starts', async () => {
+      it('keeps held messages when their conversation is left before its page loads', async () => {
         const { listMessages, resolvers } = createPendingListMessages();
         const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
 
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
         const firstLoad = setActiveConversation('c2');
-        handleRealtimeEvent({
-          type: 'message-updated',
-          message: createMessage('m1', 'c2', 'm1 during first load'),
-        });
         const otherLoad = setActiveConversation('c1');
         const secondLoad = setActiveConversation('c2');
 
-        resolvers[2]([createMessage('m1', 'c2', 'm1 listed')]);
-        await secondLoad;
-        resolvers[0]([createMessage('m1', 'c2', 'm1 first page')]);
+        resolvers[0]([createMessage('m0', 'c2')]);
         resolvers[1]([]);
-        await Promise.all([firstLoad, otherLoad]);
+        resolvers[2]([createMessage('m0', 'c2')]);
+        await Promise.all([firstLoad, otherLoad, secondLoad]);
 
-        expect(getTexts(store)).toEqual(['m1 listed']);
+        expect(store.state.messageIds).toEqual(['m0', 'm1']);
       });
-
       it('applies held messages when listMessages fails', async () => {
-        const listMessages = vi
-          .fn()
-          .mockRejectedValueOnce(new Error('offline'))
-          .mockResolvedValue({ messages: [], hasMore: false });
+        const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
         const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
 
-        const loading = setActiveConversation('c2');
-        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2', 'v1') });
-        await loading;
-        expect(getTexts(store)).toEqual(['v1']);
-
-        handleRealtimeEvent({ type: 'message-updated', message: createMessage('m1', 'c2', 'v2') });
-        await setActiveConversation('c1');
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
         await setActiveConversation('c2');
 
-        // Nothing older than the store was kept to replay over the next page.
-        expect(store.state.messageIds).toEqual([]);
+        expect(store.state.messageIds).toEqual(['m1']);
       });
-
       it('keeps the store copy over a held one when listMessages fails', async () => {
         const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
         const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
 
-        const loading = setActiveConversation('c2');
         handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2', '') });
+        const loading = setActiveConversation('c2');
         store.addMessage(createMessage('m1', 'c2', 'streamed'));
         await loading;
 
         expect(getTexts(store)).toEqual(['streamed']);
       });
-
       it('message-removed: drops the message from the buffer', async () => {
         const { store, handleRealtimeEvent, setActiveConversation } = setup();
 
@@ -342,11 +316,7 @@ describe('createRealtimeActions', () => {
 
       it('message-updated: merges buffered updates like updateMessage', async () => {
         const author = { id: 'u1', displayName: 'Ada' };
-        const listMessages = vi.fn().mockResolvedValue({
-          messages: [{ ...createMessage('m2', 'c2'), author }],
-          hasMore: false,
-        });
-        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+        const { store, handleRealtimeEvent, setActiveConversation } = setup();
 
         handleRealtimeEvent({
           type: 'message-added',
@@ -356,18 +326,11 @@ describe('createRealtimeActions', () => {
           type: 'message-updated',
           message: createMessage('m1', 'c2', 'm1 edited'),
         });
-        const loading = setActiveConversation('c2');
-        handleRealtimeEvent({
-          type: 'message-updated',
-          message: createMessage('m2', 'c2', 'm2 edited'),
-        });
-        await loading;
+        await setActiveConversation('c2');
 
-        expect(getTexts(store)).toEqual(['m2 edited', 'm1 edited']);
+        expect(getTexts(store)).toEqual(['m1 edited']);
         expect(store.state.messagesById.m1.author).toEqual(author);
-        expect(store.state.messagesById.m2.author).toEqual(author);
       });
-
       it('leaves messages missing from a partial page to history pagination', async () => {
         const listMessages = vi.fn().mockResolvedValue({
           messages: [createMessage('m3', 'c2')],
@@ -375,58 +338,27 @@ describe('createRealtimeActions', () => {
         });
         const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
 
-        handleRealtimeEvent({
-          type: 'message-updated',
-          message: createMessage('m1', 'c2', 'm1 edited'),
-        });
-        const loading = setActiveConversation('c2');
-        handleRealtimeEvent({ type: 'message-added', message: createMessage('m4', 'c2') });
-        handleRealtimeEvent({
-          type: 'message-updated',
-          message: createMessage('m0', 'c2', 'm0 edited'),
-        });
-        await loading;
-
-        // m1 and m0 may be older than the page; m4 was added while it loaded.
-        expect(store.state.messageIds).toEqual(['m3', 'm4']);
-      });
-
-      it('merges a live update onto the listed copy, not onto the held one', async () => {
-        const { listMessages, resolvers } = createPendingListMessages();
-        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
-
-        handleRealtimeEvent({
-          type: 'message-added',
-          message: { ...createMessage('m1', 'c2'), author: { id: 'held' } },
-        });
-        const loading = setActiveConversation('c2');
-        handleRealtimeEvent({
-          type: 'message-updated',
-          message: createMessage('m1', 'c2', 'm1 edited'),
-        });
-        resolvers[0]([{ ...createMessage('m1', 'c2'), author: { id: 'listed' } }]);
-        await loading;
-
-        expect(getTexts(store)).toEqual(['m1 edited']);
-        expect(store.state.messagesById.m1.author).toEqual({ id: 'listed' });
-      });
-
-      it('does not append a held message to a partial page because it was updated live', async () => {
-        const listMessages = vi.fn().mockResolvedValue({
-          messages: [createMessage('m3', 'c2')],
-          hasMore: true,
-        });
-        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
-
         handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
-        const loading = setActiveConversation('c2');
         handleRealtimeEvent({
           type: 'message-updated',
-          message: createMessage('m1', 'c2', 'm1 edited'),
+          message: createMessage('m2', 'c2', 'm2 edited'),
         });
-        await loading;
+        await setActiveConversation('c2');
 
+        // m1 and m2 may be older than the page.
         expect(store.state.messageIds).toEqual(['m3']);
+      });
+      it('keeps a buffered copy in step with events applied while no conversation is active', async () => {
+        const { store, handleRealtimeEvent, setActiveConversation } = setup();
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2', 'v1') });
+        await setActiveConversation(undefined);
+        handleRealtimeEvent({ type: 'message-updated', message: createMessage('m1', 'c2', 'v2') });
+        handleRealtimeEvent({ type: 'message-updated', message: createMessage('m1', 'c2', 'v3') });
+        expect(getTexts(store)).toEqual(['v3']);
+        await setActiveConversation('c2');
+
+        expect(getTexts(store)).toEqual(['v3']);
       });
 
       it('message-removed: drops the message from the buffer without a conversation id', async () => {

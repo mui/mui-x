@@ -69,7 +69,6 @@ export function createConversationActions<Cursor = string>(params: {
     const historyRequestId = historyLoadRequestIdRef.current;
     store.setHistoryLoading(true);
     store.setHistoryStatus('loading');
-    realtimeMessageBuffer.markStale(conversationId);
 
     try {
       const result = await runtimeRef.current.adapter.listMessages({

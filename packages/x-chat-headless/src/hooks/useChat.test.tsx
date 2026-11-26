@@ -1853,4 +1853,43 @@ describe('useChat', () => {
     await act(() => result.current.setActiveConversation('c2'));
     expect(result.current.messages).toEqual([]);
   });
+
+  it("does not replay a replaced adapter's messages into a conversation opened in the same commit", async () => {
+    const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
+    const firstAdapter = createAdapter({
+      subscribe({ onEvent }) {
+        onEventByAdapter.push(onEvent);
+        return () => {};
+      },
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: firstAdapter,
+      initialActiveConversationId: 'c1',
+    });
+    const { result, rerender } = renderHook(
+      ({ open }: { open: boolean }) => {
+        const chat = useChat();
+        React.useLayoutEffect(() => {
+          if (open) {
+            void chat.setActiveConversation('c2');
+          }
+        }, [chat, open]);
+        return chat;
+      },
+      { wrapper: Wrapper, initialProps: { open: false } },
+    );
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+    act(() =>
+      onEventByAdapter[0]({
+        type: 'message-added',
+        message: { id: 'm1', role: 'user', conversationId: 'c2', parts: [] },
+      }),
+    );
+    setProps({ adapter: createAdapter(), initialActiveConversationId: 'c1' });
+    rerender({ open: true });
+
+    await waitFor(() => expect(result.current.activeConversationId).toBe('c2'));
+    expect(result.current.messages).toEqual([]);
+  });
 });

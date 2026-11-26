@@ -13,31 +13,24 @@ export function createRealtimeActions(params: {
   const { store, conversationNavigationRequestIdRef, realtimeMessageBuffer } = params;
 
   /**
-   * Keeps a message that is not in the store out of the visible thread when it belongs to another
-   * conversation, or to the active one while its history loads. Returns `false` to apply it now.
+   * Keeps a message that is not in the store out of the visible thread when it belongs to a
+   * conversation other than the active one. Returns `false` to apply it now.
    */
   function bufferMessage(message: ChatMessage, isUpdate: boolean): boolean {
-    const { activeConversationId, historyStatus } = store.state;
+    const { activeConversationId } = store.state;
+    const { conversationId } = message;
 
-    if (activeConversationId == null) {
+    if (
+      activeConversationId == null ||
+      conversationId == null ||
+      conversationId === activeConversationId
+    ) {
       return false;
     }
 
-    const conversationId = message.conversationId ?? activeConversationId;
     // A controlled thread is owned by the parent, so nothing is replayed into it.
-    const isControlled = store.parameters.messages !== undefined;
-
-    if (conversationId === activeConversationId) {
-      if (historyStatus !== 'loading' || isControlled) {
-        return false;
-      }
-
-      realtimeMessageBuffer.add(conversationId, message, { isLive: true, isUpdate });
-      return true;
-    }
-
-    if (!isControlled) {
-      realtimeMessageBuffer.add(conversationId, message, { isLive: false, isUpdate });
+    if (store.parameters.messages === undefined) {
+      realtimeMessageBuffer.add(conversationId, message, isUpdate);
     }
 
     return true;
@@ -49,14 +42,18 @@ export function createRealtimeActions(params: {
         // Messages already stored are applied whatever their conversation.
         if (store.state.messagesById[event.message.id] || !bufferMessage(event.message, false)) {
           store.addMessage(event.message);
+          realtimeMessageBuffer.updateIfPresent(event.message, false);
         }
         return;
       case 'message-updated':
         if (store.state.messagesById[event.message.id]) {
           store.updateMessage(event.message.id, event.message);
-        } else if (!bufferMessage(event.message, true)) {
+        } else if (bufferMessage(event.message, true)) {
+          return;
+        } else {
           store.addMessage(event.message);
         }
+        realtimeMessageBuffer.updateIfPresent(event.message, true);
         return;
       case 'message-removed':
         realtimeMessageBuffer.remove(event.messageId, event.conversationId);

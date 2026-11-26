@@ -83,7 +83,15 @@ export function useChatController<Cursor = string>({
   const conversationLoadRequestIdRef = React.useRef(0);
   const historyLoadRequestIdRef = React.useRef(0);
   const realtimeMessageBuffer = useRefWithInit(createRealtimeMessageBuffer).current;
+  const realtimeMessageBufferAdapterRef = React.useRef(adapter);
   const storeUnknown = asCursorAgnosticChatStore(store);
+
+  // Cleared during render, before any child effect can open a conversation under a new
+  // adapter, which may be another backend.
+  if (realtimeMessageBufferAdapterRef.current !== adapter) {
+    realtimeMessageBufferAdapterRef.current = adapter;
+    realtimeMessageBuffer.clearAll();
+  }
 
   runtimeRef.current = {
     adapter,
@@ -328,10 +336,8 @@ export function useChatController<Cursor = string>({
     return () => {
       isDisposed = true;
       cleanup?.();
-      // Buffered messages came from this subscription; a new adapter may be another backend.
-      realtimeMessageBuffer.clearAll();
     };
-  }, [adapter, handleRealtimeEvent, setRuntimeError, realtimeMessageBuffer]);
+  }, [adapter, handleRealtimeEvent, setRuntimeError]);
 
   useStoreEffect(
     store,
