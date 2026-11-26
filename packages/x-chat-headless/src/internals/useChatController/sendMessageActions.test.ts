@@ -1223,6 +1223,59 @@ describe('createSendMessageActions', () => {
       expect(store.state.messagesById.constructor).toBe(edited);
     });
 
+    it('restores the snapshot of a reply named "constructor" patched while pending when regenerating rejects', async () => {
+      const [u1, a1] = makeThread();
+      const reply = { ...a1, id: 'constructor' };
+      const store = new ChatStore({ initialMessages: [u1, reply] });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          // The store resolves the inherited key and writes a partial entry without an id.
+          store.updateMessage('constructor', { parts: [{ type: 'text', text: 'Edited' }] });
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('constructor');
+
+      expect(store.state.messageIds).toEqual(['u1', 'constructor']);
+      expect(store.state.messagesById.constructor).toBe(reply);
+    });
+
+    it('keeps an edit to a reply named "__proto__" made while pending when regenerating rejects', async () => {
+      const [u1, a1] = makeThread();
+      const u2: ChatMessage = { ...u1, id: 'u2' };
+      const reply: ChatMessage = { ...a1, id: '__proto__' };
+      const edited: ChatMessage = { ...reply, parts: [{ type: 'text', text: 'Edited' }] };
+      const store = new ChatStore({ initialMessages: [u1, reply, u2] });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          store.setMessages([u1, u2, edited]);
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('__proto__');
+
+      expect(store.state.messageIds).toEqual(['u1', '__proto__', 'u2']);
+      expect(store.state.messagesById[reply.id]).toBe(edited);
+    });
+
     it('restores a reply with no surviving predecessor before the first message in the live order when regenerating rejects', async () => {
       const [u1, a1] = makeThread();
       const u2: ChatMessage = { ...u1, id: 'u2' };

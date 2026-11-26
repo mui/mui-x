@@ -478,8 +478,10 @@ export function createSendMessageActions<Cursor = string>(params: {
         const removedMessage = removedById.get(id);
         if (removedMessage) {
           const group = restoredAfter.get(previousLiveId) ?? [];
-          // Own-property check: an id such as "constructor" must not resolve to an inherited key.
-          group.push(Object.hasOwn(messagesById, id) ? messagesById[id] : removedMessage);
+          // The id check rejects inherited keys (e.g. "constructor") and the partial entries
+          // the store writes for them; `in`/`hasOwn` would miss a "__proto__" entry.
+          const liveMessage = messagesById[id];
+          group.push(liveMessage?.id === id ? liveMessage : removedMessage);
           restoredAfter.set(previousLiveId, group);
         } else if (liveIds.has(id)) {
           previousLiveId = id;
