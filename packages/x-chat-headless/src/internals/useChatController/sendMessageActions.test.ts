@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { ChatStore } from '../../store/ChatStore';
 import { createSendMessageActions } from './sendMessageActions';
+import { ChatStreamError } from '../../stream/ChatStreamError';
 import type { ChatAdapter } from '../../adapters';
 import type { ChatMessage } from '../../types/chat-entities';
 import type { ChatMessageChunk, ChatStreamEnvelope } from '../../types/chat-stream';
@@ -416,6 +417,44 @@ describe('createSendMessageActions', () => {
         isError: true,
         message: { id: 'a1', status: 'error' },
       });
+    });
+
+    it('reports the stream error, not a throwing onFinish, when the first stream errors and reconnectToStream is set', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const setRuntimeError = vi.fn();
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(
+          new ReadableStream<ChatMessageChunk>({
+            start(controller) {
+              controller.enqueue({ type: 'start', messageId: 'a1' });
+            },
+            pull() {
+              throw new ChatStreamError({
+                code: 'STREAM_ERROR',
+                message: 'adapter failed',
+                source: 'stream',
+                recoverable: true,
+              });
+            },
+          }),
+        ),
+        reconnectToStream: vi.fn(),
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: {
+          current: { adapter, onFinish: vi.fn().mockRejectedValue(new Error('consumer failed')) },
+        },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(setRuntimeError.mock.calls[0][0].message).toContain('adapter failed');
     });
 
     it('calls an onFinish attached mid-stream when the first stream errors and reconnectToStream is set', async () => {
