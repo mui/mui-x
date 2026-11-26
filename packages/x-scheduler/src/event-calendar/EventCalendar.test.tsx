@@ -404,8 +404,10 @@ describe('EventCalendar', () => {
       const { setProps } = await renderSettled(
         <EventCalendar events={[event1]} view="month" onViewChange={onViewChange} />,
       );
+
       const content = getContent();
       await activateWithoutFocus(within(content).getByRole('button', { name: '26' }));
+
       expect(onViewChange.mock.calls[0][0]).to.equal('day');
       expect(content).to.have.attribute('data-view', 'month');
       expect(document.body).toHaveFocus();
@@ -426,6 +428,7 @@ describe('EventCalendar', () => {
           onVisibleDateChange={onVisibleDateChange}
         />,
       );
+
       const content = getContent();
       await activateWithoutFocus(within(content).getByRole('button', { name: '20' }));
 
@@ -443,6 +446,7 @@ describe('EventCalendar', () => {
           defaultVisibleDate={new Date('2025-05-26T12:00:00Z')}
         />,
       );
+
       const content = getContent();
       const header = within(content).getByRole('columnheader', { name: 'Monday, May 26' });
       await activateWithoutFocus(within(header).getByRole('button'));
