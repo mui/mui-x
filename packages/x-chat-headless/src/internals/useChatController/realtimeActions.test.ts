@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ChatStore } from '../../store/ChatStore';
 import { createConversationActions } from './conversationActions';
+import {
+  createRealtimeMessageBuffer,
+  REALTIME_MESSAGE_BUFFER_LIMIT,
+} from './realtimeMessageBuffer';
 import { createRealtimeActions } from './realtimeActions';
 import type { ChatAdapter } from '../../adapters';
 import type { ChatConversation, ChatMessage } from '../../types/chat-entities';
@@ -32,6 +36,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'message-added', message: baseMessage });
@@ -45,6 +50,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'message-updated', message: updatedMessage });
@@ -58,6 +64,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'message-updated', message: baseMessage });
@@ -70,6 +77,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'message-removed', messageId: 'm1' });
@@ -79,26 +87,78 @@ describe('createRealtimeActions', () => {
     });
 
     describe('conversation scoping', () => {
-      function setup(initialMessages: ChatMessage[] = []) {
+      function createMessage(id: string, conversationId: string, text = id): ChatMessage {
+        return { id, role: 'user', conversationId, parts: [{ type: 'text', text }] };
+      }
+
+      function getTexts(store: ChatStore) {
+        return store.state.messageIds.map((id) => {
+          const part = store.state.messagesById[id].parts[0];
+          return part.type === 'text' ? part.text : undefined;
+        });
+      }
+
+      function setup(
+        options: {
+          initialMessages?: ChatMessage[];
+          messages?: ChatMessage[];
+          listMessages?: ChatAdapter['listMessages'];
+        } = {},
+      ) {
         const store = new ChatStore({
           initialConversations: [conversation1, conversation2],
           initialActiveConversationId: 'c1',
-          initialMessages,
+          initialMessages: options.initialMessages,
+          messages: options.messages,
+        });
+        const conversationNavigationRequestIdRef = { current: 0 };
+        const realtimeMessageBuffer = createRealtimeMessageBuffer();
+        const adapter: ChatAdapter = {
+          sendMessage: vi.fn().mockResolvedValue(new ReadableStream()),
+          listMessages: options.listMessages,
+        };
+        const { setActiveConversation } = createConversationActions({
+          store,
+          runtimeRef: { current: { adapter } },
+          setRuntimeError: vi.fn(),
+          stopStreaming: vi.fn(),
+          conversationNavigationRequestIdRef,
+          conversationLoadRequestIdRef: { current: 0 },
+          historyLoadRequestIdRef: { current: 0 },
+          realtimeMessageBuffer,
         });
         const { handleRealtimeEvent } = createRealtimeActions({
           store: asUnknown(store),
-          conversationNavigationRequestIdRef: { current: 0 },
+          conversationNavigationRequestIdRef,
+          realtimeMessageBuffer,
         });
-        return { store, handleRealtimeEvent };
+        return { store, handleRealtimeEvent, setActiveConversation };
       }
 
-      it('message-added: ignores messages from another conversation', () => {
+      // Each call returns a pending page that the test resolves by hand.
+      function createPendingListMessages() {
+        const resolvers: Array<(messages: ChatMessage[]) => void> = [];
+        const listMessages = vi.fn(
+          () =>
+            new Promise<{ messages: ChatMessage[]; hasMore: boolean }>((resolve) => {
+              resolvers.push((messages) => resolve({ messages, hasMore: false }));
+            }),
+        );
+        return { listMessages, resolvers };
+      }
+
+      it('message-added: keeps messages from another conversation out of the thread', () => {
         const { store, handleRealtimeEvent } = setup();
 
-        handleRealtimeEvent({
-          type: 'message-added',
-          message: { ...baseMessage, conversationId: 'c2' },
-        });
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+
+        expect(store.state.messageIds).toEqual([]);
+      });
+
+      it('message-updated: keeps messages from another conversation out of the thread', () => {
+        const { store, handleRealtimeEvent } = setup();
+
+        handleRealtimeEvent({ type: 'message-updated', message: createMessage('m1', 'c2') });
 
         expect(store.state.messageIds).toEqual([]);
       });
@@ -106,47 +166,24 @@ describe('createRealtimeActions', () => {
       it('message-added: adds messages from the active conversation or without a conversation', () => {
         const { store, handleRealtimeEvent } = setup();
 
-        handleRealtimeEvent({
-          type: 'message-added',
-          message: { ...baseMessage, conversationId: 'c1' },
-        });
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c1') });
         handleRealtimeEvent({ type: 'message-added', message: { ...baseMessage, id: 'm2' } });
 
         expect(store.state.messageIds).toEqual(['m1', 'm2']);
       });
 
-      it('message-updated: ignores messages from another conversation', () => {
-        const { store, handleRealtimeEvent } = setup();
+      it('updates a message already in the store from another conversation', () => {
+        const { store, handleRealtimeEvent } = setup({
+          initialMessages: [createMessage('m1', 'c2')],
+        });
 
         handleRealtimeEvent({
           type: 'message-updated',
-          message: { ...updatedMessage, conversationId: 'c2' },
+          message: createMessage('m1', 'c2', 'updated'),
         });
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2', 'added') });
 
-        expect(store.state.messageIds).toEqual([]);
-      });
-
-      it('message-updated: updates a message already in the store from another conversation', () => {
-        const { store, handleRealtimeEvent } = setup([{ ...baseMessage, conversationId: 'c2' }]);
-
-        handleRealtimeEvent({
-          type: 'message-updated',
-          message: { ...updatedMessage, conversationId: 'c2' },
-        });
-
-        expect(store.state.messagesById.m1).toMatchObject(updatedMessage);
-      });
-
-      it('message-added: updates a message already in the store from another conversation', () => {
-        const { store, handleRealtimeEvent } = setup([{ ...baseMessage, conversationId: 'c2' }]);
-
-        handleRealtimeEvent({
-          type: 'message-added',
-          message: { ...updatedMessage, conversationId: 'c2' },
-        });
-
-        expect(store.state.messagesById.m1).toMatchObject(updatedMessage);
-        expect(store.state.messageIds).toEqual(['m1']);
+        expect(getTexts(store)).toEqual(['added']);
       });
 
       it('message-added: adds messages with a conversation id when no conversation is active', () => {
@@ -154,14 +191,139 @@ describe('createRealtimeActions', () => {
         const { handleRealtimeEvent } = createRealtimeActions({
           store: asUnknown(store),
           conversationNavigationRequestIdRef: { current: 0 },
+          realtimeMessageBuffer: createRealtimeMessageBuffer(),
         });
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+
+        expect(store.state.messageIds).toEqual(['m1']);
+      });
+
+      it('replays buffered messages when their conversation opens without listMessages', async () => {
+        const { store, handleRealtimeEvent, setActiveConversation } = setup();
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m2', 'c2') });
+        handleRealtimeEvent({
+          type: 'message-updated',
+          message: createMessage('m1', 'c2', 'm1 edited'),
+        });
+        await setActiveConversation('c2');
+
+        expect(getTexts(store)).toEqual(['m1 edited', 'm2']);
+
+        // The buffer is cleared once applied.
+        await setActiveConversation('c1');
+        await setActiveConversation('c2');
+        expect(store.state.messageIds).toEqual([]);
+      });
+
+      it('applies buffered messages on top of the listMessages page', async () => {
+        const listMessages = vi.fn().mockResolvedValue({
+          messages: [createMessage('m0', 'c2'), createMessage('m1', 'c2', 'm1 listed')],
+          hasMore: false,
+        });
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
 
         handleRealtimeEvent({
           type: 'message-added',
-          message: { ...baseMessage, conversationId: 'c2' },
+          message: createMessage('m1', 'c2', 'm1 buffered'),
+        });
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m2', 'c2') });
+        await setActiveConversation('c2');
+
+        // The page was requested after the buffered events, so its copy of m1 wins.
+        expect(getTexts(store)).toEqual(['m0', 'm1 listed', 'm2']);
+      });
+
+      it('applies events received while the conversation loads over the listed page', async () => {
+        const { listMessages, resolvers } = createPendingListMessages();
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        const loading = setActiveConversation('c2');
+        handleRealtimeEvent({
+          type: 'message-updated',
+          message: createMessage('m1', 'c2', 'm1 edited'),
+        });
+        handleRealtimeEvent({ type: 'message-added', message: { ...baseMessage, id: 'm2' } });
+        expect(store.state.messageIds).toEqual([]);
+
+        resolvers[0]([createMessage('m1', 'c2')]);
+        await loading;
+
+        expect(getTexts(store)).toEqual(['m1 edited', 'Hello']);
+      });
+
+      it('treats events as stale once a newer load of their conversation starts', async () => {
+        const { listMessages, resolvers } = createPendingListMessages();
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });
+
+        const firstLoad = setActiveConversation('c2');
+        handleRealtimeEvent({
+          type: 'message-updated',
+          message: createMessage('m1', 'c2', 'm1 during first load'),
+        });
+        const otherLoad = setActiveConversation('c1');
+        const secondLoad = setActiveConversation('c2');
+
+        resolvers[2]([createMessage('m1', 'c2', 'm1 listed')]);
+        await secondLoad;
+        resolvers[0]([createMessage('m1', 'c2', 'm1 first page')]);
+        resolvers[1]([]);
+        await Promise.all([firstLoad, otherLoad]);
+
+        expect(getTexts(store)).toEqual(['m1 listed']);
+      });
+
+      it('message-removed: drops the message from the buffer', async () => {
+        const { store, handleRealtimeEvent, setActiveConversation } = setup();
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m2', 'c2') });
+        handleRealtimeEvent({ type: 'message-removed', messageId: 'm1', conversationId: 'c2' });
+        await setActiveConversation('c2');
+
+        expect(store.state.messageIds).toEqual(['m2']);
+      });
+
+      it('conversation-removed: drops the conversation buffer', async () => {
+        const { store, handleRealtimeEvent, setActiveConversation } = setup();
+
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c2' });
+        await setActiveConversation('c2');
+
+        expect(store.state.messageIds).toEqual([]);
+      });
+
+      it(`keeps the ${REALTIME_MESSAGE_BUFFER_LIMIT} most recent messages per conversation`, async () => {
+        const { store, handleRealtimeEvent, setActiveConversation } = setup();
+
+        for (let index = 0; index <= REALTIME_MESSAGE_BUFFER_LIMIT; index += 1) {
+          handleRealtimeEvent({ type: 'message-added', message: createMessage(`m${index}`, 'c2') });
+        }
+        await setActiveConversation('c2');
+
+        expect(store.state.messageIds).toHaveLength(REALTIME_MESSAGE_BUFFER_LIMIT);
+        expect(store.state.messageIds[0]).toBe('m1');
+        expect(store.state.messageIds.at(-1)).toBe(`m${REALTIME_MESSAGE_BUFFER_LIMIT}`);
+      });
+
+      it('does not replay messages into a controlled thread', async () => {
+        const listMessages = vi.fn().mockResolvedValue({
+          messages: [createMessage('m0', 'c2')],
+          hasMore: false,
+        });
+        const { store, handleRealtimeEvent, setActiveConversation } = setup({
+          messages: [],
+          listMessages,
         });
 
-        expect(store.state.messageIds).toEqual(['m1']);
+        handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+        expect(store.state.messageIds).toEqual([]);
+        await setActiveConversation('c2');
+
+        expect(store.state.messageIds).toEqual(['m0']);
       });
     });
 
@@ -170,6 +332,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'conversation-added', conversation: conversation1 });
@@ -183,6 +346,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({
@@ -198,6 +362,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'conversation-updated', conversation: conversation1 });
@@ -210,6 +375,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c1' });
@@ -228,6 +394,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c1' });
@@ -244,6 +411,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef,
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c1' });
@@ -259,6 +427,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef,
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c1' });
@@ -277,6 +446,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'presence', userId: 'u1', isOnline: true });
@@ -296,6 +466,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'read', conversationId: 'c1' });
@@ -311,6 +482,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       handleRealtimeEvent({ type: 'typing', conversationId: 'c1', userId: 'u1', isTyping: true });
@@ -357,10 +529,12 @@ describe('createRealtimeActions', () => {
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef,
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       // Start a load against the active conversation; the listMessages promise
@@ -403,6 +577,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         conversationNavigationRequestIdRef: { current: 0 },
+        realtimeMessageBuffer: createRealtimeMessageBuffer(),
       });
 
       // @ts-expect-error — testing an unknown type at runtime

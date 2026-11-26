@@ -262,7 +262,17 @@ subscribe({ onEvent }) {
 
 Re-delivering events after a reconnect is safe: `*-added` and `*-updated` events with an already-known `id` update the existing record instead of duplicating it, so backends can replay a window of recent events on reconnect without deduplication on the client.
 
-When a conversation is active, `message-added` and `message-updated` events whose `message.conversationId` names a different conversation are ignored, unless the message is already in the store. If the adapter implements `listMessages`, those messages load when the user opens that conversation; otherwise, stream only the active conversation. Set `message.conversationId` on every message, and use `conversation-updated` (for example, `unreadCount`) to show activity in other threads. Conversation, typing, presence, and read events carry their own ids and are always safe to forward.
+When a conversation is active, `message-added` and `message-updated` events for a different conversation are kept out of the visible thread and held until the user opens that conversation.
+Set `message.conversationId` on every message: a message without it is treated as part of the active conversation.
+
+- **Replay:** held messages are applied after `listMessages` loads the conversation, or on their own when the adapter doesn't implement `listMessages`. Messages already in the page keep their position, and new ones are appended in arrival order.
+- **Conflicts:** when the page contains a held message, the page's copy wins, because it was fetched after the event arrived. Events that arrive while the conversation is loading win over the page.
+- **Bound:** the runtime holds the 50 most recent messages per conversation and clears them once applied. `message-removed` discards a held message, and `conversation-removed` discards everything held for that conversation.
+- **Controlled `messages`:** nothing is held or replayed, because your app owns the thread. Route other conversations' message events to your own state in `subscribe()` before calling `onEvent`.
+
+Messages already in the store are updated whatever their conversation.
+Use `conversation-updated` (for example, `unreadCount`) to show activity in other threads.
+Conversation, typing, presence, and read events carry their own ids and are always safe to forward.
 
 ## Sending typing indicators
 

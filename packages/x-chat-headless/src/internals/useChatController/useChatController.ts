@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import type { ChatAdapter } from '../../adapters';
 import { asCursorAgnosticChatStore } from '../../store';
@@ -22,6 +23,7 @@ import {
 } from './useChatControllerHelpers';
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
+import { createRealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { createSendMessageActions } from './sendMessageActions';
 import { createTypingActions } from './typingActions';
 import type { ChatFeatures } from '../../ChatProvider';
@@ -79,6 +81,7 @@ export function useChatController<Cursor = string>({
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
   const historyLoadRequestIdRef = React.useRef(0);
+  const realtimeMessageBuffer = useRefWithInit(createRealtimeMessageBuffer).current;
   const storeUnknown = asCursorAgnosticChatStore(store);
 
   runtimeRef.current = {
@@ -123,9 +126,10 @@ export function useChatController<Cursor = string>({
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef,
+        realtimeMessageBuffer,
       }),
 
-    [setRuntimeError, stopStreaming, store],
+    [setRuntimeError, stopStreaming, store, realtimeMessageBuffer],
   );
 
   const { sendMessage, sendMessageIfIdle, retry, regenerate, pruneAttachmentsByMessageIds } =
@@ -231,8 +235,9 @@ export function useChatController<Cursor = string>({
       createRealtimeActions({
         store: storeUnknown,
         conversationNavigationRequestIdRef,
+        realtimeMessageBuffer,
       }),
-    [storeUnknown, conversationNavigationRequestIdRef],
+    [storeUnknown, conversationNavigationRequestIdRef, realtimeMessageBuffer],
   );
 
   const {

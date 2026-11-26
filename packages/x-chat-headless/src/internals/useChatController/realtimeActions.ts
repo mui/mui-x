@@ -1,41 +1,65 @@
 import type * as React from 'react';
 import type { ChatStore } from '../../store';
+import type { ChatMessage } from '../../types/chat-entities';
 import type { ChatRealtimeEvent } from '../../types/chat-realtime';
+import type { RealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { applyPresenceUpdate, applyReadUpdate } from './useChatControllerHelpers';
 
 export function createRealtimeActions(params: {
   store: ChatStore<unknown>;
   conversationNavigationRequestIdRef: React.MutableRefObject<number>;
+  realtimeMessageBuffer: RealtimeMessageBuffer;
 }) {
-  const { store, conversationNavigationRequestIdRef } = params;
+  const { store, conversationNavigationRequestIdRef, realtimeMessageBuffer } = params;
 
-  // True when the message names a conversation other than the active one.
-  function isOtherConversation(conversationId: string | undefined): boolean {
-    const activeId = store.state.activeConversationId;
-    return conversationId != null && activeId != null && conversationId !== activeId;
+  /**
+   * Keeps a message that is not in the store out of the visible thread when it belongs to another
+   * conversation, or to the active one while its history loads. Returns `false` to apply it now.
+   */
+  function bufferMessage(message: ChatMessage): boolean {
+    const { activeConversationId, historyStatus } = store.state;
+
+    if (activeConversationId == null) {
+      return false;
+    }
+
+    const conversationId = message.conversationId ?? activeConversationId;
+    // A controlled thread is owned by the parent, so nothing is replayed into it.
+    const isControlled = store.parameters.messages !== undefined;
+
+    if (conversationId === activeConversationId) {
+      if (historyStatus !== 'loading' || isControlled) {
+        return false;
+      }
+
+      realtimeMessageBuffer.add(conversationId, message, true);
+      return true;
+    }
+
+    if (!isControlled) {
+      realtimeMessageBuffer.add(conversationId, message, false);
+    }
+
+    return true;
   }
 
   function handleRealtimeEvent(event: ChatRealtimeEvent): void {
     switch (event.type) {
       case 'message-added':
-        // Messages already stored (e.g. controlled messages) are applied whatever their conversation.
-        if (
-          !store.state.messagesById[event.message.id] &&
-          isOtherConversation(event.message.conversationId)
-        ) {
-          return;
+        // Messages already stored are applied whatever their conversation.
+        if (store.state.messagesById[event.message.id] || !bufferMessage(event.message)) {
+          store.addMessage(event.message);
         }
-        store.addMessage(event.message);
         return;
       case 'message-updated':
-        // Stored messages are always updated; new ones only join the active conversation.
         if (store.state.messagesById[event.message.id]) {
           store.updateMessage(event.message.id, event.message);
-        } else if (!isOtherConversation(event.message.conversationId)) {
+        } else if (!bufferMessage(event.message)) {
           store.addMessage(event.message);
         }
         return;
       case 'message-removed':
+        realtimeMessageBuffer.remove(event.messageId);
         store.removeMessage(event.messageId);
         return;
       case 'conversation-added':
@@ -49,6 +73,7 @@ export function createRealtimeActions(params: {
         }
         return;
       case 'conversation-removed':
+        realtimeMessageBuffer.clear(event.conversationId);
         store.removeConversation(event.conversationId);
 
         if (store.state.activeConversationId === event.conversationId) {

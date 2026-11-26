@@ -2,6 +2,7 @@ import type * as React from 'react';
 import type { ChatAdapter, ChatListMessagesResult } from '../../adapters';
 import type { ChatStore } from '../../store';
 import type { ChatError } from '../../types/chat-error';
+import type { RealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { createRuntimeError, getErrorMessage } from './useChatControllerHelpers';
 
 export interface ConversationActionsRuntimeRef<Cursor = string> {
@@ -16,6 +17,7 @@ export function createConversationActions<Cursor = string>(params: {
   conversationNavigationRequestIdRef: React.MutableRefObject<number>;
   conversationLoadRequestIdRef: React.MutableRefObject<number>;
   historyLoadRequestIdRef: React.MutableRefObject<number>;
+  realtimeMessageBuffer: RealtimeMessageBuffer;
 }) {
   const {
     store,
@@ -25,6 +27,7 @@ export function createConversationActions<Cursor = string>(params: {
     conversationNavigationRequestIdRef,
     conversationLoadRequestIdRef,
     historyLoadRequestIdRef,
+    realtimeMessageBuffer,
   } = params;
 
   async function loadConversationMessages(
@@ -49,6 +52,10 @@ export function createConversationActions<Cursor = string>(params: {
     if (!runtimeRef.current.adapter.listMessages) {
       if (shouldResetMessages) {
         store.resetMessages();
+        const bufferedMessages = realtimeMessageBuffer.flush(conversationId, []);
+        if (bufferedMessages.length > 0) {
+          store.setMessages(bufferedMessages);
+        }
       }
       store.setHistoryStatus('idle');
       return;
@@ -62,6 +69,7 @@ export function createConversationActions<Cursor = string>(params: {
     const historyRequestId = historyLoadRequestIdRef.current;
     store.setHistoryLoading(true);
     store.setHistoryStatus('loading');
+    realtimeMessageBuffer.markStale(conversationId);
 
     try {
       const result = await runtimeRef.current.adapter.listMessages({
@@ -76,7 +84,7 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
-      store.setMessages(result.messages);
+      store.setMessages(realtimeMessageBuffer.flush(conversationId, result.messages));
       store.setHistoryState({
         cursor: result.cursor,
         hasMore: result.hasMore ?? false,
