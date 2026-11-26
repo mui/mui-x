@@ -485,33 +485,42 @@ describe('createSendMessageActions', () => {
       });
     });
 
-    it('marks the user message as errored before streaming stops when the stream cannot be read without reconnectToStream', async () => {
-      const store = new ChatStore();
-      store.setActiveConversation('c1');
-      const lockedStream = createStream([{ type: 'start', messageId: 'a1' }]);
-      lockedStream.getReader();
-      const adapter = createAdapter({ sendMessage: vi.fn().mockResolvedValue(lockedStream) });
-      const statusesWhenStreamingStops: Array<string | undefined> = [];
-      let wasStreaming = false;
-      store.subscribe((state) => {
-        if (wasStreaming && !state.isStreaming) {
-          statusesWhenStreamingStops.push(state.messagesById[state.messageIds[0]]?.status);
-        }
-        wasStreaming = state.isStreaming;
-      });
+    it.each([
+      ['without reconnectToStream', false],
+      ['with reconnectToStream and no onFinish', true],
+    ])(
+      'marks the user message as errored before streaming stops when the stream cannot be read %s',
+      async (_, withReconnect) => {
+        const store = new ChatStore();
+        store.setActiveConversation('c1');
+        const lockedStream = createStream([{ type: 'start', messageId: 'a1' }]);
+        lockedStream.getReader();
+        const adapter = createAdapter({
+          sendMessage: vi.fn().mockResolvedValue(lockedStream),
+          ...(withReconnect ? { reconnectToStream: vi.fn() } : {}),
+        });
+        const statusesWhenStreamingStops: Array<string | undefined> = [];
+        let wasStreaming = false;
+        store.subscribe((state) => {
+          if (wasStreaming && !state.isStreaming) {
+            statusesWhenStreamingStops.push(state.messagesById[state.messageIds[0]]?.status);
+          }
+          wasStreaming = state.isStreaming;
+        });
 
-      const { sendMessage } = createSendMessageActions({
-        store,
-        storeUnknown: asUnknown(store),
-        runtimeRef: { current: { adapter } },
-        setRuntimeError: vi.fn(),
-        assistantMessageIdByUserMessageIdRef: { current: new Map() },
-      });
+        const { sendMessage } = createSendMessageActions({
+          store,
+          storeUnknown: asUnknown(store),
+          runtimeRef: { current: { adapter } },
+          setRuntimeError: vi.fn(),
+          assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        });
 
-      await sendMessage(userMessageInput);
+        await sendMessage(userMessageInput);
 
-      expect(statusesWhenStreamingStops).toEqual(['error']);
-    });
+        expect(statusesWhenStreamingStops).toEqual(['error']);
+      },
+    );
 
     it('calls onFinish once with isAbort when the run is stopped before an unreadable first stream', async () => {
       const store = new ChatStore();
