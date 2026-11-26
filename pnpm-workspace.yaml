@@ -22,7 +22,7 @@ catalog:
   '@mui/icons-material': 9.6.0
   '@mui/internal-test-utils': 2.1.1-canary.11
   '@mui/internal-core-docs': 10.0.0-canary.3
-  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@b8b593e
+  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@03d54d36
   '@mui/material': 9.6.0
   '@mui/stylis-plugin-rtl': 9.6.0
   '@mui/system': 9.6.0
@@ -123,9 +123,9 @@ allowBuilds:
 overrides:
   '@mui/internal-docs-infra>@mui/internal-typescript-api-extractor': 0.1.1-canary.3
   # Until https://github.com/mui/mui-public/pull/2125 is released.
-  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@b8b593e
+  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@03d54d36
   # Until https://github.com/mui/material-ui/pull/49910 is released.
-  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@1cf0ea6430
+  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@1a3021220a
   '@mui/internal-core-docs>@mui/internal-markdown': 4.0.1-canary.2
   '@mui/internal-core-docs>@mui/icons-material': 9.6.0
   '@mui/internal-core-docs>@mui/material': 9.6.0
