@@ -73,13 +73,22 @@ function getUserLabel(user: ChatLocaleTypingUser) {
   return user.displayName ?? user.id;
 }
 
-// `Date#toLocaleTimeString()` with options builds a new formatter on every call, once per message
-// of a long list; this one is built once, with the same locale and options.
+// `Date#toLocaleTimeString()` and `toLocaleDateString()` with options build a new formatter on every
+// call, once per message or conversation of a long list; these are built once, with the same
+// options. A formatter keeps the default time zone and locale of when it was built, so a change to
+// either while the page is open shows in these labels only after a reload; to follow it, override
+// `messageTimestampLabel` and `conversationTimestampLabel`.
 let timeFormatter: Intl.DateTimeFormat | undefined;
+let dayFormatter: Intl.DateTimeFormat | undefined;
 
 function formatTime(date: Date): string {
   timeFormatter ??= new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
   return timeFormatter.format(date);
+}
+
+function formatDay(date: Date): string {
+  dayFormatter ??= new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' });
+  return dayFormatter.format(date);
 }
 
 function formatMessageTimestamp(dateTime: string): string {
@@ -104,7 +113,7 @@ function formatConversationTimestamp(dateTime: string): string {
   if (diffDays === 0) {
     return formatTime(d);
   }
-  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  return formatDay(d);
 }
 
 const messageStatusLabels: Record<ChatMessageStatus, string> = {
