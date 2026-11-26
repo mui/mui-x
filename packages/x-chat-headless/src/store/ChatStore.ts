@@ -461,7 +461,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
   };
 
   public addConversation = (conversation: ChatConversation) => {
-    const nextConversationIds = this.state.conversationsById[conversation.id]
+    const nextConversationIds = Object.hasOwn(this.state.conversationsById, conversation.id)
       ? this.state.conversationIds
       : [...this.state.conversationIds, conversation.id];
 

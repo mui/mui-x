@@ -31,7 +31,7 @@ export function createRealtimeActions(params: {
         store.addConversation(event.conversation);
         return;
       case 'conversation-updated':
-        if (store.state.conversationsById[event.conversation.id]) {
+        if (Object.hasOwn(store.state.conversationsById, event.conversation.id)) {
           store.updateConversation(event.conversation.id, event.conversation);
         } else {
           // An update names an existing conversation, so a stream in flight cannot belong to it.

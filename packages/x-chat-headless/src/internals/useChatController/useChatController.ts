@@ -120,15 +120,19 @@ export function useChatController<Cursor = string>({
   const keepStreamOnSwitch = React.useCallback(
     (nextConversationId: string | undefined) => {
       const run = inFlightRunRef.current;
-      const { isStreaming, streamingConversationId, conversationsById } = store.state;
-      if (!isStreaming || streamingConversationId != null || nextConversationId == null || !run) {
+      const { streamingConversationId, activeStreamAbortController, conversationIds } = store.state;
+      // A run already stopped (controller cleared or aborted) is never kept.
+      const isLive =
+        activeStreamAbortController != null && !activeStreamAbortController.signal.aborted;
+      if (!isLive || streamingConversationId != null || nextConversationId == null || !run) {
         return false;
       }
 
+      // `conversationIds` rather than `conversationsById`, so ids like `__proto__` are matched exactly.
       const belongsToRun =
         run.reportedConversationId != null
           ? run.reportedConversationId === nextConversationId
-          : Object.hasOwn(conversationsById, nextConversationId) &&
+          : conversationIds.includes(nextConversationId) &&
             !run.knownConversationIds.has(nextConversationId);
       if (!belongsToRun) {
         return false;
@@ -310,12 +314,15 @@ export function useChatController<Cursor = string>({
 
         // Loaded conversations already existed, so a stream in flight cannot belong to them.
         // Ones already added during the run (props or realtime) keep counting as added.
-        const { conversationsById } = store.state;
-        result.conversations.forEach((conversation) => {
-          if (!Object.hasOwn(conversationsById, conversation.id)) {
-            inFlightRunRef.current?.knownConversationIds.add(conversation.id);
-          }
-        });
+        const run = inFlightRunRef.current;
+        if (run && run.conversationId == null) {
+          const presentIds = new Set(store.state.conversationIds);
+          result.conversations.forEach((conversation) => {
+            if (!presentIds.has(conversation.id)) {
+              run.knownConversationIds.add(conversation.id);
+            }
+          });
+        }
         store.setConversations(result.conversations);
       })
       .catch((error) => {

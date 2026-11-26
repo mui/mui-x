@@ -1026,17 +1026,23 @@ describe('useChat', () => {
       },
     );
 
-    it('stops the stream when the parent opens another conversation than the one reported on `start`', async () => {
-      const view = renderStreamingChat({ conversations: [] });
-      await view.send();
-      await startReply(view.stream, 'c-new');
+    it.each(['c-new', ''])(
+      'stops the stream when the parent opens another conversation than the one reported on `start` (%j)',
+      async (reportedConversationId) => {
+        const view = renderStreamingChat({ conversations: [] });
+        await view.send();
+        await startReply(view.stream, reportedConversationId);
 
-      // The reported id wins over a conversation added during the reply.
-      await view.switchTo({ activeConversationId: 'c-added', conversations: [{ id: 'c-added' }] });
+        // The reported id wins over a conversation added during the reply.
+        await view.switchTo({
+          activeConversationId: 'c-added',
+          conversations: [{ id: 'c-added' }],
+        });
 
-      expect(view.signals[0].aborted).toBe(true);
-      expect(view.result.current.chat.isStreaming).toBe(false);
-    });
+        expect(view.signals[0].aborted).toBe(true);
+        expect(view.result.current.chat.isStreaming).toBe(false);
+      },
+    );
 
     it.each([
       ['uncontrolled', false],
@@ -1167,9 +1173,34 @@ describe('useChat', () => {
       expect(view.signals[0].aborted).toBe(true);
     });
 
-    it('stops the stream when the target was first seen through a realtime `conversation-updated`', async () => {
+    it.each(['c-existing', 'constructor'])(
+      'stops the stream when the target was first seen through a realtime `conversation-updated` (%s)',
+      async (conversationId) => {
+        let onEvent: (event: ChatRealtimeEvent) => void = () => {};
+        const view = renderStreamingChat({
+          adapter: {
+            subscribe: ({ onEvent: handler }) => {
+              onEvent = handler;
+              return () => {};
+            },
+          },
+        });
+        await view.send();
+        await startReply(view.stream);
+
+        act(() => {
+          onEvent({ type: 'conversation-updated', conversation: { id: conversationId } });
+        });
+        await view.switchTo({ activeConversationId: conversationId });
+
+        expect(view.signals[0].aborted).toBe(true);
+      },
+    );
+
+    it('stops the stream when the target was added before the message was sent, even with an inherited property name', async () => {
       let onEvent: (event: ChatRealtimeEvent) => void = () => {};
       const view = renderStreamingChat({
+        controlledActiveConversation: false,
         adapter: {
           subscribe: ({ onEvent: handler }) => {
             onEvent = handler;
@@ -1177,13 +1208,15 @@ describe('useChat', () => {
           },
         },
       });
+      act(() => {
+        onEvent({ type: 'conversation-added', conversation: { id: 'constructor' } });
+      });
       await view.send();
       await startReply(view.stream);
 
-      act(() => {
-        onEvent({ type: 'conversation-updated', conversation: { id: 'c-existing' } });
+      await act(async () => {
+        await view.result.current.chat.setActiveConversation('constructor');
       });
-      await view.switchTo({ activeConversationId: 'c-existing' });
 
       expect(view.signals[0].aborted).toBe(true);
     });
@@ -1268,6 +1301,39 @@ describe('useChat', () => {
           expect.objectContaining({ conversationId: 'c-new', messageId: 'assistant-new' }),
         );
       });
+    });
+
+    it('keeps the stream for a conversation added as `__proto__`', async () => {
+      const view = renderStreamingChat({ conversations: [] });
+      await view.send();
+      await startReply(view.stream);
+
+      await view.switchTo({
+        activeConversationId: '__proto__',
+        conversations: [{ id: '__proto__' }],
+      });
+
+      expect(view.signals[0].aborted).toBe(false);
+    });
+
+    it('does not keep a stream stopped just before the switch', async () => {
+      const listMessages = vi.fn(async () => ({ messages: [] }));
+      const view = renderStreamingChat({
+        controlledActiveConversation: false,
+        adapter: { listMessages },
+      });
+      await view.send();
+      await startReply(view.stream, 'c-new');
+
+      await act(async () => {
+        view.result.current.chat.stopStreaming();
+        await view.result.current.chat.setActiveConversation('c-new');
+      });
+
+      expect(view.signals[0].aborted).toBe(true);
+      expect(listMessages).toHaveBeenCalledWith(
+        expect.objectContaining({ conversationId: 'c-new' }),
+      );
     });
 
     it('keeps a kept stream in its conversation across a reconnect', async () => {

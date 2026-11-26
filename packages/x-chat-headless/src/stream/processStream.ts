@@ -308,7 +308,7 @@ export async function processStream<Cursor = string>(
         // let two ids-less responses merge into one assistant message.
         targetMessageId = chunk.messageId ?? targetMessageId;
         startAuthor = chunk.author;
-        if (chunk.conversationId) {
+        if (chunk.conversationId != null) {
           options.onReportedConversationId?.(chunk.conversationId);
         }
         ensureAssistantMessage();
