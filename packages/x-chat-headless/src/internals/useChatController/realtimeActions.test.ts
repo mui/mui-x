@@ -32,6 +32,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -51,6 +52,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming,
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -68,6 +70,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming,
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -82,6 +85,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -96,6 +100,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -109,6 +114,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -123,6 +129,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -137,6 +144,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -153,6 +161,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -166,6 +175,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -185,6 +195,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -202,6 +213,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef,
       });
 
@@ -219,6 +231,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming,
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef,
       });
 
@@ -239,6 +252,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -259,6 +273,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -275,6 +290,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -327,6 +343,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef,
       });
 
@@ -370,6 +387,7 @@ describe('createRealtimeActions', () => {
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
         stopStreaming: vi.fn(),
+        inFlightRunRef: { current: null },
         conversationNavigationRequestIdRef: { current: 0 },
       });
 

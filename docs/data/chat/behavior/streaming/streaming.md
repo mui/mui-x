@@ -226,7 +226,7 @@ A message sent from a new chat has no conversation yet, so its reply streams wit
 When your app then moves the chat to the conversation the server created for it, the runtime keeps the stream, and the reply ends up in that conversation, if it can tell that conversation is the reply's own.
 It recognizes it in either of these ways:
 
-- **The `start` chunk reports it.** Send the new conversation's id as `conversationId` on the `start` chunk. Switching to that id keeps the stream; switching to any other id stops it.
+- **The `start` chunk reports it.** Send the new conversation's id as `conversationId` on the `start` chunk, and switch only after the `start` chunk has arrived. Switching to that id keeps the stream; switching to any other id stops it.
 
   ```ts
   controller.enqueue({ type: 'start', messageId: 'msg-1', conversationId: 'c-new' });
@@ -236,6 +236,10 @@ It recognizes it in either of these ways:
 
 Without either signal, switching to the new conversation stops the stream, and the reply is lost.
 When both apply, the `start` chunk wins.
+Conversations first seen through a realtime `conversation-updated` event count as existing ones.
+
+With controlled `messages`, keep passing the chat's current messages (the latest array from `onMessagesChange`) when you switch to the new conversation.
+The kept reply continues in the messages you pass, so passing an empty list for the new conversation drops the message and the start of the reply.
 
 ## Reconnecting to streams
 

@@ -109,7 +109,9 @@ const adapter: ChatAdapter = {
 For the full chunk type reference, see [Streaming](/x/react-chat/behavior/streaming/).
 
 When `conversationId` is `undefined` (the user writes in a new chat) and your server creates the conversation, put its id on the `start` chunk.
-The runtime then keeps the reply streaming when your app switches to that conversation; without it, the switch stops the stream.
+The runtime then keeps the reply streaming when your app switches to that conversation, provided the `start` chunk arrived before the switch.
+Alternatively, your app can add the new conversation to `conversations` (or emit a realtime `conversation-added` event) before it switches.
+With neither, the switch stops the stream.
 See [Switching conversations while a reply streams](/x/react-chat/behavior/streaming/#switching-conversations-while-a-reply-streams).
 
 ```ts

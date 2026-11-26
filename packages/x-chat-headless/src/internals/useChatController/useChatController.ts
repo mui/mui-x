@@ -128,7 +128,7 @@ export function useChatController<Cursor = string>({
       const belongsToRun =
         run.reportedConversationId != null
           ? run.reportedConversationId === nextConversationId
-          : conversationsById[nextConversationId] !== undefined &&
+          : Object.hasOwn(conversationsById, nextConversationId) &&
             !run.knownConversationIds.has(nextConversationId);
       if (!belongsToRun) {
         return false;
@@ -138,7 +138,11 @@ export function useChatController<Cursor = string>({
       store.setStreaming(true, nextConversationId);
       // Deferred because controlled messages may be syncing from props now, which drops writes.
       queueMicrotask(() => {
-        if (inFlightRunRef.current !== run) {
+        // Skip when the user has moved on, so another conversation's messages are not relabelled.
+        if (
+          inFlightRunRef.current !== run ||
+          store.state.activeConversationId !== nextConversationId
+        ) {
           return;
         }
         const messages = getMessages(storeUnknown);
@@ -277,6 +281,7 @@ export function useChatController<Cursor = string>({
       createRealtimeActions({
         store: storeUnknown,
         stopStreaming,
+        inFlightRunRef,
         conversationNavigationRequestIdRef,
       }),
     [storeUnknown, stopStreaming, conversationNavigationRequestIdRef],
@@ -304,9 +309,13 @@ export function useChatController<Cursor = string>({
         }
 
         // Loaded conversations already existed, so a stream in flight cannot belong to them.
-        result.conversations.forEach((conversation) =>
-          inFlightRunRef.current?.knownConversationIds.add(conversation.id),
-        );
+        // Ones already added during the run (props or realtime) keep counting as added.
+        const { conversationsById } = store.state;
+        result.conversations.forEach((conversation) => {
+          if (!Object.hasOwn(conversationsById, conversation.id)) {
+            inFlightRunRef.current?.knownConversationIds.add(conversation.id);
+          }
+        });
         store.setConversations(result.conversations);
       })
       .catch((error) => {

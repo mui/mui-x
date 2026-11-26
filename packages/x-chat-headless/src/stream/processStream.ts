@@ -37,6 +37,11 @@ export interface ProcessStreamOptions {
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
   /**
+   * Current conversation of the run; the controller can assign one to an unscoped run mid-stream.
+   * @returns {string | undefined} The conversation id, or `undefined` while the run has none.
+   */
+  getConversationId?: () => string | undefined;
+  /**
    * Called with the `conversationId` of the `start` chunk, when the stream reports one.
    * @param {string} conversationId The conversation the stream reported.
    */
@@ -106,6 +111,7 @@ export async function processStream<Cursor = string>(
   options: ProcessStreamOptions = {},
 ): Promise<ProcessStreamResult> {
   const storeUnknown = asCursorAgnosticChatStore(store);
+  const getConversationId = () => options.getConversationId?.() ?? options.conversationId;
   let targetMessageId = options.messageId;
   let finishReason: string | undefined;
   let didReceiveTerminalChunk = false;
@@ -142,7 +148,7 @@ export async function processStream<Cursor = string>(
         message: getFinishMessage(
           storeUnknown,
           targetMessageId,
-          options.conversationId,
+          getConversationId(),
           resultWithProgress.status,
         ),
         messages: store.state.messageIds.map((id) => store.state.messagesById[id]).filter(Boolean),
@@ -197,8 +203,7 @@ export async function processStream<Cursor = string>(
       throw failStream('Stream processing requires a target assistant message id.');
     }
 
-    // An unscoped stream may have been given a conversation by the controller since it started.
-    const conversationId = options.conversationId ?? store.state.streamingConversationId;
+    const conversationId = getConversationId();
     const message = getOrCreateMessage(storeUnknown, targetMessageId, conversationId, startAuthor);
 
     if (!didStartMessage) {

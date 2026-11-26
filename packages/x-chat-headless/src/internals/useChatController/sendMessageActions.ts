@@ -83,9 +83,10 @@ export function createSendMessageActions<Cursor = string>(params: {
   }
 
   function startRun(conversationId: string | undefined): InFlightRun {
+    // Only an unscoped run can be kept on a switch, so only it needs the snapshot.
     const run: InFlightRun = {
       conversationId,
-      knownConversationIds: new Set(store.state.conversationIds),
+      knownConversationIds: new Set(conversationId == null ? store.state.conversationIds : []),
     };
     inFlightRunRef.current = run;
     return run;
@@ -107,6 +108,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
     const processOptions = {
       conversationId: run.conversationId,
+      getConversationId: () => run.conversationId,
       onReportedConversationId: (reportedConversationId: string) => {
         run.reportedConversationId = reportedConversationId;
       },
@@ -158,7 +160,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       // failStream cleared streamingConversationId; the run keeps a scope the controller assigned.
       store.setStreaming(true, run.conversationId);
       const reconnectStream = await adapter.reconnectToStream({
-        conversationId: run.conversationId,
+        conversationId: run.conversationId ?? run.reportedConversationId,
         messageId: result.messageId,
         signal: abortController.signal,
       });
@@ -171,7 +173,6 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       return await processStream(store, reconnectStream, {
         ...processOptions,
-        conversationId: run.conversationId,
         onFinish: runtimeRef.current.onFinish,
         messageId: result.messageId,
         reconnectFromSequence: result.nextSequence,
