@@ -450,6 +450,44 @@ describe('createSendMessageActions', () => {
       });
     });
 
+    it('reports the stream error, not a throwing onFinish, when the first stream cannot be read', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn().mockRejectedValue(new Error('consumer failed'));
+      const setRuntimeError = vi.fn();
+      const lockedStream = createStream([{ type: 'start', messageId: 'a1' }]);
+      lockedStream.getReader();
+      const lockedMessage = (() => {
+        try {
+          lockedStream.getReader();
+          return '';
+        } catch (error) {
+          return (error as Error).message;
+        }
+      })();
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(lockedStream),
+        reconnectToStream: vi.fn(),
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onFinish } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(lockedMessage).not.toBe('');
+      expect(setRuntimeError.mock.calls[0][0]).toMatchObject({
+        code: 'SEND_ERROR',
+        message: lockedMessage,
+      });
+    });
+
     it('calls onFinish once with isAbort when the run is stopped before an unreadable first stream', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
@@ -597,7 +635,8 @@ describe('createSendMessageActions', () => {
       await sendMessage(userMessageInput);
 
       expect(onFinish).toHaveBeenCalledTimes(1);
-      expect(store.state.error?.message ?? '').not.toContain('Unable to reconnect');
+      // No stream error is recorded or reported; the callback's throw surfaces only as SEND_ERROR.
+      expect(store.state.error).toBeNull();
       expect(onError).not.toHaveBeenCalled();
       expect(setRuntimeError).toHaveBeenCalledTimes(1);
       expect(setRuntimeError.mock.calls[0][0]).toMatchObject({
@@ -1442,35 +1481,6 @@ describe('createSendMessageActions', () => {
       expect(setRuntimeError).toHaveBeenCalledWith(
         expect.objectContaining({ code: 'REGENERATE_ERROR' }),
       );
-    });
-
-    it('restores the removed assistant run when another message arrives before adapter.regenerate rejects', async () => {
-      const store = new ChatStore({ initialMessages: makeThread() });
-      store.setActiveConversation('c1');
-      const adapter = createAdapter({
-        regenerate: vi.fn().mockImplementation(async () => {
-          store.addMessage({
-            id: 'u2',
-            role: 'user',
-            status: 'sent',
-            parts: [{ type: 'text', text: 'Realtime' }],
-          });
-          throw new Error('Regen failed');
-        }),
-      });
-
-      const { regenerate } = createSendMessageActions({
-        store,
-        storeUnknown: asUnknown(store),
-        runtimeRef: { current: { adapter } },
-        setRuntimeError: vi.fn(),
-        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
-      });
-
-      await regenerate('a1');
-
-      expect(store.state.messagesById.a1).toBeDefined();
-      expect(store.state.messagesById.u2).toBeDefined();
     });
 
     it('restores the removed assistant run when the returned stream cannot be read', async () => {

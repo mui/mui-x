@@ -121,18 +121,22 @@ export function createSendMessageActions<Cursor = string>(params: {
     try {
       result = await processStream(store, stream, processOptions);
     } catch (error) {
-      if (capturedFinishPayload) {
-        await runtimeRef.current.onFinish?.(capturedFinishPayload);
-      } else {
-        // The stream threw before finishing (e.g. a locked stream): still report the run once.
-        const isAbort = abortController.signal.aborted;
-        await emitDeferredFinish({
-          messageId: fallbackMessageId,
-          status: isAbort ? 'cancelled' : 'error',
-          isAbort,
-          isDisconnect: false,
-          isError: !isAbort,
-        });
+      try {
+        if (capturedFinishPayload) {
+          await runtimeRef.current.onFinish?.(capturedFinishPayload);
+        } else {
+          // The stream threw before finishing (e.g. a locked stream): still report the run once.
+          const isAbort = abortController.signal.aborted;
+          await emitDeferredFinish({
+            messageId: fallbackMessageId,
+            status: isAbort ? 'cancelled' : 'error',
+            isAbort,
+            isDisconnect: false,
+            isError: !isAbort,
+          });
+        }
+      } catch {
+        // The stream's error explains the failed run; a throwing onFinish must not replace it.
       }
       throw error;
     }
