@@ -680,10 +680,8 @@ GridFilterFormBase.propTypes /* remove-proptypes */ = {
    * A ref allowing to set imperative focus.
    * It can be passed to the el
    */
-  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */
+    .oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * If `true`, the logic operator field is rendered.
    * The field will be invisible if `showMultiFilterOperators` is also `true`.

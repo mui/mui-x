@@ -18,8 +18,8 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
 
   it('should exclude the dragged occurrence of its own day when moved from another timezone', async () => {
     const handleEventsChange = vi.fn();
-    // A UTC all-day weekly series whose display bounds normalize to New York July 3rd,
-    // so the day grid renders it a cell earlier than its data-timezone day.
+    // A UTC all-day weekly series displayed in New York: an all-day event is the same date in
+    // every timezone, so the day grid renders it on July 4th.
     const event = utcJuly4AllDayBuilder()
       .title('Weekly sync')
       .recurrent('WEEKLY')
@@ -53,22 +53,16 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     await user.click(await screen.findByText(/Only this event/i));
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-    // The exception lands on the occurrence's own July 4th, not the displayed July
-    // 3rd — the day grid threads the occurrence's `dataTimezone` into the drag data.
+    // The exception is the occurrence's own day, as a date.
     const updatedEvents = handleEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
-    expect(series.exDates).to.have.length(1);
-    expect(
-      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
-    ).toEqualPlainDate('2025-07-04');
+    expect(series.exDates).to.deep.equal(['2025-07-04']);
 
-    // The detached one-off lands on the day the user dropped it on (New York July 8th),
-    // not a day shifted by re-reading the display bounds as the base.
+    // The detached one-off lands on the day the user dropped it on, as a date.
     const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
     expect(detached.rrule).to.equal(undefined);
-    expect(
-      toPlainDate(createDate(String(detached.start), 'UTC').getTime(), 'America/New_York'),
-    ).toEqualPlainDate('2025-07-08');
+    expect(detached.start).to.equal('2025-07-08');
+    expect(detached.end).to.equal('2025-07-09');
   });
 
   it('should exclude the dragged occurrence of its own day when a timed one is moved from another timezone', async () => {
@@ -113,7 +107,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     await user.click(await screen.findByText(/Only this event/i));
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-    // The time grid threads the occurrence's `dataTimezone` too: the exception lands on the
+    // The time grid threads the occurrence's data instants too: the exception lands on the
     // occurrence's own July 3rd, not on the July 4th the column shows it in.
     const updatedEvents = handleEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;

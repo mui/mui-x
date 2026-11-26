@@ -268,6 +268,10 @@ export interface GridClasses {
    */
   'columnHeader--moving': string;
   /**
+   * Styles applied to the column header if a keyboard reorder press would move its column.
+   */
+  'columnHeader--reorderTarget': string;
+  /**
    * Styles applied to the column header if the type of the column is `number`.
    */
   'columnHeader--numeric': string;
@@ -729,6 +733,10 @@ export interface GridClasses {
    */
   'root--disableUserSelection': string;
   /**
+   * Styles applied to the root element while a click on a cell writes a reference into the formula being edited (Premium formulas).
+   */
+  'root--formulaReferencePicking': string;
+  /**
    * Used to fix header outline border radius.
    * @ignore - do not document.
    */
@@ -754,6 +762,10 @@ export interface GridClasses {
    * Styles applied to the row element when it is being dragged (entire row).
    */
   'row--beingDragged': string;
+  /**
+   * Styles applied to the row element if a keyboard reorder press would move the row.
+   */
+  'row--reorderTarget': string;
   /**
    * Styles applied to the first visible row element on every page of the grid.
    */
@@ -1174,6 +1186,7 @@ export const gridClassesOverrides = {
     'root--densityComfortable',
     'root--densityCompact',
     'root--disableUserSelection',
+    'root--formulaReferencePicking',
     'root--noToolbar',
     'withVerticalBorder',
   ],
@@ -1224,6 +1237,7 @@ export const gridClassesOverrides = {
     'columnHeader--numeric',
     'columnHeader--pinnedLeft',
     'columnHeader--pinnedRight',
+    'columnHeader--reorderTarget',
     'columnHeader--siblingFocused',
     'columnHeader--sortable',
     'columnHeader--sorted',
@@ -1270,6 +1284,7 @@ export const gridClassesOverrides = {
     'row--editing',
     'row--firstVisible',
     'row--lastVisible',
+    'row--reorderTarget',
     'rowReorderCell',
     'rowReorderCell--draggable',
     'rowReorderCellContainer',

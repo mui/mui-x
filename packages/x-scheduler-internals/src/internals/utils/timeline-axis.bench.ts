@@ -7,7 +7,7 @@ import {
   endOfDay,
   startOfDay,
 } from 'test/utils/scheduler';
-import { processDate } from '../../process-date';
+import { getTimezoneId, toZonedDateTime } from './plain-date-utils/timeZone';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
 import { getTimelineAxisDurationMs, timelineAxisOffsetToTimestamp } from './timeline-axis';
 
@@ -15,7 +15,9 @@ const occurrenceCount = 1_000;
 
 export const benchmarkResult = { value: undefined as unknown };
 
-describe.each(['default', 'America/New_York'] as const)('%s display timezone', (timezone) => {
+describe.each(['default', 'America/New_York'] as const)('%s display timezone', (parameter) => {
+  // The display timezone as the store holds it: by its identifier.
+  const timezone = getTimezoneId(parameter);
   // A week of 24 hours per day, like the time grid of the week view.
   const start = startOfDay(createDate('2026-03-02T12:00:00Z'), timezone);
   const axis = createTimelineAxis({
@@ -30,8 +32,8 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
     const occurrenceStart = addMinutes(start, index * 10);
     return {
-      start: processDate(occurrenceStart, 'default'),
-      end: processDate(addMinutes(occurrenceStart, 30 + (index % 10) * 30), 'default'),
+      start: toZonedDateTime(occurrenceStart.getTime(), timezone),
+      end: toZonedDateTime(addMinutes(occurrenceStart, 30 + (index % 10) * 30).getTime(), timezone),
     };
   });
 

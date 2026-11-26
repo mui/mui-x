@@ -1,41 +1,31 @@
-import {
-  PlainDate as PlainDateValue,
-  type BaseTemporal as PlainDateTypes,
-  type PlainDateConstructor,
-} from './PlainDate';
-import {
-  PlainTime as PlainTimeValue,
-  type BaseTemporal as PlainTimeTypes,
-  type PlainTimeConstructor,
-} from './PlainTime';
-import {
-  PlainDateTime as PlainDateTimeValue,
-  type BaseTemporal as PlainDateTimeTypes,
-  type PlainDateTimeConstructor,
-} from './PlainDateTime';
-import {
-  ZonedDateTime as ZonedDateTimeValue,
-  type BaseTemporal as ZonedDateTimeTypes,
-  type ZonedDateTimeConstructor,
-} from './ZonedDateTime';
+import { PlainDate as PlainDateValue } from './PlainDate';
+import type { BaseTemporal as PlainDateTypes } from './PlainDate';
+import { PlainTime as PlainTimeValue } from './PlainTime';
+import type { BaseTemporal as PlainTimeTypes } from './PlainTime';
+import { PlainDateTime as PlainDateTimeValue } from './PlainDateTime';
+import type { BaseTemporal as PlainDateTimeTypes } from './PlainDateTime';
+import { ZonedDateTime as ZonedDateTimeValue } from './ZonedDateTime';
+import type { BaseTemporal as ZonedDateTimeTypes } from './ZonedDateTime';
 
+// Each value comes before its type: the API generator documents the first declaration of a name,
+// and only the value carries the constructor and the static methods.
 /**
  * A date without a time or timezone, in the ISO calendar or another calendar system.
  */
+export const PlainDate: typeof PlainDateTypes.PlainDate = PlainDateValue;
 export type PlainDate = PlainDateTypes.PlainDate;
-export const PlainDate: PlainDateConstructor = PlainDateValue;
 /**
  * A time without a date or timezone.
  */
+export const PlainTime: typeof PlainTimeTypes.PlainTime = PlainTimeValue;
 export type PlainTime = PlainTimeTypes.PlainTime;
-export const PlainTime: PlainTimeConstructor = PlainTimeValue;
 /**
  * A date and time without a timezone, in the ISO calendar or another calendar system.
  */
+export const PlainDateTime: typeof PlainDateTimeTypes.PlainDateTime = PlainDateTimeValue;
 export type PlainDateTime = PlainDateTimeTypes.PlainDateTime;
-export const PlainDateTime: PlainDateTimeConstructor = PlainDateTimeValue;
 /**
  * A date and time in a specific timezone, in the ISO calendar or another calendar system.
  */
+export const ZonedDateTime: typeof ZonedDateTimeTypes.ZonedDateTime = ZonedDateTimeValue;
 export type ZonedDateTime = ZonedDateTimeTypes.ZonedDateTime;
-export const ZonedDateTime: ZonedDateTimeConstructor = ZonedDateTimeValue;

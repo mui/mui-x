@@ -1,27 +1,29 @@
 'use client';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import type { BaseTemporal } from './base-temporal';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
-import type {
-  SchedulerEventId,
-  SchedulerEventOccurrence,
-  SchedulerProcessedDate,
-} from '../../models';
+import type { SchedulerEventId, SchedulerEventOccurrence } from '../../models';
 import { generateOccurrenceFromEvent } from './event-utils';
 
 /**
- * Returns a lazy builder for the occurrence a drag or resize session starts from,
- * carrying the data-timezone identity next to the rendered display bounds.
+ * Returns a lazy builder for the occurrence a drag or resize session starts from.
  */
 export function useOriginalOccurrence(
   parameters: useOriginalOccurrence.Parameters,
 ): () => SchedulerEventOccurrence {
-  const { eventId, occurrenceKey, start, end, dataTimezone } = parameters;
+  const { eventId, occurrenceKey, start, end } = parameters;
   const store = useSchedulerStoreContext();
 
   return useStableCallback(() => {
     const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
-    return generateOccurrenceFromEvent({ event, eventId, occurrenceKey, start, end, dataTimezone });
+    return generateOccurrenceFromEvent({
+      event,
+      eventId,
+      occurrenceKey,
+      start,
+      end,
+    });
   });
 }
 
@@ -30,12 +32,7 @@ export namespace useOriginalOccurrence {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     /** The rendered display bounds of the occurrence (or segment). */
-    start: SchedulerProcessedDate;
-    end: SchedulerProcessedDate;
-    /**
-     * The occurrence bounds in the data timezone, which identify a recurring occurrence.
-     * `undefined` for placeholders.
-     */
-    dataTimezone: SchedulerEventOccurrence['dataTimezone'] | undefined;
+    start: BaseTemporal.ZonedDateTime;
+    end: BaseTemporal.ZonedDateTime;
   }
 }

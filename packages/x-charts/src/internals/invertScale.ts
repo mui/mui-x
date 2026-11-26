@@ -15,10 +15,11 @@ export function invertScale<T>(scale: D3Scale, data: readonly T[], value: number
  * Get the data index for a given value on an ordinal scale.
  */
 export function getDataIndexForOrdinalScaleValue(scale: D3OrdinalScale, value: number) {
-  const dataIndex =
-    scale.bandwidth() === 0
-      ? Math.floor((value - Math.min(...scale.range()) + scale.step() / 2) / scale.step())
-      : Math.floor((value - Math.min(...scale.range())) / scale.step());
+  const [r0, r1] = scale.range();
+  // Measure from the range start, which holds the first item even when the range is descending.
+  const offset = r1 < r0 ? r0 - value : value - r0;
 
-  return dataIndex;
+  return scale.bandwidth() === 0
+    ? Math.floor((offset + scale.step() / 2) / scale.step())
+    : Math.floor(offset / scale.step());
 }

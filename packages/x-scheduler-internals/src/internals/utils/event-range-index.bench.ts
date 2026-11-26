@@ -35,8 +35,8 @@ function numericLinearQuery(
 
   return collection.filter(
     (event) =>
-      event.displayTimezone.start.timestamp <= rangeEndTimestamp &&
-      event.displayTimezone.end.timestamp >= rangeStartTimestamp,
+      event.start.epochMilliseconds <= rangeEndTimestamp &&
+      event.end.epochMilliseconds >= rangeStartTimestamp,
   );
 }
 

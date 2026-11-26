@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { scaleLinear, scaleLog } from '@mui/x-charts-vendor/d3-scale';
 import { Flatbush } from '../../../Flatbush';
+import { scaleBand, scalePoint } from '../../../scales';
 import { findClosestPoints } from './findClosestPoints';
 import type { D3Scale } from '../../../../models/axis';
 import { zoomScaleRange } from '../useChartCartesianAxis/zoom';
@@ -229,6 +230,43 @@ describe('findClosestPoints', () => {
       );
 
       expect(closestPoint).to.deep.eq([1]);
+    });
+
+    describe('ordinal x-axis', () => {
+      const domain = [0, 1, 2, 3];
+      const seriesData = domain.map((x) => ({ x, y: 50 }));
+      const yScale = scaleLinear()
+        .domain([0, 100])
+        .range([drawingArea.top, drawingArea.top + drawingArea.height]);
+      const reversedRange: [number, number] = [
+        drawingArea.left + drawingArea.width,
+        drawingArea.left,
+      ];
+
+      [
+        { name: 'band', xScale: scaleBand(domain, reversedRange) as unknown as D3Scale },
+        { name: 'point', xScale: scalePoint(domain, reversedRange) as unknown as D3Scale },
+      ].forEach(({ name, xScale }) => {
+        it(`finds the closest point on a reversed ${name} scale`, () => {
+          const flatbush = prepareFlatbush(seriesData, xScale, yScale);
+          const find = (svgPointX: number) =>
+            findClosestPoints(
+              flatbush,
+              seriesData,
+              xScale,
+              yScale,
+              noZoom.start, // x
+              noZoom.end, // x
+              noZoom.start, // y
+              noZoom.end, // y
+              svgPointX,
+              500,
+            );
+
+          expect(find(990)).to.deep.eq([0]);
+          expect(find(10)).to.deep.eq([3]);
+        });
+      });
     });
   });
 });

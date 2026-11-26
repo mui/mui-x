@@ -5,12 +5,13 @@ import {
   DEFAULT_EVENT_CALENDAR_STATE,
   endOfDay,
   EventBuilder,
-  processDay,
   setSystemTimezone,
   startOfDay,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
 
@@ -26,12 +27,12 @@ function getStateInUTCOnApiaSystem() {
       type: 'creation',
       surfaceType: 'day-grid',
       start: Date.UTC(2011, 11, 30),
-      end: Date.UTC(2011, 11, 30, 23, 59, 59),
+      end: Date.UTC(2011, 11, 31),
       resourceId: null,
     },
   };
-  const december30 = processDay(new Date(Date.UTC(2011, 11, 30)), 'UTC');
-  const december31 = processDay(new Date(Date.UTC(2011, 11, 31)), 'UTC');
+  const december30 = BaseTemporal.PlainDate.from('2011-12-30');
+  const december31 = BaseTemporal.PlainDate.from('2011-12-31');
   return { state, december30, december31 };
 }
 
@@ -61,14 +62,15 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     );
 
     // A placeholder from Monday, January 8th to Wednesday, January 17th, 2024, across two rows.
+    // Its end is exclusive: the first instant of January 18th.
     const state: EventCalendarState = {
       ...DEFAULT_EVENT_CALENDAR_STATE,
       displayTimezone: 'UTC',
       occurrencePlaceholder: {
         type: 'creation',
         surfaceType: 'day-grid',
-        start: Date.UTC(2024, 0, 8, 9),
-        end: Date.UTC(2024, 0, 17, 18),
+        start: Date.UTC(2024, 0, 8),
+        end: Date.UTC(2024, 0, 18),
         resourceId: null,
       },
     };
@@ -76,7 +78,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     const rowStart = Date.UTC(2024, 0, 14);
 
     it('should render a placeholder from a previous row on the first day of the row', () => {
-      const firstDay = processDay(new Date(rowStart), 'UTC');
+      const firstDay = toPlainDate(rowStart, 'UTC');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(state, firstDay, rowStart),
       ).to.equal(state.occurrencePlaceholder);
@@ -93,7 +95,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           resourceId: null,
         },
       };
-      const firstDay = processDay(new Date(rowStart), 'UTC');
+      const firstDay = toPlainDate(rowStart, 'UTC');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
           reversedState,
@@ -105,7 +107,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
     it('should not render a placeholder from a previous row on the other days of the row', () => {
       // Its last day, which only its end falls on.
-      const lastDay = processDay(new Date(Date.UTC(2024, 0, 17)), 'UTC');
+      const lastDay = BaseTemporal.PlainDate.from('2024-01-17');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(state, lastDay, rowStart),
       ).to.equal(null);
@@ -114,7 +116,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     it('should not render a placeholder on the first day of a row that starts before it', () => {
       // The first row starts on Sunday, January 7th, before the placeholder started.
       const previousRowStart = Date.UTC(2024, 0, 7);
-      const firstDay = processDay(new Date(previousRowStart), 'UTC');
+      const firstDay = toPlainDate(previousRowStart, 'UTC');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
           state,
@@ -127,12 +129,34 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     it('should not render a placeholder on the first day of a row that starts after it', () => {
       // The third row starts on Sunday, January 21st, after the placeholder ended.
       const nextRowStart = Date.UTC(2024, 0, 21);
-      const firstDay = processDay(new Date(nextRowStart), 'UTC');
+      const firstDay = toPlainDate(nextRowStart, 'UTC');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
           state,
           firstDay,
           nextRowStart,
+        ),
+      ).to.equal(null);
+    });
+
+    it('should not render a placeholder on the first day of the row its exclusive end starts', () => {
+      // A one-day placeholder on Saturday, January 13th: its end is the first instant of the row.
+      const saturdayState: EventCalendarState = {
+        ...state,
+        occurrencePlaceholder: {
+          type: 'creation',
+          surfaceType: 'day-grid',
+          start: Date.UTC(2024, 0, 13),
+          end: Date.UTC(2024, 0, 14),
+          resourceId: null,
+        },
+      };
+      const firstDay = BaseTemporal.PlainDate.from('2024-01-14');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+          saturdayState,
+          firstDay,
+          rowStart,
         ),
       ).to.equal(null);
     });
@@ -208,12 +232,12 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
   describe('isCreatingInDayCell', () => {
     const day = createDate('2024-01-15');
-    const processedDay = processDay(day);
+    const plainDate = toPlainDate(day.getTime(), 'default');
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(false);
     });
 
@@ -229,7 +253,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(false);
     });
 
@@ -238,6 +262,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'internal-drag',
+          allDay: false,
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'day-grid',
@@ -249,7 +274,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(false);
     });
 
@@ -265,7 +290,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(true);
     });
 
@@ -283,7 +308,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(false);
     });
 
@@ -305,7 +330,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     const day = createDate('2024-01-15');
     const dayStart = startOfDay(day);
     const dayEnd = endOfDay(day);
-    const plainDate = processDay(day).plainDate;
+    const plainDate = toPlainDate(day.getTime(), 'default');
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
@@ -345,6 +370,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'internal-drag',
+          allDay: false,
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'time-grid',
