@@ -681,6 +681,98 @@ describe('MessageListRoot', () => {
     });
   });
 
+  describe('viewport resize', () => {
+    function waitForTwoFrames() {
+      return new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      });
+    }
+
+    // 240px of rows in a 160px viewport; shrinking by 40px mimics the typing indicator mounting below the list.
+    it.skipIf(isJSDOM)('stays pinned to the bottom when the viewport shrinks', async () => {
+      const onReachBottom = vi.fn();
+      render(<ControlledMessageList onReachBottom={onReachBottom} />);
+      const log = screen.getByRole('log');
+      await waitForTwoFrames();
+
+      log.style.height = '120px';
+
+      await waitFor(() => {
+        expect(log.scrollTop).toBe(120);
+      });
+      await waitForTwoFrames();
+      expect(onReachBottom).toHaveBeenCalledTimes(0);
+    });
+
+    it.skipIf(isJSDOM)('keeps the scroll position when scrolled up', async () => {
+      render(<ControlledMessageList />);
+      const log = screen.getByRole('log');
+      await waitForTwoFrames();
+      log.scrollTop = 40;
+      await waitForTwoFrames();
+
+      log.style.height = '120px';
+      await waitForTwoFrames();
+
+      expect(log.scrollTop).toBe(40);
+    });
+
+    it.skipIf(isJSDOM)('does not re-pin when autoScroll is disabled', async () => {
+      render(<ControlledMessageList autoScroll={false} />);
+      const log = screen.getByRole('log');
+      log.scrollTop = 80;
+      await waitForTwoFrames();
+
+      log.style.height = '120px';
+      await waitForTwoFrames();
+
+      expect(log.scrollTop).toBe(80);
+    });
+
+    it.skipIf(isJSDOM)('preserves the viewport anchor on a later history prepend', async () => {
+      render(<ControlledMessageList />);
+      const log = screen.getByRole('log');
+      await waitForTwoFrames();
+      log.scrollTop = 40;
+      await waitForTwoFrames();
+      log.style.height = '120px';
+      await waitForTwoFrames();
+
+      fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
+
+      // Two 40px rows above the reader: the same rows stay in view.
+      await waitFor(() => {
+        expect(log.scrollTop).toBe(120);
+      });
+    });
+
+    it.skipIf(isJSDOM)(
+      'keeps the scroll position and unseen count when the list is hidden and shown again',
+      async () => {
+        render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} />);
+        const log = screen.getByRole('log');
+        await waitForTwoFrames();
+        log.scrollTop = 40;
+        await waitForTwoFrames();
+        fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
+        await waitFor(() => {
+          expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
+        });
+        await waitForTwoFrames();
+
+        log.parentElement!.style.display = 'none';
+        await waitForTwoFrames();
+        await waitForTwoFrames();
+        log.parentElement!.style.display = '';
+        await waitForTwoFrames();
+        await waitForTwoFrames();
+
+        expect(log.scrollTop).toBe(40);
+        expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
+      },
+    );
+  });
+
   it.skipIf(isJSDOM)('auto-scrolls on append when already near the bottom', async () => {
     render(<ControlledMessageList />);
     const log = screen.getByRole('log');

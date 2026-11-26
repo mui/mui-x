@@ -5,7 +5,8 @@ import type { MessageListRootOwnerState } from './messageList.types';
 
 type ScrollAnchor = {
   id: string;
-  offsetFromBottom: number;
+  // Measured from the viewport top so a viewport resize (e.g. the typing indicator mounting) keeps it valid.
+  rowBottomFromTop: number;
 };
 
 type ChangeKind = 'none' | 'append' | 'prepend' | 'other';
@@ -175,7 +176,7 @@ export function useMessageListBehavior(parameters: {
 
       return {
         id,
-        offsetFromBottom: containerRect.bottom - rect.bottom,
+        rowBottomFromTop: rect.bottom - containerRect.top,
       };
     }
 
@@ -195,10 +196,10 @@ export function useMessageListBehavior(parameters: {
       return false;
     }
 
-    const containerBottom = root.getBoundingClientRect().bottom;
-    const nextOffsetFromBottom = containerBottom - element.getBoundingClientRect().bottom;
+    const containerTop = root.getBoundingClientRect().top;
+    const nextRowBottomFromTop = element.getBoundingClientRect().bottom - containerTop;
 
-    root.scrollTop += anchor.offsetFromBottom - nextOffsetFromBottom;
+    root.scrollTop += nextRowBottomFromTop - anchor.rowBottomFromTop;
 
     return true;
   }, []);
@@ -245,6 +246,10 @@ export function useMessageListBehavior(parameters: {
       // Guard against the frame firing after unmount: once the cleanup runs
       // we shouldn't touch DOM refs or call state setters (#10).
       if (!isMountedRef.current) {
+        return;
+      }
+      // A hidden list (`display: none` ancestor) measures as at the bottom; keep the last visible state.
+      if (rootRef.current?.clientHeight === 0) {
         return;
       }
       if (isAtBottomRef.current && autoScrollEnabled && isStreamingRef.current) {
@@ -383,6 +388,24 @@ export function useMessageListBehavior(parameters: {
     updateIsAtBottom,
     updateUnseenMessageCount,
   ]);
+
+  React.useEffect(() => {
+    const root = rootRef.current;
+
+    if (!root || !autoScrollEnabled || typeof globalThis.ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    // A viewport resize (typing indicator, composer, window) fires no scroll event: stay pinned.
+    const observer = new globalThis.ResizeObserver(() => {
+      if (isAtBottomRef.current) {
+        scrollToBottom({ behavior: 'instant' });
+      }
+    });
+    observer.observe(root);
+
+    return () => observer.disconnect();
+  }, [autoScrollEnabled, scrollToBottom]);
 
   React.useEffect(() => {
     // Restore on (re)mount so the resize-driven auto-scroll keeps working after
