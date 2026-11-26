@@ -943,6 +943,67 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
       });
 
+      it('should keep the validation of an unchanged field when the row starts the edit mode', async () => {
+        let resolveValidation: () => void;
+        const validation = new Promise<void>((resolve) => {
+          resolveValidation = resolve;
+        });
+        const preProcessEditCellProps1 = ({ props, hasChanged }: GridPreProcessEditCellProps) => {
+          if (hasChanged && !props.value) {
+            apiRef.current?.setEditCellValue({ id: 0, field: 'price2M', value: 99 });
+          }
+          return props;
+        };
+        const preProcessEditCellProps2 = async ({
+          props,
+          hasChanged,
+          otherFieldsProps,
+        }: GridPreProcessEditCellProps) => {
+          if (hasChanged) {
+            return { ...props, error: props.value == null };
+          }
+          const error = otherFieldsProps!.price2M.value === 99;
+          await validation;
+          return { ...props, error };
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columns={[
+              {
+                field: 'currencyPair',
+                editable: true,
+                preProcessEditCellProps: preProcessEditCellProps1,
+              },
+              {
+                field: 'price1M',
+                type: 'number',
+                editable: true,
+                preProcessEditCellProps: preProcessEditCellProps2,
+              },
+              { field: 'price2M', type: 'number', editable: true },
+            ]}
+          />,
+        );
+        act(() =>
+          apiRef.current?.startRowEditMode({
+            id: 0,
+            fieldToFocus: 'currencyPair',
+            deleteValue: true,
+          }),
+        );
+        await act(async () => resolveValidation!());
+        await waitFor(() =>
+          expect(apiRef.current?.state.editRows[0].price1M.isProcessingProps).to.equal(false),
+        );
+
+        act(() => apiRef.current?.stopRowEditMode({ id: 0 }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
+      });
+
       it('should ignore a pending validation of a removed row in a new row with the same id', async () => {
         let resolveValidation: () => void;
         const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
@@ -1443,6 +1504,24 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(preProcessEditCellProps.mock.lastCall?.[0].otherFieldsProps).to.deep.equal({
           price1M: { value: 1, error: false, isProcessingProps: false },
         });
+      });
+
+      it('should pass hasChanged=false to preProcessEditCellProps of the other fields', async () => {
+        const preProcessEditCellProps1 = vi.fn(({ props }: GridPreProcessEditCellProps) => props);
+        const preProcessEditCellProps2 = vi.fn(({ props }: GridPreProcessEditCellProps) => props);
+        const { user } = render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps: preProcessEditCellProps1 }}
+            column2Props={{ preProcessEditCellProps: preProcessEditCellProps2 }}
+          />,
+        );
+
+        const cell = getCell(0, 1);
+        await user.click(cell);
+        await user.keyboard('{Delete}');
+
+        expect(preProcessEditCellProps1.mock.lastCall?.[0].hasChanged).to.equal(true);
+        expect(preProcessEditCellProps2.mock.lastCall?.[0].hasChanged).to.equal(false);
       });
     });
 

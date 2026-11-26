@@ -525,9 +525,8 @@ export const useGridRowEditing = (
           if (hasValueValidation(processingPropsLookup.current, id, field)) {
             return;
           }
-          const value = apiRef.current.getCellValue(id, field);
-          const newValue = deleteValue ? getDefaultCellValue(column) : (initialValue ?? value);
-          const hasChanged = newValue !== value;
+          // `deleteValue` changes only the value of `fieldToFocus`
+          const hasChanged = newProps[field].value !== apiRef.current.getCellValue(id, field);
 
           processEditCellProps(
             processingPropsLookup.current,
