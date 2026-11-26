@@ -185,6 +185,36 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     [anchor],
   );
 
+  // The arrow keys move between the events, wrapping around, like inside a grid cell.
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const items = Array.from(bodyRef.current?.children ?? []) as HTMLElement[];
+    if (event.defaultPrevented || items.length === 0) {
+      return;
+    }
+    const previousKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+    const nextKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
+    let offset = 0;
+    if (event.key === 'ArrowDown' || event.key === nextKey) {
+      offset = 1;
+    } else if (event.key === 'ArrowUp' || event.key === previousKey) {
+      offset = -1;
+    } else {
+      return;
+    }
+    // From the popover itself (index -1), the first or the last event.
+    let index = items.indexOf(event.target as HTMLElement);
+    if (index === -1 && offset === -1) {
+      index = 0;
+    }
+    event.preventDefault();
+    items[(index + offset + items.length) % items.length].focus();
+  };
+
+  // Like a menu, the popover opens with focus on its first event.
+  const focusFirstItem = () => {
+    (bodyRef.current?.firstElementChild as HTMLElement | null)?.focus();
+  };
+
   const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
     if (isFocusLostWith(paper)) {
       getFocusFallback()?.focus({ preventScroll: true });
@@ -200,7 +230,10 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       anchorOrigin={{ vertical: 'top', horizontal: isRtl ? 'right' : 'left' }}
       transformOrigin={{ vertical: 'top', horizontal: isRtl ? 'right' : 'left' }}
       onClose={onClose}
-      slotProps={{ transition: { onExited: restoreFocusOnExit } }}
+      slotProps={{
+        paper: { onKeyDown: handleKeyDown },
+        transition: { onEntering: focusFirstItem, onExited: restoreFocusOnExit },
+      }}
     >
       <MoreEventsPopoverHeader className={classes.moreEventsPopoverHeader}>
         <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>

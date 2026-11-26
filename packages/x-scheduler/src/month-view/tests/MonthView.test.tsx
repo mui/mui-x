@@ -309,6 +309,31 @@ describe('<MonthView />', () => {
       });
     });
 
+    it('should move between the events with the arrow keys, wrapping around', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+      const eventButtons = within(popover).getAllByRole('button');
+
+      await act(async () => {
+        eventButtons[0].focus();
+      });
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).to.equal(eventButtons[1]);
+
+      await user.keyboard('{ArrowUp}{ArrowUp}');
+      expect(document.activeElement).to.equal(eventButtons[eventButtons.length - 1]);
+
+      await user.keyboard('{ArrowRight}');
+      expect(document.activeElement).to.equal(eventButtons[0]);
+    });
+
+    it('should focus the first event when the popover opens', async () => {
+      const { popover } = await renderAndOpenPopover();
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(within(popover).getAllByRole('button')[0]);
+      });
+    });
+
     it('should name each event in the popover with its title, time range and date', async () => {
       const { popover } = await renderAndOpenPopover();
 
@@ -751,7 +776,7 @@ describe('<MonthView />', () => {
       ]);
     });
 
-    it('should not focus an event when the popover is reopened for another day', async () => {
+    it('should focus the first event of the new day when the popover is reopened for another day', async () => {
       const { user } = await renderAndOpenPopover({
         events: [...manyEvents, ...nextDayEvents],
       });
@@ -775,15 +800,12 @@ describe('<MonthView />', () => {
 
         const nextDayPopover = await screen.findByRole('presentation');
         await waitFor(() => {
-          expect(nextDayPopover.contains(document.activeElement)).to.equal(true);
+          expect(document.activeElement).to.equal(within(nextDayPopover).getAllByRole('button')[0]);
         });
-        // Not even briefly on an event or the "+N more" button.
+        // Not even briefly on an event of the previous day or the "+N more" button.
         expect(
           focusedElements.filter((element) => !nextDayPopover.contains(element)),
         ).to.deep.equal([]);
-        expect(within(nextDayPopover).getAllByRole('button')).not.to.include(
-          document.activeElement,
-        );
       } finally {
         document.removeEventListener('focusin', recordFocus);
       }

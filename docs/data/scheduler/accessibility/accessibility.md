@@ -132,12 +132,11 @@ Each cell's accessible name includes its number of events, for example "Wednesda
 
 #### Tab sequence
 
-Only one cell is in the Tab sequence: the last focused cell, or the current day before any cell has been focused.
-<kbd class="key">Tab</kbd> moves into the grid and the next <kbd class="key">Tab</kbd> moves out of it.
+<kbd class="key">Tab</kbd> moves into the grid, on the last focused cell or on the current day, and the next <kbd class="key">Tab</kbd> moves out of it.
 
 #### Inside a cell
 
-Once you move into a cell, focus goes through its items: the day number button, the events (including the ones that span from a previous day), and the "+N more" button.
+Once you move into a cell, focus goes through its items: the day number button, the events, and the "+N more" button.
 
 |                                                                                 Keys | Description                                       |
 | -----------------------------------------------------------------------------------: | :------------------------------------------------ |
@@ -145,7 +144,6 @@ Once you move into a cell, focus goes through its items: the day number button, 
 |                 <kbd class="key">Arrow Up</kbd> or <kbd class="key">Arrow Left</kbd> | Moves focus to the previous item, wrapping around |
 | <kbd class="key">Tab</kbd> / <kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd> | Same as the arrow keys                            |
 |                           <kbd class="key">Escape</kbd> or <kbd class="key">F2</kbd> | Moves focus back to the cell                      |
-|                                                             <kbd class="key">C</kbd> | Creates an event in the cell                      |
 
 ### Resources sidebar
 
@@ -190,7 +188,7 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 
 - The popover header shows the formatted date (for example, `"Mon, May 26"`).
 - Each event inside the popover has the same `aria-label` as in the grid (see [Events](#events)).
-- Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd>. <kbd class="key">Shift</kbd>+<kbd class="key">F10</kbd> or the <kbd class="key">Menu</kbd> key opens the [event context menu](#event-context-menu).
+- Opening the popover moves focus to its first event, and the arrow keys move between the events, wrapping around. Event items have `role="button"` with `tabIndex="0"`, and respond to the [same keys](#menus-and-popovers) as in the grid.
 - Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
 - The popover's list follows the day's events, and stays open while the day still has more events than the cell can display. When the focused event, or the one whose context menu is open, is removed (for example, deleted from that menu), focus moves to the next event in the list, or to the previous one if it was the last. Once every event fits in the cell, the **"X more"** button is no longer displayed, so the popover closes and focus moves to the day cell.
 
