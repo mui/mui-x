@@ -12,6 +12,12 @@ import { useMessageIds } from '../hooks/useMessage';
 const { render } = createRenderer();
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+function waitForTwoFrames() {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+}
+
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
@@ -602,9 +608,7 @@ describe('MessageListRoot', () => {
     expect(log.scrollHeight).toBe(240);
     expect(log.scrollTop).toBe(log.scrollHeight - log.clientHeight);
     // Let the async scroll event from the mount scroll be handled.
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => requestAnimationFrame(resolve));
-    });
+    await waitForTwoFrames();
     expect(onReachBottom).toHaveBeenCalledTimes(0);
     expect(screen.getByTestId('message-list-bottom-state')).to.have.text('true');
   });
@@ -618,9 +622,7 @@ describe('MessageListRoot', () => {
       const log = await screen.findByRole('log');
 
       expect(log.scrollTop).toBe(20);
-      await new Promise((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(resolve));
-      });
+      await waitForTwoFrames();
       expect(onReachTop).toHaveBeenCalledTimes(0);
       expect(listMessages).not.toHaveBeenCalledWith(
         expect.objectContaining({ cursor: 'cursor-1' }),
@@ -682,12 +684,6 @@ describe('MessageListRoot', () => {
   });
 
   describe('viewport resize', () => {
-    function waitForTwoFrames() {
-      return new Promise((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(resolve));
-      });
-    }
-
     // 240px of rows in a 160px viewport; shrinking by 40px mimics the typing indicator mounting below the list.
     it.skipIf(isJSDOM)('stays pinned to the bottom when the viewport shrinks', async () => {
       const onReachBottom = vi.fn();
@@ -771,6 +767,76 @@ describe('MessageListRoot', () => {
         expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
       },
     );
+
+    it.skipIf(isJSDOM)(
+      'keeps the scroll position when a message arrives while the list is hidden',
+      async () => {
+        render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} />);
+        const log = screen.getByRole('log');
+        await waitForTwoFrames();
+        log.scrollTop = 40;
+        await waitForTwoFrames();
+
+        log.parentElement!.style.display = 'none';
+        await waitForTwoFrames();
+        fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
+        log.parentElement!.style.display = '';
+        await waitForTwoFrames();
+        await waitForTwoFrames();
+
+        expect(log.scrollTop).toBe(40);
+        expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'stays pinned when history is prepended in the same frame the viewport shrinks',
+      async () => {
+        render(<ControlledMessageList />);
+        const log = screen.getByRole('log');
+        await waitForTwoFrames();
+
+        log.style.height = '120px';
+        fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
+        await waitForTwoFrames();
+
+        expect(log.scrollTop).toBe(200);
+      },
+    );
+
+    it.skipIf(isJSDOM)('does not load history when re-pinning in the top zone', async () => {
+      const onReachTop = vi.fn();
+      const listMessages = createHistoryListMessages();
+      render(<HistoryListMountedWhenLoaded listMessages={listMessages} onReachTop={onReachTop} />);
+      const log = await screen.findByRole('log');
+      await waitForTwoFrames();
+
+      // Re-pins from scrollTop 20 to 30, still inside the 40px top zone.
+      log.style.height = '50px';
+      await waitFor(() => {
+        expect(log.scrollTop).toBe(30);
+      });
+      await waitForTwoFrames();
+
+      expect(onReachTop).toHaveBeenCalledTimes(0);
+      expect(listMessages).not.toHaveBeenCalledWith(
+        expect.objectContaining({ cursor: 'cursor-1' }),
+      );
+    });
+
+    it.skipIf(isJSDOM)('does not scroll when the autoScroll buffer changes', async () => {
+      const view = render(<ControlledMessageList />);
+      const log = screen.getByRole('log');
+      await waitForTwoFrames();
+      log.scrollTop = 40;
+      await waitForTwoFrames();
+
+      // The reader is now inside the bottom zone, but the viewport kept its size.
+      view.setProps({ autoScroll: { buffer: 50 } });
+      await waitForTwoFrames();
+
+      expect(log.scrollTop).toBe(40);
+    });
   });
 
   it.skipIf(isJSDOM)('auto-scrolls on append when already near the bottom', async () => {

@@ -5,8 +5,7 @@ import type { MessageListRootOwnerState } from './messageList.types';
 
 type ScrollAnchor = {
   id: string;
-  // Measured from the viewport top so a viewport resize (e.g. the typing indicator mounting) keeps it valid.
-  rowBottomFromTop: number;
+  offsetFromBottom: number;
 };
 
 type ChangeKind = 'none' | 'append' | 'prepend' | 'other';
@@ -99,7 +98,8 @@ export function useMessageListBehavior(parameters: {
   const resizeFrameRef = React.useRef(0);
   const isMountedRef = React.useRef(true);
   const hasMountedRef = React.useRef(false);
-  const mountScrollTopRef = React.useRef<number | null>(null);
+  // Offset of a scroll the hook made itself (mount, resize re-pin); its scroll event must not load history.
+  const programmaticScrollTopRef = React.useRef<number | null>(null);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
@@ -126,6 +126,10 @@ export function useMessageListBehavior(parameters: {
 
   const updateIsAtBottom = React.useCallback(
     (options?: { silent?: boolean }) => {
+      // A hidden list (`display: none` ancestor) measures as at the bottom; keep the last visible state.
+      if (rootRef.current?.clientHeight === 0) {
+        return isAtBottomRef.current;
+      }
       const nextIsAtBottom = isScrollableToBottom(rootRef.current, autoScrollBuffer);
       const previousIsAtBottom = isAtBottomRef.current;
 
@@ -176,7 +180,7 @@ export function useMessageListBehavior(parameters: {
 
       return {
         id,
-        rowBottomFromTop: rect.bottom - containerRect.top,
+        offsetFromBottom: containerRect.bottom - rect.bottom,
       };
     }
 
@@ -196,10 +200,10 @@ export function useMessageListBehavior(parameters: {
       return false;
     }
 
-    const containerTop = root.getBoundingClientRect().top;
-    const nextRowBottomFromTop = element.getBoundingClientRect().bottom - containerTop;
+    const containerBottom = root.getBoundingClientRect().bottom;
+    const nextOffsetFromBottom = containerBottom - element.getBoundingClientRect().bottom;
 
-    root.scrollTop += nextRowBottomFromTop - anchor.rowBottomFromTop;
+    root.scrollTop += anchor.offsetFromBottom - nextOffsetFromBottom;
 
     return true;
   }, []);
@@ -246,10 +250,6 @@ export function useMessageListBehavior(parameters: {
       // Guard against the frame firing after unmount: once the cleanup runs
       // we shouldn't touch DOM refs or call state setters (#10).
       if (!isMountedRef.current) {
-        return;
-      }
-      // A hidden list (`display: none` ancestor) measures as at the bottom; keep the last visible state.
-      if (rootRef.current?.clientHeight === 0) {
         return;
       }
       if (isAtBottomRef.current && autoScrollEnabled && isStreamingRef.current) {
@@ -309,16 +309,16 @@ export function useMessageListBehavior(parameters: {
       updateUnseenMessageCount(0);
     }
 
-    // Only the event still at the mount scroll's offset is skipped; a coalesced user scroll elsewhere loads.
-    const isMountScrollEvent = root.scrollTop === mountScrollTopRef.current;
-    mountScrollTopRef.current = null;
+    // Only the event still at the programmatic scroll's offset is skipped; a coalesced user scroll elsewhere loads.
+    const isProgrammaticScrollEvent = root.scrollTop === programmaticScrollTopRef.current;
+    programmaticScrollTopRef.current = null;
 
     if (root.scrollTop > estimatedItemSize) {
       topReachedRef.current = false;
       return;
     }
 
-    if (!isMountScrollEvent) {
+    if (!isProgrammaticScrollEvent) {
       void maybeLoadMoreHistory();
     }
   }, [
@@ -341,7 +341,7 @@ export function useMessageListBehavior(parameters: {
       scrollToBottom({ behavior: 'instant' });
       // The scroll event this emits must not load history; none is emitted if the list did not move.
       const scrollTop = rootRef.current?.scrollTop ?? 0;
-      mountScrollTopRef.current = scrollTop === scrollTopBefore ? null : scrollTop;
+      programmaticScrollTopRef.current = scrollTop === scrollTopBefore ? null : scrollTop;
     }
   }, [autoScrollEnabled, scrollToBottom]);
 
@@ -392,20 +392,33 @@ export function useMessageListBehavior(parameters: {
   React.useEffect(() => {
     const root = rootRef.current;
 
-    if (!root || !autoScrollEnabled || typeof globalThis.ResizeObserver === 'undefined') {
+    if (!root || typeof globalThis.ResizeObserver === 'undefined') {
       return undefined;
     }
 
-    // A viewport resize (typing indicator, composer, window) fires no scroll event: stay pinned.
+    // A viewport resize (typing indicator, composer, window) fires no scroll event.
+    let height = root.clientHeight;
     const observer = new globalThis.ResizeObserver(() => {
-      if (isAtBottomRef.current) {
+      const previousHeight = height;
+      height = root.clientHeight;
+      // Unchanged, or hidden by a `display: none` ancestor until it shows again.
+      if (height === previousHeight || height === 0) {
+        return;
+      }
+      if (autoScrollEnabled && isAtBottomRef.current) {
+        const scrollTopBefore = root.scrollTop;
         scrollToBottom({ behavior: 'instant' });
+        programmaticScrollTopRef.current =
+          root.scrollTop === scrollTopBefore ? null : root.scrollTop;
+      } else {
+        // The anchor is measured from the viewport bottom, which just moved.
+        anchorRef.current = captureAnchor(itemIdsRef.current);
       }
     });
     observer.observe(root);
 
     return () => observer.disconnect();
-  }, [autoScrollEnabled, scrollToBottom]);
+  }, [autoScrollEnabled, captureAnchor, scrollToBottom]);
 
   React.useEffect(() => {
     // Restore on (re)mount so the resize-driven auto-scroll keeps working after
