@@ -467,8 +467,8 @@ export function createSendMessageActions<Cursor = string>(params: {
       // Pre-stream rejection: put each removed message back after its nearest surviving
       // original predecessor (or before the first survivor), keeping changes made meanwhile.
       const removedById = new Map(removedMessages.map((message) => [message.id, message]));
-      const { messagesById } = store.state;
       const currentMessages = getMessages(storeUnknown);
+      // A Map lookup avoids inherited keys (e.g. an id of "constructor") on `messagesById`.
       const currentById = new Map(currentMessages.map((message) => [message.id, message]));
       const liveMessages = currentMessages.filter((message) => !removedById.has(message.id));
       const liveIds = new Set(liveMessages.map((message) => message.id));
@@ -478,12 +478,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         const removedMessage = removedById.get(id);
         if (removedMessage) {
           const group = restoredAfter.get(previousLiveId) ?? [];
-          // An unlisted id can still have an own entry (addMessage does not list "constructor"), but
-          // updateMessage on such ids can write a partial one, so require a complete message.
-          const ownMessage = Object.hasOwn(messagesById, id) ? messagesById[id] : undefined;
-          const isCompleteOwnMessage =
-            ownMessage?.id === id && ownMessage.role != null && Array.isArray(ownMessage.parts);
-          group.push(currentById.get(id) ?? (isCompleteOwnMessage ? ownMessage : removedMessage));
+          group.push(currentById.get(id) ?? removedMessage);
           restoredAfter.set(previousLiveId, group);
         } else if (liveIds.has(id)) {
           previousLiveId = id;
