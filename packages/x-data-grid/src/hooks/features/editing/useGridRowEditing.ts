@@ -526,7 +526,9 @@ export const useGridRowEditing = (
             return;
           }
           // `deleteValue` changes only the value of `fieldToFocus`
-          const hasChanged = newProps[field].value !== apiRef.current.getCellValue(id, field);
+          const hasChanged =
+            field === fieldToFocus &&
+            newProps[field].value !== apiRef.current.getCellValue(id, field);
 
           processEditCellProps(
             processingPropsLookup.current,

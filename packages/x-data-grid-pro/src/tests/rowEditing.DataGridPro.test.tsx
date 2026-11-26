@@ -1523,6 +1523,32 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(preProcessEditCellProps1.mock.lastCall?.[0].hasChanged).to.equal(true);
         expect(preProcessEditCellProps2.mock.lastCall?.[0].hasChanged).to.equal(false);
       });
+
+      it('should pass hasChanged=false to preProcessEditCellProps of a field with a valueGetter', async () => {
+        const preProcessEditCellProps = vi.fn(({ props }: GridPreProcessEditCellProps) => props);
+        const { user } = render(
+          <TestCase
+            rows={[{ id: 0, currencyPair: 'USDGBP', date: '2030-01-10' }]}
+            columns={[
+              { field: 'currencyPair', editable: true },
+              {
+                field: 'date',
+                type: 'date',
+                editable: true,
+                // Each call returns a new `Date` object
+                valueGetter: (value) => value && new Date(value),
+                preProcessEditCellProps,
+              },
+            ]}
+          />,
+        );
+
+        const cell = getCell(0, 0);
+        await user.click(cell);
+        await user.keyboard('{Delete}');
+
+        expect(preProcessEditCellProps.mock.lastCall?.[0].hasChanged).to.equal(false);
+      });
     });
 
     describe('by pressing a printable character', () => {
