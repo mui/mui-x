@@ -118,6 +118,9 @@ describe('createRealtimeActions', () => {
           listMessages: options.listMessages,
         };
         const runtimeRef = { current: { adapter } };
+        const realtimeMessageBufferRef = {
+          current: { adapter, buffer: realtimeMessageBuffer },
+        };
         const { setActiveConversation } = createConversationActions({
           store,
           runtimeRef,
@@ -126,14 +129,20 @@ describe('createRealtimeActions', () => {
           conversationNavigationRequestIdRef,
           conversationLoadRequestIdRef: { current: 0 },
           historyLoadRequestIdRef: { current: 0 },
-          realtimeMessageBufferRef: { current: { adapter, buffer: realtimeMessageBuffer } },
+          realtimeMessageBufferRef,
         });
         const { handleRealtimeEvent } = createRealtimeActions({
           store: asUnknown(store),
           conversationNavigationRequestIdRef,
           realtimeMessageBuffer,
         });
-        return { store, handleRealtimeEvent, setActiveConversation, runtimeRef };
+        return {
+          store,
+          handleRealtimeEvent,
+          setActiveConversation,
+          runtimeRef,
+          realtimeMessageBufferRef,
+        };
       }
 
       // Each call returns a pending page that the test resolves by hand.
@@ -306,6 +315,32 @@ describe('createRealtimeActions', () => {
 
         expect(store.state.messageIds).toEqual(['m1']);
       });
+      it.each(['resolves', 'rejects'] as const)(
+        'discards held messages when the adapter changes before listMessages %s',
+        async (outcome) => {
+          let settleLoad: () => void = () => {};
+          const listMessages = vi.fn(
+            () =>
+              new Promise<{ messages: ChatMessage[] }>((resolve, reject) => {
+                settleLoad = () =>
+                  outcome === 'resolves' ? resolve({ messages: [] }) : reject(new Error('offline'));
+              }),
+          );
+          const { store, handleRealtimeEvent, setActiveConversation, realtimeMessageBufferRef } =
+            setup({ listMessages });
+
+          handleRealtimeEvent({ type: 'message-added', message: createMessage('m1', 'c2') });
+          const loading = setActiveConversation('c2');
+          realtimeMessageBufferRef.current = {
+            adapter: { sendMessage: vi.fn() },
+            buffer: createRealtimeMessageBuffer(),
+          };
+          settleLoad();
+          await loading;
+
+          expect(store.state.messageIds).toEqual([]);
+        },
+      );
       it('keeps the store copy over a held one when listMessages fails', async () => {
         const listMessages = vi.fn().mockRejectedValue(new Error('offline'));
         const { store, handleRealtimeEvent, setActiveConversation } = setup({ listMessages });

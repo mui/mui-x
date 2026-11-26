@@ -1,6 +1,7 @@
 import type * as React from 'react';
 import type { ChatAdapter, ChatListMessagesResult } from '../../adapters';
 import type { ChatStore } from '../../store';
+import type { ChatMessage } from '../../types/chat-entities';
 import type { ChatError } from '../../types/chat-error';
 import type { AdapterRealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { createRuntimeError, getErrorMessage } from './useChatControllerHelpers';
@@ -50,14 +51,20 @@ export function createConversationActions<Cursor = string>(params: {
     }
 
     // Only the subscription of the adapter that serves this load holds messages for it.
-    const held = realtimeMessageBufferRef.current;
-    const realtimeMessageBuffer =
-      held?.adapter === runtimeRef.current.adapter ? held.buffer : undefined;
+    const held =
+      realtimeMessageBufferRef.current?.adapter === runtimeRef.current.adapter
+        ? realtimeMessageBufferRef.current
+        : null;
+    // Discarded if the adapter changed while the request was pending.
+    const flushHeldMessages = (messages: ChatMessage[], hasMore: boolean) =>
+      held && realtimeMessageBufferRef.current === held
+        ? held.buffer.flush(conversationId, messages, hasMore)
+        : messages;
 
     if (!runtimeRef.current.adapter.listMessages) {
       if (shouldResetMessages) {
         store.resetMessages();
-        const bufferedMessages = realtimeMessageBuffer?.flush(conversationId, [], false) ?? [];
+        const bufferedMessages = flushHeldMessages([], false);
         if (bufferedMessages.length > 0) {
           store.setMessages(bufferedMessages);
         }
@@ -89,9 +96,7 @@ export function createConversationActions<Cursor = string>(params: {
       }
 
       const hasMore = result.hasMore ?? false;
-      store.setMessages(
-        realtimeMessageBuffer?.flush(conversationId, result.messages, hasMore) ?? result.messages,
-      );
+      store.setMessages(flushHeldMessages(result.messages, hasMore));
       store.setHistoryState({ cursor: result.cursor, hasMore });
       store.setHistoryStatus('loaded');
       store.setError(null);
@@ -105,7 +110,7 @@ export function createConversationActions<Cursor = string>(params: {
 
       // Held messages predate the request. For duplicate ids `setMessages` keeps the first
       // position and the last value, i.e. the store copy, which is newer (e.g. streamed).
-      const heldMessages = realtimeMessageBuffer?.flush(conversationId, [], false) ?? [];
+      const heldMessages = flushHeldMessages([], false);
       if (heldMessages.length > 0) {
         store.setMessages([
           ...heldMessages,

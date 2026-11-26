@@ -1,6 +1,5 @@
 import type * as React from 'react';
 import type { ChatStore } from '../../store';
-import type { ChatMessage } from '../../types/chat-entities';
 import type { ChatRealtimeEvent } from '../../types/chat-realtime';
 import type { RealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { applyPresenceUpdate, applyReadUpdate } from './useChatControllerHelpers';
@@ -12,30 +11,6 @@ export function createRealtimeActions(params: {
 }) {
   const { store, conversationNavigationRequestIdRef, realtimeMessageBuffer } = params;
 
-  /**
-   * Keeps a message that is not in the store out of the visible thread when it belongs to a
-   * conversation other than the active one. Returns `false` to apply it now.
-   */
-  function bufferMessage(message: ChatMessage, isUpdate: boolean): boolean {
-    const { activeConversationId } = store.state;
-    const { conversationId } = message;
-
-    if (
-      activeConversationId == null ||
-      conversationId == null ||
-      conversationId === activeConversationId
-    ) {
-      return false;
-    }
-
-    // A controlled thread is owned by the parent, so nothing is replayed into it.
-    if (store.parameters.messages === undefined) {
-      realtimeMessageBuffer.add(conversationId, message, isUpdate);
-    }
-
-    return true;
-  }
-
   function handleRealtimeEvent(event: ChatRealtimeEvent): void {
     switch (event.type) {
       case 'message-added':
@@ -43,9 +18,20 @@ export function createRealtimeActions(params: {
         const { message } = event;
         const isUpdate = event.type === 'message-updated';
         const isStored = Boolean(store.state.messagesById[message.id]);
+        const { activeConversationId } = store.state;
 
-        // Messages already stored are applied whatever their conversation.
-        if (!isStored && bufferMessage(message, isUpdate)) {
+        // A message for another conversation stays out of the visible thread; stored ones are
+        // applied whatever their conversation.
+        if (
+          !isStored &&
+          activeConversationId != null &&
+          message.conversationId != null &&
+          message.conversationId !== activeConversationId
+        ) {
+          // A controlled thread is owned by the parent, so nothing is replayed into it.
+          if (store.parameters.messages === undefined) {
+            realtimeMessageBuffer.add(message.conversationId, message, isUpdate);
+          }
           return;
         }
         if (isStored && isUpdate) {
