@@ -478,10 +478,12 @@ export function createSendMessageActions<Cursor = string>(params: {
         const removedMessage = removedById.get(id);
         if (removedMessage) {
           const group = restoredAfter.get(previousLiveId) ?? [];
-          // An unlisted id can still have an own entry (addMessage does not list "constructor");
-          // the id check skips the id-less patch updateMessage writes for such ids.
+          // An unlisted id can still have an own entry (addMessage does not list "constructor"), but
+          // updateMessage on such ids can write a partial one, so require a complete message.
           const ownMessage = Object.hasOwn(messagesById, id) ? messagesById[id] : undefined;
-          group.push(currentById.get(id) ?? (ownMessage?.id === id ? ownMessage : removedMessage));
+          const isCompleteOwnMessage =
+            ownMessage?.id === id && ownMessage.role != null && Array.isArray(ownMessage.parts);
+          group.push(currentById.get(id) ?? (isCompleteOwnMessage ? ownMessage : removedMessage));
           restoredAfter.set(previousLiveId, group);
         } else if (liveIds.has(id)) {
           previousLiveId = id;

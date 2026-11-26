@@ -1306,6 +1306,39 @@ describe('createSendMessageActions', () => {
       expect(store.state.messagesById.author).toBe(reply);
     });
 
+    it('restores the snapshot over an incomplete own entry for a removed reply when regenerating rejects', async () => {
+      const [u1, a1] = makeThread();
+      const reply: ChatMessage = { ...a1, id: 'author' };
+      const protoMessage: ChatMessage = {
+        ...u1,
+        id: '__proto__',
+        author: { id: 'author', displayName: 'Alex' },
+      };
+      const store = new ChatStore({ initialMessages: [u1, reply] });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          store.setMessages([u1, protoMessage]);
+          // As a rejected tool approval's rollback does: copies the inherited author into an own entry.
+          store.updateMessage('author', { parts: reply.parts });
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('author');
+
+      // updateMessage's spread drops the "__proto__" message itself (store bug); check only the reply.
+      expect(store.state.messageIds.slice(0, 2)).toEqual(['u1', 'author']);
+      expect(store.state.messagesById.author).toBe(reply);
+    });
+
     it('restores a reply with no surviving predecessor before the first message in the live order when regenerating rejects', async () => {
       const [u1, a1] = makeThread();
       const u2: ChatMessage = { ...u1, id: 'u2' };
