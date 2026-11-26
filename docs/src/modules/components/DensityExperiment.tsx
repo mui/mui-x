@@ -14,11 +14,13 @@ import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   GridActionsCellItem,
+  GridAiAssistantPanel,
   GridCheckIcon,
   GridDeleteIcon,
   unstable_enhanceDensity as enhanceGrid,
 } from '@mui/x-data-grid-premium';
-import DensityExperimentShell, { createEnhancedTheme } from './DensityExperimentShell';
+import { formulaFeature } from '@mui/x-data-grid-premium/formula';
+import DensityExperimentShell from './DensityExperimentShell';
 
 const teams = ['Core', 'Grid', 'Pickers', 'Charts', 'Tree View'];
 const tags = ['math', 'poetry', 'engines', 'notes', 'navy', 'logic', 'crypto'];
@@ -61,8 +63,6 @@ const rows = Array.from({ length: 40 }, (_, i) => ({
       : 'Short note.',
 }));
 
-const enhanced = createEnhancedTheme(enhanceGrid);
-
 export default function DensityExperiment() {
   return (
     <DensityExperimentShell
@@ -72,13 +72,13 @@ export default function DensityExperiment() {
           Right column:{' '}
           <code>
             enhanceGrid(enhanceMaterial(createTheme(
-            {'{ cssVariables: { cssVarPrefix: "density" } }'})))
+            {'{ cssVariables: { cssVarPrefix: "density" }, focusVisible: true }'})))
           </code>{' '}
           with the Premium enhancer (Pro and community underneath). Open the columns panel, filter
           panel, pivot sidebar and AI assistant, edit a cell, expand the quick filter.
         </React.Fragment>
       }
-      enhanced={enhanced}
+      enhance={enhanceGrid}
       componentNames={['MuiDataGrid']}
     >
       {() => (
@@ -99,6 +99,8 @@ export default function DensityExperiment() {
               headerFilters
               rowReordering
               aiAssistant
+              slots={{ aiAssistantPanel: GridAiAssistantPanel }}
+              featureDependencies={{ formula: formulaFeature }}
               onPrompt={async () => ({
                 conversationId: 'density-experiment',
                 select: -1,

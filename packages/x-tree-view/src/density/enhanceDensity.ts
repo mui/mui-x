@@ -1,3 +1,4 @@
+import type { CircularProgressProps } from '@mui/material/CircularProgress';
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
 import {
   addDefaultProps,
@@ -16,10 +17,17 @@ import type { TreeItemClassKey } from '../TreeItem/treeItemClasses';
 export type TreeViewDensityComponents = NonNullable<Theme['components']> & {
   MuiSimpleTreeView?: { defaultProps?: object };
   MuiRichTreeView?: { defaultProps?: object };
-  MuiTreeItem?: { styleOverrides?: Partial<Record<TreeItemClassKey, unknown>> };
+  MuiTreeItem?: {
+    defaultProps?: object;
+    styleOverrides?: Partial<Record<TreeItemClassKey, unknown>>;
+  };
   MuiTreeItemLoader?: {
     styleOverrides?: Partial<Record<TreeItemLoaderClassKey, CSSInterpolation>>;
   };
+};
+
+type LoadingIconDefaults = NonNullable<Theme['components']> & {
+  MuiTreeItem?: { defaultProps?: { slotProps?: { loadingIcon?: CircularProgressProps } } };
 };
 
 /** A theme whose `components` object the enhancer chain owns and can write into. */
@@ -57,14 +65,27 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     gap: spacing('xSmall'),
   };
   addStyleOverride(components, 'MuiTreeItem', 'content', row);
+  const targetSize = 'max(100%, 24px)';
+  const centered = { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
   addStyleOverride(components, 'MuiTreeItem', 'iconContainer', {
     width: iconSize,
     '& svg': { fontSize: iconSize },
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      width: targetSize,
+      height: targetSize,
+      ...centered,
+    },
   });
   // The item checkbox is a material Checkbox that master sizes to its glyph
   // (no padding). Material's enhancer gives every Checkbox a `touchTarget`
   // box, which the row then squeezes, so the box follows the glyph again.
-  addStyleOverride(components, 'MuiTreeItem', 'checkbox', { width: iconSize, height: iconSize });
+  addStyleOverride(components, 'MuiTreeItem', 'checkbox', {
+    width: iconSize,
+    height: iconSize,
+    '& input': { width: targetSize, height: targetSize, ...centered },
+  });
   // The editable label and its inline input share a 2px inset so the text
   // does not move on edit; it is half the smallest step.
   const editInset = `calc(${spacing('xxSmall')} / 2)`;
@@ -72,6 +93,9 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     variants: [{ props: { editable: true }, style: { paddingLeft: editInset } }],
   });
   addStyleOverride(components, 'MuiTreeItem', 'labelInput', { paddingInline: editInset });
+  addDefaultProps(components as LoadingIconDefaults, 'MuiTreeItem', {
+    slotProps: { loadingIcon: { size: `calc(${iconSize} - ${spacing('xxSmall')})` } },
+  });
   addStyleOverride(components, 'MuiTreeItemLoader', 'root', {
     ...row,
     [`& .${treeItemLoaderClasses.iconContainer}`]: { width: iconSize },

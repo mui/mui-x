@@ -23,7 +23,9 @@ describe('enhanceDensity', () => {
 
   it('emits the cell inline inset as the xSmall step, var ref on a vars theme', () => {
     const plain = enhanceDensity(enhancedTheme());
-    expect(plain.components.MuiDataGrid?.styleOverrides?.cell).toEqual([{ paddingInline: '8px' }]);
+    expect(plain.components.MuiDataGrid?.styleOverrides?.cell).toEqual([
+      { paddingInline: '8px', '&.MuiDataGrid-cell--editing': { padding: 1 } },
+    ]);
     expect(plain.components.MuiDataGrid?.styleOverrides?.cellCheckbox).toEqual([
       { paddingInline: 0 },
     ]);
@@ -33,7 +35,10 @@ describe('enhanceDensity', () => {
 
     const vars = enhanceDensity(enhancedTheme({}, { cssVariables: true }));
     expect(vars.components.MuiDataGrid?.styleOverrides?.cell).toEqual([
-      { paddingInline: 'var(--mui-spacing-xSmall, 8px)' },
+      {
+        paddingInline: 'var(--mui-spacing-xSmall, 8px)',
+        '&.MuiDataGrid-cell--editing': { padding: 1 },
+      },
     ]);
   });
 
@@ -44,7 +49,6 @@ describe('enhanceDensity', () => {
         minHeight: 'calc(32px + 2 * 8px)',
         padding: '8px',
         gap: '4px',
-        '& svg': { fontSize: '16px' },
       },
     ]);
 
@@ -54,7 +58,6 @@ describe('enhanceDensity', () => {
         minHeight: 'calc(var(--mui-touchTarget, 32px) + 2 * var(--mui-spacing-xSmall, 8px))',
         padding: 'var(--mui-spacing-xSmall, 8px)',
         gap: 'var(--mui-spacing-xxSmall, 4px)',
-        '& svg': { fontSize: 'var(--mui-iconSize, 16px)' },
       },
     ]);
   });
@@ -75,44 +78,70 @@ describe('enhanceDensity', () => {
     expect(styleOverrides?.toolbarDivider).toEqual([{ marginInline: '4px' }]);
     expect(styleOverrides?.toolbarLabel).toEqual([{ marginInline: '4px' }]);
     expect(styleOverrides?.columnsManagement).toEqual([
-      { padding: '4px 12px', '& .MuiFormControlLabel-root': { gap: '4px' } },
+      { padding: '4px 12px', '& .MuiFormControlLabel-root': { gap: '4px', margin: 0 } },
     ]);
     const searchField = {
-      '& svg': { fontSize: '16px' },
       '& .MuiInputAdornment-positionEnd .MuiIconButton-sizeSmall.MuiIconButton-edgeEnd': {
-        marginRight: 'calc(32px / -4)',
+        marginRight: 'calc((16px - 32px + 4px) / 2)',
       },
     };
     expect(styleOverrides?.toolbarQuickFilterControl).toEqual([searchField]);
     expect(styleOverrides?.columnsManagementHeader).toEqual([
       { padding: '12px 16px', ...searchField },
     ]);
-    expect(styleOverrides?.columnsManagementFooter).toEqual([{ padding: '8px 8px 8px 12px' }]);
+    expect(styleOverrides?.columnsManagementFooter).toEqual([
+      { padding: '8px 8px 8px 12px', '& .MuiFormControlLabel-root': { gap: '4px', margin: 0 } },
+    ]);
     expect(styleOverrides?.columnsManagementEmptyText).toEqual([{ paddingBlock: '8px' }]);
   });
 
-  it('emits the header insets, menu pull, and the cell glyph/inset rules', () => {
+  it('emits the header insets, menu pull, badge anchor, and the cell inset rules', () => {
     const { styleOverrides } = enhanceDensity(enhancedTheme()).components.MuiDataGrid!;
+    const smallButtonPull = 'calc((16px - 32px + 4px) / 2)';
     expect(styleOverrides?.columnHeader).toEqual([{ paddingInline: '8px' }]);
-    expect(styleOverrides?.columnHeaderTitleContainer).toEqual([{ gap: '4px' }]);
-    expect(styleOverrides?.menuIcon).toEqual([{ marginRight: 'calc((32px - 4px - 16px) / -2)' }]);
+    expect(styleOverrides?.columnHeaderTitleContainer).toEqual([
+      { gap: '4px', '& .MuiBadge-badge': { top: 'calc((1lh - 4px + 1px) / 2)' } },
+    ]);
+    expect(styleOverrides?.menuIcon).toEqual([{ marginRight: smallButtonPull }]);
     expect(styleOverrides?.['columnHeader--alignRight']).toEqual([
-      { '& .MuiDataGrid-menuIcon': { marginLeft: 'calc((32px - 4px - 16px) / -2)' } },
+      { '& .MuiDataGrid-menuIcon': { marginLeft: smallButtonPull, marginRight: 'auto' } },
     ]);
-    expect(styleOverrides?.booleanCell).toEqual([{ fontSize: '16px' }]);
-    expect(styleOverrides?.actionsCell).toEqual([
-      { gridGap: '8px', '& svg': { fontSize: '16px' } },
-    ]);
+    expect(styleOverrides?.booleanCell).toBe(undefined);
+    expect(styleOverrides?.actionsCell).toEqual([{ gridGap: '8px' }]);
     expect(styleOverrides?.editInputCell).toEqual([
-      { '& input': { paddingInline: '8px' }, '& svg': { fontSize: '16px' } },
+      { '& input': { padding: '0 8px', height: '100%' } },
     ]);
     const popupInset = {
       paddingInline: 'calc(8px - 1px)',
       paddingBlock: 'calc((32px + 2 * 4px - 1px - 1lh) / 2)',
     };
+    const cornerButtonTarget = {
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        right: 0,
+        bottom: 0,
+        width: 'max(100%, 24px)',
+        height: 'max(100%, 24px)',
+      },
+    };
     expect(styleOverrides?.editLongTextCellValue).toEqual([{ paddingInline: '8px' }]);
     expect(styleOverrides?.editLongTextCellPopperContent).toEqual([popupInset]);
-    expect(styleOverrides?.longTextCellPopperContent).toEqual([popupInset]);
+    expect(styleOverrides?.longTextCell).toEqual([
+      {
+        '&.MuiDataGrid-longTextCell .MuiDataGrid-longTextCellExpandButton': {
+          right: 'calc(1px - 8px)',
+          ...cornerButtonTarget,
+        },
+      },
+    ]);
+    expect(styleOverrides?.longTextCellPopperContent).toEqual([
+      {
+        ...popupInset,
+        marginLeft: 'calc(10px - 8px)',
+        '& .MuiDataGrid-longTextCellCollapseButton': cornerButtonTarget,
+      },
+    ]);
   });
 
   it('emits the filter panel insets', () => {
@@ -121,9 +150,7 @@ describe('enhanceDensity', () => {
       { '& .MuiDataGrid-panelContent': { padding: '24px 12px 16px 8px', gap: '24px' } },
     ]);
     expect(styleOverrides?.panelFooter).toEqual([{ padding: '8px' }]);
-    expect(styleOverrides?.filterForm).toEqual([
-      { gap: '12px', '& .MuiDataGrid-filterFormDeleteIcon svg': { fontSize: '16px' } },
-    ]);
+    expect(styleOverrides?.filterForm).toEqual([{ gap: '12px' }]);
   });
 
   it('emits the footer bar paired with the pagination toolbar', () => {
@@ -137,6 +164,7 @@ describe('enhanceDensity', () => {
       },
     ]);
     expect(styleOverrides?.rowCount).toEqual([{ marginInline: '16px' }]);
+    expect(styleOverrides?.overlay).toEqual([{ gap: '8px' }]);
     expect(styleOverrides?.selectedRowCount).toEqual([{ marginInline: '16px' }]);
   });
 
@@ -145,7 +173,7 @@ describe('enhanceDensity', () => {
       enhancedTheme({ MuiDataGrid: { styleOverrides: { cell: { paddingInline: 4 } } } }),
     );
     expect(theme.components.MuiDataGrid?.styleOverrides?.cell).toEqual([
-      { paddingInline: '8px' },
+      { paddingInline: '8px', '&.MuiDataGrid-cell--editing': { padding: 1 } },
       { paddingInline: 4 },
     ]);
   });

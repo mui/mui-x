@@ -1,6 +1,11 @@
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
 import type {} from '../themeAugmentation';
-import { addStyleOverride, getDensityScale, getDensitySizing } from '@mui/x-internals/densityTheme';
+import {
+  addDefaultProps,
+  addStyleOverride,
+  getDensityScale,
+  getDensitySizing,
+} from '@mui/x-internals/densityTheme';
 import { labelMarkClasses } from '../ChartsLabel/labelMarkClasses';
 import { legendClasses } from '../ChartsLegend/chartsLegendClasses';
 import { piecewiseColorLegendClasses } from '../ChartsLegend/piecewiseColorLegendClasses';
@@ -23,6 +28,7 @@ export type ChartsDensityComponents = NonNullable<Theme['components']> & {
   MuiContinuousColorLegend?: SlotOverrides;
   MuiPiecewiseColorLegend?: SlotOverrides;
   MuiChartsToolbar?: SlotOverrides;
+  MuiChartsLabelGradient?: { defaultProps?: { thickness?: number } };
 };
 
 /**
@@ -33,8 +39,11 @@ export type ChartsDensityComponents = NonNullable<Theme['components']> & {
  * wrap this one and add what they own.
  */
 export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<T> {
-  getDensityScale(theme);
+  const scale = getDensityScale(theme);
   const components: ChartsDensityComponents = { ...theme.components };
+  addDefaultProps(components, 'MuiChartsLabelGradient', {
+    thickness: scale.iconSize - scale.spacing.xxSmall,
+  });
   const { spacing } = theme;
   const { touchTarget, iconSize } = getDensitySizing(theme);
   const halfStep = `calc(${spacing('xxSmall')} / 2)`;

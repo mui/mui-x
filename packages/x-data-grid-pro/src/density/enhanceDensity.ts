@@ -1,9 +1,11 @@
-import type { Theme } from '@mui/material/styles';
+import type { CSSInterpolation, Theme } from '@mui/material/styles';
+import { autocompleteClasses } from '@mui/material/Autocomplete';
+import { iconButtonClasses } from '@mui/material/IconButton';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { unstable_enhanceDensity as enhanceCommunityDensity } from '@mui/x-data-grid/density';
 import type { DensityEnhancedTheme } from '@mui/x-data-grid/density';
-import { gridClasses } from '@mui/x-data-grid';
-import { getDensityScale, getDensitySizing, gridDensityHeight } from '@mui/x-data-grid/internals';
+import { DATA_GRID_PROPS_DEFAULT_VALUES, gridClasses } from '@mui/x-data-grid';
+import { getDensityScale, getDensitySizing } from '@mui/x-data-grid/internals';
 import { addDefaultProps, addStyleOverride } from '@mui/x-internals/densityTheme';
 import type { DataGridProProps } from '../models/dataGridProProps';
 
@@ -12,7 +14,10 @@ import type { DataGridProProps } from '../models/dataGridProProps';
 // types), where the key carries community props only. Pin the Pro props here so
 // the Pro-only emission typechecks in every program.
 type ProDensityComponents = NonNullable<Theme['components']> & {
-  MuiDataGrid?: { defaultProps?: Partial<DataGridProProps> };
+  MuiDataGrid?: {
+    defaultProps?: Partial<DataGridProProps>;
+    styleOverrides?: { multiSelectChips?: CSSInterpolation };
+  };
 };
 
 /**
@@ -26,16 +31,17 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const enhanced = enhanceCommunityDensity(theme);
   const scale = getDensityScale(enhanced);
   addDefaultProps(enhanced.components as ProDensityComponents, 'MuiDataGrid', {
-    headerFilterHeight: gridDensityHeight(scale),
+    headerFilterHeight: Math.max(
+      scale.touchTarget + 2 * scale.spacing.xSmall,
+      DATA_GRID_PROPS_DEFAULT_VALUES.columnHeaderHeight,
+    ),
   });
 
   const { spacing } = theme;
   const { touchTarget, iconSize } = getDensitySizing(theme);
-  const { components } = enhanced;
-  // The grid hardcodes `fontSize="small"` on its icons with no prop to change it;
-  // material's enhancer maps that variant to `iconSize - 2px`, but the grid's
-  // default glyph is the icon constant itself, so the owning slot restates it.
-  const glyph = { '& svg': { fontSize: iconSize } };
+  const components = enhanced.components as ProDensityComponents;
+  const smallBox = `calc(${touchTarget} - ${spacing('xxSmall')})`;
+  const spacingUnitPx = parseFloat(/([\d.]+)px/.exec(String(spacing(1)))?.[1] ?? '8');
 
   // Header filter row: the same block inset the row height formula carries
   // (xxSmall above and below the touch target), so the small input fits.
@@ -45,22 +51,26 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // override list, so their `styleOverrides` keys are dropped; they nest under
   // the root slot instead (all four render inside the root, not in a portal).
   addStyleOverride(components, 'MuiDataGrid', 'root', {
-    [`& .${gridClasses['columnHeader--filter']}`]: {
+    '--DataGrid-cellOffsetMultiplier': scale.spacing.medium / spacingUnitPx,
+    [`& .${gridClasses.columnHeader}.${gridClasses['columnHeader--filter']}`]: {
       paddingBlock: spacing('xxSmall'),
-      paddingRight: spacing('xSmall'),
+      paddingRight: `calc(${spacing('xSmall')} + (${iconSize} - ${smallBox}) / 2)`,
+      minHeight: 0,
+      [`& .${iconButtonClasses.root}`]: {
+        minWidth: 0,
+        minHeight: 0,
+        marginBlock: 0,
+        height: `min(100%, ${smallBox})`,
+        aspectRatio: 1,
+      },
     },
-    [`& .${gridClasses.rowReorderIcon}`]: { fontSize: iconSize },
-    // Chip rows (the overflow measurer reads their computed gap); the edit
-    // row carries master's `0 10px` inset; the rowspan stack inset mirrors
-    // master's selector.
-    [`& .${gridClasses.multiSelectCell}`]: { gap: spacing('xxSmall') },
+    // The edit row carries master's `0 10px` inset; the rowspan stack inset
+    // mirrors master's selector.
     [`& .${gridClasses.cell}[aria-rowspan]:not([aria-rowspan="1"]) .${gridClasses.multiSelectCell}`]:
       { paddingTop: spacing('xSmall') },
-    [`& .${gridClasses.editMultiSelectCell}`]: {
-      gap: spacing('xxSmall'),
-      paddingInline: spacing('xSmall'),
-    },
+    [`& .${gridClasses.editMultiSelectCell}`]: { paddingInline: spacing('xSmall') },
   });
+  addStyleOverride(components, 'MuiDataGrid', 'multiSelectChips', { gap: spacing('xxSmall') });
   addStyleOverride(components, 'MuiDataGrid', 'columnHeaderFilterInput', {
     marginRight: spacing('xxSmall'),
     marginBottom: spacing('-xxSmall'),
@@ -76,7 +86,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // Tree data / grouping toggles: a small icon button (`flex: 0 0 28px` in
   // master) and its gap to the label.
   const toggle = {
-    flexBasis: `calc(${touchTarget} - ${spacing('xxSmall')})`,
+    flexBasis: smallBox,
     marginRight: spacing('medium'),
   };
   addStyleOverride(components, 'MuiDataGrid', 'treeDataGroupingCellToggle', toggle);
@@ -86,12 +96,15 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addStyleOverride(components, 'MuiDataGrid', 'multiSelectCellPopperContent', {
     padding: spacing('xSmall'),
     gap: spacing('xxSmall'),
+    marginLeft: `calc(10px - ${spacing('xSmall')})`,
   });
   addStyleOverride(components, 'MuiDataGrid', 'editMultiSelectCellPopperContent', {
     [`& .${inputBaseClasses.root}.${inputBaseClasses.sizeSmall}`]: {
       paddingBlock: spacing('xxSmall'),
     },
-    ...glyph,
+    [`& .${autocompleteClasses.root} .${autocompleteClasses.tag}`]: { '--_height': smallBox },
+    [`& .${autocompleteClasses.root} .${autocompleteClasses.inputRoot}.${inputBaseClasses.sizeSmall}`]:
+      { '--_tagHeight': smallBox },
   });
   return enhanced;
 }

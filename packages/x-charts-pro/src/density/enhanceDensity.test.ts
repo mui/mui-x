@@ -14,6 +14,9 @@ describe('enhanceDensity', () => {
     expect((theme.components as any).MuiChartsHeatmapTooltip.styleOverrides.axesValue).toEqual([
       { padding: '4px 12px', '& span': { marginRight: '12px' } },
     ]);
+    expect((theme.components as any).MuiChartsZoomSliderTooltip.styleOverrides.root).toEqual([
+      { '& > div': { paddingInline: '4px' } },
+    ]);
     expect(theme.components.MuiChartsLegend?.styleOverrides?.root).toBeDefined();
   });
 });

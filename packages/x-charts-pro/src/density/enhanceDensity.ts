@@ -7,6 +7,7 @@ import { addStyleOverride } from '@mui/x-internals/densityTheme';
 // augmentation does not list it, so its key is typed loosely here.
 type ChartsProDensityComponents = ChartsDensityComponents & {
   MuiChartsHeatmapTooltip?: { styleOverrides?: Record<string, CSSInterpolation> };
+  MuiChartsZoomSliderTooltip?: { styleOverrides?: Record<string, CSSInterpolation> };
 };
 
 /**
@@ -26,6 +27,9 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addStyleOverride(components, 'MuiChartsHeatmapTooltip', 'axesValue', {
     padding: `${spacing('xxSmall')} ${spacing('small')}`,
     '& span': { marginRight: spacing('small') },
+  });
+  addStyleOverride(components, 'MuiChartsZoomSliderTooltip', 'root', {
+    '& > div': { paddingInline: spacing('xxSmall') },
   });
 
   return enhanced;

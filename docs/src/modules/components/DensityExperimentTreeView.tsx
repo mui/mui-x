@@ -9,9 +9,7 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { unstable_enhanceDensity as enhanceTreeView } from '@mui/x-tree-view-pro/density';
-import DensityExperimentShell, { createEnhancedTheme } from './DensityExperimentShell';
-
-const enhanced = createEnhancedTheme(enhanceTreeView);
+import DensityExperimentShell from './DensityExperimentShell';
 
 const items = [
   {
@@ -67,7 +65,7 @@ export default function DensityExperimentTreeView() {
           inline input.
         </React.Fragment>
       }
-      enhanced={enhanced}
+      enhance={enhanceTreeView}
       componentNames={[
         'MuiTreeItem',
         'MuiTreeItemLoader',

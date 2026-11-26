@@ -6,9 +6,10 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import type { Theme } from '@mui/material/styles';
+import type { DensityScaleOverrides, Theme } from '@mui/material/styles';
 import {
   createTheme,
+  StyledEngineProvider,
   ThemeProvider,
   unstable_enhanceDensity as enhanceMaterial,
 } from '@mui/material/styles';
@@ -20,22 +21,42 @@ const pages = [
   { href: '/x/density-experiment-charts/', label: 'Charts' },
 ];
 
-const vanilla = createTheme({ cssVariables: true });
+const scales: Record<string, DensityScaleOverrides> = {
+  low: {
+    spacing: { xxSmall: 8, xSmall: 12, small: 16, medium: 24, large: 32, xLarge: 48, xxLarge: 64 },
+    touchTarget: 44,
+    iconSize: 24,
+  },
+  high: {
+    spacing: { xxSmall: 2, xSmall: 4, small: 8, medium: 12, large: 16, xLarge: 24, xxLarge: 32 },
+    touchTarget: 24,
+    iconSize: 12,
+  },
+};
 
-/**
- * The material enhancer followed by the X enhancer under review. The enhanced
- * theme gets its own `cssVarPrefix`: a nested ThemeProvider that reuses the
- * outer prefix skips its style sheet, so every `var(--mui-*)` ref would fall
- * back to the literal.
- */
-export function createEnhancedTheme(enhanceX: (theme: Theme) => Theme) {
-  return enhanceX(enhanceMaterial(createTheme({ cssVariables: { cssVarPrefix: 'density' } })));
+interface QueryOptions {
+  scale: string | null;
+  layers: boolean;
+  mode: 'light' | 'dark';
+}
+
+function useQueryOptions() {
+  const [options, setOptions] = React.useState<QueryOptions | null>(null);
+  React.useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    setOptions({
+      scale: query.get('scale'),
+      layers: query.get('layers') === 'modular',
+      mode: query.get('mode') === 'dark' ? 'dark' : 'light',
+    });
+  }, []);
+  return options;
 }
 
 interface DensityExperimentShellProps {
   title: string;
   description: React.ReactNode;
-  enhanced: Theme;
+  enhance: (theme: Theme) => Theme;
   /** Theme component names whose emitted `defaultProps` are printed under each column. */
   componentNames: string[];
   children: (theme: Theme) => React.ReactNode;
@@ -46,7 +67,7 @@ function Column({
   theme,
   componentNames,
   children,
-}: Omit<DensityExperimentShellProps, 'description' | 'enhanced'> & { theme: Theme }) {
+}: Omit<DensityExperimentShellProps, 'description' | 'enhance'> & { theme: Theme }) {
   const scale = theme.unstable_densityScale;
   const components = theme.components as Record<string, any> | undefined;
   const defaultProps = Object.fromEntries(
@@ -84,33 +105,70 @@ function Column({
 }
 
 export default function DensityExperimentShell(props: DensityExperimentShellProps) {
-  const { title, description, enhanced, componentNames, children } = props;
+  const { title, description, enhance, componentNames, children } = props;
+  const options = useQueryOptions();
+  const scale = options?.scale ?? null;
+  const layers = options?.layers ?? false;
+  const mode = options?.mode ?? 'light';
+  const vanilla = React.useMemo(
+    () =>
+      createTheme({
+        cssVariables: true,
+        focusVisible: true,
+        modularCssLayers: layers,
+        palette: { mode },
+      }),
+    [layers, mode],
+  );
+  // The enhanced theme gets its own `cssVarPrefix`: a nested ThemeProvider that
+  // reuses the outer prefix skips its style sheet, so every `var(--mui-*)` ref
+  // would fall back to the literal.
+  const enhanced = React.useMemo(
+    () =>
+      enhance(
+        enhanceMaterial(
+          createTheme({
+            cssVariables: { cssVarPrefix: 'density' },
+            focusVisible: true,
+            modularCssLayers: layers,
+            palette: { mode },
+          }),
+          scale ? scales[scale] : undefined,
+        ),
+      ),
+    [enhance, scale, layers, mode],
+  );
+  if (!options) {
+    return null;
+  }
   return (
-    <ThemeProvider theme={vanilla}>
-      <CssBaseline />
-      <Box sx={{ p: 3 }}>
-        <Stack direction="row" spacing={2} sx={{ mb: 2, flexWrap: 'wrap' }}>
-          {pages.map((page) => (
-            <Link key={page.href} href={page.href}>
-              {page.label}
-            </Link>
-          ))}
-        </Stack>
-        <Typography variant="h5" sx={{ mb: 0.5 }}>
-          {title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" component="div" sx={{ mb: 3 }}>
-          {description}
-        </Typography>
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={4}>
-          <Column title="Vanilla" theme={vanilla} componentNames={componentNames}>
-            {children}
-          </Column>
-          <Column title="Enhanced" theme={enhanced} componentNames={componentNames}>
-            {children}
-          </Column>
-        </Stack>
-      </Box>
-    </ThemeProvider>
+    <StyledEngineProvider enableCssLayer={layers}>
+      <ThemeProvider theme={vanilla}>
+        <CssBaseline />
+        <Box sx={{ p: 3 }}>
+          <Stack direction="row" spacing={2} sx={{ mb: 2, flexWrap: 'wrap' }}>
+            {pages.map((page) => (
+              <Link key={page.href} href={page.href}>
+                {page.label}
+              </Link>
+            ))}
+          </Stack>
+          <Typography variant="h5" sx={{ mb: 0.5 }}>
+            {title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" component="div" sx={{ mb: 3 }}>
+            {description}
+          </Typography>
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={4}>
+            <Column title="Vanilla" theme={vanilla} componentNames={componentNames}>
+              {children}
+            </Column>
+            <Column title="Enhanced" theme={enhanced} componentNames={componentNames}>
+              {children}
+            </Column>
+          </Stack>
+        </Box>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 }

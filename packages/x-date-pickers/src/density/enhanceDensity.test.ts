@@ -70,15 +70,84 @@ describe('enhanceDensity', () => {
         marginBlock: 'calc(4px / 2)',
         marginInline: '4px',
         paddingInline: '16px',
+        '&:first-of-type': { marginTop: 4 },
       },
+    ]);
+    expect(theme.components.MuiDigitalClock?.styleOverrides?.list).toEqual([{ padding: 0 }]);
+    expect(theme.components.MuiMultiSectionDigitalClockSection?.styleOverrides?.root).toEqual([
+      { padding: 0 },
     ]);
   });
 
-  it("releases material's Button height on the toolbar value buttons", () => {
+  it("releases material's Button min height on the toolbar value buttons", () => {
     const theme = enhanceDensity(enhancedTheme());
     expect(theme.components.MuiPickersToolbarButton?.styleOverrides?.root).toEqual([
-      { height: 'auto' },
+      { minHeight: 0, padding: 0, textTransform: 'none' },
     ]);
+  });
+
+  it("zeroes material's dialog content inset around a picker layout", () => {
+    const theme = enhanceDensity(enhancedTheme());
+    const [pickerLayer] = theme.components.MuiDialogContent?.styleOverrides?.root as any[];
+    expect(pickerLayer).toEqual({ '&:has(> .MuiPickersLayout-root)': { padding: 0 } });
+  });
+
+  it("keeps the clock and layout controls at material's spacing", () => {
+    const { components } = enhanceDensity(enhancedTheme());
+    const meridiemButton = { minWidth: 0, minHeight: 0, height: 36, paddingInline: 4 };
+    expect(components.MuiClock?.styleOverrides?.amButton).toEqual([meridiemButton]);
+    expect(components.MuiClock?.styleOverrides?.pmButton).toEqual([meridiemButton]);
+    expect(components.MuiPickersLayout?.styleOverrides?.actionBar).toEqual([
+      { padding: '8px', gap: '8px' },
+    ]);
+    const viewHeight = 'calc(12px + 32px + 4px + calc(32px + 4px) * 7)';
+    expect(components.MuiPickersLayout?.styleOverrides?.root).toEqual([
+      {
+        '&:has(.MuiDateCalendar-root)': {
+          '& .MuiMultiSectionDigitalClock-root, & .MuiMultiSectionDigitalClockSection-root, & .MuiDigitalClock-root':
+            { maxHeight: viewHeight },
+          '& .MuiPickersLayout-shortcuts': { maxHeight: viewHeight },
+        },
+        '&:has(.MuiDateTimePickerTabs-root)': {
+          '& .MuiMultiSectionDigitalClock-root': {
+            width: 'max(320px, calc(calc(32px + 4px) * 7 + 2 * 24px))',
+            maxHeight: viewHeight,
+          },
+          '& .MuiMultiSectionDigitalClockSection-root': { maxHeight: `calc(${viewHeight} - 1px)` },
+        },
+      },
+    ]);
+    expect(components.MuiPickersArrowSwitcher?.styleOverrides?.spacer).toEqual([
+      { width: 'calc(32px - 16px)' },
+    ]);
+  });
+
+  it('spaces and sizes the field adornments like a material input', () => {
+    const { components } = enhanceDensity(enhancedTheme());
+    const smallBox = 'calc(32px - 4px)';
+    const pull = `calc((16px - ${smallBox}) / 2)`;
+    expect(components.MuiPickersInputBase?.styleOverrides?.root).toEqual([
+      {
+        gap: '8px',
+        variants: [
+          {
+            props: { inputSize: 'small' },
+            style: {
+              gap: '4px',
+              '& .MuiInputAdornment-root .MuiIconButton-sizeMedium': {
+                minWidth: smallBox,
+                minHeight: smallBox,
+                '&.MuiIconButton-edgeEnd': { marginRight: pull },
+                '&.MuiIconButton-edgeStart': { marginLeft: pull },
+              },
+            },
+          },
+        ],
+      },
+    ]);
+    const [filled] = components.MuiPickersFilledInput?.styleOverrides?.root as any[];
+    expect(filled['--_filledInputPadTop']).toBe('calc(16px + (32px - 1lh) / 2)');
+    expect(filled['--_filledInputPadBottom']).toBe('calc((32px - 1lh) / 2)');
   });
 
   it("writes the label variables material's InputLabel reads for the picker inputs", () => {

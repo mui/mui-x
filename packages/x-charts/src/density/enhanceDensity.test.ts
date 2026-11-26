@@ -29,6 +29,9 @@ describe('enhanceDensity', () => {
       ?.root as any[];
     expect(mark.width).toBe('calc(16px - 2px)');
     expect(mark['&.MuiChartsLabelMark-line']).toEqual({ width: '16px', height: 'calc(16px / 2)' });
+    expect(
+      (theme.components as ChartsDensityComponents).MuiChartsLabelGradient?.defaultProps,
+    ).toEqual({ thickness: 12 });
   });
 
   it('sizes the toolbar bar off the touch target', () => {

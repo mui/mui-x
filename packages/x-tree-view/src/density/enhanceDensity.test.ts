@@ -18,6 +18,13 @@ describe('enhanceDensity', () => {
     });
   });
 
+  it('sizes the item loading icon like a small icon, through defaultProps', () => {
+    const theme = enhanceDensity(enhancedTheme());
+    expect(theme.components.MuiTreeItem?.defaultProps).toEqual({
+      slotProps: { loadingIcon: { size: 'calc(16px - 4px)' } },
+    });
+  });
+
   it('puts the item row on the touch target, keeping the item height and indentation', () => {
     const theme = enhanceDensity(enhancedTheme({}, { cssVariables: true }));
     expect(theme.components.MuiTreeItem?.styleOverrides?.content).toEqual([

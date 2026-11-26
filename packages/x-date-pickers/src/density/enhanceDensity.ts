@@ -3,6 +3,14 @@ import { inputLabelClasses } from '@mui/material/InputLabel';
 import { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import { iconButtonClasses } from '@mui/material/IconButton';
 import { addStyleOverride, getDensityScale, getDensitySizing } from '@mui/x-internals/densityTheme';
+import { dateCalendarClasses } from '../DateCalendar';
+import { dateTimePickerTabsClasses } from '../DateTimePicker';
+import { digitalClockClasses } from '../DigitalClock';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '../MultiSectionDigitalClock';
+import { pickersLayoutClasses } from '../PickersLayout';
 
 /** A theme whose `components` object the enhancer chain owns and can write into. */
 export type DensityEnhancedTheme<T extends Theme> = T & {
@@ -19,7 +27,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   getDensityScale(theme);
   const components: NonNullable<Theme['components']> = { ...theme.components };
   const { spacing } = theme;
-  const { touchTarget } = getDensitySizing(theme);
+  const { touchTarget, iconSize } = getDensitySizing(theme);
 
   // Day grid. A day is the interactive box; the 2px gutters around it are half
   // the smallest step, so a week row stays `touchTarget + xxSmall` high. The
@@ -50,9 +58,10 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // The date time picker caps its clock columns at that constant with
   // `maxHeight`, so a shorter calendar leaves that row at the clock height.
   const headerBlock = `${spacing('small')} + ${touchTarget} + ${spacing('xxSmall')}`;
+  const viewHeight = `calc(${headerBlock} + ${dayRow} * 7)`;
   const viewWidth = `max(320px, calc(${dayRow} * 7 + 2 * ${spacing('large')}))`;
   addStyleOverride(components, 'MuiDateCalendar', 'root', {
-    height: `calc(${headerBlock} + ${dayRow} * 7)`,
+    height: viewHeight,
     maxHeight: 'none',
     width: viewWidth,
   });
@@ -69,7 +78,9 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addStyleOverride(components, 'MuiPickersCalendarHeader', 'label', {
     marginRight: spacing('xSmall'),
   });
-  addStyleOverride(components, 'MuiPickersArrowSwitcher', 'spacer', { width: spacing('large') });
+  addStyleOverride(components, 'MuiPickersArrowSwitcher', 'spacer', {
+    width: `calc(${touchTarget} - ${iconSize})`,
+  });
 
   // Month and year grids: pill buttons twice as wide as they are high.
   const pill = {
@@ -117,26 +128,53 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addStyleOverride(components, 'MuiDigitalClock', 'item', {
     ...clockItem,
     paddingInline: spacing('medium'),
+    '&:first-of-type': { marginTop: 4 },
   });
+  addStyleOverride(components, 'MuiDigitalClock', 'list', { padding: 0 });
+  addStyleOverride(components, 'MuiMultiSectionDigitalClockSection', 'root', { padding: 0 });
   addStyleOverride(components, 'MuiMultiSectionDigitalClockSection', 'item', {
     ...clockItem,
     paddingInline: spacing('xSmall'),
     '&:first-of-type': { marginTop: spacing('xxSmall') },
   });
   addStyleOverride(components, 'MuiClock', 'root', { margin: spacing('medium') });
+  const meridiemButton = { minWidth: 0, minHeight: 0, height: 36, paddingInline: 4 };
+  addStyleOverride(components, 'MuiClock', 'amButton', meridiemButton);
+  addStyleOverride(components, 'MuiClock', 'pmButton', meridiemButton);
+  addStyleOverride(components, 'MuiPickersLayout', 'root', {
+    [`&:has(.${dateCalendarClasses.root})`]: {
+      [`& .${multiSectionDigitalClockClasses.root}, & .${multiSectionDigitalClockSectionClasses.root}, & .${digitalClockClasses.root}`]:
+        { maxHeight: viewHeight },
+      [`& .${pickersLayoutClasses.shortcuts}`]: { maxHeight: viewHeight },
+    },
+    [`&:has(.${dateTimePickerTabsClasses.root})`]: {
+      [`& .${multiSectionDigitalClockClasses.root}`]: { width: viewWidth, maxHeight: viewHeight },
+      [`& .${multiSectionDigitalClockSectionClasses.root}`]: {
+        maxHeight: `calc(${viewHeight} - 1px)`,
+      },
+    },
+  });
+  addStyleOverride(components, 'MuiPickersLayout', 'actionBar', {
+    padding: spacing('xSmall'),
+    gap: spacing('xSmall'),
+  });
 
   // Toolbars. The landscape padding resets the portrait one after the base
   // rule, so it is restated in the same variant.
+  addStyleOverride(components, 'MuiDialogContent', 'root', {
+    [`&:has(> .${pickersLayoutClasses.root})`]: { padding: 0 },
+  });
   addStyleOverride(components, 'MuiPickersToolbar', 'root', {
     padding: `${spacing('medium')} ${spacing('large')}`,
     variants: [
       { props: { pickerOrientation: 'landscape' }, style: { padding: spacing('medium') } },
     ],
   });
-  // The toolbar values are Buttons holding headline text. Material's enhancer
-  // gives every medium Button a `touchTarget` height, which clips the headline
-  // and drops it below the separators, so the height is released again.
-  addStyleOverride(components, 'MuiPickersToolbarButton', 'root', { height: 'auto' });
+  addStyleOverride(components, 'MuiPickersToolbarButton', 'root', {
+    minHeight: 0,
+    padding: 0,
+    textTransform: 'none',
+  });
   addStyleOverride(components, 'MuiDatePickerToolbar', 'title', {
     variants: [
       { props: { pickerOrientation: 'landscape' }, style: { marginRight: spacing('medium') } },
@@ -191,14 +229,19 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // field size; in master a medium button is exactly as high as a small field,
   // so the small field sizes its adornment buttons to material's small box.
   const smallBox = `calc(${touchTarget} - ${spacing('xxSmall')})`;
+  const smallEdgePull = `calc((${iconSize} - ${smallBox}) / 2)`;
   addStyleOverride(components, 'MuiPickersInputBase', 'root', {
+    gap: spacing('xSmall'),
     variants: [
       {
         props: { inputSize: 'small' },
         style: {
+          gap: spacing('xxSmall'),
           [`& .${inputAdornmentClasses.root} .${iconButtonClasses.sizeMedium}`]: {
-            width: smallBox,
-            height: smallBox,
+            minWidth: smallBox,
+            minHeight: smallBox,
+            [`&.${iconButtonClasses.edgeEnd}`]: { marginRight: smallEdgePull },
+            [`&.${iconButtonClasses.edgeStart}`]: { marginLeft: smallEdgePull },
           },
         },
       },
@@ -225,6 +268,8 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const filledPadTop = `calc(${spacing('medium')} + (${touchTarget} - 1lh) / 2)`;
   const filledPadTopSmall = `calc(${spacing('medium')} + (${touchTarget} - 1lh) / 4)`;
   addStyleOverride(components, 'MuiPickersFilledInput', 'root', {
+    '--_filledInputPadTop': filledPadTop,
+    '--_filledInputPadBottom': padBlock,
     [label]: {
       '--_restY': `calc((${filledPadTop} + ${padBlock}) / 2)`,
       '--_shrinkY': '6px',
@@ -234,6 +279,8 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
       {
         props: { inputSize: 'small' },
         style: {
+          '--_filledInputPadTop': filledPadTopSmall,
+          '--_filledInputPadBottom': padBlockSmall,
           [label]: {
             '--_restY': `calc((${filledPadTopSmall} + ${padBlockSmall}) / 2)`,
             '--_shrinkY': '4px',

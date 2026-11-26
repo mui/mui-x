@@ -12,9 +12,7 @@ import { PiecewiseColorLegend, ContinuousColorLegend } from '@mui/x-charts/Chart
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { unstable_enhanceDensity as enhanceCharts } from '@mui/x-charts-premium/density';
-import DensityExperimentShell, { createEnhancedTheme } from './DensityExperimentShell';
-
-const enhanced = createEnhancedTheme(enhanceCharts);
+import DensityExperimentShell from './DensityExperimentShell';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 const series = [
@@ -49,7 +47,7 @@ export default function DensityExperimentCharts() {
           tooltips.
         </React.Fragment>
       }
-      enhanced={enhanced}
+      enhance={enhanceCharts}
       componentNames={[
         'MuiChartsLegend',
         'MuiContinuousColorLegend',

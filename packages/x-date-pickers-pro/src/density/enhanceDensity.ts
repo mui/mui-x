@@ -2,8 +2,14 @@ import type { Theme } from '@mui/material/styles';
 import { unstable_enhanceDensity as enhanceCommunityDensity } from '@mui/x-date-pickers/density';
 import type { DensityEnhancedTheme } from '@mui/x-date-pickers/density';
 import { dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
+import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { pickersArrowSwitcherClasses, pickersToolbarClasses } from '@mui/x-date-pickers/internals';
-import { addStyleOverride, getDensitySizing } from '@mui/x-internals/densityTheme';
+import { addDefaultProps, addStyleOverride, getDensitySizing } from '@mui/x-internals/densityTheme';
+import { dateRangeCalendarClasses } from '../DateRangeCalendar';
 
 /**
  * Make the Pro date and time pickers density-aware: the community enhancer
@@ -22,6 +28,13 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // highlight and preview pseudo-elements read the two vars, so they follow.
   const dayGutter = `calc(${spacing('xxSmall')} / 2)`;
   const dayRow = `calc(${touchTarget} + ${spacing('xxSmall')})`;
+  const viewHeight = `calc(${spacing('small')} + ${touchTarget} + ${spacing('xxSmall')} + ${dayRow} * 7)`;
+  addStyleOverride(components, 'MuiPickersLayout', 'root', {
+    [`&:has(.${dateRangeCalendarClasses.root})`]: {
+      [`& .${multiSectionDigitalClockClasses.root}, & .${multiSectionDigitalClockSectionClasses.root}, & .${digitalClockClasses.root}`]:
+        { maxHeight: `max(360px, ${viewHeight})` },
+    },
+  });
   addStyleOverride(components, 'MuiDateRangePickerDay', 'root', {
     '--PickerDay-size': touchTarget,
     '--PickerDay-horizontalMargin': dayGutter,
@@ -33,6 +46,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // outranks the switcher's own class, which is injected later.
   addStyleOverride(components, 'MuiDateRangeCalendar', 'monthContainer', {
     [`& .${dayCalendarClasses.root}`]: { minHeight: `calc(${dayRow} * 6)` },
+    [`& .${dayCalendarClasses.slideTransition}`]: { minHeight: `calc(${dayRow} * 6)` },
     [`& > .${pickersArrowSwitcherClasses.root}`]: {
       padding: `${spacing('small')} ${spacing('medium')} ${spacing('xxSmall')}`,
     },
@@ -46,19 +60,34 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     minHeight: `calc(${touchTarget} + ${spacing('small')})`,
   });
   addStyleOverride(components, 'MuiDateTimeRangePickerTabs', 'filler', { width: touchTarget });
+  addStyleOverride(components, 'MuiDateTimeRangePickerTabs', 'tabButton', {
+    textTransform: 'none',
+  });
   addStyleOverride(components, 'MuiTimeRangePickerTabs', 'tab', {
     minHeight: touchTarget,
     gap: spacing('xSmall'),
   });
 
+  addStyleOverride(components, 'MuiDateTimeRangePickerToolbar', 'startToolbar', {
+    paddingBottom: 0,
+  });
   addStyleOverride(components, 'MuiTimeRangePickerToolbar', 'root', {
     paddingTop: spacing('small'),
     paddingBottom: spacing('xSmall'),
+    paddingInline: 0,
     [`& .${pickersToolbarClasses.title}`]: { paddingLeft: spacing('small') },
   });
   addStyleOverride(components, 'MuiTimeRangePickerToolbar', 'container', {
     variants: [{ props: { pickerVariant: 'mobile' }, style: { rowGap: spacing('xSmall') } }],
   });
+
+  for (const name of [
+    'MuiMultiInputDateRangeField',
+    'MuiMultiInputTimeRangeField',
+    'MuiMultiInputDateTimeRangeField',
+  ] as const) {
+    addDefaultProps(components, name, { spacing: spacing('medium') });
+  }
 
   return enhanced;
 }

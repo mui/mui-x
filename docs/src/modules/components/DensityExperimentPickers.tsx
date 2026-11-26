@@ -24,9 +24,8 @@ import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePi
 import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { unstable_enhanceDensity as enhancePickers } from '@mui/x-date-pickers-pro/density';
-import DensityExperimentShell, { createEnhancedTheme } from './DensityExperimentShell';
+import DensityExperimentShell from './DensityExperimentShell';
 
-const enhanced = createEnhancedTheme(enhancePickers);
 const value = dayjs('2026-04-17T09:30');
 const range: [dayjs.Dayjs, dayjs.Dayjs] = [dayjs('2026-04-14T09:30'), dayjs('2026-04-22T17:00')];
 const noActions = { actionBar: { actions: [] } };
@@ -64,7 +63,7 @@ export default function DensityExperimentPickers() {
             pickers open in a dialog: click their field to review the tabs and toolbars.
           </React.Fragment>
         }
-        enhanced={enhanced}
+        enhance={enhancePickers}
         componentNames={[
           'MuiPickerDay',
           'MuiDayCalendar',
@@ -108,6 +107,7 @@ export default function DensityExperimentPickers() {
                 slotProps={noActions}
               />
               <StaticTimePicker defaultValue={value} slotProps={noActions} />
+              <StaticTimePicker defaultValue={value} ampmInClock />
               <StaticDateTimePicker defaultValue={value} slotProps={noActions} />
               <DigitalClock defaultValue={value} />
               <MultiSectionDigitalClock defaultValue={value} />

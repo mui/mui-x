@@ -1,4 +1,5 @@
 import type { Theme } from '@mui/material/styles';
+import { badgeClasses } from '@mui/material/Badge';
 import { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import { iconButtonClasses } from '@mui/material/IconButton';
 import { inputAdornmentClasses } from '@mui/material/InputAdornment';
@@ -44,7 +45,11 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // key resolves to its step (var ref with px fallback on a vars theme, px otherwise).
   const { spacing } = theme;
   const { touchTarget, iconSize } = getDensitySizing(theme);
-  addStyleOverride(components, 'MuiDataGrid', 'cell', { paddingInline: spacing('xSmall') });
+  const wcagTargetSize = '24px';
+  addStyleOverride(components, 'MuiDataGrid', 'cell', {
+    paddingInline: spacing('xSmall'),
+    [`&.${gridClasses['cell--editing']}`]: { padding: 1 },
+  });
   // Master zeroes the checkbox column's inset after the shared cell/header
   // rule; the emissions above land later still, so the zero is restated.
   addStyleOverride(components, 'MuiDataGrid', 'cellCheckbox', { paddingInline: 0 });
@@ -55,7 +60,6 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     minHeight: `calc(${touchTarget} + 2 * ${spacing('xSmall')})`,
     padding: spacing('xSmall'),
     gap: spacing('xxSmall'),
-    '& svg': { fontSize: iconSize }, // see `glyph` below
   });
   // The quick filter trigger sizes itself `min-content`, which carried the
   // master box through the icon button's padding. Material's enhancer sizes
@@ -72,19 +76,17 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
 
   // Columns management panel. The row checkbox+label is the grid's internal
   // FormControlLabel wrapper (no slot key of its own), so its gap nests here.
+  const labelGap = {
+    [`& .${formControlLabelClasses.root}`]: { gap: spacing('xxSmall'), margin: 0 },
+  };
   addStyleOverride(components, 'MuiDataGrid', 'columnsManagement', {
     padding: `${spacing('xxSmall')} ${spacing('small')}`,
-    [`& .${formControlLabelClasses.root}`]: { gap: spacing('xxSmall') },
+    ...labelGap,
   });
-  // Search fields (columns panel header, toolbar quick filter): the clear
-  // button pulls to the field edge. Material's enhancer pulls `edge="end"`
-  // buttons by a quarter of the box; the grid's internal adornment rule
-  // outranks that variant, so the pull is restated at the owning slot with
-  // the edge class in the selector to outrank the internal rule in turn.
+  const smallButtonPull = `calc((${iconSize} - ${touchTarget} + ${spacing('xxSmall')}) / 2)`;
   const searchField = {
-    '& svg': { fontSize: iconSize }, // see `glyph` below
     [`& .${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}.${iconButtonClasses.edgeEnd}`]:
-      { marginRight: `calc(${touchTarget} / -4)` },
+      { marginRight: smallButtonPull },
   };
   addStyleOverride(components, 'MuiDataGrid', 'toolbarQuickFilterControl', searchField);
   addStyleOverride(components, 'MuiDataGrid', 'columnsManagementHeader', {
@@ -93,40 +95,43 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   });
   addStyleOverride(components, 'MuiDataGrid', 'columnsManagementFooter', {
     padding: `${spacing('xSmall')} ${spacing('xSmall')} ${spacing('xSmall')} ${spacing('small')}`,
+    ...labelGap,
   });
   addStyleOverride(components, 'MuiDataGrid', 'columnsManagementEmptyText', {
     paddingBlock: spacing('xSmall'),
   });
 
-  // Headers: the same inline inset as cells, title↔icon gap, and the menu
-  // button pull (master -5 cancelled the small button's padding so the glyph
-  // sits at the header edge; the small box is `touchTarget - xxSmall` now).
-  const menuPull = `calc((${touchTarget} - ${spacing('xxSmall')} - ${iconSize}) / -2)`;
   addStyleOverride(components, 'MuiDataGrid', 'columnHeader', { paddingInline: spacing('xSmall') });
   addStyleOverride(components, 'MuiDataGrid', 'columnHeaderTitleContainer', {
     gap: spacing('xxSmall'),
+    [`& .${badgeClasses.badge}`]: { top: `calc((1lh - ${spacing('xxSmall')} + 1px) / 2)` },
   });
-  addStyleOverride(components, 'MuiDataGrid', 'menuIcon', { marginRight: menuPull });
+  addStyleOverride(components, 'MuiDataGrid', 'menuIcon', { marginRight: smallButtonPull });
   addStyleOverride(components, 'MuiDataGrid', 'columnHeader--alignRight', {
-    [`& .${gridClasses.menuIcon}`]: { marginLeft: menuPull },
+    [`& .${gridClasses.menuIcon}`]: { marginLeft: smallButtonPull, marginRight: 'auto' },
   });
 
-  // Cells with icons or inner controls.
-  // The grid hardcodes `fontSize="small"` on its icons with no prop to change it;
-  // material's enhancer maps that variant to `iconSize - 2px`, but the grid's
-  // default glyph is the icon constant itself, so the owning slot restates it.
-  const glyph = { '& svg': { fontSize: iconSize } };
-  // The boolean cell class is on the icon itself.
-  addStyleOverride(components, 'MuiDataGrid', 'booleanCell', { fontSize: iconSize });
-  addStyleOverride(components, 'MuiDataGrid', 'actionsCell', {
-    gridGap: spacing('xSmall'),
-    ...glyph,
-  });
+  addStyleOverride(components, 'MuiDataGrid', 'actionsCell', { gridGap: spacing('xSmall') });
   // Edit input: master pads the input 16px against the cell's 10px, so the
   // value jumps on edit entry; both ride the cell inset here.
   addStyleOverride(components, 'MuiDataGrid', 'editInputCell', {
-    '& input': { paddingInline: spacing('xSmall') },
-    ...glyph,
+    '& input': { padding: `0 ${spacing('xSmall')}`, height: '100%' },
+  });
+  const cornerButtonTarget = {
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      width: `max(100%, ${wcagTargetSize})`,
+      height: `max(100%, ${wcagTargetSize})`,
+    },
+  };
+  addStyleOverride(components, 'MuiDataGrid', 'longTextCell', {
+    [`&.${gridClasses.longTextCell} .${gridClasses.longTextCellExpandButton}`]: {
+      right: `calc(1px - ${spacing('xSmall')})`,
+      ...cornerButtonTarget,
+    },
   });
   // Long-text popups: inline inset = cell inset minus the 1px border; block
   // inset centres the first line on the row the way master's 15.5px did.
@@ -138,7 +143,11 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     paddingInline: spacing('xSmall'),
   });
   addStyleOverride(components, 'MuiDataGrid', 'editLongTextCellPopperContent', popupInset);
-  addStyleOverride(components, 'MuiDataGrid', 'longTextCellPopperContent', popupInset);
+  addStyleOverride(components, 'MuiDataGrid', 'longTextCellPopperContent', {
+    ...popupInset,
+    marginLeft: `calc(10px - ${spacing('xSmall')})`,
+    [`& .${gridClasses.longTextCellCollapseButton}`]: cornerButtonTarget,
+  });
 
   // Filter panel. `panelContent` resolves on both the filter content wrapper
   // and the panel shell's inner slot, so the content inset nests under `panel`.
@@ -149,10 +158,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     },
   });
   addStyleOverride(components, 'MuiDataGrid', 'panelFooter', { padding: spacing('xSmall') });
-  addStyleOverride(components, 'MuiDataGrid', 'filterForm', {
-    gap: spacing('small'),
-    [`& .${gridClasses.filterFormDeleteIcon} svg`]: { fontSize: iconSize },
-  });
+  addStyleOverride(components, 'MuiDataGrid', 'filterForm', { gap: spacing('small') });
 
   // Footer: the same bar material gives TablePagination (`touchTarget + medium`).
   // The pagination's own toolbar is held 1px under the footer (the footer's
@@ -168,5 +174,6 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addStyleOverride(components, 'MuiDataGrid', 'selectedRowCount', {
     marginInline: spacing('medium'),
   });
+  addStyleOverride(components, 'MuiDataGrid', 'overlay', { gap: spacing('xSmall') });
   return { ...theme, components };
 }
