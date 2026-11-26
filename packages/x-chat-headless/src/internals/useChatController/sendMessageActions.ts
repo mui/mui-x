@@ -175,6 +175,8 @@ export function createSendMessageActions<Cursor = string>(params: {
       });
 
       if (!reconnectStream || abortController.signal.aborted) {
+        // Before the store write: a subscriber that switches conversations must not keep this run.
+        run.isFinished = true;
         store.setStreaming(false);
         await emitDeferredFinish(result);
         return result;
@@ -188,6 +190,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         seenEventIds: result.seenEventIds,
       });
     } catch (error) {
+      run.isFinished = true;
       store.setStreaming(false);
 
       if (abortController.signal.aborted) {
@@ -556,10 +559,10 @@ export function createSendMessageActions<Cursor = string>(params: {
           message,
           ...(restoredAfter.get(message.id) ?? []),
         ]);
-        const currentIds = store.state.messageIds;
+        // By identity, so a restored reply that only changed its conversation is still written.
         if (
-          nextMessages.length !== currentIds.length ||
-          nextMessages.some((message, index) => message.id !== currentIds[index])
+          nextMessages.length !== currentMessages.length ||
+          nextMessages.some((message, index) => message !== currentMessages[index])
         ) {
           store.setMessages(nextMessages);
         }
