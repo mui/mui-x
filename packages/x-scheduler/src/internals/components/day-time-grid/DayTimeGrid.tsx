@@ -38,6 +38,7 @@ import { DayGridCell, EVENT_HEIGHT } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
+import { getDefaultFocusedCell } from '../../utils/date-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
@@ -423,6 +424,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const isTodayInView = nowDayNumber >= firstDayNumber && nowDayNumber <= lastDayNumber;
 
+  // Today's column, else the first one. A new object for other days resets the tab stop.
+  const defaultFocusedCell = React.useMemo(
+    () => getDefaultFocusedCell([days], 'time-grid', [nowDayNumber]),
+    [days, nowDayNumber],
+  );
+
   const updateHasScroll = React.useCallback(() => {
     const body = bodyRef.current;
     const allDayHeader = allDayHeaderWrapperRef.current;
@@ -484,6 +491,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       className={clsx(className, classes.dayTimeGridContainer)}
       aria-rowcount={3}
       aria-colcount={days.length}
+      defaultFocusedCell={defaultFocusedCell}
     >
       <DayTimeGridHeader
         className={classes.dayTimeGridHeader}

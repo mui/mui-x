@@ -3,8 +3,8 @@ import { screen } from '@mui/internal-test-utils';
 import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import type { GridRowType } from '@mui/x-scheduler-internals/models';
-import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
+import type { GridCellCoordinates, GridRowType } from '@mui/x-scheduler-internals/models';
+import { CALENDAR_GRID_ITEM_PROPS, toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import {
   addDays,
   addHours,
@@ -24,6 +24,12 @@ describe('CalendarGrid keyboard navigation', () => {
 
   const baseDay = createDate('2025-05-05T12:00:00');
   const days = Array.from({ length: 7 }, (_, i) => addDays(baseDay, i));
+
+  function getTabbableCells() {
+    return [...screen.queryAllByRole('gridcell'), ...screen.queryAllByRole('columnheader')].filter(
+      (cell) => cell.getAttribute('tabindex') === '0',
+    );
+  }
 
   // The days of the cells of a row.
   const toRowDays = (rowDays: Date[]) =>
@@ -317,23 +323,14 @@ describe('CalendarGrid keyboard navigation', () => {
       expect(screen.getByTestId('w0-2')).toHaveFocus();
     });
 
-    it('should keep all cells tabbable but only move DOM focus to one', async () => {
+    it('should make only the focused cell tabbable', async () => {
       const { user } = render(<MonthLikeGrid />);
 
       await user.click(screen.getByTestId('w0-3'));
+      expect(getTabbableCells()).to.deep.equal([screen.getByTestId('w0-3')]);
 
-      // All cells are tabbable (tabindex=0) so Tab flows through the grid
-      const allCells = screen.getAllByRole('gridcell');
-      const tabbableCells = allCells.filter((cell) => cell.getAttribute('tabindex') === '0');
-      expect(tabbableCells).toHaveLength(allCells.length);
-
-      // But only one cell has DOM focus
-      expect(screen.getByTestId('w0-3')).toHaveFocus();
-
-      // After navigating down, all cells remain tabbable but DOM focus moves
       await user.keyboard('{ArrowDown}');
-      const newTabbableCells = allCells.filter((cell) => cell.getAttribute('tabindex') === '0');
-      expect(newTabbableCells).toHaveLength(allCells.length);
+      expect(getTabbableCells()).to.deep.equal([screen.getByTestId('w1-3')]);
       expect(screen.getByTestId('w1-3')).toHaveFocus();
     });
 
@@ -452,105 +449,256 @@ describe('CalendarGrid keyboard navigation', () => {
     });
   });
 
-  describe('event tabIndex follows cell focus', () => {
-    function GridWithEvents() {
-      const day1 = createDate('2025-05-05T12:00:00');
-      const day2 = addDays(day1, 1);
-
+  describe('single tab stop', () => {
+    function GridBetweenButtons(props: { defaultFocusedCell?: GridCellCoordinates }) {
       return (
         <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root rowTypes={['day-grid']} rowsPerType={{}}>
+          <button type="button">before</button>
+          <CalendarGrid.Root rowTypes={['header', 'day-grid']} {...props}>
+            <CalendarGrid.HeaderRow>
+              {days.map((day, i) => (
+                <CalendarGrid.HeaderCell
+                  key={i}
+                  date={toPlainDate(day.getTime(), 'default')}
+                  data-testid={`header-${i}`}
+                />
+              ))}
+            </CalendarGrid.HeaderRow>
+            <CalendarGrid.DayRow
+              start={days[0].getTime()}
+              end={endOfDay(days[6]).getTime()}
+              days={toRowDays(days)}
+            >
+              {days.map((day, i) => (
+                <CalendarGrid.DayCell
+                  key={i}
+                  value={toPlainDate(day.getTime(), 'default')}
+                  data-testid={`day-${i}`}
+                />
+              ))}
+            </CalendarGrid.DayRow>
+          </CalendarGrid.Root>
+          <button type="button">after</button>
+        </EventCalendarProvider>
+      );
+    }
+
+    it('should make the first day cell the tab stop by default', () => {
+      render(<GridBetweenButtons />);
+
+      expect(getTabbableCells()).to.deep.equal([screen.getByTestId('day-0')]);
+    });
+
+    it('should make the default focused cell the tab stop', () => {
+      render(
+        <GridBetweenButtons
+          defaultFocusedCell={{ rowType: 'day-grid', rowIndex: 0, columnIndex: 3 }}
+        />,
+      );
+
+      expect(getTabbableCells()).to.deep.equal([screen.getByTestId('day-3')]);
+    });
+
+    it('should move into the grid and out of it with a single Tab each', async () => {
+      const { user } = render(<GridBetweenButtons />);
+
+      await user.click(screen.getByRole('button', { name: 'before' }));
+      await user.keyboard('{Tab}');
+      expect(screen.getByTestId('day-0')).toHaveFocus();
+
+      await user.keyboard('{Tab}');
+      expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
+    });
+
+    it('should come back to the last focused cell', async () => {
+      const { user } = render(<GridBetweenButtons />);
+
+      await user.click(screen.getByTestId('day-2'));
+      await user.keyboard('{ArrowRight}');
+      await user.keyboard('{Tab}');
+      expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
+
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+      expect(screen.getByTestId('day-3')).toHaveFocus();
+    });
+
+    it('should reset the tab stop when a new default focused cell is passed', async () => {
+      const { user, setProps } = render(
+        <GridBetweenButtons
+          defaultFocusedCell={{ rowType: 'day-grid', rowIndex: 0, columnIndex: 1 }}
+        />,
+      );
+
+      await user.click(screen.getByTestId('day-4'));
+      await user.click(screen.getByRole('button', { name: 'after' }));
+      expect(getTabbableCells()).to.deep.equal([screen.getByTestId('day-4')]);
+
+      setProps({ defaultFocusedCell: { rowType: 'day-grid', rowIndex: 0, columnIndex: 1 } });
+
+      expect(getTabbableCells()).to.deep.equal([screen.getByTestId('day-1')]);
+    });
+  });
+
+  describe('moving into a cell', () => {
+    const day1 = createDate('2025-05-05T12:00:00');
+    const day2 = addDays(day1, 1);
+
+    function DayEvent(props: { id: string; day: Date; hidden?: boolean }) {
+      return (
+        <CalendarGrid.DayEvent
+          eventId={props.id}
+          occurrenceKey={`${props.id}-key`}
+          start={toZonedDateTime(props.day.getTime(), 'default')}
+          end={toZonedDateTime(addHours(props.day, 1).getTime(), 'default')}
+          renderDragPreview={() => null}
+          aria-hidden={props.hidden}
+          data-testid={props.hidden ? `${props.id}-copy` : props.id}
+        />
+      );
+    }
+
+    function GridWithEvents() {
+      return (
+        <EventCalendarProvider events={[]}>
+          <CalendarGrid.Root rowTypes={['day-grid']}>
             <CalendarGrid.DayRow
               start={day1.getTime()}
-              end={endOfDay(day2).getTime()}
-              days={toRowDays([day1, day2])}
+              end={endOfDay(addDays(day1, 2)).getTime()}
+              days={toRowDays([day1, day2, addDays(day1, 2)])}
             >
               <CalendarGrid.DayCell
                 value={toPlainDate(day1.getTime(), 'default')}
                 data-testid="cell-0"
               >
-                <CalendarGrid.DayEvent
-                  eventId="event-1"
-                  occurrenceKey="occ-1"
-                  start={toZonedDateTime(day1.getTime(), 'default')}
-                  end={toZonedDateTime(addHours(day1, 1).getTime(), 'default')}
-                  renderDragPreview={() => null}
-                  data-testid="event-1"
-                />
+                <button type="button" data-testid="day-button" {...CALENDAR_GRID_ITEM_PROPS}>
+                  5
+                </button>
+                <DayEvent id="event-1" day={day1} />
+                <DayEvent id="event-2" day={day1} />
               </CalendarGrid.DayCell>
               <CalendarGrid.DayCell
                 value={toPlainDate(day2.getTime(), 'default')}
                 data-testid="cell-1"
               >
-                <CalendarGrid.DayEvent
-                  eventId="event-2"
-                  occurrenceKey="occ-2"
-                  start={toZonedDateTime(day2.getTime(), 'default')}
-                  end={toZonedDateTime(addHours(day2, 1).getTime(), 'default')}
-                  renderDragPreview={() => null}
-                  data-testid="event-2"
-                />
+                {/* The copy of a multi-day event that starts in the previous cell. */}
+                <DayEvent id="event-1" day={day1} hidden />
+                <DayEvent id="event-3" day={day2} />
               </CalendarGrid.DayCell>
+              <CalendarGrid.DayCell
+                value={toPlainDate(addDays(day1, 2).getTime(), 'default')}
+                data-testid="cell-2"
+              />
             </CalendarGrid.DayRow>
           </CalendarGrid.Root>
         </EventCalendarProvider>
       );
     }
 
-    it('should make day events tabbable only when their parent cell is focused', async () => {
+    it('should keep the events out of the Tab sequence', () => {
+      render(<GridWithEvents />);
+
+      ['event-1', 'event-2', 'event-3'].forEach((id) => {
+        expect(screen.getByTestId(id)).to.have.attribute('tabindex', '-1');
+      });
+    });
+
+    it.each([
+      { name: 'Enter', keys: '{Enter}' },
+      { name: 'F2', keys: '{F2}' },
+    ])('should move focus to the first item of the cell on $name', async ({ keys }) => {
       const { user } = render(<GridWithEvents />);
 
-      const event1 = screen.getByTestId('event-1');
-      const event2 = screen.getByTestId('event-2');
-
-      // Before any cell is focused, all events are not tabbable
-      expect(event1).to.have.attribute('tabindex', '-1');
-      expect(event2).to.have.attribute('tabindex', '-1');
-
-      // Focus cell-0 → event-1 becomes tabbable
       await user.click(screen.getByTestId('cell-0'));
-      expect(event1).to.have.attribute('tabindex', '0');
-      expect(event2).to.have.attribute('tabindex', '-1');
+      await user.keyboard(keys);
 
-      // Navigate to cell-1 → event-2 becomes tabbable, event-1 becomes not tabbable
-      await user.keyboard('{ArrowRight}');
-      expect(event1).to.have.attribute('tabindex', '-1');
-      expect(event2).to.have.attribute('tabindex', '0');
+      expect(screen.getByTestId('day-button')).toHaveFocus();
+    });
+
+    it.each([
+      { name: 'the arrow keys', next: '{ArrowDown}', previous: '{ArrowUp}' },
+      { name: 'Tab', next: '{Tab}', previous: '{Shift>}{Tab}{/Shift}' },
+    ])('should move between the items of the cell with $name and wrap', async (keys) => {
+      const { user } = render(<GridWithEvents />);
+
+      await user.click(screen.getByTestId('cell-0'));
+      await user.keyboard('{Enter}');
+
+      await user.keyboard(keys.next);
+      expect(screen.getByTestId('event-1')).toHaveFocus();
+      await user.keyboard(keys.next);
+      expect(screen.getByTestId('event-2')).toHaveFocus();
+      await user.keyboard(keys.next);
+      expect(screen.getByTestId('day-button')).toHaveFocus();
+      await user.keyboard(keys.previous);
+      expect(screen.getByTestId('event-2')).toHaveFocus();
+    });
+
+    it.each([
+      { name: 'Escape', keys: '{Escape}' },
+      { name: 'F2', keys: '{F2}' },
+    ])('should move focus back to the cell on $name', async ({ keys }) => {
+      const { user } = render(<GridWithEvents />);
+
+      await user.click(screen.getByTestId('cell-0'));
+      await user.keyboard('{Enter}{ArrowDown}');
+      await user.keyboard(keys);
+
+      expect(screen.getByTestId('cell-0')).toHaveFocus();
+    });
+
+    it('should do nothing on Enter in a cell without items', async () => {
+      const { user } = render(<GridWithEvents />);
+
+      await user.click(screen.getByTestId('cell-2'));
+      await user.keyboard('{Enter}');
+
+      expect(screen.getByTestId('cell-2')).toHaveFocus();
+    });
+
+    it('should reach a multi-day event from a later cell it covers', async () => {
+      const { user } = render(<GridWithEvents />);
+
+      await user.click(screen.getByTestId('cell-1'));
+      await user.keyboard('{Enter}');
+      expect(screen.getByTestId('event-1')).toHaveFocus();
+
+      await user.keyboard('{ArrowDown}');
+      expect(screen.getByTestId('event-3')).toHaveFocus();
+
+      await user.keyboard('{ArrowDown}{Escape}');
+      expect(screen.getByTestId('cell-1')).toHaveFocus();
+    });
+
+    it('should move back to the cell of an event focused with the pointer', async () => {
+      const { user } = render(<GridWithEvents />);
+
+      await user.click(screen.getByTestId('event-3'));
+      await user.keyboard('{Escape}');
+
+      expect(screen.getByTestId('cell-1')).toHaveFocus();
+      expect(getTabbableCells()).to.deep.equal([screen.getByTestId('cell-1')]);
     });
 
     function GridWithTimeEvents() {
-      const day1 = createDate('2025-05-05T12:00:00');
-      const day2 = addDays(day1, 1);
-
       return (
         <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root rowTypes={['time-grid']} rowsPerType={{}}>
+          <CalendarGrid.Root rowTypes={['time-grid']}>
             <CalendarGrid.TimeScrollableContent>
               <CalendarGrid.TimeColumn
                 value={toPlainDate(day1.getTime(), 'default')}
                 data-testid="col-0"
               >
-                <CalendarGrid.TimeEvent
-                  eventId="event-1"
-                  occurrenceKey="occ-1"
-                  start={toZonedDateTime(addHours(day1, 9).getTime(), 'default')}
-                  end={toZonedDateTime(addHours(day1, 10).getTime(), 'default')}
-                  renderDragPreview={() => null}
-                  data-testid="time-event-1"
-                />
-              </CalendarGrid.TimeColumn>
-              <CalendarGrid.TimeColumn
-                value={toPlainDate(day2.getTime(), 'default')}
-                data-testid="col-1"
-              >
-                <CalendarGrid.TimeEvent
-                  eventId="event-2"
-                  occurrenceKey="occ-2"
-                  start={toZonedDateTime(addHours(day2, 9).getTime(), 'default')}
-                  end={toZonedDateTime(addHours(day2, 10).getTime(), 'default')}
-                  renderDragPreview={() => null}
-                  data-testid="time-event-2"
-                />
+                {[9, 11].map((hour) => (
+                  <CalendarGrid.TimeEvent
+                    key={hour}
+                    eventId={`event-${hour}`}
+                    occurrenceKey={`occ-${hour}`}
+                    start={toZonedDateTime(addHours(day1, hour - 12).getTime(), 'default')}
+                    end={toZonedDateTime(addHours(day1, hour - 11).getTime(), 'default')}
+                    renderDragPreview={() => null}
+                    data-testid={`time-event-${hour}`}
+                  />
+                ))}
               </CalendarGrid.TimeColumn>
             </CalendarGrid.TimeScrollableContent>
           </CalendarGrid.Root>
@@ -558,25 +706,20 @@ describe('CalendarGrid keyboard navigation', () => {
       );
     }
 
-    it('should make time events tabbable only when their parent column is focused', async () => {
+    it('should move through the events of a time column', async () => {
       const { user } = render(<GridWithTimeEvents />);
 
-      const timeEvent1 = screen.getByTestId('time-event-1');
-      const timeEvent2 = screen.getByTestId('time-event-2');
+      expect(screen.getByTestId('time-event-9')).to.have.attribute('tabindex', '-1');
 
-      // Before any column is focused, all events are not tabbable
-      expect(timeEvent1).to.have.attribute('tabindex', '-1');
-      expect(timeEvent2).to.have.attribute('tabindex', '-1');
-
-      // Focus col-0 → time-event-1 becomes tabbable
       await user.click(screen.getByTestId('col-0'));
-      expect(timeEvent1).to.have.attribute('tabindex', '0');
-      expect(timeEvent2).to.have.attribute('tabindex', '-1');
+      await user.keyboard('{Enter}');
+      expect(screen.getByTestId('time-event-9')).toHaveFocus();
 
-      // Navigate to col-1 → time-event-2 becomes tabbable, time-event-1 becomes not tabbable
-      await user.keyboard('{ArrowRight}');
-      expect(timeEvent1).to.have.attribute('tabindex', '-1');
-      expect(timeEvent2).to.have.attribute('tabindex', '0');
+      await user.keyboard('{ArrowDown}');
+      expect(screen.getByTestId('time-event-11')).toHaveFocus();
+
+      await user.keyboard('{Escape}');
+      expect(screen.getByTestId('col-0')).toHaveFocus();
     });
   });
 });

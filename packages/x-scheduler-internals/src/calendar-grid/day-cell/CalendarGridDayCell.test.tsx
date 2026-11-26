@@ -56,7 +56,7 @@ describe('<CalendarGrid.DayCell />', () => {
   );
 
   describe('keyboard interactions', () => {
-    it('should create an all-day event placeholder on Enter keypress', async () => {
+    it('should create an all-day event placeholder on C', async () => {
       let store: AnyEventCalendarStore | null = null;
       const onEventEditingStart = vi.fn();
 
@@ -73,11 +73,11 @@ describe('<CalendarGrid.DayCell />', () => {
       );
 
       const cell = screen.getByRole('gridcell');
-      // Focus without clicking, so the Enter keypress is the only creation trigger.
+      // Focus without clicking, so the key press is the only creation trigger.
       act(() => {
         cell.focus();
       });
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
@@ -113,7 +113,7 @@ describe('<CalendarGrid.DayCell />', () => {
       act(() => {
         screen.getByRole('gridcell').focus();
       });
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       const placeholder = store!.state.occurrencePlaceholder!;
       return {
@@ -145,7 +145,34 @@ describe('<CalendarGrid.DayCell />', () => {
       });
     });
 
-    it('should not create event on Enter when pressed on a child element', async () => {
+    it.each([
+      { name: 'Enter', keys: '{Enter}' },
+      { name: 'Ctrl+C', keys: '{Control>}c{/Control}' },
+      { name: 'Meta+C', keys: '{Meta>}c{/Meta}' },
+    ])('should not create an event on $name', async ({ keys }) => {
+      let store: AnyEventCalendarStore | null = null;
+
+      const { user } = render(
+        <DayCellWrapper>
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </DayCellWrapper>,
+      );
+
+      act(() => {
+        screen.getByRole('gridcell').focus();
+      });
+      await user.keyboard(keys);
+
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+
+    it('should not create an event on C when pressed on a child element', async () => {
       let store: AnyEventCalendarStore | null = null;
 
       const { user } = render(
@@ -164,12 +191,12 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const button = screen.getByRole('button', { name: 'child' });
       await user.click(button);
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
     });
 
-    it('should not create event on Enter when eventCreation is false', async () => {
+    it('should not create an event on C when eventCreation is false', async () => {
       let store: AnyEventCalendarStore | null = null;
 
       const { user } = render(
@@ -186,7 +213,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const cell = screen.getByRole('gridcell');
       await user.click(cell);
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
     });

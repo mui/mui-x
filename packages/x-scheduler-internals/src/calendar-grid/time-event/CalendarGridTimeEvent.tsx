@@ -5,6 +5,7 @@ import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
+import { getCalendarGridItemProps } from '../../internals/utils/calendar-grid-items';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { computeElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
@@ -37,11 +38,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   } = componentProps;
 
   // Context hooks
-  const {
-    axis: columnAxis,
-    hasFocus: columnHasFocus,
-    getCursorPositionInElementMs,
-  } = useCalendarGridTimeColumnContext();
+  const { axis: columnAxis, getCursorPositionInElementMs } = useCalendarGridTimeColumnContext();
   const columnStart = columnAxis.start;
 
   // Ref hooks
@@ -110,7 +107,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const { getButtonProps, buttonRef } = useButton({
     disabled: false,
     native: nativeButton,
-    tabIndex: columnHasFocus ? 0 : -1,
+    // The grid has a single tab stop, the events are reached by moving into their column.
+    tabIndex: -1,
   });
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
@@ -129,7 +127,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
           [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
         } as React.CSSProperties,
       },
-      ...(interactive ? [getButtonProps] : []),
+      ...(interactive ? [getButtonProps, getCalendarGridItemProps(occurrenceKey)] : []),
     ],
   });
 

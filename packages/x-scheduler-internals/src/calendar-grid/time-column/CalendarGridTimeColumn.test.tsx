@@ -66,7 +66,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
   });
 
   describe('keyboard interactions', () => {
-    it('should create a timed event placeholder on Enter keypress', async () => {
+    it('should create a timed event placeholder on C', async () => {
       let store: AnyEventCalendarStore | null = null;
 
       const { user } = render(
@@ -82,19 +82,19 @@ describe('<CalendarGrid.TimeColumn />', () => {
       );
 
       const cell = screen.getByRole('gridcell');
-      // Focus without clicking, so the Enter keypress is the only creation trigger.
+      // Focus without clicking, so the key press is the only creation trigger.
       act(() => {
         cell.focus();
       });
       expect(store!.state.occurrencePlaceholder).to.equal(null);
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
       expect(store!.state.occurrencePlaceholder?.surfaceType).to.equal('time-grid');
     });
 
-    it('should not create event on Enter when eventCreation is false', async () => {
+    it('should not create an event on C when eventCreation is false', async () => {
       let store: AnyEventCalendarStore | null = null;
 
       const { user } = render(
@@ -111,7 +111,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       const cell = screen.getByRole('gridcell');
       await user.click(cell);
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
     });

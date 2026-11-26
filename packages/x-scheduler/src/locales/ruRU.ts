@@ -192,6 +192,14 @@ const ruRUCalendar: SchedulerCalendarTranslations = {
   weekdayMonday: 'Понедельник',
   weekdaySaturday: 'Суббота',
 
+  // Grid cells
+  // eventCountAriaLabel: eventCount => {
+  //   if (eventCount === 0) {
+  //     return 'No events';
+  //   }
+  //   return eventCount === 1 ? '1 event' : `${eventCount} events`;
+  // },
+
   // WeekView
   allDay: 'Весь день',
   // dayGridLabel: 'All-day and multi-day events',

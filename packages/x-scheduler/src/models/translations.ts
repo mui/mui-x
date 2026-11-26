@@ -261,6 +261,9 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   weekdayMonday: string;
   weekdaySaturday: string;
 
+  // Grid cells
+  eventCountAriaLabel: (eventCount: number) => string;
+
   // WeekView
   allDay: string;
   dayGridLabel: string;

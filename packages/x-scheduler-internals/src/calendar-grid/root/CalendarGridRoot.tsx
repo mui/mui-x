@@ -1,13 +1,37 @@
 'use client';
 import * as React from 'react';
 import { useId } from '@base-ui/utils/useId';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { DEFAULT_ROW_TYPES } from '../../internals/utils/getNavigationTarget';
+import {
+  CALENDAR_GRID_ITEM_ATTRIBUTE,
+  getCalendarGridCellItems,
+} from '../../internals/utils/calendar-grid-items';
 import type { GridCellCoordinates, GridRowType } from '../../models/calendarGrid';
 import { CalendarGridRootContext } from './CalendarGridRootContext';
+import type { CalendarGridCellRegistration } from './CalendarGridRootContext';
 
 const DEFAULT_ROWS_PER_TYPE: Partial<Record<GridRowType, number>> = {};
+
+function isSameCell(a: GridCellCoordinates | null, b: GridCellCoordinates | null) {
+  return (
+    a != null &&
+    b != null &&
+    a.rowType === b.rowType &&
+    a.rowIndex === b.rowIndex &&
+    a.columnIndex === b.columnIndex
+  );
+}
+
+/** C, without the modifiers used by the browser and the assistive technologies. */
+function isCreateEventKey(event: React.KeyboardEvent) {
+  return (
+    (event.key === 'c' || event.key === 'C') && !event.ctrlKey && !event.metaKey && !event.altKey
+  );
+}
 
 export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   componentProps: CalendarGridRoot.Props,
@@ -22,41 +46,198 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     id: idProp,
     rowTypes = DEFAULT_ROW_TYPES,
     rowsPerType: rowsPerTypeProp = DEFAULT_ROWS_PER_TYPE,
+    defaultFocusedCell,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
   const id = useId(idProp);
   const rowsPerType = rowsPerTypeProp;
+  const isRtl = useDirection() === 'rtl';
 
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const cellsRef = React.useRef(new Map<HTMLElement, CalendarGridCellRegistration>());
+  // The cell whose items the keyboard moves through, `null` while moving between cells.
+  // Read in focus handlers that run before a re-render, so it is not a state.
+  const enteredCellRef = React.useRef<HTMLElement | null>(null);
 
   const [focusedCell, setFocusedCellState] = React.useState<GridCellCoordinates | null>(null);
+  // The tab stop, kept when focus leaves the grid so Tab comes back to the same cell.
+  const [activeCell, setActiveCell] = React.useState<GridCellCoordinates | null>(null);
+
+  // A new default (for example once the visible days change) resets the tab stop.
+  const [prevDefaultFocusedCell, setPrevDefaultFocusedCell] = React.useState(defaultFocusedCell);
+  if (prevDefaultFocusedCell !== defaultFocusedCell) {
+    setPrevDefaultFocusedCell(defaultFocusedCell);
+    setActiveCell(null);
+  }
+
+  const fallbackTabStop = React.useMemo<GridCellCoordinates>(
+    () => ({
+      rowType: rowTypes.find((rowType) => rowType !== 'header') ?? rowTypes[0],
+      rowIndex: 0,
+      columnIndex: 0,
+    }),
+    [rowTypes],
+  );
+  const tabStop = activeCell ?? defaultFocusedCell ?? fallbackTabStop;
 
   const setFocusedCell = React.useCallback((coordinates: GridCellCoordinates) => {
-    setFocusedCellState((prev) =>
-      prev?.rowType === coordinates.rowType &&
-      prev.rowIndex === coordinates.rowIndex &&
-      prev.columnIndex === coordinates.columnIndex
-        ? prev
-        : coordinates,
-    );
+    setFocusedCellState((prev) => (isSameCell(prev, coordinates) ? prev : coordinates));
+    setActiveCell((prev) => (isSameCell(prev, coordinates) ? prev : coordinates));
   }, []);
 
-  const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {
+  const isTabStop = React.useCallback(
+    (coordinates: GridCellCoordinates) => isSameCell(tabStop, coordinates),
+    [tabStop],
+  );
+
+  const registerCell = React.useCallback(
+    (cell: HTMLElement, registration: CalendarGridCellRegistration) => {
+      cellsRef.current.set(cell, registration);
+      return () => {
+        if (cellsRef.current.get(cell) === registration) {
+          cellsRef.current.delete(cell);
+        }
+      };
+    },
+    [],
+  );
+
+  const enterCell = React.useCallback((cell: HTMLElement) => {
+    const [firstItem] = getCalendarGridCellItems(cell);
+    if (firstItem == null) {
+      return false;
+    }
+    enteredCellRef.current = cell;
+    firstItem.focus();
+    return true;
+  }, []);
+
+  const exitCell = (cell: HTMLElement) => {
+    enteredCellRef.current = null;
+    cell.focus({ preventScroll: true });
+  };
+
+  const isInGrid = (target: EventTarget) =>
+    target instanceof Node && rootRef.current?.contains(target) === true;
+
+  const handleFocus = useStableCallback((event: React.FocusEvent<HTMLDivElement>) => {
+    const target = event.target;
+    // Events from portals (popovers, dialogs) bubble through the React tree too.
+    if (!isInGrid(target)) {
+      return;
+    }
+    if (cellsRef.current.has(target)) {
+      enteredCellRef.current = null;
+      return;
+    }
+    if (!target.hasAttribute(CALENDAR_GRID_ITEM_ATTRIBUTE)) {
+      return;
+    }
+    // An item of a multi-day event can be focused from another cell of its row.
+    const enteredCell = enteredCellRef.current;
+    if (enteredCell != null && getCalendarGridCellItems(enteredCell).includes(target)) {
+      return;
+    }
+    // Focused another way, for example by a click or once a dialog closes.
+    const cell = Array.from(cellsRef.current.keys()).find((element) => element.contains(target));
+    enteredCellRef.current = cell ?? null;
+    const coordinates = cell != null ? cellsRef.current.get(cell)!.coordinates : null;
+    if (coordinates != null && !isSameCell(coordinates, tabStop)) {
+      setActiveCell(coordinates);
+    }
+  });
+
+  const handleBlur = useStableCallback((event: React.FocusEvent<HTMLDivElement>) => {
     if (!rootRef.current?.contains(event.relatedTarget as Node)) {
       setFocusedCellState(null);
+      enteredCellRef.current = null;
     }
-  }, []);
+  });
+
+  const handleKeyDown = useStableCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
+    const target = event.target;
+    if (event.defaultPrevented || !isInGrid(target)) {
+      return;
+    }
+
+    const enteredCell = enteredCellRef.current;
+    const cell = cellsRef.current.has(target as HTMLElement)
+      ? (target as HTMLElement)
+      : enteredCell;
+    if (cell == null) {
+      return;
+    }
+
+    if (isCreateEventKey(event)) {
+      const createEvent = cellsRef.current.get(cell)?.createEvent;
+      if (createEvent) {
+        event.preventDefault();
+        createEvent(event.nativeEvent);
+      }
+      return;
+    }
+
+    if (cell !== enteredCell || target === cell) {
+      return;
+    }
+
+    if (event.key === 'Escape' || event.key === 'F2') {
+      event.preventDefault();
+      exitCell(cell);
+      return;
+    }
+
+    const previousKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+    const nextKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
+    let offset = 0;
+    if (event.key === 'ArrowDown' || event.key === nextKey) {
+      offset = 1;
+    } else if (event.key === 'ArrowUp' || event.key === previousKey) {
+      offset = -1;
+    } else if (event.key === 'Tab') {
+      offset = event.shiftKey ? -1 : 1;
+    }
+    if (offset === 0) {
+      return;
+    }
+
+    const items = getCalendarGridCellItems(cell);
+    const index = items.indexOf(target as HTMLElement);
+    if (index === -1) {
+      return;
+    }
+    event.preventDefault();
+    items[(index + offset + items.length) % items.length].focus();
+  });
 
   const contextValue: CalendarGridRootContext = React.useMemo(
-    () => ({ id, focusedCell, setFocusedCell, rowTypes, rowsPerType }),
-    [id, focusedCell, setFocusedCell, rowTypes, rowsPerType],
+    () => ({
+      id,
+      focusedCell,
+      setFocusedCell,
+      isTabStop,
+      enterCell,
+      registerCell,
+      rowTypes,
+      rowsPerType,
+    }),
+    [id, focusedCell, setFocusedCell, isTabStop, enterCell, registerCell, rowTypes, rowsPerType],
   );
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef, rootRef],
-    props: [elementProps, { role: 'grid', id, onBlur: handleBlur }],
+    props: [
+      elementProps,
+      {
+        role: 'grid',
+        id,
+        onFocus: handleFocus,
+        onBlur: handleBlur,
+        onKeyDown: handleKeyDown,
+      },
+    ],
   });
 
   return (
@@ -83,5 +264,11 @@ export namespace CalendarGridRoot {
      * @default {}
      */
     rowsPerType?: Partial<Record<GridRowType, number>>;
+    /**
+     * The cell that is the tab stop of the grid until a cell is focused, usually the current day.
+     * Passing a new object resets the tab stop to it.
+     * Defaults to the first cell of the first row that is not the header.
+     */
+    defaultFocusedCell?: GridCellCoordinates;
   }
 }

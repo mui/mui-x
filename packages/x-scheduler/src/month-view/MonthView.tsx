@@ -19,13 +19,16 @@ import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
 import type { MonthViewProps } from './MonthView.types';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
-import { getSiblingMonthStart } from '../internals/utils/date-utils';
+import { getDefaultFocusedCell, getSiblingMonthStart } from '../internals/utils/date-utils';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -161,6 +164,8 @@ export const MonthView = React.memo(
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
     const hiddenWeekdays = useStore(store, eventCalendarPreferenceSelectors.hiddenWeekdays);
     const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+    const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
+    const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(2);
@@ -180,6 +185,16 @@ export const MonthView = React.memo(
     const monthViewRowsPerType = React.useMemo(
       () => ({ 'day-grid': weeks.length }) as const,
       [weeks.length],
+    );
+
+    // Today, else the first day of the visible month. A new object for other days resets the tab stop.
+    const defaultFocusedCell = React.useMemo(
+      () =>
+        getDefaultFocusedCell(weeks, 'day-grid', [
+          nowDayNumber,
+          getDayNumber(visiblePlainDate.with({ day: 1 })),
+        ]),
+      [weeks, nowDayNumber, visiblePlainDate],
     );
 
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -206,6 +221,7 @@ export const MonthView = React.memo(
             className={classes.monthViewGrid}
             rowTypes={MONTH_VIEW_ROW_TYPES}
             rowsPerType={monthViewRowsPerType}
+            defaultFocusedCell={defaultFocusedCell}
             aria-rowcount={1 + weeks.length}
             aria-colcount={weeks[0].length}
           >

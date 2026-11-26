@@ -211,6 +211,14 @@ const heILCalendar: SchedulerCalendarTranslations = {
   weekdayMonday: 'יום שני',
   weekdaySaturday: 'יום שבת',
 
+  // Grid cells
+  // eventCountAriaLabel: eventCount => {
+  //   if (eventCount === 0) {
+  //     return 'No events';
+  //   }
+  //   return eventCount === 1 ? '1 event' : `${eventCount} events`;
+  // },
+
   // WeekView
   allDay: 'כל היום',
   // dayGridLabel: 'All-day and multi-day events',

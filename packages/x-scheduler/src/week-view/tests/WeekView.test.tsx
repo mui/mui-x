@@ -469,4 +469,28 @@ describe('<WeekView />', () => {
       expect(headerCells.length).to.equal(7);
     });
   });
+  it("should name each cell with its number of events and make today's column the tab stop", () => {
+    render(
+      <EventCalendarProvider
+        events={[
+          EventBuilder.new().singleDay('2025-05-05T09:00:00Z').title('Standup').build(),
+          EventBuilder.new().singleDay('2025-05-05T14:00:00Z').title('Review').build(),
+        ]}
+        resources={[]}
+      >
+        <EventDialogProvider>
+          <WeekView />
+        </EventDialogProvider>
+      </EventCalendarProvider>,
+    );
+
+    const columns = Array.from(
+      document.querySelectorAll<HTMLElement>(`.${eventCalendarClasses.dayTimeGridColumn}`),
+    );
+    expect(columns[1]).toHaveAccessibleName('Monday, May 5 2 events');
+    expect(columns[2]).toHaveAccessibleName('Tuesday, May 6 No events');
+    expect(
+      screen.getAllByRole('gridcell').filter((cell) => cell.getAttribute('tabindex') === '0'),
+    ).to.deep.equal([columns[0]]);
+  });
 });

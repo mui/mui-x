@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import { config } from 'react-transition-group';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
@@ -1633,6 +1634,107 @@ describe('<MonthView />', () => {
         .filter(Boolean);
 
       expect(weekLabels[0]).to.equal('18');
+    });
+  });
+  describe('keyboard navigation', () => {
+    function renderMonthView(
+      props: Partial<React.ComponentProps<typeof EventCalendarProvider>> = {},
+    ) {
+      return render(
+        <EventCalendarProvider {...standaloneDefaults} {...props}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    function getCell(name: RegExp) {
+      return screen.getByRole('gridcell', { name });
+    }
+
+    it("should make today's cell the single tab stop", () => {
+      renderMonthView();
+
+      const tabbableCells = screen
+        .getAllByRole('gridcell')
+        .filter((cell) => cell.getAttribute('tabindex') === '0');
+      expect(tabbableCells).to.deep.equal([getCell(/May 1,/)]);
+    });
+
+    it('should name each cell with its date and its number of events', () => {
+      renderMonthView({
+        events: [EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Meeting').build()],
+      });
+
+      expect(getCell(/^Thursday May 1, 1 event$/)).not.to.equal(null);
+      expect(getCell(/^Friday May 2, No events$/)).not.to.equal(null);
+    });
+
+    it('should move through the day number button, the events and the "+N more" button', async () => {
+      const { user } = renderMonthView({ events: manyEvents });
+      const cell = getCell(/May 1,/);
+
+      act(() => {
+        cell.focus();
+      });
+      await user.keyboard('{Enter}');
+
+      // How many events fit depends on the height of the cell, read once the layout is done.
+      const items = within(cell).getAllByRole('button');
+      expect(items[0]).toHaveAccessibleName('May 1');
+      expect(items[items.length - 1].textContent).to.match(/more/i);
+      expect(document.activeElement).to.equal(items[0]);
+      for (const item of items.slice(1)) {
+        // eslint-disable-next-line no-await-in-loop
+        await user.keyboard('{ArrowDown}');
+        expect(document.activeElement).to.equal(item);
+      }
+
+      // Wraps to the first item.
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).to.equal(items[0]);
+
+      await user.keyboard('{Escape}');
+      expect(cell).toHaveFocus();
+    });
+
+    it('should reach a multi-day event from a later day it covers', async () => {
+      const { user } = renderMonthView({
+        events: [
+          EventBuilder.new()
+            .span('2025-05-05T09:00:00Z', '2025-05-07T17:00:00Z')
+            .title('Conference')
+            .build(),
+        ],
+      });
+      const cell = getCell(/May 6, 1 event$/);
+
+      act(() => {
+        cell.focus();
+      });
+      await user.keyboard('{Enter}{ArrowDown}');
+      expect(document.activeElement).to.equal(screen.getByRole('button', { name: /^Conference,/ }));
+
+      await user.keyboard('{Escape}');
+      expect(cell).toHaveFocus();
+    });
+
+    it('should do nothing on Enter in an empty cell without items', async () => {
+      const { user } = renderMonthView({
+        events: [],
+        views: ['month'],
+        defaultView: 'month',
+        readOnly: true,
+      });
+      const cell = getCell(/May 2, No events$/);
+
+      act(() => {
+        cell.focus();
+      });
+      await user.keyboard('{Enter}');
+
+      expect(cell).toHaveFocus();
     });
   });
 });
