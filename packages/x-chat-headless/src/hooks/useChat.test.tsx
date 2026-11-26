@@ -51,6 +51,9 @@ function createControlledStream() {
     async close() {
       (controllerRef ?? (await ready)).close();
     },
+    async error(reason: unknown) {
+      (controllerRef ?? (await ready)).error(reason);
+    },
   };
 }
 
@@ -1505,6 +1508,98 @@ describe('useChat', () => {
       });
 
       expect(view.signals[0].aborted).toBe(false);
+    });
+
+    it('keeps the stream for a conversation the props added, dropped, and `listConversations` then loaded', async () => {
+      let resolveConversations: (value: { conversations: ChatConversation[] }) => void = () => {};
+      const view = renderStreamingChat({
+        conversations: [],
+        adapter: {
+          listConversations: () =>
+            new Promise((resolve) => {
+              resolveConversations = resolve;
+            }),
+        },
+      });
+      await view.send();
+      await startReply(view.stream);
+
+      view.render({ conversations: [{ id: 'c-new' }] });
+      view.render({ conversations: [] });
+      await act(async () => {
+        resolveConversations({ conversations: [{ id: 'c-new' }] });
+      });
+      await view.switchTo({ activeConversationId: 'c-new', conversations: [{ id: 'c-new' }] });
+
+      expect(view.signals[0].aborted).toBe(false);
+    });
+
+    it('does not keep a run that failed when `onError` opens its conversation', async () => {
+      const listMessages = vi.fn(async () => ({ messages: [] }));
+      const view = renderStreamingChat({
+        controlledActiveConversation: false,
+        adapter: { listMessages, reconnectToStream: vi.fn(async () => createPendingStream()) },
+        onError: () => {
+          void view.result.current.chat.setActiveConversation('c-new');
+        },
+      });
+      await view.send();
+      await startReply(view.stream, 'c-new');
+
+      await act(async () => {
+        await view.stream.error(new Error('Network down'));
+      });
+
+      await waitFor(() => {
+        expect(listMessages).toHaveBeenCalledWith(
+          expect.objectContaining({ conversationId: 'c-new' }),
+        );
+      });
+      expect(view.adapter.reconnectToStream).not.toHaveBeenCalled();
+    });
+
+    it('does not keep a run the server cancelled when its conversation is opened', async () => {
+      const listMessages = vi.fn(async () => ({ messages: [] }));
+      let didSwitch = false;
+      const view = renderStreamingChat({
+        controlledActiveConversation: false,
+        adapter: { listMessages },
+        onMessagesChange: (messages) => {
+          if (!didSwitch && messages.some((message) => message.status === 'cancelled')) {
+            didSwitch = true;
+            queueMicrotask(() => {
+              void view.result.current.chat.setActiveConversation('c-new');
+            });
+          }
+        },
+      });
+      await view.send();
+      await startReply(view.stream, 'c-new');
+
+      await act(async () => {
+        await view.stream.enqueue({ type: 'abort', messageId: 'assistant-new' });
+      });
+
+      await waitFor(() => {
+        expect(listMessages).toHaveBeenCalledWith(
+          expect.objectContaining({ conversationId: 'c-new' }),
+        );
+      });
+    });
+
+    it('reports an aborted reply to the `onFinish` of the conversation it started in', async () => {
+      const onFinishA = vi.fn();
+      const onFinishB = vi.fn();
+      const view = renderStreamingChat({ activeConversationId: 'c-a', onFinish: onFinishA });
+      await view.send();
+      await startReply(view.stream);
+
+      await view.switchTo({ activeConversationId: 'c-b', onFinish: onFinishB });
+
+      await waitFor(() => {
+        expect(onFinishA).toHaveBeenCalledTimes(1);
+      });
+      expect(onFinishB).not.toHaveBeenCalled();
     });
   });
 

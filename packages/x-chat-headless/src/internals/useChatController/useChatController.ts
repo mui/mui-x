@@ -22,7 +22,7 @@ import {
 } from './useChatControllerHelpers';
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
-import { createSendMessageActions } from './sendMessageActions';
+import { createSendMessageActions, markConversationsSeen } from './sendMessageActions';
 import type { InFlightRun } from './sendMessageActions';
 import { createTypingActions } from './typingActions';
 import type { ChatFeatures } from '../../ChatProvider';
@@ -138,7 +138,7 @@ export function useChatController<Cursor = string>({
         run.reportedConversationId != null
           ? run.reportedConversationId === nextConversationId
           : conversationIds.includes(nextConversationId) &&
-            run.isAddedById.get(nextConversationId) !== false;
+            run.isAddedById.get(nextConversationId) === true;
       if (!belongsToRun) {
         return false;
       }
@@ -171,6 +171,15 @@ export function useChatController<Cursor = string>({
       return true;
     },
     [store, storeUnknown],
+  );
+
+  // Conversations that appear while an unscoped run streams may be its new one.
+  useStoreEffect(
+    store,
+    (state) => state.conversationIds,
+    (_, conversationIds) => {
+      markConversationsSeen(inFlightRunRef.current, conversationIds, true);
+    },
   );
 
   const { loadConversationMessages, loadMoreHistory, setActiveConversation } = React.useMemo(
@@ -320,17 +329,12 @@ export function useChatController<Cursor = string>({
           return;
         }
 
-        // Conversations present now were added during the run; loaded ones already existed.
-        const run = inFlightRunRef.current;
-        if (run && run.conversationId == null) {
-          const markSeen = (id: string, isAdded: boolean) => {
-            if (!run.isAddedById.has(id)) {
-              run.isAddedById.set(id, isAdded);
-            }
-          };
-          store.state.conversationIds.forEach((id) => markSeen(id, true));
-          result.conversations.forEach(({ id }) => markSeen(id, false));
-        }
+        // Loaded conversations already existed, so a stream in flight cannot belong to them.
+        markConversationsSeen(
+          inFlightRunRef.current,
+          result.conversations.map(({ id }) => id),
+          false,
+        );
         store.setConversations(result.conversations);
       })
       .catch((error) => {

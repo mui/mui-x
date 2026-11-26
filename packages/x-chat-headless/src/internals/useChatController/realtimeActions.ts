@@ -1,6 +1,7 @@
 import type * as React from 'react';
 import type { ChatStore } from '../../store';
 import type { ChatRealtimeEvent } from '../../types/chat-realtime';
+import { markConversationsSeen } from './sendMessageActions';
 import type { InFlightRun } from './sendMessageActions';
 import { applyPresenceUpdate, applyReadUpdate } from './useChatControllerHelpers';
 
@@ -35,10 +36,7 @@ export function createRealtimeActions(params: {
           store.updateConversation(event.conversation.id, event.conversation);
         } else {
           // An update names an existing conversation, so a stream in flight cannot belong to it.
-          const isAddedById = inFlightRunRef.current?.isAddedById;
-          if (isAddedById && !isAddedById.has(event.conversation.id)) {
-            isAddedById.set(event.conversation.id, false);
-          }
+          markConversationsSeen(inFlightRunRef.current, [event.conversation.id], false);
           store.addConversation(event.conversation);
         }
         return;

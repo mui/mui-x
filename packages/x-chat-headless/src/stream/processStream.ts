@@ -28,24 +28,27 @@ import {
 } from './streamHelpers';
 import { createTextDeltaBuffer } from './streamTextDeltaBuffer';
 
+/** A streamed reply whose conversation the controller can assign while it streams. */
+export interface ProcessStreamRun {
+  conversationId: string | undefined;
+  /** The conversation the stream reported on its `start` chunk. */
+  reportedConversationId?: string;
+  /** Whether a disconnect is followed by a reconnect rather than ending the run. */
+  canReconnect?: boolean;
+  /** Set before the end of the reply is published, so a later switch does not keep the run. */
+  isFinished?: boolean;
+}
+
 export interface ProcessStreamOptions {
   conversationId?: string;
+  /** Replaces `conversationId` with the run's current one. */
+  run?: ProcessStreamRun;
   messageId?: string;
   signal?: AbortSignal;
   flushInterval?: number;
   onData?: ChatOnData;
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
-  /**
-   * Current conversation of the run; the controller can assign one to an unscoped run mid-stream.
-   * @returns {string | undefined} The conversation id, or `undefined` while the run has none.
-   */
-  getConversationId?: () => string | undefined;
-  /**
-   * Called with the `conversationId` of the `start` chunk, when the stream reports one.
-   * @param {string} conversationId The conversation the stream reported.
-   */
-  onReportedConversationId?: (conversationId: string) => void;
   /**
    * Lower-bound sequence value to accept on a reconnected stream.
    *
@@ -111,7 +114,12 @@ export async function processStream<Cursor = string>(
   options: ProcessStreamOptions = {},
 ): Promise<ProcessStreamResult> {
   const storeUnknown = asCursorAgnosticChatStore(store);
-  const getConversationId = () => options.getConversationId?.() ?? options.conversationId;
+  const getConversationId = () => (options.run ?? options).conversationId;
+  const endRun = () => {
+    if (options.run) {
+      options.run.isFinished = true;
+    }
+  };
   let targetMessageId = options.messageId;
   let finishReason: string | undefined;
   let didReceiveTerminalChunk = false;
@@ -313,13 +321,14 @@ export async function processStream<Cursor = string>(
         // let two ids-less responses merge into one assistant message.
         targetMessageId = chunk.messageId ?? targetMessageId;
         startAuthor = chunk.author;
-        if (chunk.conversationId != null) {
-          options.onReportedConversationId?.(chunk.conversationId);
+        if (chunk.conversationId != null && options.run) {
+          options.run.reportedConversationId = chunk.conversationId;
         }
         ensureAssistantMessage();
         return;
 
       case 'finish':
+        endRun();
         targetMessageId ??= chunk.messageId;
         ensureAssistantMessage();
         finishReason = chunk.finishReason;
@@ -333,6 +342,7 @@ export async function processStream<Cursor = string>(
         return;
 
       case 'abort':
+        endRun();
         targetMessageId ??= chunk.messageId;
         ensureAssistantMessage();
         didReceiveTerminalChunk = true;
@@ -738,6 +748,9 @@ export async function processStream<Cursor = string>(
 
     if (didReceiveAnyChunk) {
       flushPendingTextLikeDelta();
+      if (!options.run?.canReconnect) {
+        endRun();
+      }
       failStream('Stream closed before a terminal chunk was received.');
 
       return finish({
@@ -749,6 +762,7 @@ export async function processStream<Cursor = string>(
       });
     }
 
+    endRun();
     store.setStreaming(false);
     return finish({
       messageId: targetMessageId,
@@ -769,6 +783,7 @@ export async function processStream<Cursor = string>(
     }
 
     flushPendingTextLikeDelta();
+    endRun();
 
     // ChatStreamError means failStream() already updated the store — avoid double-handling.
     if (!(error instanceof ChatStreamError)) {

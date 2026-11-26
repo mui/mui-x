@@ -297,6 +297,14 @@ describe('ChatStore', () => {
     });
   });
 
+  it('addConversation does not duplicate a conversation with an inherited property name as id', () => {
+    const store = new ChatStore({ initialConversations: [{ id: '__proto__' }] });
+
+    store.addConversation({ id: '__proto__', title: 'Updated' });
+
+    expect(store.state.conversationIds).toEqual(['__proto__']);
+  });
+
   it('addConversation, updateConversation, and removeConversation keep normalized ordering consistent', () => {
     const store = new ChatStore({
       initialConversations: [conversation1],

@@ -2,7 +2,7 @@ import type * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { ChatAdapter } from '../../adapters';
 import { processStream } from '../../stream';
-import type { ProcessStreamResult } from '../../stream';
+import type { ProcessStreamResult, ProcessStreamRun } from '../../stream';
 import type { ChatStore } from '../../store';
 import type {
   ChatMessage,
@@ -35,15 +35,21 @@ export interface SendMessageActionsRuntimeRef<Cursor = string> {
 }
 
 /** The run being streamed; the controller decides whether a conversation switch keeps it. */
-export interface InFlightRun {
-  /** Set by the controller when it keeps an unscoped run on a switch to a new conversation. */
-  conversationId: string | undefined;
-  /** The conversation the stream reported on its `start` chunk. */
-  reportedConversationId?: string;
+export interface InFlightRun extends ProcessStreamRun {
   /** Whether each conversation the run has seen appeared during the reply; the first sighting wins. */
   isAddedById: Map<string, boolean>;
-  /** Set before `onFinish`, so a switch made from it is not kept. */
-  isFinished?: boolean;
+}
+
+/** Records, for an unscoped run in flight, how it first saw each conversation. */
+export function markConversationsSeen(run: InFlightRun | null, ids: string[], isAdded: boolean) {
+  if (!run || run.conversationId != null) {
+    return;
+  }
+  ids.forEach((id) => {
+    if (!run.isAddedById.has(id)) {
+      run.isAddedById.set(id, isAdded);
+    }
+  });
 }
 
 export function createSendMessageActions<Cursor = string>(params: {
@@ -110,20 +116,13 @@ export function createSendMessageActions<Cursor = string>(params: {
   ): Promise<ProcessStreamResult> {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
-    const finishRun: ChatOnFinish = (payload) => {
-      run.isFinished = true;
-      return runtimeRef.current.onFinish?.(payload);
-    };
+    run.canReconnect = shouldDeferFinish;
     const processOptions = {
-      conversationId: run.conversationId,
-      getConversationId: () => run.conversationId,
-      onReportedConversationId: (reportedConversationId: string) => {
-        run.reportedConversationId = reportedConversationId;
-      },
+      run,
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
-      onFinish: shouldDeferFinish ? undefined : finishRun,
+      onFinish: shouldDeferFinish ? undefined : runtimeRef.current.onFinish,
       onData: runtimeRef.current.onData,
       // Unique-per-run fallback the stream binds to when the adapter omits a
       // `messageId` on `start`. A backend-supplied id still overrides it (see
@@ -133,11 +132,12 @@ export function createSendMessageActions<Cursor = string>(params: {
       messageId: fallbackMessageId,
     };
     const emitDeferredFinish = async (result: ProcessStreamResult) => {
-      if (!shouldDeferFinish) {
+      run.isFinished = true;
+      if (!shouldDeferFinish || !runtimeRef.current.onFinish) {
         return;
       }
 
-      await finishRun({
+      await runtimeRef.current.onFinish({
         message: getFinishMessage(
           storeUnknown,
           result.messageId,
@@ -164,6 +164,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       return result;
     }
 
+    run.canReconnect = false;
     try {
       // failStream cleared streamingConversationId; the run keeps a scope the controller assigned.
       store.setStreaming(true, run.conversationId);
@@ -181,7 +182,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       return await processStream(store, reconnectStream, {
         ...processOptions,
-        onFinish: finishRun,
+        onFinish: runtimeRef.current.onFinish,
         messageId: result.messageId,
         reconnectFromSequence: result.nextSequence,
         seenEventIds: result.seenEventIds,
@@ -302,6 +303,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         runtimeRef.current.onError?.(store.state.error);
       }
     } catch (error) {
+      run.isFinished = true;
       store.updateMessage(nextMessage.id, {
         status: abortController.signal.aborted ? 'cancelled' : 'error',
       });
@@ -508,6 +510,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         runtimeRef.current.onError?.(store.state.error);
       }
     } catch (error) {
+      run.isFinished = true;
       if (abortController.signal.aborted) {
         store.setStreaming(false);
         return;
