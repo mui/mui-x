@@ -73,6 +73,8 @@ export const TreeItemContent = styled('div', {
           theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
         '[role="treeitem"]:focus-visible > &[data-disabled]': {
           opacity: 1,
+          // The row opacity would also fade the ring, so the children are dimmed instead.
+          // `*` also dims custom content, whose children may have no slot class (`useTreeItem`).
           '& > *': {
             opacity: (theme.vars || theme).palette.action.disabledOpacity,
           },
