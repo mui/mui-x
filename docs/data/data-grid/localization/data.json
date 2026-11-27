@@ -315,8 +315,8 @@
     "languageTag": "uz-UZ",
     "importName": "uzUZ",
     "localeName": "Uzbek",
-    "missingKeysCount": 8,
-    "totalKeysCount": 301,
+    "missingKeysCount": 10,
+    "totalKeysCount": 303,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/uzUZ.ts"
   },
   {
