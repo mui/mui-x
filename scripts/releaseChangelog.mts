@@ -1,6 +1,6 @@
 import { parseArgs } from 'node:util';
 import { fetchChangelogData } from '@mui/internal-code-infra/changelog';
-import { renderChangelog } from './changelog.mts';
+import { getReleaseDate, renderChangelog } from './changelog.mts';
 
 const REPO = 'mui-x';
 
@@ -35,6 +35,7 @@ if (values.help) {
     repo: REPO,
     lastRelease: values.lastRelease,
     release: values.release,
+    date: getReleaseDate(),
   });
 
   print(renderChangelog(data, values.nextVersion));

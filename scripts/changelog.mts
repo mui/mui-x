@@ -208,6 +208,13 @@ function renderProduct(
   );
 }
 
+/** The local day of the run, as UTC midnight, since `formatDate` prints the UTC day. */
+export function getReleaseDate() {
+  const now = new Date();
+
+  return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+}
+
 /**
  * The changelog of a release, for CHANGELOG.md. Without `nextVersion`, versions are
  * `__VERSION__` placeholders.

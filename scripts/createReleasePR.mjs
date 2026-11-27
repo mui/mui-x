@@ -34,7 +34,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { input, select, confirm } from '@inquirer/prompts';
 import { fetchChangelogData } from '@mui/internal-code-infra/changelog';
-import { renderChangelog } from './changelog.mts';
+import { getReleaseDate, renderChangelog } from './changelog.mts';
 import pck from '../package.json' with { type: 'json' };
 
 const packageVersion = pck.version;
@@ -636,6 +636,7 @@ async function generateChangelog(newVersion, lastVersion, releaseBranch = 'maste
       repo: REPO,
       lastRelease: `v${lastVersion}`,
       release: releaseBranch,
+      date: getReleaseDate(),
     });
 
     return renderChangelog(data, newVersion);
