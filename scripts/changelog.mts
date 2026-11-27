@@ -21,7 +21,7 @@ const CODEMOD_LABEL = 'package: codemod';
 const DOCS_LABEL = 'docs';
 const TEST_PREFIX = 'test';
 
-const EXCLUDED_LABELS = new Set(['dependencies', 'internal', 'release']);
+const EXCLUDED_LABELS = new Set(['dependencies', 'release']);
 
 const PRO_ICON = `[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')`;
 const PREMIUM_ICON = `[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')`;
