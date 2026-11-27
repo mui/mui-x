@@ -180,6 +180,17 @@ describe('BarChart - baseline', () => {
     expect(five).to.include({ y: 50, height: 50 });
   });
 
+  it('should warn when bars start from 0 on a log scale', () => {
+    expect(() =>
+      getBars({
+        series: [{ data: [10, 100] }],
+        yAxis: [{ scaleType: 'log', position: 'none' }],
+      }),
+    ).toWarnDev(
+      'uses a log scale, but the bar series of id "auto-generated-id-0" starts its bars from 0.',
+    );
+  });
+
   it('should skip zero values on a log scale with `baseline: "min"`', () => {
     const bars = getBars({
       series: [{ data: [0, 10, 100], baseline: 'min' }],

@@ -133,6 +133,7 @@ export function processBarDataForPlot(
         xAxes,
         yAxisId,
         yAxes,
+        { baseline: series[seriesId].baseline },
       );
 
       const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;

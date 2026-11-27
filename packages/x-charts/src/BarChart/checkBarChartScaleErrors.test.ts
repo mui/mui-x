@@ -1,8 +1,42 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 
 describe('checkBarChartScaleErrors', () => {
+  beforeEach(() => {
+    clearWarningsCache();
+  });
+
+  describe('log scale', () => {
+    const checkLog = (options?: Parameters<typeof checkBarChartScaleErrors>[7]) =>
+      checkBarChartScaleErrors(
+        true,
+        'seriesId',
+        1,
+        DEFAULT_X_AXIS_KEY,
+        { [DEFAULT_X_AXIS_KEY]: { scaleType: 'band', data: ['A'] } },
+        DEFAULT_Y_AXIS_KEY,
+        { [DEFAULT_Y_AXIS_KEY]: { scaleType: 'log' } },
+        options,
+      );
+
+    it('should warn when bars start from 0 on a log scale', () => {
+      expect(() => checkLog({ baseline: undefined })).toWarnDev(
+        'MUI X Charts: The first `yAxis` uses a log scale, but the bar series of id "seriesId" starts its bars from 0.',
+      );
+    });
+
+    it('should not warn with a baseline that exists on a log scale', () => {
+      expect(() => checkLog({ baseline: 'min' })).not.toWarnDev();
+      expect(() => checkLog({ baseline: 1 })).not.toWarnDev();
+    });
+
+    it('should not warn without baseline options', () => {
+      expect(() => checkLog()).not.toWarnDev();
+    });
+  });
+
   describe('verticalLayout: true', () => {
     it('should throw an error when the x-axis is not a band scale', () => {
       expect(() => {
