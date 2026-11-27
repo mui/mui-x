@@ -68,6 +68,8 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   // The cell whose items the keyboard moves through, `null` while moving between cells.
   // Read in focus handlers that run before a re-render, so it is not a state.
   const enteredCellRef = React.useRef<HTMLElement | null>(null);
+  // The entered cell when focus left the grid, for example to an event dialog, to come back to it.
+  const leftCellRef = React.useRef<HTMLElement | null>(null);
 
   // The tab stop: the last focused cell, kept when focus leaves the grid so Tab comes back to it.
   const [activeCell, setActiveCell] = React.useState<GridCellCoordinates | null>(null);
@@ -139,6 +141,8 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     if (!isInGrid(target)) {
       return;
     }
+    const leftCell = leftCellRef.current;
+    leftCellRef.current = null;
     const focusedCell = cellsRef.current.get(target as HTMLElement);
     if (focusedCell != null) {
       enteredCellRef.current = null;
@@ -151,8 +155,9 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
       return;
     }
     // An item of a multi-day event can be focused from another cell of its row.
-    const enteredCell = enteredCellRef.current;
+    const enteredCell = enteredCellRef.current ?? leftCell;
     if (enteredCell != null && getCalendarGridCellItems(enteredCell).includes(target)) {
+      enteredCellRef.current = enteredCell;
       return;
     }
     // Focused another way, for example by a click or once a dialog closes.
@@ -166,6 +171,7 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
 
   const handleBlur = useStableCallback((event: React.FocusEvent<HTMLDivElement>) => {
     if (!rootRef.current?.contains(event.relatedTarget as Node)) {
+      leftCellRef.current = enteredCellRef.current;
       enteredCellRef.current = null;
     }
   });

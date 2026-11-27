@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
@@ -688,6 +688,30 @@ describe('CalendarGrid keyboard navigation', () => {
       expect(screen.getByTestId('event-3')).toHaveFocus();
 
       await user.keyboard('{ArrowDown}{Escape}');
+      expect(screen.getByTestId('cell-1')).toHaveFocus();
+    });
+
+    it('should move back to the entered cell of a multi-day event once focus comes back to it', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <GridWithEvents />
+          <button type="button">Dialog</button>
+        </React.Fragment>,
+      );
+
+      await user.click(screen.getByTestId('cell-1'));
+      await user.keyboard('{Enter}');
+      expect(screen.getByTestId('event-1')).toHaveFocus();
+
+      // Like an event dialog opening and closing.
+      act(() => {
+        screen.getByRole('button', { name: 'Dialog' }).focus();
+      });
+      act(() => {
+        screen.getByTestId('event-1').focus();
+      });
+      await user.keyboard('{Escape}');
+
       expect(screen.getByTestId('cell-1')).toHaveFocus();
     });
 
