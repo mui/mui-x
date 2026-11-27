@@ -476,9 +476,18 @@ export const updateCacheWithNewRows = ({
         alreadyAppliedActionsToRemove[actionAlreadyAppliedToRow][id] = true;
       }
 
-      // Remove the data row from the lookups and add it to the "delete" update.
-      partialUpdates.actions.remove.push(id);
       delete dataRowIdToModelLookup[id];
+
+      // A data row inserted since the last state update is not in the tree yet,
+      // so dropping its "insert" update is enough.
+      if (actionAlreadyAppliedToRow === 'insert') {
+        delete partialUpdates.idToActionLookup[id];
+        return;
+      }
+
+      // Add the data row to the "delete" update.
+      partialUpdates.actions.remove.push(id);
+      partialUpdates.idToActionLookup[id] = 'remove';
       return;
     }
 
@@ -505,6 +514,7 @@ export const updateCacheWithNewRows = ({
       // Then add it to the "modify" update (if it has been inserted it should just remain "inserted").
       else if (actionAlreadyAppliedToRow == null) {
         partialUpdates.actions.modify.push(id);
+        partialUpdates.idToActionLookup[id] = 'modify';
       }
 
       // Update the data row lookups.
@@ -513,17 +523,19 @@ export const updateCacheWithNewRows = ({
     }
 
     // Action === "insert"
-    // If the data row has been removed since the last state update,
-    // Then drop the "remove" update and add it to the "insert" update instead.
+    // If the data row has been removed since the last state update, it is still in the tree,
+    // So drop the "remove" update and add it to the "modify" update instead.
     if (actionAlreadyAppliedToRow === 'remove') {
       alreadyAppliedActionsToRemove.remove[id] = true;
-      partialUpdates.actions.insert.push(id);
+      partialUpdates.actions.modify.push(id);
+      partialUpdates.idToActionLookup[id] = 'modify';
     }
     // If the data row has not been inserted since the last state update,
     // Then add it to the "insert" update.
     // `actionAlreadyAppliedToRow` can't be equal to "modify", otherwise we would have an `oldRow` above.
     else if (actionAlreadyAppliedToRow == null) {
       partialUpdates.actions.insert.push(id);
+      partialUpdates.idToActionLookup[id] = 'insert';
     }
 
     // Update the data row lookups.
