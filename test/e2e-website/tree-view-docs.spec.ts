@@ -47,7 +47,7 @@ test.describe('Tree View docs-infra migration', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
   });
 
-  test('server renders the preview and plain source without JavaScript', async ({ browser }) => {
+  test('server renders the preview and source input without JavaScript', async ({ browser }) => {
     const context = await browser.newContext({
       baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL,
       javaScriptEnabled: false,
@@ -60,7 +60,10 @@ test.describe('Tree View docs-infra migration', () => {
       await expect(demo.getByRole('treeitem', { name: 'Data Grid', exact: true })).toBeVisible();
       await expect(demo.locator('pre code')).toContainText('<RichTreeView');
       await expect(demo.locator('pre code')).not.toContainText('@focus');
-      await expect(demo.locator('textarea')).toHaveCount(0);
+      await expect(demo.locator('textarea')).toHaveCount(1);
+      await expect(demo.locator('textarea')).toHaveValue(/<RichTreeView/);
+      await expect(demo.locator('textarea')).toHaveAccessibleName(/^Edit .+\.tsx$/);
+      await expect(demo.locator('textarea')).toHaveAttribute('readonly', '');
     } finally {
       await context.close();
     }
@@ -137,6 +140,46 @@ test.describe('Tree View docs-infra migration', () => {
     } finally {
       releaseScripts();
     }
+  });
+
+  test('keeps the source input while live controls hydrate', async ({ page }) => {
+    const name = 'BasicRichTreeView';
+    const marker = 'data-initial-source';
+
+    await page.addInitScript(
+      ({ demoName, attribute }) => {
+        let found = false;
+
+        const observer = new MutationObserver(() => {
+          if (found) {
+            return;
+          }
+
+          const input = document.getElementById(demoName)?.parentElement?.querySelector('textarea');
+
+          if (input) {
+            found = true;
+            input.setAttribute(attribute, input.value);
+            observer.disconnect();
+          }
+        });
+
+        observer.observe(document, { childList: true, subtree: true });
+      },
+      { demoName: name, attribute: marker },
+    );
+
+    await page.goto(QUICKSTART_PATH);
+    const demo = await readyDemo(page, name);
+    const source = demo.locator('textarea');
+    const initialValue = await source.getAttribute(marker);
+
+    if (initialValue === null) {
+      throw new Error('The initial source input was replaced');
+    }
+
+    await expect(source).toHaveValue(initialValue);
+    await expect(source).not.toHaveAttribute('readonly');
   });
 
   test('source deep links select the language and override the stored preference', async ({

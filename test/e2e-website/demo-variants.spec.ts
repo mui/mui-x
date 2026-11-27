@@ -59,7 +59,8 @@ test.describe('Demo source variants', () => {
     const demo = page.locator('#KeyboardNavigation').locator('..');
 
     await demo.getByRole('button', { name: 'Show code', exact: true }).click();
-    await expect(demo.locator('textarea')).toHaveCount(0);
+    await expect(demo.locator('textarea')).toHaveCount(1);
+    await expect(demo.locator('textarea')).not.toBeFocused();
 
     await expectColors(demo);
   });
