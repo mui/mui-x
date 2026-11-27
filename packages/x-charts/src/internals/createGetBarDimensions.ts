@@ -37,24 +37,24 @@ export function getBarBaselineValue(
 /**
  * The `[start, end]` values of a bar. Bars at the stack origin (0) start at `baselineValue`.
  * In a stack, that start is clamped between 0 and the bar end so stacked bars never overlap.
- * @param {number | null} value The series value, `null` when missing or hidden.
+ * @param {number | null | undefined} value The series value, `null` or `undefined` when missing or hidden.
  */
 export function getBarExtent(
   stacked: readonly [number, number],
-  value: number | null,
+  value: number | null | undefined,
   baselineValue: number,
   isStacked: boolean,
 ): [number, number] {
   const low = Math.min(stacked[0], stacked[1]);
   const high = Math.max(stacked[0], stacked[1]);
-  const start = value !== null && value < 0 ? high : low;
+  const start = value != null && value < 0 ? high : low;
   const end = start === low ? high : low;
 
   if (start !== 0) {
     return [start, end];
   }
   // The diverging stack offset puts zero values at [0, 0] anywhere in the stack.
-  if (value === null || (isStacked && end === 0)) {
+  if (value == null || (isStacked && end === 0)) {
     return [baselineValue, baselineValue];
   }
   if (!isStacked || !Number.isFinite(baselineValue)) {

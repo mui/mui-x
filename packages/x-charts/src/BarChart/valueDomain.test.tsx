@@ -110,6 +110,19 @@ describe('<BarChart /> - value domain', () => {
       expect(yAxisDomainRef.current).to.deep.equal([0.01, 10000]);
     });
 
+    it('should ignore values missing from a shorter series', () => {
+      const yAxisDomainRef = getYAxisDomain({
+        series: [
+          { data: [100, 200, 300], baseline: 50 },
+          { data: [100, 200], baseline: 50 },
+        ],
+        xAxis: [{ data: ['A', 'B', 'C'] }],
+        yAxis: [{ domainLimit: 'strict' }],
+      });
+
+      expect(yAxisDomainRef.current).to.deep.equal([50, 300]);
+    });
+
     it("should keep zero values in the domain with `baseline: 'min'`", () => {
       const yAxisDomainRef = getYAxisDomain({
         series: [{ data: [0, 5, 10], baseline: 'min' }],

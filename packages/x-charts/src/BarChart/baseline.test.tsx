@@ -5,6 +5,7 @@ import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import type { BarChartProps } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCenter } from 'test/utils/charts/getCenter';
+import { getBarExtent } from '../internals/createGetBarDimensions';
 
 const config = {
   margin: 0,
@@ -36,6 +37,10 @@ describe('BarChart - baseline', () => {
       height: Number(bar.getAttribute('height')),
     }));
   }
+
+  it('should treat values missing from a shorter series as null', () => {
+    expect(getBarExtent([0, 0], undefined, 50, false)).to.deep.equal([50, 50]);
+  });
 
   it('should start bars from 0 by default', () => {
     const [bar] = getBars({ series: [{ data: [4, 6] }] });
