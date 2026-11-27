@@ -50,6 +50,8 @@ const PREFIXES = new Map([
   ['RichTreeViewPro', 'x-tree-view-pro'],
   ['scheduler', 'x-scheduler'],
   ['scheduler-premium', 'x-scheduler-premium'],
+  ['chat', 'x-chat'],
+  ['chat-headless', 'x-chat-headless'],
   ['codemod', 'x-codemod'],
   ['code-infra', CORE],
   ['docs-infra', CORE],
@@ -99,6 +101,7 @@ const PRODUCTS: Product[] = [
   },
   { name: 'Tree View', packageName: 'x-tree-view', tiers: ['pro'] },
   { name: 'Scheduler', packageName: 'x-scheduler', tiers: ['premium'] },
+  { name: 'Chat', packageName: 'x-chat', tiers: [], companions: ['x-chat-headless'] },
   { name: 'Codemod', packageName: 'x-codemod', tiers: [], optional: true },
 ];
 
