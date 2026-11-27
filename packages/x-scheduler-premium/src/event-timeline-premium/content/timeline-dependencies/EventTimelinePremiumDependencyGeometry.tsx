@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { Dimensions, Virtualization } from '@mui/x-virtualizer';
+import { Dimensions, RowsMeta, Virtualization } from '@mui/x-virtualizer';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -175,7 +175,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
     () =>
       createDependencyAnchorResolver({
         resources,
-        rowPositions: rowsMeta.positions,
+        getRowPosition: (rowIndex) => RowsMeta.getPosition(rowsMeta, rowIndex),
         axis: config,
         durationMs: config.durationMs,
         positionByOccurrenceKey,
@@ -188,7 +188,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
     [
       resources,
       positionByOccurrenceKey,
-      rowsMeta.positions,
+      rowsMeta,
       config,
       eventsWidth,
       theme,
@@ -218,7 +218,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
         arrow.minRowIndex <= renderContext.lastRowIndex,
     );
 
-    const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
+    const offsetTop = RowsMeta.getPosition(rowsMeta, renderContext.firstRowIndex) ?? 0;
     const height = rowsMeta.currentPageTotalHeight - offsetTop;
 
     return {

@@ -320,6 +320,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/urPK.ts"
   },
   {
+    "languageTag": "uz-UZ",
+    "importName": "uzUZ",
+    "localeName": "Uzbek",
+    "missingKeysCount": 0,
+    "totalKeysCount": 53,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/uzUZ.ts"
+  },
+  {
     "languageTag": "vi-VN",
     "importName": "viVN",
     "localeName": "Vietnamese",

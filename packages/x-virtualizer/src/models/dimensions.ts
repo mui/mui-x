@@ -81,7 +81,16 @@ export interface DimensionsState {
  */
 export interface RowsMetaState {
   /**
-   * The grid rows positions.
+   * The number of rows in the current page.
+   */
+  rowCount: number;
+  /**
+   * Whether every row of the current page has the same height.
+   */
+  hasUniformRowHeight: boolean;
+  /**
+   * The position of each row.
+   * With uniform rows, the array is only built on first access: prefer `RowsMeta.getPosition`.
    */
   positions: number[];
   /**
@@ -111,4 +120,47 @@ export type HeightEntry = {
 
   autoHeight: boolean;
   needsFirstMeasurement: boolean;
+};
+
+export const RowsMeta = {
+  /** Creates the state; with uniform rows, `positions` is built lazily on first access. */
+  create: (
+    rowsMeta: Omit<RowsMetaState, 'positions'> & { positions: number[] | null },
+  ): RowsMetaState => {
+    if (!rowsMeta.hasUniformRowHeight) {
+      return rowsMeta as RowsMetaState;
+    }
+    let lazyPositions: number[] | undefined;
+    // Enumerable so that spreading or serializing the state keeps the `positions` key.
+    return Object.defineProperty(rowsMeta, 'positions', {
+      enumerable: true,
+      get: () => {
+        const rowHeight = RowsMeta.getUniformRowHeight(rowsMeta as RowsMetaState);
+        lazyPositions ??= Array.from({ length: rowsMeta.rowCount }, (_, i) => i * rowHeight);
+        return lazyPositions;
+      },
+    }) as RowsMetaState;
+  },
+  /** Height of every row, when `hasUniformRowHeight` is set. */
+  getUniformRowHeight: (rowsMeta: RowsMetaState): number =>
+    rowsMeta.rowCount > 0 ? rowsMeta.currentPageTotalHeight / rowsMeta.rowCount : 0,
+  /** Position of the row at `index`, or `undefined` out of range, like an array lookup. */
+  getPosition: (rowsMeta: RowsMetaState, index: number): number | undefined => {
+    if (!rowsMeta.hasUniformRowHeight) {
+      return rowsMeta.positions[index];
+    }
+    return index >= 0 && index < rowsMeta.rowCount
+      ? index * RowsMeta.getUniformRowHeight(rowsMeta)
+      : undefined;
+  },
+  /** Height of the slot of the row at `index` (spacing and detail included), or 0 out of range. */
+  getSlotHeight: (rowsMeta: RowsMetaState, index: number): number => {
+    const position = RowsMeta.getPosition(rowsMeta, index);
+    if (position === undefined) {
+      return 0;
+    }
+    const nextPosition =
+      RowsMeta.getPosition(rowsMeta, index + 1) ?? rowsMeta.currentPageTotalHeight;
+    return nextPosition - position;
+  },
 };
