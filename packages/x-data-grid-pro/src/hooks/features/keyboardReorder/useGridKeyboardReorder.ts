@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { MuiEvent, RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
+import useEventCallback from '@mui/utils/useEventCallback';
 import {
   gridClasses,
   gridExpandedRowCountSelector,
@@ -290,7 +291,8 @@ export const useGridKeyboardReorder = (
   // The focused cell keeps its descriptions while it has the focus, so they can be read again.
   // It may not have the tab stop: VoiceOver moves the focus to the cell under its cursor.
   // A cell that can't describe a step, for example in a pinned row, leaves the description to the next one.
-  const handleFocusIn = (event: FocusEvent) => {
+  // The listeners are bound once, so they read the props of the last render.
+  const handleFocusIn = useEventCallback((event: FocusEvent) => {
     const describedCell = gridKeyboardReorderDescribedCellSelector(apiRef);
     if (describedCell === null) {
       return;
@@ -304,9 +306,9 @@ export const useGridKeyboardReorder = (
     } else if (!isDescribedCell(cell)) {
       markAsRead(cell ?? 'tabStop', getCellDescriptions(describedCell));
     }
-  };
+  });
 
-  const handleFocusOut = (event: FocusEvent) => {
+  const handleFocusOut = useEventCallback((event: FocusEvent) => {
     const root = getRootElement();
     if (root) {
       onFocusLeave(root, event, () => {
@@ -316,7 +318,7 @@ export const useGridKeyboardReorder = (
         }
       });
     }
-  };
+  });
 
   useGridNativeEventListener(apiRef, getRootElement, 'focusin', handleFocusIn);
   useGridNativeEventListener(apiRef, getRootElement, 'focusout', handleFocusOut);

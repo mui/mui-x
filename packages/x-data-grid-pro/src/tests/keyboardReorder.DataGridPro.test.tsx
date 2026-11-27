@@ -1300,6 +1300,27 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       expectNoDanglingIds();
     });
 
+    it('should describe the keys when reordering turns on after mount', () => {
+      const { setProps } = render(
+        <Test columns={twoColumns} rowReordering={false} disableColumnReorder />,
+      );
+      setProps({ rowReordering: true, disableColumnReorder: false });
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint, columnHint]);
+    });
+
+    it('should describe the row keys once when isRowReorderable is removed after mount', async () => {
+      const { setProps, user } = render(
+        <Test columns={twoColumns} isRowReorderable={() => false} />,
+      );
+      setProps({ isRowReorderable: undefined });
+      focusCell(0, 'name');
+      expect(getHints(getCellOf(0, 'name'))).to.deep.equal([rowHint, columnHint]);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getDescribedCells()).to.have.length(0);
+    });
+
     it('should name the Option key on Apple platforms', () => {
       mockPlatform('MacIntel');
       render(<Test columns={twoColumns} />);
