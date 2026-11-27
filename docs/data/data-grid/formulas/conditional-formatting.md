@@ -14,7 +14,7 @@ Each `highlight` rule names the columns it applies to, a condition, and the styl
   type: 'highlight',
   fields: ['stock'],
   condition: { type: 'cell', operator: 'lessThan', value: 10 },
-  style: { color: '#c62828', fontWeight: 'bold' },
+  style: { color: '#e53935', fontWeight: 'bold' },
 }
 ```
 
@@ -72,7 +72,8 @@ Like formulas, they have no effect with `disableFormulas` or a `dataSource`.
 ## Styles
 
 A rule sets any of `color`, `backgroundColor`, `fontWeight: 'bold'`, `fontStyle: 'italic'` and `textDecoration` (`'underline'` or `'line-through'`).
-Colors are hex strings, such as `#c62828`. Other values are ignored.
+Colors are hex strings, such as `#e53935`. Other values are ignored.
+A rule that sets a background and no text color also gets black or white text, whichever reads better on that background, so it stays readable in light and dark mode.
 
 When several rules match a cell and set the same property, the first rule wins.
 Selected cells and rows keep the selection background.

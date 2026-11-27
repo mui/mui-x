@@ -11,6 +11,7 @@ import type {
   GridConditionalFormattingModel,
 } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const rows = [
   { id: 0, item: 'Apple', price: 2, quantity: 3 },
@@ -250,6 +251,28 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
       ],
     });
     expect(getRuleIndexes(0, 1)).to.deep.equal([]);
+  });
+
+  it.skipIf(isJSDOM)('gives background-only rules a readable text color in dark mode', () => {
+    render(
+      <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
+        <Test
+          conditionalFormatting={[
+            { ...expensive[0], style: { backgroundColor: '#c8e6c9' } },
+            {
+              type: 'highlight',
+              fields: ['price'],
+              condition: { type: 'cell', operator: 'greaterThan', value: 20 },
+              style: { color: '#ff0000' },
+            },
+          ]}
+        />
+      </ThemeProvider>,
+    );
+
+    expect(getComputedStyle(getCell(1, 1)).color).to.equal('rgb(0, 0, 0)');
+    // A lower-priority rule that sets a text color still wins over the automatic one.
+    expect(getComputedStyle(getCell(2, 1)).color).to.equal('rgb(255, 0, 0)');
   });
 
   it.skipIf(isJSDOM)('keeps the selection background of selected rows', () => {

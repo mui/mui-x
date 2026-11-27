@@ -3,6 +3,7 @@ import {
   getConditionalFormattingExcelOptions,
   getConditionalFormattingExcelStyle,
   getConditionalFormattingStyles,
+  getContrastTextColor,
   sanitizeConditionalFormattingStyle,
 } from './gridConditionalFormattingUtils';
 import type { GridConditionalFormattingModel } from './gridConditionalFormattingInterfaces';
@@ -64,6 +65,10 @@ describe('gridConditionalFormattingUtils', () => {
       ];
       expect(Object.entries(getConditionalFormattingStyles(model, 7))).to.deep.equal([
         [
+          '.MuiDataGrid-root .MuiDataGrid-cell.MuiDataGrid-conditionalFormatting-7-1:where(.MuiDataGrid-row:not(.Mui-selected) > :not(.Mui-selected))',
+          { color: '#ffffff' },
+        ],
+        [
           '.MuiDataGrid-root .MuiDataGrid-row:not(.Mui-selected) > .MuiDataGrid-cell.MuiDataGrid-conditionalFormatting-7-1:not(.Mui-selected)',
           { backgroundColor: '#222' },
         ],
@@ -73,6 +78,13 @@ describe('gridConditionalFormattingUtils', () => {
         ],
       ]);
     });
+  });
+
+  it('picks the text color that reads better on a background', () => {
+    expect(getContrastTextColor('#c8e6c9')).to.equal('#000000');
+    expect(getContrastTextColor('#fff')).to.equal('#000000');
+    expect(getContrastTextColor('#1565c0')).to.equal('#ffffff');
+    expect(getContrastTextColor('#222')).to.equal('#ffffff');
   });
 
   describe('getConditionalFormattingExcelOptions', () => {

@@ -85,19 +85,46 @@ export function sanitizeConditionalFormattingStyle(
 export const getConditionalFormattingClassName = (instanceId: number, index: number) =>
   `MuiDataGrid-conditionalFormatting-${instanceId}-${index}`;
 
+const toHexDigits = (color: string) =>
+  color.length === 4
+    ? color
+        .slice(1)
+        .split('')
+        .map((char) => char + char)
+        .join('')
+    : color.slice(1);
+
+/**
+ * Black or white, whichever reads better on the background (WCAG relative luminance).
+ */
+export const getContrastTextColor = (backgroundColor: string) => {
+  const digits = toHexDigits(backgroundColor);
+  const [red, green, blue] = [0, 2, 4].map((start) => {
+    const channel = parseInt(digits.slice(start, start + 2), 16) / 255;
+    return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+  });
+  const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+  return luminance > 0.179 ? '#000000' : '#ffffff';
+};
+
 /**
  * The global styles of the rules. The first rule is written last so it wins
  * when several rules set the same property. The background skips selected
  * cells and rows, so the selection stays visible.
+ * A rule with a background and no text color gets a readable one, so it works in
+ * light and dark mode. It is written first and without specificity, so any rule
+ * that sets a text color wins.
  */
 export function getConditionalFormattingStyles(
   model: GridConditionalFormattingModel,
   instanceId: number,
 ) {
-  const styles: Record<
+  type Styles = Record<
     string,
     Omit<GridConditionalFormattingStyle, 'fontWeight'> & { fontWeight?: string }
-  > = {};
+  >;
+  const contrastStyles: Styles = {};
+  const styles: Styles = {};
   for (let i = model.length - 1; i >= 0; i -= 1) {
     const rule = model[i];
     if (!isConditionalFormattingHighlightRule(rule)) {
@@ -112,22 +139,17 @@ export function getConditionalFormattingStyles(
       styles[
         `.${gridClasses.root} .${gridClasses.row}:not(.Mui-selected) > ${cell}:not(.Mui-selected)`
       ] = { backgroundColor };
+      if (textStyle.color === undefined) {
+        contrastStyles[
+          `.${gridClasses.root} ${cell}:where(.${gridClasses.row}:not(.Mui-selected) > :not(.Mui-selected))`
+        ] = { color: getContrastTextColor(backgroundColor) };
+      }
     }
   }
-  return styles;
+  return { ...contrastStyles, ...styles };
 }
 
-const toArgb = (color: string) => {
-  const hex =
-    color.length === 4
-      ? color
-          .slice(1)
-          .split('')
-          .map((char) => char + char)
-          .join('')
-      : color.slice(1);
-  return `FF${hex.toUpperCase()}`;
-};
+const toArgb = (color: string) => `FF${toHexDigits(color).toUpperCase()}`;
 
 export function getConditionalFormattingExcelStyle(
   style: GridConditionalFormattingStyle,
