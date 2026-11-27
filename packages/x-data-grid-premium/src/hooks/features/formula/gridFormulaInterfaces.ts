@@ -265,6 +265,15 @@ export interface GridComputedColumnRecord {
   colDef: GridColDef;
 }
 
+/**
+ * The cells read through `FORMATTED(...)`, keyed by stringified row id then field: the
+ * value given to the formatter and its output (`undefined` when it threw).
+ */
+export type GridFormulaFormattedReads = Map<
+  string,
+  Map<GridColDef['field'], { value: unknown; formatted: unknown }>
+>;
+
 export interface GridComputedColumnsRuntimeCache {
   /**
    * Keyed by field, in the order of the model.
@@ -285,6 +294,10 @@ export interface GridComputedColumnsRuntimeCache {
    * The union of `dependencyClosure`: every field a computed column reads.
    */
   referencedFields: Set<string>;
+  /**
+   * The `FORMATTED(...)` reads of the memoized results, re-checked when the columns change.
+   */
+  formattedReads: GridFormulaFormattedReads;
   /**
    * The inputs the records were last built from, compared by reference.
    */
@@ -409,6 +422,11 @@ export interface GridFormulaInternalCache {
    * whether dependents must recompute.
    */
   trackedValues: Map<string, Map<GridColDef['field'], unknown>>;
+  /**
+   * The `FORMATTED(...)` reads, re-checked on row and column changes: a formatted value
+   * can change while the raw value stays the same.
+   */
+  formattedReads: GridFormulaFormattedReads;
   /**
    * Rows lookup snapshot from the last pass — rows are replaced immutably,
    * so a reference diff finds the changed/added/removed ids.

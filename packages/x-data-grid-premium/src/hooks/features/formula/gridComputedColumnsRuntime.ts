@@ -25,7 +25,7 @@ import {
 } from './engine';
 import type { FormulaErrorValue, FormulaScalar } from './engine';
 import { EMPTY_POSITION_CONTEXT } from './gridFormulaPositionContext';
-import { formatFormulaCellValue } from './gridFormulaUtils';
+import { isFormattedReadStale, readFormattedCellValue } from './gridFormulaUtils';
 import {
   applyComputedColDefOverrides,
   areComputedColDefOverridesEqual,
@@ -206,7 +206,14 @@ export function evaluateComputedCell(
           return getRowValueUtil(row, colDef, apiRef) as FormulaScalar;
         },
         formatCellValue: (ref, value) =>
-          formatFormulaCellValue(apiRef, row, columnsLookup[ref.field], value),
+          readFormattedCellValue(
+            apiRef,
+            runtime.formattedReads,
+            ref,
+            row,
+            columnsLookup[ref.field],
+            value,
+          ),
         hasRow: () => true,
         hasField: (referencedField) => columnsLookup[referencedField] !== undefined,
         position: EMPTY_POSITION_CONTEXT,
@@ -489,6 +496,34 @@ export function haveComputedColDefOverridesChanged(
 
 export function resetComputedResults(cache: GridFormulaInternalCache) {
   cache.computedColumns.results = new WeakMap();
+  cache.computedColumns.formattedReads = new Map();
+}
+
+/**
+ * Tells whether a `FORMATTED(...)` read of the memoized results gives another output with the
+ * current columns (a new label or `valueFormatter`).
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ * @param {GridFormulaInternalCache} cache The internal cache of the formula feature.
+ * @returns {boolean} `true` when the memoized results may be stale.
+ */
+export function haveComputedFormattedReadsChanged(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  cache: GridFormulaInternalCache,
+): boolean {
+  const rowsLookup = gridRowsLookupSelector(apiRef);
+  const columnsLookup = gridColumnLookupSelector(apiRef);
+  for (const [rowKey, reads] of cache.computedColumns.formattedReads) {
+    const row = rowsLookup[rowKey];
+    if (row === undefined) {
+      continue;
+    }
+    for (const [field, read] of reads) {
+      if (isFormattedReadStale(apiRef, row, columnsLookup[field], read)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 /**

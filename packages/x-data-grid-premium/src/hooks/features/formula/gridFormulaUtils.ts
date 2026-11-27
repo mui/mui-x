@@ -6,9 +6,10 @@ import {
   createFormulaFunctionRegistry,
   createFormulaParser,
 } from './engine';
-import type { FormulaScalar } from './engine';
+import type { FormulaCellRef, FormulaScalar } from './engine';
 import type {
   GridComputedColumnsRuntimeCache,
+  GridFormulaFormattedReads,
   GridFormulaFunctionDefinition,
   GridFormulaInternalCache,
 } from './gridFormulaInterfaces';
@@ -46,6 +47,7 @@ export function createComputedColumnsRuntimeCache(): GridComputedColumnsRuntimeC
     results: new WeakMap(),
     dependencyClosure: new Map(),
     referencedFields: new Set(),
+    formattedReads: new Map(),
     model: null,
     computedColDef: undefined,
     hydratedColDefs: new Map(),
@@ -76,6 +78,7 @@ export function createFormulaInternalCache(
     pendingFilterItemsReset: null,
     typeChangeReset: null,
     trackedValues: new Map(),
+    formattedReads: new Map(),
     lastRowIdToModelLookup: null,
     formulaFields: [],
     lastColumnsSignature: new Map(),
@@ -121,6 +124,7 @@ export function resetFormulaEvaluationCache(cache: GridFormulaInternalCache) {
   cache.positionContextRowIds = null;
   cache.positionContextFields = null;
   cache.trackedValues = new Map();
+  cache.formattedReads = new Map();
   cache.lastRowIdToModelLookup = null;
 }
 
@@ -248,4 +252,45 @@ export function formatFormulaCellValue(
     return String(formatted);
   }
   return formatted as FormulaScalar;
+}
+
+/**
+ * `formatFormulaCellValue`, recording the read so that `isFormattedReadStale` can re-check it.
+ */
+export function readFormattedCellValue(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  reads: GridFormulaFormattedReads,
+  ref: FormulaCellRef,
+  row: GridValidRowModel | undefined,
+  colDef: GridColDef | undefined,
+  value: FormulaScalar,
+): FormulaScalar {
+  const rowKey = String(ref.id);
+  let rowReads = reads.get(rowKey);
+  if (rowReads === undefined) {
+    rowReads = new Map();
+    reads.set(rowKey, rowReads);
+  }
+  const read = { value, formatted: undefined as unknown };
+  rowReads.set(ref.field, read);
+  read.formatted = formatFormulaCellValue(apiRef, row, colDef, value);
+  return read.formatted as FormulaScalar;
+}
+
+/**
+ * Tells whether formatting the recorded value again gives another output.
+ */
+export function isFormattedReadStale(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  row: GridValidRowModel | undefined,
+  colDef: GridColDef | undefined,
+  read: { value: unknown; formatted: unknown },
+): boolean {
+  let formatted: unknown;
+  try {
+    formatted = formatFormulaCellValue(apiRef, row, colDef, read.value as FormulaScalar);
+  } catch {
+    formatted = undefined;
+  }
+  return !Object.is(formatted, read.formatted);
 }

@@ -571,6 +571,27 @@ describe('formulaEvaluator', () => {
       expect(evaluateFormatted('FORMATTED(missing)')).to.deep.include({ code: '#REF!' });
     });
 
+    it('turns a throwing formatter into a catchable #ERROR!', () => {
+      const { ast } = parseFormula('IFERROR(FORMATTED(status), "fallback")');
+      if (ast === null) {
+        throw new Error('Test expression did not parse.');
+      }
+      const context = createTestContext(STATUS_ROWS);
+      context.formatCellValue = () => {
+        throw new Error('Boom');
+      };
+      expect(evaluateFormula(ast, context)).to.deep.equal({ type: 'value', value: 'fallback' });
+      const { ast: bare } = parseFormula('FORMATTED(status)');
+      if (bare === null) {
+        throw new Error('Test expression did not parse.');
+      }
+      expect(evaluateFormula(bare, context)).to.deep.equal({
+        type: 'error',
+        code: '#ERROR!',
+        message: 'Boom',
+      });
+    });
+
     it('is #VALUE! when the context cannot format', () => {
       expect(evaluateFormatted('FORMATTED(status)', false)).to.deep.equal({
         type: 'error',

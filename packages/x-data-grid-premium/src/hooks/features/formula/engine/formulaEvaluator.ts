@@ -86,7 +86,18 @@ function readCellValue(
     return createFormulaError('#VALUE!', 'FORMATTED() is not supported here.');
   }
   const value = normalizeResolvedValue(context.getCellValue(ref));
-  return isFormulaErrorValue(value) ? value : normalizeResolvedValue(formatCellValue(ref, value));
+  if (isFormulaErrorValue(value)) {
+    return value;
+  }
+  // A cell error, so that `IFERROR` can catch a throwing formatter.
+  try {
+    return normalizeResolvedValue(formatCellValue(ref, value));
+  } catch (error) {
+    return createFormulaError(
+      '#ERROR!',
+      error instanceof Error ? error.message : 'The value could not be formatted.',
+    );
+  }
 }
 
 function evaluateCellRef(

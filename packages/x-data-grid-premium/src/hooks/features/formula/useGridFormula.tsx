@@ -41,6 +41,7 @@ import {
   validateFormulaExpression,
 } from './engine';
 import {
+  computeFormattedReadsPass,
   computeFullFormulaPass,
   computePositionRebindFormulaPass,
   computeRowsDiffFormulaPass,
@@ -89,6 +90,7 @@ import {
   bumpComputedColumnsRevision,
   evictComputedResultsForRows,
   haveComputedColDefOverridesChanged,
+  haveComputedFormattedReadsChanged,
   resetComputedResults,
 } from './gridComputedColumnsRuntime';
 import {
@@ -437,7 +439,7 @@ export const useGridFormula = (
   }, [apiRef, props.disableFormulas, props.dataSource]);
 
   const runPass = React.useCallback(
-    (mode: 'diff' | 'full' | 'rebind'): GridCellCoordinates[] | null => {
+    (mode: 'diff' | 'full' | 'rebind' | 'formatted'): GridCellCoordinates[] | null => {
       const cache = apiRef.current.caches.formula!;
       const formulaFields = computeEffectiveFormulaFields();
       const previousLookup = gridFormulaLookupSelector(apiRef);
@@ -502,6 +504,8 @@ export const useGridFormula = (
         result = computeFullFormulaPass(ctx);
       } else if (mode === 'diff') {
         result = computeRowsDiffFormulaPass(ctx);
+      } else if (mode === 'formatted') {
+        result = computeFormattedReadsPass(ctx);
       } else {
         result = computePositionRebindFormulaPass(ctx);
       }
@@ -976,12 +980,15 @@ export const useGridFormula = (
       columnsSignature,
       cache.lastColumnsSignature,
     );
-    if (!fieldsChanged && !signatureChanged) {
+    // A new label or `valueFormatter` keeps the signature but changes what `FORMATTED()` reads.
+    const computedFormattedChanged = haveComputedFormattedReadsChanged(apiRef, cache);
+    if (!fieldsChanged && !signatureChanged && !computedFormattedChanged) {
       // The column set is stable, but columns may have moved: visibility
       // toggles and reorders (programmatic `setColumnIndex` included) all
       // funnel through this event. The rebind pass compares the visible
       // field order itself and exits cheaply when nothing moved.
       triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: false });
+      triggerDependentFeatures(runPass('formatted'), { aggregation: true, rowSpanning: false });
       // A record rebuilt with the same getters (a new name or format) leaves the grouping
       // columns that copy from it stale. The nested `columnsChange` of the extra hydration finds
       // the identities recorded. A type change rebuilds the getters, so it takes the other
@@ -995,13 +1002,14 @@ export const useGridFormula = (
       // inputs drops the memoized results (an unrelated column re-created with an
       // inline getter on every parent render does not).
       const computedColumnsChanged =
-        signatureChanged &&
-        cache.computedColumns.records.size > 0 &&
-        haveComputedInputsChanged(columnsSignature, previousSignature, cache.computedColumns);
+        computedFormattedChanged ||
+        (signatureChanged &&
+          cache.computedColumns.records.size > 0 &&
+          haveComputedInputsChanged(columnsSignature, previousSignature, cache.computedColumns));
       if (computedColumnsChanged) {
         resetComputedResults(cache);
       }
-      if (signatureChanged) {
+      if (signatureChanged || computedFormattedChanged) {
         // Not only the computed cells read the revision: the preview of a draft
         // (the first computed column included) reads the same getters.
         bumpComputedColumnsRevision(apiRef);

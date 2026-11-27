@@ -1,3 +1,4 @@
+import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import type { GridRowId } from '@mui/x-data-grid-pro';
 import type { GridStateColDef } from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';
@@ -21,6 +22,8 @@ import type {
   FormulaRowSelector,
 } from './engine';
 import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionContext';
+
+const RAW_EXPORT_COLUMN_TYPES = new Set(['number', 'date', 'dateTime', 'boolean']);
 
 /**
  * The cached `result` written alongside an exported Excel formula. Structurally
@@ -156,10 +159,23 @@ export function getCellExcelFormula(
   // exporting it verbatim would hand untrusted row data a live formula that
   // Excel evaluates on recalc (formula injection). Fall back to the evaluated
   // value instead — the export then shows exactly what the grid shows.
-  const { ranges, calls } = extractFormulaDependencies(ast);
+  const { ranges, calls, formattedColumns } = extractFormulaDependencies(ast);
   const registry = apiRef.current.caches.formula!.registry;
   for (const name of calls) {
     if (registry.get(name) === undefined) {
+      return null;
+    }
+  }
+
+  // These types export their raw value, so a live reference would not read the formatted one.
+  const columnsLookup = gridColumnLookupSelector(apiRef);
+  for (const selector of formattedColumns) {
+    const formattedField =
+      selector.kind === 'field'
+        ? selector.field
+        : layout.positionContext.getFieldAtPosition(selector.index);
+    const type = formattedField === undefined ? undefined : columnsLookup[formattedField]?.type;
+    if (type !== undefined && RAW_EXPORT_COLUMN_TYPES.has(type)) {
       return null;
     }
   }

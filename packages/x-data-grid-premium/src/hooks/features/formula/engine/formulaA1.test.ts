@@ -221,6 +221,12 @@ describe('formulaA1', () => {
   });
 
   describe('toCanonicalFormula — paste offset', () => {
+    it('keeps the FORMATTED() wrapper when shifting', () => {
+      expect(toDisplay(toCanonical('FORMATTED(B5)', { rowOffset: -1, columnOffset: 1 }))).to.equal(
+        'FORMATTED(C4)',
+      );
+    });
+
     it('shifts relative axes by the paste offset before freezing', () => {
       // Pasting `A1` one row down and one column right → B2.
       expect(toCanonical('A1', { rowOffset: 1, columnOffset: 1 })).to.equal(

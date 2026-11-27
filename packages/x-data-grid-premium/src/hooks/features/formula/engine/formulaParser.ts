@@ -323,7 +323,8 @@ class Parser {
           throw this.failure('FORMATTED() expects a single-cell reference.', reference.span);
         }
         this.expectPunctuation(')');
-        // The span stays on the inner reference: highlights and picks target it.
+        // Keeps the inner reference's span on purpose (highlights and picks), so a binary or
+        // root span starts at the inner reference, not at `FORMATTED`.
         return { ...reference, formatted: true };
       }
       case 'RANGE_REF': {

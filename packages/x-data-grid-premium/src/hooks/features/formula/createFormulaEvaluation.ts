@@ -44,7 +44,8 @@ import type {
 } from './gridFormulaInterfaces';
 import {
   areFormulaFieldsEqual,
-  formatFormulaCellValue,
+  isFormattedReadStale,
+  readFormattedCellValue,
   resetFormulaEvaluationCache,
 } from './gridFormulaUtils';
 import {
@@ -263,6 +264,13 @@ function detachRecordEdges(
       dependents.delete(key);
       if (dependents.size === 0) {
         cache.dependents.delete(dependency);
+        const formattedReads = cache.formattedReads.get(rowKey);
+        if (formattedReads !== undefined) {
+          formattedReads.delete(field);
+          if (formattedReads.size === 0) {
+            cache.formattedReads.delete(rowKey);
+          }
+        }
         // No formula reads this cell anymore — stop tracking its raw value,
         // unless a range dependent of the field still does.
         if (!cache.rangeDependentsByField.has(field)) {
@@ -645,7 +653,14 @@ function createPassResolver(ctx: FormulaPassContext): FormulaPassResolver {
       return value as FormulaScalar;
     },
     formatCellValue: (ref, value) =>
-      formatFormulaCellValue(apiRef, rowsLookup[ref.id], columnsLookup[ref.field], value),
+      readFormattedCellValue(
+        apiRef,
+        cache.formattedReads,
+        ref,
+        rowsLookup[ref.id],
+        columnsLookup[ref.field],
+        value,
+      ),
     hasRow: (id) => rowsLookup[id] !== undefined,
     hasField: (field) => columnsLookup[field] !== undefined,
   };
@@ -925,6 +940,50 @@ export function computeFullFormulaPass(ctx: FormulaPassContext): FormulaPassResu
 }
 
 /**
+ * Dirties the dependents of the `FORMATTED(...)` reads of a row whose formatted value changed.
+ */
+function addStaleFormattedReadsToDirty(
+  ctx: FormulaPassContext,
+  rowKey: string,
+  row: GridValidRowModel,
+  id: GridRowId,
+  dirty: Set<GridFormulaCellKey>,
+) {
+  const reads = ctx.cache.formattedReads.get(rowKey);
+  if (reads === undefined) {
+    return;
+  }
+  for (const [field, read] of reads) {
+    if (isFormattedReadStale(ctx.apiRef, row, ctx.columnsLookup[field], read)) {
+      addDependentsToDirty(ctx.cache, createFormulaCellKey(id, field), dirty);
+    }
+  }
+}
+
+/**
+ * Re-evaluates the formulas whose `FORMATTED(...)` reads give another output, after a column
+ * change that keeps the raw values (labels, `valueFormatter`). Returns `null` when none does.
+ */
+export function computeFormattedReadsPass(ctx: FormulaPassContext): FormulaPassResult | null {
+  const { cache, rowsLookup, apiRef } = ctx;
+  const dirty = new Set<GridFormulaCellKey>();
+  for (const rowKey of cache.formattedReads.keys()) {
+    const row = rowsLookup[rowKey];
+    if (row !== undefined) {
+      addStaleFormattedReadsToDirty(ctx, rowKey, row, gridRowIdSelector(apiRef, row), dirty);
+    }
+  }
+  const changedKeys = runEvaluation(ctx, dirty);
+  if (changedKeys.size === 0) {
+    return null;
+  }
+  const builder = createIncrementalLookup(ctx.previousLookup);
+  const changedCells: GridCellCoordinates[] = [];
+  applyChangedRecords(ctx, changedKeys, builder, changedCells);
+  return { lookup: builder.lookup, changedCells };
+}
+
+/**
  * Reference-diffs the rows lookup against the snapshot from the last pass and
  * recomputes only the dirty subgraph. Falls back to a full pass when there is
  * no snapshot or the formula column set changed. Returns `null` when nothing
@@ -974,6 +1033,7 @@ export function computeRowsDiffFormulaPass(ctx: FormulaPassContext): FormulaPass
         }
       }
     }
+    addStaleFormattedReadsToDirty(ctx, rowKey, row, id, dirty);
   }
 
   const removedRowCells: GridCellCoordinates[] = [];
@@ -996,6 +1056,7 @@ export function computeRowsDiffFormulaPass(ctx: FormulaPassContext): FormulaPass
       }
     }
     cache.trackedValues.delete(rowKey);
+    cache.formattedReads.delete(rowKey);
   }
 
   if (dirty.size === 0 && removedCells.length === 0 && removedRowKeys.length === 0) {

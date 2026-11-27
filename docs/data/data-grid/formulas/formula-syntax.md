@@ -76,7 +76,7 @@ When the referenced cell holds an error, `FORMATTED()` returns that error.
 
 In the Excel export, `FORMATTED(status)` is written as the plain cell reference, like `status`.
 Single select columns, and the other columns with a `valueFormatter` except number, date, and boolean columns, export their formatted text, so Excel reads the same value as the grid.
-Number, date, and boolean columns export their raw value.
+Number, date, and boolean columns export their raw value, so a formula that reads one of them through `FORMATTED()` exports its evaluated value instead of a live formula.
 
 ## Ranges and whole columns
 
