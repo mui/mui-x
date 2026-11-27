@@ -9,7 +9,7 @@
       "description": "The placement of the bar label. It accepts the following values:<br />- &#39;center&#39;: the label is centered on the bar<br />- &#39;outside&#39;: the label is placed after the end of the bar, from the point of the view of the origin. For a vertical positive bar, the label is above its top edge; for a horizontal negative bar, the label is placed to the left of its leftmost limit."
     },
     "baseline": {
-      "description": "<p>The value the bars start from.<br />In a stack, only the bars at the bottom use it, and their start stays between 0 and their value so bars never overlap.<br />Series of the same stack share one baseline.<br /><br />- <code>&#39;min&#39;</code> bars start from the axis minimum. Useful with a log scale.<br />- <code>&#39;max&#39;</code> bars start from the axis maximum.<br />- <code>number</code> bars start from this value.</p>\n"
+      "description": "<p>The value the bars start from.<br />In a stack, only the bars at the bottom use it, and their start stays between 0 and their value so bars never overlap.<br />Series of the same stack share one baseline. It is ignored unless the stack uses the <code>&#39;diverging&#39;</code> stack offset.<br /><br />- <code>&#39;min&#39;</code> bars start from the axis minimum. Useful with a log scale.<br />- <code>&#39;max&#39;</code> bars start from the axis maximum.<br />- <code>number</code> bars start from this value.</p>\n"
     },
     "color": {
       "description": "Color to use when displaying the series.<br />If <code>colorGetter</code> is provided, it will be used to get the color for each data point instead.<br />Otherwise, this color will be used for all data points in the series."

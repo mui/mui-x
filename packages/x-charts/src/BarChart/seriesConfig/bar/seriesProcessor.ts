@@ -1,7 +1,7 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { DefaultizedBarSeriesType } from '../../../models';
-import { getStackingGroups } from '../../../internals/stacking';
+import { getStackingGroups, StackOffset } from '../../../internals/stacking';
 import type { DatasetElementType, DatasetType } from '../../../models/seriesType/config';
 import type { SeriesId } from '../../../models/seriesType/common';
 import type { SeriesProcessor } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
@@ -85,19 +85,35 @@ Bar plots only support numeric and null values.`,
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
+    const stackId = series[ids[0]].stack;
     // The stack bottom changes per index, so all series of a stack share one baseline.
-    const baseline = ids.map((id) => series[id].baseline).find((value) => value !== undefined);
-    if (
-      process.env.NODE_ENV !== 'production' &&
-      ids.some((id) => series[id].baseline !== undefined && series[id].baseline !== baseline)
-    ) {
-      warnOnce(
-        [
-          `MUI X Charts: The bar series of the stack "${series[ids[0]].stack}" have different \`baseline\` values.`,
-          'A stack can only start from one baseline, so the first one is used for every series of the stack.',
-          'Set the same `baseline` on all the series of the stack.',
-        ].join('\n'),
-      );
+    const requestedBaseline = ids
+      .map((id) => series[id].baseline)
+      .find((value) => value !== undefined);
+    // Other offsets don't start the stack at 0, so the bottom bars can't be found.
+    const supportsBaseline = stackId === undefined || stackingOffset === StackOffset.diverging;
+    const baseline = supportsBaseline ? requestedBaseline : undefined;
+
+    if (process.env.NODE_ENV !== 'production' && requestedBaseline !== undefined) {
+      if (!supportsBaseline) {
+        warnOnce(
+          [
+            `MUI X Charts: The \`baseline\` of the bar series in the stack "${stackId}" is ignored because the stack does not use the 'diverging' stack offset.`,
+            'Other stack offsets do not start the stack at 0, so the bars at the bottom of the stack cannot be identified.',
+            "Remove the `baseline`, or use `stackOffset: 'diverging'` for this stack.",
+          ].join('\n'),
+        );
+      } else if (
+        ids.some((id) => series[id].baseline !== undefined && series[id].baseline !== baseline)
+      ) {
+        warnOnce(
+          [
+            `MUI X Charts: The bar series of the stack "${stackId}" have different \`baseline\` values.`,
+            'A stack can only start from one baseline, so the first one is used for every series of the stack.',
+            'Set the same `baseline` on all the series of the stack.',
+          ].join('\n'),
+        );
+      }
     }
     const keys = ids.map((id) => {
       // Use dataKey if needed and available
@@ -151,7 +167,7 @@ Bar plots only support numeric and null values.`,
         minBarSize: 0,
         valueFormatter: series[id].valueFormatter ?? barValueFormatter,
         ...series[id],
-        ...(baseline === undefined ? {} : { baseline }),
+        baseline,
         data,
         hidden,
         stackedData: stackedData[index] as [number, number][],

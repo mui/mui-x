@@ -74,7 +74,7 @@ export interface BarSeriesType
   /**
    * The value the bars start from.
    * In a stack, only the bars at the bottom use it, and their start stays between 0 and their value so bars never overlap.
-   * Series of the same stack share one baseline.
+   * Series of the same stack share one baseline. It is ignored unless the stack uses the `'diverging'` stack offset.
    *
    * - `'min'` bars start from the axis minimum. Useful with a log scale.
    * - `'max'` bars start from the axis maximum.

@@ -17,6 +17,9 @@ const config = {
   hideLegend: true,
 } as const;
 
+const OFFSET_WARNING =
+  'MUI X Charts: The `baseline` of the bar series in the stack "a" is ignored because the stack does not use the \'diverging\' stack offset.';
+
 const STACK_CLAMP_WARNING =
   'MUI X Charts: A stacked bar series has a `baseline` outside the range between 0 and the value of a bar at the bottom of the stack.';
 
@@ -217,6 +220,30 @@ describe('BarChart - baseline', () => {
       expect(bars[0]).to.include({ y: 25, height: 25 });
       expect(bars[1]).to.include({ y: 65, height: 0 });
     });
+
+    it.each([
+      { stackOffset: 'silhouette', data: [[2], [2]] },
+      { stackOffset: 'wiggle', data: [[2], [2]] },
+      { stackOffset: 'none', data: [[3], [-3], [2]] },
+    ] as const)(
+      'should ignore the baseline with the $stackOffset stack offset',
+      ({ stackOffset, data }) => {
+        const series = (baseline?: number) =>
+          data.map((values) => ({ data: values, stack: 'a', stackOffset, baseline }));
+        const props = {
+          xAxis: [{ data: ['A'], position: 'none' as const }],
+          yAxis: [{ min: -10, max: 10, position: 'none' as const }],
+        };
+
+        const expected = getBars({ ...props, series: series() });
+        let bars: ReturnType<typeof getBars> = [];
+        expect(() => {
+          bars = getBars({ ...props, series: series(1) });
+        }).toWarnDev(OFFSET_WARNING);
+
+        expect(bars).to.deep.equal(expected);
+      },
+    );
 
     it('should share the baseline across the series of a stack', () => {
       const bars = getBars({

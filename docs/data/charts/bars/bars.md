@@ -123,6 +123,7 @@ Set the axis `min` below your data to keep it visible.
 Unlike the [area baseline](/x/react-charts/lines/#baseline), which applies to every stacked series, the bar baseline only applies to the bottom of the stack.
 The start of each bottom bar stays between 0 and its value, so stacked bars never overlap.
 Series of the same stack share one baseline.
+The baseline only applies to stacks with the default `'diverging'` stack offset, since other offsets don't start the stack at 0.
 
 ### Log scale
 
