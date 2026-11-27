@@ -10,7 +10,7 @@ import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import type { Store } from '@base-ui/utils/store';
 import { useStore, createSelectorMemoized } from '@base-ui/utils/store';
 import type { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState } from '../models';
-import { Size } from '../models';
+import { RowsMeta, Size } from '../models';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
@@ -103,6 +103,41 @@ export namespace Dimensions {
   export type API = ReturnType<typeof useDimensions>;
 }
 
+// Accumulates the layout of a page's rows, one height at a time. The positions array is only
+// built once a row height differs from the previous ones: with uniform heights, the positions
+// follow from the row count and total height alone (see `RowsMeta.getPosition`).
+// Callers loop themselves rather than pass a height callback: a callback shared by several
+// call sites can't be inlined, which measurably slows down the hydration of large pages.
+class RowsLayout {
+  private rowCount = 0;
+
+  private firstRowHeight = 0;
+
+  private positions: number[] | null = null;
+
+  private totalHeight = 0;
+
+  add(height: number) {
+    if (this.rowCount === 0) {
+      this.firstRowHeight = height;
+    } else if (this.positions === null && height !== this.firstRowHeight) {
+      this.positions = uniformPositions(this.rowCount, this.firstRowHeight);
+    }
+    this.positions?.push(this.totalHeight);
+    this.totalHeight += height;
+    this.rowCount += 1;
+  }
+
+  build() {
+    return {
+      rowCount: this.rowCount,
+      hasUniformRowHeight: this.positions === null,
+      positions: this.positions,
+      currentPageTotalHeight: this.totalHeight,
+    };
+  }
+}
+
 function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const { rowCount, rows, getRowHeight, dimensions: dimensionsParams } = params;
   const {
@@ -116,20 +151,18 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 
   // Calculate the initial content height and row positions so the
   // initial render gets the correct size.
-  const positions: number[] = [];
-  let currentPageTotalHeight = 0;
+  let rowsLayout;
   if (getRowHeight && rows.length > 0) {
+    const layout = new RowsLayout();
     for (let i = 0; i < rows.length; i += 1) {
-      positions.push(currentPageTotalHeight);
       const height = getRowHeight(rows[i]);
-      currentPageTotalHeight += typeof height === 'number' ? height : rowHeight;
+      layout.add(typeof height === 'number' ? height : rowHeight);
     }
+    rowsLayout = layout.build();
   } else {
-    for (let i = 0; i < rowCount; i += 1) {
-      positions.push(i * rowHeight);
-    }
-    currentPageTotalHeight = rowCount * rowHeight;
+    rowsLayout = uniformRows(rowCount, rowHeight);
   }
+  const { currentPageTotalHeight } = rowsLayout;
 
   // Reflect the pinned zone sizes in the container heights at initialization, mirroring
   // `updateDimensions`. The pinned rows' measured height is still 0 in `rowsMeta`
@@ -151,12 +184,11 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     },
   };
 
-  const rowsMeta = {
-    currentPageTotalHeight,
-    positions,
+  const rowsMeta = RowsMeta.create({
+    ...rowsLayout,
     pinnedTopRowsTotalHeight: 0,
     pinnedBottomRowsTotalHeight: 0,
-  };
+  });
 
   const rowHeights = new Map();
 
@@ -601,19 +633,17 @@ function useRowsMeta(
         return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
       }, 0) ?? 0;
 
-    const positions: number[] = [];
     const baseRowHeight = selectors.dimensions(store.state).rowHeight;
-    let currentPageTotalHeight = 0;
-    for (let i = 0; i < rows.length; i += 1) {
-      positions.push(currentPageTotalHeight);
-      let rowHeight = 0;
-      if (hasPerRowHeights) {
+    let rowsLayout;
+    if (hasPerRowHeights) {
+      const layout = new RowsLayout();
+      for (let i = 0; i < rows.length; i += 1) {
         const entry = processHeightEntry(rows[i]);
-        rowHeight = entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
-      } else {
-        rowHeight = baseRowHeight;
+        layout.add(entry.content + entry.spacingTop + entry.spacingBottom + entry.detail);
       }
-      currentPageTotalHeight += rowHeight;
+      rowsLayout = layout.build();
+    } else {
+      rowsLayout = uniformRows(rows.length, baseRowHeight);
     }
 
     if (!hasRowWithAutoHeight.current) {
@@ -624,14 +654,13 @@ function useRowsMeta(
     const didHeightsChange =
       pinnedTopRowsTotalHeight !== store.state.rowsMeta.pinnedTopRowsTotalHeight ||
       pinnedBottomRowsTotalHeight !== store.state.rowsMeta.pinnedBottomRowsTotalHeight ||
-      currentPageTotalHeight !== store.state.rowsMeta.currentPageTotalHeight;
+      rowsLayout.currentPageTotalHeight !== store.state.rowsMeta.currentPageTotalHeight;
 
-    const rowsMeta = {
-      currentPageTotalHeight,
-      positions,
+    const rowsMeta = RowsMeta.create({
+      ...rowsLayout,
       pinnedTopRowsTotalHeight,
       pinnedBottomRowsTotalHeight,
-    };
+    });
 
     store.set('rowsMeta', rowsMeta);
     if (didHeightsChange) {
@@ -740,6 +769,19 @@ function useRowsMeta(
     getLastMeasuredRowIndex,
     resetRowHeights,
   };
+}
+
+function uniformRows(rowCount: number, rowHeight: number) {
+  return {
+    rowCount,
+    hasUniformRowHeight: true,
+    positions: null,
+    currentPageTotalHeight: rowCount * rowHeight,
+  };
+}
+
+function uniformPositions(rowCount: number, rowHeight: number) {
+  return Array.from({ length: rowCount }, (_, index) => index * rowHeight);
 }
 
 export function observeRootNode(

@@ -2458,6 +2458,9 @@ importers:
       '@mui/x-scheduler':
         specifier: workspace:^
         version: link:../../packages/x-scheduler/build
+      '@mui/x-scheduler-premium':
+        specifier: workspace:^
+        version: link:../../packages/x-scheduler-premium/build
       '@mui/x-tree-view':
         specifier: workspace:^
         version: link:../../packages/x-tree-view/build

@@ -126,7 +126,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
 
     // An all-day occurrence is identified by the day it is displayed on: July 4th in New York.
     expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
-    expect(deleteRecurringEventSpy!.mock.lastCall![0].occurrence.start.timestamp).to.equal(
+    expect(deleteRecurringEventSpy!.mock.lastCall![0].occurrence.start.epochMilliseconds).to.equal(
       createDate('2025-07-04T00:00:00', 'America/New_York').getTime(),
     );
     // The recurring branch defers to the scope dialog instead of deleting right away.

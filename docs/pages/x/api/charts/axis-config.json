@@ -7,11 +7,17 @@
   ],
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
-    "scaleType": { "type": { "description": "'linear'" }, "required": true },
-    "axis": { "type": { "description": "'x'" } },
+    "axis": { "type": { "description": "'x' | 'y'" } },
+    "barGapRatio": { "type": { "description": "number" }, "default": "0.1" },
+    "categoryGapRatio": { "type": { "description": "number" }, "default": "0.2" },
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
     "className": { "type": { "description": "string" } },
-    "colorMap": { "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig" } },
+    "colorMap": {
+      "type": {
+        "description": "ContinuousColorConfig&lt;number | Date&gt; | OrdinalColorConfig&lt;string | number | Date&gt; | PiecewiseColorConfig&lt;number | Date&gt;"
+      }
+    },
+    "constant": { "type": { "description": "number" }, "default": "1" },
     "data": { "type": { "description": "readonly V[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableLine": { "type": { "description": "boolean" }, "default": "false" },
@@ -22,21 +28,26 @@
       }
     },
     "domainSeries": { "type": { "description": "'all' | 'visible'" }, "default": "\"all\"" },
+    "groups": { "type": { "description": "AxisGroup[]" } },
     "height": {
-      "type": { "description": "AxisProps extends ChartsXAxisProps ? number | 'auto' : never" },
+      "type": { "description": "'auto' | number" },
       "default": "45 if an axis label is provided, 25 otherwise."
     },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
+    "max": { "type": { "description": "NumberValue | number" } },
+    "min": { "type": { "description": "NumberValue | number" } },
     "offset": { "type": { "description": "number" }, "default": "0" },
-    "position": {
+    "ordinalTimeTicks": { "type": { "description": "OrdinalTimeTicks" } },
+    "position": { "type": { "description": "'bottom' | 'left' | 'none' | 'right' | 'top'" } },
+    "reverse": { "type": { "description": "boolean" } },
+    "scaleType": {
       "type": {
-        "description": "(AxisProps extends ChartsXAxisProps ? 'top' | 'bottom' : 'none') | (AxisProps extends ChartsYAxisProps ? 'left' | 'right' : 'none') | 'none'"
+        "description": "'band' | 'linear' | 'log' | 'point' | 'pow' | 'sqrt' | 'symlog' | 'time' | 'utc'"
       }
     },
-    "reverse": { "type": { "description": "boolean" } },
     "slotProps": {
       "type": { "description": "Partial&lt;ChartsAxisSlotProps&gt;" },
       "default": "{}"
@@ -51,6 +62,7 @@
       "type": { "description": "'auto' | ((value: any, index: number) =&gt; boolean)" },
       "default": "'auto'"
     },
+    "tickLabelMinGap": { "type": { "description": "number" }, "default": "4" },
     "tickLabelPlacement": { "type": { "description": "'middle' | 'tick'" }, "default": "'middle'" },
     "tickLabelStyle": { "type": { "description": "ChartsTextProps['style']" } },
     "tickMaxStep": { "type": { "description": "number" } },
@@ -71,7 +83,7 @@
       "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; V" }
     },
     "width": {
-      "type": { "description": "AxisProps extends ChartsYAxisProps ? number | 'auto' : never" },
+      "type": { "description": "'auto' | number" },
       "default": "65 if an axis label is provided, 45 otherwise."
     },
     "zoom": { "type": { "description": "boolean | ZoomOptions" }, "isProPlan": true }

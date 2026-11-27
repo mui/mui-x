@@ -116,6 +116,45 @@ describe('ScatterChart - click event', () => {
       });
       expect(onItemClick.mock.calls.length).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
+
+    ['band' as const, 'point' as const].forEach((scaleType) => {
+      it(`should resolve the clicked point on a reversed ${scaleType} x-axis`, async () => {
+        const onItemClick = vi.fn();
+        const { user, container } = render(
+          <div style={{ width: 100, height: 100 }}>
+            <ScatterChart
+              {...config}
+              dataset={undefined}
+              xAxis={[{ position: 'none', scaleType, data: [0, 1, 2, 3], reverse: true }]}
+              yAxis={[{ position: 'none', min: 0, max: 10 }]}
+              series={[{ id: 's1', data: [0, 1, 2, 3].map((x) => ({ x, y: 5 })) }]}
+              onItemClick={onItemClick}
+            />
+          </div>,
+        );
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
+
+        await user.pointer([
+          { keys: '[MouseLeft]', target: layerContainer, coords: { clientX: 95, clientY: 50 } },
+        ]);
+        expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
+          type: 'scatter',
+          dataIndex: 0,
+          seriesId: 's1',
+        });
+
+        await user.pointer([
+          { keys: '[MouseLeft]', target: layerContainer, coords: { clientX: 5, clientY: 50 } },
+        ]);
+        expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
+          type: 'scatter',
+          dataIndex: 3,
+          seriesId: 's1',
+        });
+      });
+    });
   });
 
   describe('onItemClick - disabling voronoi', () => {

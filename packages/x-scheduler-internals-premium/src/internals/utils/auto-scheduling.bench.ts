@@ -49,8 +49,8 @@ describe.each([
     updated: [
       {
         id: 0,
-        start: addDays(new Date(events[0].start.timestamp), 3),
-        end: addDays(new Date(events[0].end.timestamp), 3),
+        start: addDays(new Date(events[0].start.epochMilliseconds), 3),
+        end: addDays(new Date(events[0].end.epochMilliseconds), 3),
       },
     ],
   };

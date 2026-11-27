@@ -34,7 +34,12 @@ import { sparkLineChartGrid } from '../charts/SparkLineChart/scenarios';
 import { chatBox } from '../chat/scenarios';
 import { dataGrid, dataGridPremium, dataGridPro } from '../dataGrid/scenarios';
 import { dateCalendar, dateRangeCalendar } from '../datePickers/scenarios';
-import { eventCalendar } from '../scheduler/scenarios';
+import {
+  eventCalendar,
+  eventCalendarMonth,
+  eventCalendarPremiumRecurring,
+  eventTimelinePremiumDependencies,
+} from '../scheduler/scenarios';
 import { richTreeView, richTreeViewPro } from '../treeView/scenarios';
 
 // The benchmarks of all of MUI X, in one file: the runner loads the file's page once per round and
@@ -100,6 +105,9 @@ smokeBenchmark(richTreeViewPro);
 
 // Scheduler
 smokeBenchmark(eventCalendar);
+smokeBenchmark(eventCalendarMonth);
+smokeBenchmark(eventCalendarPremiumRecurring);
+smokeBenchmark(eventTimelinePremiumDependencies);
 
 // Chat
 smokeBenchmark(chatBox);

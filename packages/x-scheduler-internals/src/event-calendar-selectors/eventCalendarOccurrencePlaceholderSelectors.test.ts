@@ -5,12 +5,13 @@ import {
   DEFAULT_EVENT_CALENDAR_STATE,
   endOfDay,
   EventBuilder,
-  processDay,
   setSystemTimezone,
   startOfDay,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
 
@@ -30,8 +31,8 @@ function getStateInUTCOnApiaSystem() {
       resourceId: null,
     },
   };
-  const december30 = processDay(new Date(Date.UTC(2011, 11, 30)), 'UTC');
-  const december31 = processDay(new Date(Date.UTC(2011, 11, 31)), 'UTC');
+  const december30 = BaseTemporal.PlainDate.from('2011-12-30');
+  const december31 = BaseTemporal.PlainDate.from('2011-12-31');
   return { state, december30, december31 };
 }
 
@@ -77,7 +78,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     const rowStart = Date.UTC(2024, 0, 14);
 
     it('should render a placeholder from a previous row on the first day of the row', () => {
-      const firstDay = processDay(new Date(rowStart), 'UTC');
+      const firstDay = toPlainDate(rowStart, 'UTC');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(state, firstDay, rowStart),
       ).to.equal(state.occurrencePlaceholder);
@@ -94,7 +95,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           resourceId: null,
         },
       };
-      const firstDay = processDay(new Date(rowStart), 'UTC');
+      const firstDay = toPlainDate(rowStart, 'UTC');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
           reversedState,
@@ -106,7 +107,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
     it('should not render a placeholder from a previous row on the other days of the row', () => {
       // Its last day, which only its end falls on.
-      const lastDay = processDay(new Date(Date.UTC(2024, 0, 17)), 'UTC');
+      const lastDay = BaseTemporal.PlainDate.from('2024-01-17');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(state, lastDay, rowStart),
       ).to.equal(null);
@@ -115,7 +116,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     it('should not render a placeholder on the first day of a row that starts before it', () => {
       // The first row starts on Sunday, January 7th, before the placeholder started.
       const previousRowStart = Date.UTC(2024, 0, 7);
-      const firstDay = processDay(new Date(previousRowStart), 'UTC');
+      const firstDay = toPlainDate(previousRowStart, 'UTC');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
           state,
@@ -128,7 +129,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     it('should not render a placeholder on the first day of a row that starts after it', () => {
       // The third row starts on Sunday, January 21st, after the placeholder ended.
       const nextRowStart = Date.UTC(2024, 0, 21);
-      const firstDay = processDay(new Date(nextRowStart), 'UTC');
+      const firstDay = toPlainDate(nextRowStart, 'UTC');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
           state,
@@ -150,7 +151,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           resourceId: null,
         },
       };
-      const firstDay = processDay(new Date(rowStart), 'UTC');
+      const firstDay = BaseTemporal.PlainDate.from('2024-01-14');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
           saturdayState,
@@ -231,12 +232,12 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
   describe('isCreatingInDayCell', () => {
     const day = createDate('2024-01-15');
-    const processedDay = processDay(day);
+    const plainDate = toPlainDate(day.getTime(), 'default');
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(false);
     });
 
@@ -252,7 +253,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(false);
     });
 
@@ -273,7 +274,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(false);
     });
 
@@ -289,7 +290,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(true);
     });
 
@@ -307,7 +308,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, plainDate),
       ).to.equal(false);
     });
 
@@ -329,7 +330,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     const day = createDate('2024-01-15');
     const dayStart = startOfDay(day);
     const dayEnd = endOfDay(day);
-    const plainDate = processDay(day).plainDate;
+    const plainDate = toPlainDate(day.getTime(), 'default');
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;

@@ -82,7 +82,7 @@ export function buildResolver(parameters: {
 }) {
   return createDependencyAnchorResolver({
     resources: parameters.resources,
-    rowPositions: parameters.rowPositions,
+    getRowPosition: (rowIndex) => parameters.rowPositions[rowIndex],
     axis: parameters.axis ?? fullDayAxis,
     durationMs: getTimelineAxisDurationMs(parameters.axis ?? fullDayAxis),
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,

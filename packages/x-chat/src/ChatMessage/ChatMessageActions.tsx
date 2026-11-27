@@ -72,15 +72,16 @@ const ChatMessageActionsStyled = styled('div', {
   justifySelf: 'start',
   alignItems: 'center',
   gap: theme.spacing(0.25),
-  // `visibility: hidden` (not just opacity) removes the action buttons from
-  // the tab order and from hit-testing while hidden, so tabbing through the
-  // chat never stops on an invisible control. Actions are revealed on hover
-  // (mouse), when the user drills into the focused message with Enter
-  // (`data-actionable` set by the roving message list), or while focus is
-  // inside the actions themselves. Visibility flips at the end of the
-  // opacity fade when hiding, and immediately when revealing.
+  // Without roving focus the transparent buttons stay tabbable so focus can reveal the bar.
   opacity: 0,
-  visibility: 'hidden',
+  // Roving rows always carry a tabindex. Setting only a variable there lets an action-level
+  // `sx`/styleOverrides `visibility` win (the cast: csstype has no `var()` type).
+  visibility:
+    'var(--MuiChatMessage-actionsVisibility, visible)' as React.CSSProperties['visibility'],
+  pointerEvents: 'none',
+  '.MuiChatMessage-root[tabindex] &': {
+    '--MuiChatMessage-actionsVisibility': 'hidden',
+  },
   transition: theme.transitions.create(['opacity', 'visibility'], {
     duration: theme.transitions.duration.short,
   }),
@@ -90,6 +91,7 @@ const ChatMessageActionsStyled = styled('div', {
   '.MuiChatMessage-root:hover &, .MuiChatMessage-root[data-actionable="true"] &, &:focus-within': {
     opacity: 1,
     visibility: 'visible',
+    pointerEvents: 'auto',
   },
   ...(ownerState?.isOwnMessage && {
     justifySelf: 'end',

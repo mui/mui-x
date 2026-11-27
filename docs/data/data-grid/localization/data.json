@@ -312,6 +312,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/urPK.ts"
   },
   {
+    "languageTag": "uz-UZ",
+    "importName": "uzUZ",
+    "localeName": "Uzbek",
+    "missingKeysCount": 8,
+    "totalKeysCount": 301,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/uzUZ.ts"
+  },
+  {
     "languageTag": "vi-VN",
     "importName": "viVN",
     "localeName": "Vietnamese",

@@ -33,6 +33,11 @@ const series = [
   { label: 'Series B', data: data.map((p) => p.y2), highlightScope },
 ];
 
+const lineSeries = series.map((s) => ({
+  ...s,
+  highlightScope: { highlight: 'series', fade: 'global' },
+}));
+
 export default function KeyboardNavigation() {
   const [chartType, setChartType] = React.useState('line');
   const [focusItemOnClick, setFocusItemOnClick] = React.useState(false);
@@ -108,8 +113,9 @@ function Chart({ chartRef, type, focusItemOnClick }) {
           ref={chartRef}
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
-          series={series}
+          series={lineSeries}
           slotProps={{ tooltip: { trigger: 'item' } }}
+          experimentalFeatures={{ enablePositionBasedPointerInteraction: true }}
           focusItemOnClick={focusItemOnClick}
         />
       );

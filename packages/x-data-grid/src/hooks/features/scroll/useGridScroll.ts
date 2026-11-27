@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useRtl } from '@mui/system/RtlProvider';
+import { RowsMeta } from '@mui/x-virtualizer';
 import type { GridCellIndexCoordinates } from '../../../models/gridCell';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -188,17 +189,18 @@ export const useGridScroll = (apiRef: RefObject<GridPrivateApiCommunity>): void 
       if (targetRowIndex !== undefined) {
         const rowsMeta = gridRowsMetaSelector(apiRef);
         const elementIndex = targetRowIndex - rowIndexOffset;
+        // A row added in the same tick has no position until `rowsMeta` is re-hydrated:
+        // leave the vertical scroll alone instead of jumping to the top.
+        const elementOffset = RowsMeta.getPosition(rowsMeta, elementIndex);
 
-        const targetOffsetHeight = rowsMeta.positions[elementIndex + 1]
-          ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
-          : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
-
-        scrollCoordinates.top = scrollIntoView({
-          containerSize: dimensions.viewportInnerSize.height,
-          scrollPosition: virtualScrollerRef.current?.scrollTop ?? 0,
-          elementSize: targetOffsetHeight,
-          elementOffset: rowsMeta.positions[elementIndex],
-        });
+        if (elementOffset !== undefined) {
+          scrollCoordinates.top = scrollIntoView({
+            containerSize: dimensions.viewportInnerSize.height,
+            scrollPosition: virtualScrollerRef.current?.scrollTop ?? 0,
+            elementSize: RowsMeta.getSlotHeight(rowsMeta, elementIndex),
+            elementOffset,
+          });
+        }
       }
 
       scrollCoordinates = apiRef.current.unstable_applyPipeProcessors(
