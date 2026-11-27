@@ -20,6 +20,7 @@ const MISCELLANEOUS = 'Miscellaneous';
 const CODEMOD_LABEL = 'package: codemod';
 const DOCS_LABEL = 'docs';
 const TEST_PREFIX = 'test';
+const RECIPE = 'recipe';
 
 const EXCLUDED_LABELS = new Set(['dependencies', 'release']);
 
@@ -75,6 +76,9 @@ const L10N_SCOPES = new Map([
   ['tree view', 'x-tree-view'],
   ['scheduler', 'x-scheduler'],
 ]);
+
+const REVERTS = /^[ \t]*reverts\b.*(?:\n[ \t]*[-*][ \t]+#\d+.*)*/gim;
+const PULL_REFERENCE = /#(\d+)/g;
 
 /** A heading in the body of a pull request, above notes on how to migrate. */
 const BREAKING_HEADING = /^(#{1,6})\s*breaking changes?\b.*$/im;
@@ -135,9 +139,11 @@ function createRouter() {
       return [['x-codemod', prefixes]];
     }
 
-    // `[docs][charts]` is a docs change, and so is one labeled `docs` that no product scope claims.
+    // `[docs][charts]` is a docs change, and so are recipes and changes labeled `docs` that no
+    // product scope claims.
     const isDocs =
-      prefixes.some((prefix) => matchPrefix(prefix, [DOCS])) ||
+      prefixes.some((prefix) => matchPrefix(prefix, [DOCS, RECIPE])) ||
+      change.labels.includes(RECIPE) ||
       (change.labels.includes(DOCS_LABEL) &&
         !labelValues(change.labels, 'scope').some((scope) => L10N_SCOPES.has(scope)));
 
@@ -181,7 +187,26 @@ function createRouter() {
       }
     }
 
-    return unique.size > 0 ? [...unique] : [[MISCELLANEOUS, prefixes]];
+    // `[charts][internal]` is a Charts change.
+    if (unique.size > 1) {
+      unique.delete(CORE);
+    }
+
+    if (unique.size > 0) {
+      return [...unique];
+    }
+
+    // Without a prefix, like `fix(scheduler): …`, the product scope labels pick the section.
+    const scoped =
+      prefixes.length > 0
+        ? []
+        : labelValues(change.labels, 'scope').flatMap((scope): [string, string[]][] => {
+            const packageName = L10N_SCOPES.get(scope);
+
+            return packageName ? [[packageName, prefixes]] : [];
+          });
+
+    return scoped.length > 0 ? scoped : [[MISCELLANEOUS, prefixes]];
   };
 }
 
@@ -216,6 +241,34 @@ function renderEntries(entries: Entry[] = []) {
         joinWords(line, `(${formatReference(entry.change)})`, formatAuthor(entry.change.author)),
       ),
   );
+}
+
+/** The pull requests that a `Reverts #1` line, or a list below `Reverts:`, of a body points at. */
+function getRevertedNumbers({ pullRequest }: ChangelogChange) {
+  const body = (pullRequest?.body ?? '').replace(/\r\n/g, '\n');
+
+  return Array.from(body.matchAll(REVERTS), ([block]) =>
+    Array.from(block.matchAll(PULL_REFERENCE), (match) => Number(match[1])),
+  ).flat();
+}
+
+/** Changes that a revert in the same release undoes, and the reverts. */
+function getReverted(changes: ChangelogChange[]) {
+  const numbers = new Set(changes.map(({ pullRequest }) => pullRequest?.number));
+  const reverted = new Set<number>();
+
+  for (const change of changes) {
+    const targets = getRevertedNumbers(change).filter((number) => numbers.has(number));
+
+    if (!change.pullRequest || targets.length === 0) {
+      continue;
+    }
+
+    reverted.add(change.pullRequest.number);
+    targets.forEach((number) => reverted.add(number));
+  }
+
+  return reverted;
 }
 
 /** The section on breaking changes in the body of a pull request, without its heading. */
@@ -332,8 +385,12 @@ export function getReleaseDate() {
  * `__VERSION__` placeholders.
  */
 export function renderChangelog(data: ChangelogData, nextVersion?: string) {
+  const reverted = getReverted(data.changes);
+
   const listed = data.changes.filter(
-    ({ labels }) => !labels.some((label) => EXCLUDED_LABELS.has(label)),
+    ({ labels, pullRequest }) =>
+      !labels.some((label) => EXCLUDED_LABELS.has(label)) &&
+      !reverted.has(pullRequest?.number ?? 0),
   );
 
   const groups = groupChanges(listed, createRouter());
