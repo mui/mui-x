@@ -10,6 +10,7 @@ import {
   gridRowsLoadingSelector,
   gridRowsLookupSelector,
   gridSortModelSelector,
+  gridTabIndexCellSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '@mui/x-data-grid';
 import type {
@@ -23,6 +24,7 @@ import type {
 import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GRID_TREE_DATA_GROUPING_FIELD,
+  createRootSelector,
   createSelector,
   gridEditRowsStateSelector,
   gridKeyboardUseActiveSelector,
@@ -31,6 +33,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { GridStatePro } from '../../../models/gridStatePro';
 import { GRID_REORDER_COL_DEF } from '../rowReorder/gridRowReorderColDef';
 import { isRowReorderAllowed } from '../rowReorder/rowReorderDragUtils';
 
@@ -255,3 +258,100 @@ export const gridColumnKeyboardReorderTargetSelector = createSelector(
       column: columnLookup[field],
     }) === 'allowed',
 );
+
+export type KeyboardReorderDescriptionKind = 'row' | 'column';
+
+/**
+ * Returns the id of the node that describes the reorder keys of rows or columns.
+ * It only depends on the grid instance, so the nodes and the elements they describe agree on it.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {KeyboardReorderDescriptionKind} kind Whether the node describes rows or columns.
+ * @returns {string} The id of the node.
+ */
+export function getKeyboardReorderDescriptionId(
+  apiRef: RefObject<GridPrivateApiPro>,
+  kind: KeyboardReorderDescriptionKind,
+): string {
+  return `mui-data-grid-${apiRef.current.instanceId.id}-${kind}-reorder-description`;
+}
+
+export const gridKeyboardReorderDescribedCellSelector = createRootSelector(
+  (state: GridStatePro) => state.keyboardReorder.describedCell,
+);
+
+export const gridKeyboardReorderUnreadDescriptionsSelector = createRootSelector(
+  (state: GridStatePro) => state.keyboardReorder.unreadDescriptions,
+);
+
+/**
+ * Whether the column header describes the reorder keys: a step could move the column.
+ * Unlike the marker, it doesn't wait for a key press, so the description is there when the focus lands.
+ */
+export const gridColumnKeyboardReorderDescribedSelector = createSelector(
+  gridEditRowsStateSelector,
+  gridVisiblePinnedColumnDefinitionsSelector,
+  gridColumnLookupSelector,
+  (
+    editRowsState,
+    pinnedColumns,
+    columnLookup,
+    { field, disableColumnReorder }: ColumnReorderStepProps & { field: string },
+  ) =>
+    getColumnStepStatus({
+      disableColumnReorder,
+      editRowsState,
+      pinnedColumns,
+      field,
+      column: columnLookup[field],
+    }) === 'allowed',
+);
+
+export type KeyboardReorderCellDescriptionArgs = RowReorderStepProps &
+  ColumnReorderStepProps & {
+    rowId: GridRowId;
+  };
+
+/**
+ * The cell of a row that describes the reorder keys, and the steps it describes.
+ */
+export interface KeyboardReorderCellDescribedSteps {
+  /**
+   * The field of the cell.
+   */
+  field: string;
+  /**
+   * Whether a step could move the row.
+   */
+  row: boolean;
+  /**
+   * Whether a step could move the column.
+   */
+  column: boolean;
+}
+
+/**
+ * Returns the cell of the row that describes the reorder keys, and the unread steps it describes.
+ * Until the focus lands on a cell, it's the cell with the tab stop,
+ * so the description is there when the focus lands on it with the keyboard.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {KeyboardReorderCellDescriptionArgs} args The row and the props that the rules depend on.
+ * @returns {KeyboardReorderCellDescribedSteps | null} The cell and its steps, or `null`.
+ */
+export function gridCellKeyboardReorderDescribedStepsSelector(
+  apiRef: RefObject<GridPrivateApiPro>,
+  args: KeyboardReorderCellDescriptionArgs,
+): KeyboardReorderCellDescribedSteps | null {
+  const { rowId } = args;
+  const describedCell = gridKeyboardReorderDescribedCellSelector(apiRef);
+  const cell = describedCell === 'tabStop' ? gridTabIndexCellSelector(apiRef) : describedCell;
+  // Called for every rendered row, so leave early for the other rows
+  if (cell?.id !== rowId) {
+    return null;
+  }
+
+  const unread = gridKeyboardReorderUnreadDescriptionsSelector(apiRef);
+  const row = unread.row && getRowReorderStepStatus(apiRef, args, rowId) === 'allowed';
+  const column =
+    unread.column && getColumnReorderStepStatus(apiRef, args, cell.field) === 'allowed';
+  return row || column ? { field: cell.field, row, column } : null;
+}

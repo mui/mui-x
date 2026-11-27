@@ -4,7 +4,8 @@ import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-t
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { getCell, getRowsFieldContent } from 'test/utils/helperFn';
-import { vi, describe, it, expect } from 'vitest';
+import { mockPlatform } from 'test/utils/mockPlatform';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
 
 const rows = [
   { id: 0, name: 'A', group: 'X', amount: 1 },
@@ -72,6 +73,25 @@ describe('<DataGridPremium /> - Keyboard reorder', () => {
     await act(() => Promise.resolve());
     expect(onRowOrderChange).not.toHaveBeenCalled();
     expect(getAnnouncement()).to.equal('');
+  });
+
+  it('should not describe the row keys with row grouping', () => {
+    // The text names the keys of the OS
+    onTestFinished(mockPlatform('Win32'));
+    render(
+      <Test
+        initialState={{ rowGrouping: { model: ['group'] } }}
+        defaultGroupingExpansionDepth={-1}
+      />,
+    );
+
+    act(() => apiRef.current!.setCellFocus(0, 'name'));
+    const leafCell = document.querySelector('[data-id="0"] [data-field="name"]')!;
+    const hints = leafCell
+      .getAttribute('aria-describedby')!
+      .split(' ')
+      .map((id) => document.getElementById(id)?.textContent);
+    expect(hints).to.deep.equal(['Press Alt+Left Arrow or Alt+Right Arrow to move the column.']);
   });
 
   it('should not move a row below the aggregation footer', async () => {

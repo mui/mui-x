@@ -131,6 +131,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const isRtl = useRtl();
   const adornment = configuration.hooks.useColumnHeaderAdornment(colDef.field);
   const isReorderTarget = configuration.hooks.useIsColumnKeyboardReorderTarget(colDef.field);
+  const keyboardReorderDescribedBy = configuration.hooks.useKeyboardReorderColumnHeaderDescribedBy(
+    colDef.field,
+  );
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId = useId();
   const columnMenuButtonId = useId();
@@ -371,6 +374,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       draggableContainerProps={draggableEventHandlers}
       columnHeaderSeparatorProps={columnHeaderSeparatorProps}
       style={style}
+      aria-describedby={keyboardReorderDescribedBy}
       {...mouseEventsHandlers}
     />
   );
