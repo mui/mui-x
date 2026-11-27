@@ -287,8 +287,8 @@ export const useDataGridPremiumComponent = (
   // Before `useGridRowSelection`: the select-all shortcut of the cell selection feature
   // must run first and block the row selection listener with `defaultMuiPrevented`.
   useGridCellSelection(apiRef, props);
-  useGridConditionalFormatting(apiRef, props);
   useGridRowSelection(apiRef, props);
+  useGridConditionalFormatting(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);

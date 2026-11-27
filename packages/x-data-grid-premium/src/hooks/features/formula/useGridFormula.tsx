@@ -737,15 +737,20 @@ export const useGridFormula = (
 
   useGridApiMethod(apiRef, formulaPrivateApi, 'private');
 
+  // Formula conditions follow the formulas of the grid: off with `disableFormulas` or a `dataSource`.
+  const cellFormulaConditionsEnabled = !props.disableFormulas && !props.dataSource;
   const cellConditionPrivateApi: GridCellConditionPrivateApi = {
     evaluateCellFormulaCondition: React.useCallback(
-      (formula, row) => evaluateCellFormulaCondition(apiRef, formula, row),
-      [apiRef],
+      (formula, row) =>
+        cellFormulaConditionsEnabled && evaluateCellFormulaCondition(apiRef, formula, row),
+      [apiRef, cellFormulaConditionsEnabled],
     ),
     getCellFormulaConditionExcelFormula: React.useCallback(
       (formula, fieldToColumnLetter, rowNumber) =>
-        getCellFormulaConditionExcelFormula(apiRef, formula, fieldToColumnLetter, rowNumber),
-      [apiRef],
+        cellFormulaConditionsEnabled
+          ? getCellFormulaConditionExcelFormula(apiRef, formula, fieldToColumnLetter, rowNumber)
+          : null,
+      [apiRef, cellFormulaConditionsEnabled],
     ),
   };
 

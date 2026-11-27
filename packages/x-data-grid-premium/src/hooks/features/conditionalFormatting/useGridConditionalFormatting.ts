@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
-import { gridColumnLookupSelector, useGridSelector } from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, useGridEvent } from '@mui/x-data-grid-pro';
 import type { GridRowId, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { useGridApiMethod, useGridRegisterPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import type {
@@ -17,6 +17,7 @@ import { gridFormulaLookupSelector } from '../formula/gridFormulaSelectors';
 import { gridComputedColumnsRevisionSelector } from '../computedColumns/gridComputedColumnsSelectors';
 import type {
   GridConditionalFormattingApi,
+  GridConditionalFormattingModel,
   GridConditionalFormattingHighlightRule,
 } from './gridConditionalFormattingInterfaces';
 import { gridConditionalFormattingSelector } from './gridConditionalFormattingSelectors';
@@ -28,6 +29,12 @@ import {
 } from './gridConditionalFormattingUtils';
 import { matchesGridCellCondition } from '../cellCondition/gridCellConditionUtils';
 
+/**
+ * The model can be restored from untrusted data.
+ */
+const toConditionalFormattingModel = (model: unknown): GridConditionalFormattingModel =>
+  Array.isArray(model) ? model : [];
+
 export const conditionalFormattingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'conditionalFormatting' | 'initialState'>,
   GridPrivateApiPremium
@@ -37,7 +44,9 @@ export const conditionalFormattingStateInitializer: GridStateInitializer<
   return {
     ...state,
     conditionalFormatting: {
-      model: props.conditionalFormatting ?? props.initialState?.conditionalFormatting?.model ?? [],
+      model: toConditionalFormattingModel(
+        props.conditionalFormatting ?? props.initialState?.conditionalFormatting?.model,
+      ),
     },
   };
 };
@@ -60,7 +69,8 @@ export const useGridConditionalFormatting = (
   const setConditionalFormatting = React.useCallback<
     GridConditionalFormattingApi['setConditionalFormatting']
   >(
-    (model) => {
+    (newModel) => {
+      const model = toConditionalFormattingModel(newModel);
       if (model === gridConditionalFormattingSelector(apiRef)) {
         return;
       }
@@ -101,9 +111,6 @@ export const useGridConditionalFormatting = (
         return classNames;
       }
       const row = apiRef.current.getRow(id);
-      if (row == null) {
-        return classNames;
-      }
 
       const cache = apiRef.current.caches.conditionalFormatting;
       // Formula, computed and `valueGetter` cells change value without a new row object.
@@ -177,12 +184,11 @@ export const useGridConditionalFormatting = (
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
-  const model = useGridSelector(apiRef, gridConditionalFormattingSelector);
-  React.useEffect(() => {
+  const warnIfFormulaFeatureIsMissing = React.useCallback(() => {
     if (
       process.env.NODE_ENV !== 'production' &&
       apiRef.current.evaluateCellFormulaCondition === undefined &&
-      model.some(
+      gridConditionalFormattingSelector(apiRef).some(
         (rule) => isConditionalFormattingHighlightRule(rule) && rule.condition.type === 'formula',
       )
     ) {
@@ -193,7 +199,10 @@ export const useGridConditionalFormatting = (
         ].join('\n'),
       );
     }
-  }, [apiRef, model]);
+  }, [apiRef]);
+
+  React.useEffect(warnIfFormulaFeatureIsMissing, [warnIfFormulaFeatureIsMissing]);
+  useGridEvent(apiRef, 'conditionalFormattingChange', warnIfFormulaFeatureIsMissing);
 
   React.useEffect(() => {
     if (props.conditionalFormatting !== undefined) {

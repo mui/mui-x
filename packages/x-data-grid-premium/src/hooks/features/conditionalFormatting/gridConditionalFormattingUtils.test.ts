@@ -64,7 +64,7 @@ describe('gridConditionalFormattingUtils', () => {
       ];
       expect(Object.entries(getConditionalFormattingStyles(model, 7))).to.deep.equal([
         [
-          '.MuiDataGrid-root .MuiDataGrid-row:not(.Mui-selected) .MuiDataGrid-cell.MuiDataGrid-conditionalFormatting-7-1:not(.Mui-selected)',
+          '.MuiDataGrid-root .MuiDataGrid-row:not(.Mui-selected) > .MuiDataGrid-cell.MuiDataGrid-conditionalFormatting-7-1:not(.Mui-selected)',
           { backgroundColor: '#222' },
         ],
         [

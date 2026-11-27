@@ -41,10 +41,52 @@ const NEGATED_OPERATORS = {
   isNotEmpty: 'isEmpty',
 } as const;
 
+const parseDateString = (value: GridCellConditionValue | undefined) => {
+  if (typeof value !== 'string') {
+    return value;
+  }
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date;
+};
+
+/**
+ * A restored state holds dates as ISO strings: read them as dates against a date cell.
+ */
+const withDateValues = (condition: GridCellValueCondition): GridCellValueCondition => ({
+  ...condition,
+  value: parseDateString(condition.value) ?? condition.value,
+  valueTo: parseDateString(condition.valueTo),
+});
+
+const isRangeOperator = (operator: string) => operator === 'between' || operator === 'notBetween';
+
+/**
+ * A condition whose values cannot be compared never matches, negated or not.
+ */
+const isComparableCondition = (condition: GridCellValueCondition) => {
+  const value = toComparable(condition.value);
+  if (value === null) {
+    return false;
+  }
+  if (!isRangeOperator(condition.operator)) {
+    return true;
+  }
+  const upper = toComparable(condition.valueTo);
+  return upper !== null && upper.kind === value.kind;
+};
+
 function matchesValueCondition(condition: GridCellValueCondition, cellValue: unknown): boolean {
+  const resolved = cellValue instanceof Date ? withDateValues(condition) : condition;
+  return isComparableCondition(resolved) && matchesComparableCondition(resolved, cellValue);
+}
+
+function matchesComparableCondition(
+  condition: GridCellValueCondition,
+  cellValue: unknown,
+): boolean {
   const { operator } = condition;
   if (operator === 'notEqual' || operator === 'notBetween') {
-    return !matchesValueCondition(
+    return !matchesComparableCondition(
       { ...condition, operator: NEGATED_OPERATORS[operator] },
       cellValue,
     );
@@ -78,6 +120,9 @@ function matchesValueCondition(condition: GridCellValueCondition, cellValue: unk
 }
 
 const toText = (value: unknown) => (value == null ? '' : String(value));
+
+const isEmptinessOperator = (operator: string) =>
+  operator === 'isEmpty' || operator === 'isNotEmpty';
 
 function matchesTextCondition(condition: GridCellTextCondition, cellValue: unknown): boolean {
   const { operator } = condition;
@@ -123,6 +168,10 @@ export function matchesGridCellConditionValue(
     return matchesValueCondition(condition, cellValue);
   }
   if (condition.type === 'text') {
+    // A date has no text of its own: the grid formats it, Excel stores a number.
+    if (cellValue instanceof Date && !isEmptinessOperator(condition.operator)) {
+      return false;
+    }
     return matchesTextCondition(condition, cellValue);
   }
   return false;
@@ -148,7 +197,11 @@ export function matchesGridCellCondition(
   return matchesGridCellConditionValue(condition, cellValue);
 }
 
-const toExcelString = (value: string) => `"${value.replace(/"/g, '""')}"`;
+// Excel rejects string constants longer than 255 characters in formulas.
+const EXCEL_MAX_STRING_LENGTH = 255;
+
+const toExcelString = (value: string) =>
+  value.length > EXCEL_MAX_STRING_LENGTH ? null : `"${value.replace(/"/g, '""')}"`;
 
 const toExcelLiteral = (value: GridCellConditionValue | undefined): string | null => {
   if (typeof value === 'number') {
@@ -214,17 +267,22 @@ function getTextConditionExcelFormula(
   cell: string,
 ): string | null {
   const text = toText(condition.value);
+  const literal = toExcelString(text);
   switch (condition.operator) {
     case 'contains':
     case 'notContains': {
       // `SEARCH` reads `*`, `?` and `~` as wildcards.
-      const formula = `ISNUMBER(SEARCH(${toExcelString(text.replace(/[~*?]/g, '~$&'))},${cell}))`;
+      const pattern = toExcelString(text.replace(/[~*?]/g, '~$&'));
+      if (pattern === null) {
+        return null;
+      }
+      const formula = `ISNUMBER(SEARCH(${pattern},${cell}))`;
       return condition.operator === 'contains' ? formula : `NOT(${formula})`;
     }
     case 'startsWith':
-      return `LEFT(${cell},${text.length})=${toExcelString(text)}`;
+      return literal === null ? null : `LEFT(${cell},${text.length})=${literal}`;
     case 'endsWith':
-      return `RIGHT(${cell},${text.length})=${toExcelString(text)}`;
+      return literal === null ? null : `RIGHT(${cell},${text.length})=${literal}`;
     case 'isEmpty':
       return `LEN(TRIM(${cell}))=0`;
     case 'isNotEmpty':
@@ -249,19 +307,26 @@ export function getGridCellConditionExcelFormula(
   cell: string,
   columnType: string | undefined,
 ): string | null {
+  const isDate = isDateColumn(columnType);
   if (condition.type === 'text') {
+    if (isDate && !isEmptinessOperator(condition.operator)) {
+      return null;
+    }
     return getTextConditionExcelFormula(condition, cell);
   }
   if (condition.type !== 'cell') {
     return null;
   }
+  const resolved = isDate ? withDateValues(condition) : condition;
+  if (!isComparableCondition(resolved)) {
+    return null;
+  }
   // Excel stores dates as numbers: keep number conditions off date columns and the reverse, as in the grid.
-  const isDate = isDateColumn(columnType);
   if (
-    (condition.value instanceof Date && !isDate) ||
-    (typeof condition.value === 'number' && isDate)
+    (resolved.value instanceof Date && !isDate) ||
+    (typeof resolved.value === 'number' && isDate)
   ) {
     return null;
   }
-  return getValueConditionExcelFormula(condition, cell);
+  return getValueConditionExcelFormula(resolved, cell);
 }

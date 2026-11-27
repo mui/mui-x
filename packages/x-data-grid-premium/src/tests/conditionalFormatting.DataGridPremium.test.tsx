@@ -115,6 +115,62 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
     expect(getRuleIndexes(2, 1)).to.deep.equal([]);
   });
 
+  it('keeps date rules working through a JSON round trip of the state', () => {
+    render(
+      <Test
+        rows={[{ id: 0, day: new Date(2023, 5, 1) }]}
+        columns={[{ field: 'day', type: 'date' }]}
+        initialState={{
+          conditionalFormatting: {
+            model: [
+              {
+                type: 'highlight',
+                fields: ['day'],
+                condition: { type: 'cell', operator: 'lessThan', value: new Date(2024, 0, 1) },
+                style: { color: '#000000' },
+              },
+            ],
+          },
+        }}
+      />,
+    );
+    expect(getRuleIndexes(0, 0)).to.deep.equal([0]);
+
+    const saved = JSON.parse(JSON.stringify(apiRef.current?.exportState()));
+    act(() => apiRef.current?.setConditionalFormatting([]));
+    expect(getRuleIndexes(0, 0)).to.deep.equal([]);
+    act(() => apiRef.current?.restoreState(saved));
+    expect(getRuleIndexes(0, 0)).to.deep.equal([0]);
+  });
+
+  it('ignores a restored model that is not an array', async () => {
+    render(<Test />);
+    act(() => apiRef.current?.restoreState({ conditionalFormatting: { model: {} as any } }));
+    expect(getRuleIndexes(1, 1)).to.deep.equal([]);
+    expect(await act(() => apiRef.current?.getDataAsExcel())).not.to.equal(null);
+  });
+
+  it('formats the parent rows of tree data', () => {
+    render(
+      <Test
+        treeData
+        getTreeDataPath={(row) => row.path}
+        rows={[
+          { id: 0, path: ['a'], price: 50 },
+          { id: 1, path: ['a', 'b'], price: 60 },
+        ]}
+        columns={[{ field: 'price', type: 'number' }]}
+        defaultGroupingExpansionDepth={-1}
+        conditionalFormatting={expensive}
+      />,
+    );
+    const getPriceCell = (id: number) =>
+      document.querySelector(`[data-id="${id}"] [data-field="price"]`)!;
+
+    expect(getPriceCell(0).className).to.match(/MuiDataGrid-conditionalFormatting-\d+-0/);
+    expect(getPriceCell(1).className).to.match(/MuiDataGrid-conditionalFormatting-\d+-0/);
+  });
+
   it('exports and restores the rules with the state', () => {
     render(<Test />);
     expect(
@@ -272,6 +328,18 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
       expect(getRuleIndexes(0, 0)).to.deep.equal([]);
     });
 
+    it('has no effect with disableFormulas', () => {
+      render(
+        <Test
+          featureDependencies={{ formula: formulaFeature }}
+          disableFormulas
+          conditionalFormatting={formulaRule}
+        />,
+      );
+
+      expect(getRuleIndexes(1, 0)).to.deep.equal([]);
+    });
+
     it('warns without the formula feature', () => {
       expect(() => {
         render(<Test conditionalFormatting={formulaRule} />);
@@ -281,6 +349,27 @@ describe('<DataGridPremium /> - Conditional formatting', () => {
   });
 
   describe('Excel export', () => {
+    it('starts the formats below the column group headers and covers pinned rows', async () => {
+      render(
+        <Test
+          conditionalFormatting={expensive}
+          pinnedRows={{ top: [{ id: 'pinned', item: 'Pinned', price: 9, quantity: 1 }] }}
+          columnGroupingModel={[{ groupId: 'Prices', children: [{ field: 'price' }] }]}
+        />,
+      );
+
+      const workbook = await act(() =>
+        apiRef.current?.getDataAsExcel({ includeColumnGroupsHeaders: true }),
+      );
+      const worksheet = workbook!.worksheets[0] as unknown as {
+        conditionalFormattings: { ref: string }[];
+        getCell: (address: string) => { value: unknown };
+      };
+      const [{ ref }] = worksheet.conditionalFormattings;
+      expect(ref).to.equal('B3:B6');
+      expect(worksheet.getCell('B3').value).to.equal(9);
+    });
+
     it('exports the rules as conditional formats', async () => {
       render(
         <Test

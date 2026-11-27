@@ -36,7 +36,8 @@ A `cell` condition compares the value of the cell with `value`.
 The operators are `equal`, `notEqual`, `greaterThan`, `greaterThanOrEqual`, `lessThan`, `lessThanOrEqual`, `between` and `notBetween`.
 `between` and `notBetween` also read the upper bound from `valueTo`. Both bounds are inclusive.
 
-A number only matches number cells, a date only matches date cells, and a string only matches text cells.
+A number only matches number cells, a date only matches date cells, and a string only matches text cells. Boolean cells never match.
+On a date column, a date can also be an ISO string, as dates are once a saved state is parsed from JSON.
 Strings are compared case-insensitively.
 
 ```ts
@@ -47,6 +48,7 @@ Strings are compared case-insensitively.
 
 A `text` condition matches the text of the cell, case-insensitively.
 For columns that are not number, boolean or date columns, it reads the formatted value, like the label of a single select option.
+On date cells, only `isEmpty` and `isNotEmpty` match.
 The operators are `contains`, `notContains`, `startsWith`, `endsWith`, `isEmpty` and `isNotEmpty`.
 
 ```ts
@@ -65,6 +67,7 @@ It uses the [formula syntax](/x/react-data-grid/formula-syntax/) and can only re
 A formula reads the values of the cells, not their formatted text.
 
 Formula conditions need the formula feature, injected through the `featureDependencies` prop as described in [Enabling formulas](/x/react-data-grid/formulas/#enabling-formulas).
+Like formulas, they have no effect with `disableFormulas` or a `dataSource`.
 
 ## Styles
 
@@ -74,7 +77,7 @@ Colors are hex strings, such as `#c62828`. Other values are ignored.
 When several rules match a cell and set the same property, the first rule wins.
 Selected cells and rows keep the selection background.
 
-The rules apply to data rows, including pinned rows. Group rows and aggregation rows are not formatted.
+The rules apply to data rows, including pinned rows and the parent rows of tree data. Row grouping rows and aggregation rows are not formatted.
 
 ## Controlled rules
 
@@ -93,4 +96,5 @@ With a [web worker](/x/react-data-grid/export/#using-a-web-worker), an `exceljsP
 
 ## API
 
-- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
+- [`DataGridPremium`](/x/api/data-grid/data-grid-premium/)
+- [`GridApi`](/x/api/data-grid/grid-api/)

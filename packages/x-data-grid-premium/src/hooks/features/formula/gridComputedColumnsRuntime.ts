@@ -162,7 +162,7 @@ export function createSameRowEvaluationContext(
       if (colDef.computed) {
         return toResolvedValue(evaluateComputedCell(apiRef, row, ref.field));
       }
-      // The records hold the freshest cell-formula results — the state lookup is
+      // The records hold the freshest cell-formula results: the state lookup is
       // only written after a pass. A pass evaluates the formula cells a computed
       // cell reads before the formulas that read it, and drops the results of the
       // row each time one of them is evaluated.
