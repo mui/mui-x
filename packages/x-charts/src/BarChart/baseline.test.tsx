@@ -20,6 +20,39 @@ const config = {
 const OFFSET_WARNING =
   'MUI X Charts: The `baseline` of the bar series in the stack "a" is ignored because the stack does not use the \'diverging\' stack offset.';
 
+/** Bounds of a clip path made of `M`, `h`, `v` and `a` commands with relative endpoints. */
+function getClipPathBounds(d: string) {
+  let x = 0;
+  let y = 0;
+  const xs: number[] = [];
+  const ys: number[] = [];
+  for (const [, command, rawArgs] of d.matchAll(/([MhvaZ])([^MhvaZ]*)/g)) {
+    const args = rawArgs
+      .trim()
+      .split(/[\s,]+/)
+      .filter(Boolean)
+      .map(Number);
+    if (command === 'M') {
+      [x, y] = args;
+    } else if (command === 'h') {
+      x += args[0];
+    } else if (command === 'v') {
+      y += args[0];
+    } else if (command === 'a') {
+      x += args[5];
+      y += args[6];
+    }
+    xs.push(x);
+    ys.push(y);
+  }
+  return {
+    left: Math.min(...xs),
+    right: Math.max(...xs),
+    top: Math.min(...ys),
+    bottom: Math.max(...ys),
+  };
+}
+
 const STACK_CLAMP_WARNING =
   'MUI X Charts: A stacked bar series has a `baseline` outside the range between 0 and the value of a bar at the bottom of the stack.';
 
@@ -39,6 +72,31 @@ describe('BarChart - baseline', () => {
       width: Number(bar.getAttribute('width')),
       height: Number(bar.getAttribute('height')),
     }));
+  }
+
+  function getBarsAndClipBounds(props: Partial<BarChartProps> & Pick<BarChartProps, 'series'>) {
+    const { container } = render(<BarChart {...config} borderRadius={4} {...props} />);
+    const bars = Array.from(container.querySelectorAll(`.${barClasses.element}`), (bar) => ({
+      left: Number(bar.getAttribute('x')),
+      top: Number(bar.getAttribute('y')),
+      right: Number(bar.getAttribute('x')) + Number(bar.getAttribute('width')),
+      bottom: Number(bar.getAttribute('y')) + Number(bar.getAttribute('height')),
+    }));
+    const clips = Array.from(container.querySelectorAll('clipPath path'), (path) =>
+      getClipPathBounds(path.getAttribute('d') ?? ''),
+    );
+    return { bars, clips };
+  }
+
+  function expectClipToCoverBars({ bars, clips }: ReturnType<typeof getBarsAndClipBounds>) {
+    expect(clips).to.have.length(1);
+    const [clip] = clips;
+    bars.forEach((bar) => {
+      expect(clip.left).to.be.at.most(bar.left);
+      expect(clip.right).to.be.at.least(bar.right);
+      expect(clip.top).to.be.at.most(bar.top);
+      expect(clip.bottom).to.be.at.least(bar.bottom);
+    });
   }
 
   it('should treat values missing from a shorter series as null', () => {
@@ -219,6 +277,69 @@ describe('BarChart - baseline', () => {
 
       expect(bars[0]).to.include({ y: 25, height: 25 });
       expect(bars[1]).to.include({ y: 65, height: 0 });
+    });
+
+    it('should keep the clip path on a stack whose baseline is clamped', () => {
+      let result: ReturnType<typeof getBarsAndClipBounds> = { bars: [], clips: [] };
+      expect(() => {
+        result = getBarsAndClipBounds({
+          series: [
+            { data: [2], stack: 'a', baseline: 'max' },
+            { data: [3], stack: 'a' },
+          ],
+          xAxis: [{ data: ['A'], position: 'none' }],
+        });
+      }).toWarnDev(STACK_CLAMP_WARNING);
+
+      expectClipToCoverBars(result);
+    });
+
+    it('should keep the clip path on a mixed-sign stack whose baseline is clamped', () => {
+      let result: ReturnType<typeof getBarsAndClipBounds> = { bars: [], clips: [] };
+      expect(() => {
+        result = getBarsAndClipBounds({
+          series: [
+            { data: [5], stack: 'a', baseline: 2 },
+            { data: [-3], stack: 'a' },
+          ],
+          xAxis: [{ data: ['A'], position: 'none' }],
+          yAxis: [{ min: -10, max: 10, position: 'none' }],
+        });
+      }).toWarnDev(STACK_CLAMP_WARNING);
+
+      expectClipToCoverBars(result);
+    });
+
+    it('should keep the clip path on a negative stack whose baseline is clamped', () => {
+      let result: ReturnType<typeof getBarsAndClipBounds> = { bars: [], clips: [] };
+      expect(() => {
+        result = getBarsAndClipBounds({
+          series: [
+            { data: [-2], stack: 'a', baseline: 'min' },
+            { data: [-3], stack: 'a' },
+          ],
+          xAxis: [{ data: ['A'], position: 'none' }],
+          yAxis: [{ min: -10, max: 0, position: 'none' }],
+        });
+      }).toWarnDev(STACK_CLAMP_WARNING);
+
+      expectClipToCoverBars(result);
+    });
+
+    it('should keep the clip path on a horizontal stack whose baseline is clamped', () => {
+      let result: ReturnType<typeof getBarsAndClipBounds> = { bars: [], clips: [] };
+      expect(() => {
+        result = getBarsAndClipBounds({
+          series: [
+            { data: [2], stack: 'a', baseline: -5, layout: 'horizontal' },
+            { data: [3], stack: 'a', layout: 'horizontal' },
+          ],
+          xAxis: [{ min: -10, max: 10, position: 'none' }],
+          yAxis: [{ data: ['A'], position: 'none' }],
+        });
+      }).toWarnDev(STACK_CLAMP_WARNING);
+
+      expectClipToCoverBars(result);
     });
 
     it.each([

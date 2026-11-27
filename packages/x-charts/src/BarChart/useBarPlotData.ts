@@ -189,26 +189,29 @@ export function processBarDataForPlot(
           lastNegativePerIndex.set(dataIndex, result);
         }
 
-        if (!masks[result.maskId]) {
-          masks[result.maskId] = {
+        let mask = masks[result.maskId];
+        if (mask) {
+          const x = Math.min(mask.x, result.x);
+          const y = Math.min(mask.y, result.y);
+          mask.width = Math.max(mask.x + mask.width, result.x + result.width) - x;
+          mask.height = Math.max(mask.y + mask.height, result.y + result.height) - y;
+          mask.x = x;
+          mask.y = y;
+        } else {
+          mask = {
             id: result.maskId,
-            width: 0,
-            height: 0,
+            x: result.x,
+            y: result.y,
+            width: result.width,
+            height: result.height,
             hasNegative: false,
             hasPositive: false,
             layout,
             xOrigin,
             yOrigin,
-            x: 0,
-            y: 0,
           };
+          masks[result.maskId] = mask;
         }
-
-        const mask = masks[result.maskId];
-        mask.width = layout === 'vertical' ? result.width : mask.width + result.width;
-        mask.height = layout === 'vertical' ? mask.height + result.height : result.height;
-        mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
-        mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
 
         mask.hasNegative = mask.hasNegative || sign < 0;
         mask.hasPositive = mask.hasPositive || sign > 0;
@@ -321,8 +324,20 @@ export function processBarDataForPlot(
     });
   });
 
+  const masksData = Object.values(masks);
+  // The clip path grows from the origin. A clamped stack baseline can differ from the stack base.
+  for (const mask of masksData) {
+    if (mask.hasPositive !== mask.hasNegative) {
+      if (mask.layout === 'vertical') {
+        mask.yOrigin = mask.hasPositive ? mask.y + mask.height : mask.y;
+      } else {
+        mask.xOrigin = mask.hasPositive ? mask.x : mask.x + mask.width;
+      }
+    }
+  }
+
   return {
     completedData: data,
-    masksData: Object.values(masks),
+    masksData,
   };
 }
