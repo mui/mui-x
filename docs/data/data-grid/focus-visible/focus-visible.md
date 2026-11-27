@@ -21,7 +21,8 @@ See Material UI's [Focus visible](/material-ui/customization/focus-visible/) pa
 
 ## Usage
 
-When `focusVisible` is enabled, these elements show the focus ring: toolbar buttons, menu items, checkboxes, pagination controls, and the controls inside panels.
+When `focusVisible` is enabled, these elements show the focus ring: cells, column headers, the cell being edited, toolbar buttons, menu items, checkboxes, pagination controls, and the controls inside panels.
+Cells and column headers draw the ring inside their edges, so neighboring cells don't cover it.
 
 :::info
 The focus ring only shows when you use the keyboard. Clicking doesn't show it.
@@ -33,7 +34,10 @@ Press <kbd class="key">Tab</kbd> to move through the demo below.
 
 {{"demo": "FocusVisibleDataGrid.js", "bg": "inline"}}
 
-:::warning
-Cells and column headers keep their own focus style, and `theme.focusVisible` doesn't change it.
-This is because the Grid marks the active cell after a click too, not only after keyboard navigation.
+:::info
+A click on a cell keeps the Grid's thin outline, so you can still see which cell is active.
+The focus ring replaces it when you move with the keyboard.
+
+In Firefox, the arrow keys keep the thin outline after a click on a cell.
+Press <kbd class="key">Tab</kbd> to move into the Grid to see the focus ring.
 :::

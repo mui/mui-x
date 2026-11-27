@@ -1,5 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type { CSSInterpolation } from '@mui/system';
+import type { CSSObject, Theme } from '@mui/material/styles';
 import { styled, css } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c, gridClassesOverrides } from '../../constants/gridClasses';
@@ -26,6 +27,42 @@ const separatorIconDragStyles = {
 // https://github.com/emotion-js/emotion/issues/1105#issuecomment-1722524968
 const ignoreSsrWarning =
   '/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
+
+const focusRingOwner = ':has(.Mui-focusVisible)';
+const keyboardFocus = ':is(:focus-visible, :has(:focus-visible))';
+const notPinned = `:not(.${c['cell--pinnedLeft']}, .${c['cell--pinnedRight']})`;
+
+function getFocusVisibleStyles(theme: Theme): CSSObject {
+  const ringLayer: CSSObject = {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+    zIndex: 1,
+    ...((theme.applyFocusVisible?.('inset') ?? theme.focusVisible) as CSSObject),
+  };
+  const cell = `.${c.cell}${keyboardFocus}:not(.${c['cell--editing']}, ${focusRingOwner})`;
+  const header = `.${c.columnHeader}${keyboardFocus}:not(${focusRingOwner})`;
+  const editingCell = `.${c.cell}.${c['cell--editing']}:focus-within:not(${focusRingOwner})`;
+
+  return {
+    [`& ${cell}, & ${header}, & ${editingCell}`]: {
+      outline: 'none',
+    },
+    [`& ${cell}${notPinned}, & ${editingCell}${notPinned}`]: {
+      position: 'relative',
+    },
+    [`& ${cell}::before, & ${header}::before, & ${editingCell}::before`]: ringLayer,
+    [`& .${c.cell}:focus-within${focusRingOwner}, & .${c.columnHeader}:focus-within${focusRingOwner}`]:
+      {
+        outline: 'none',
+      },
+    [`& .${c['cell--editing']} .MuiInputBase-root.Mui-focused`]: {
+      outline: 'none',
+      boxShadow: 'none',
+    },
+  };
+}
 
 const shouldShowBorderTopRightRadiusSelector = (apiRef: RefObject<GridApiCommunity>) =>
   !apiRef.current.state.dimensions.isReady
@@ -56,7 +93,7 @@ export const GridRootStyles = styled('div', {
     });
     return overrides;
   },
-})<{ ownerState: OwnerState }>(({ ownerState }) => {
+})<{ ownerState: OwnerState }>(({ ownerState, theme }) => {
   const apiRef = useGridPrivateApiContext();
   const shouldShowBorderTopRightRadius = useGridSelector(
     apiRef,
@@ -282,6 +319,7 @@ export const GridRootStyles = styled('div', {
       outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
     },
+    ...(theme.focusVisible && getFocusVisibleStyles(theme)),
     // Pre-mounted editor (`imeFastEdit`). It must stay focusable, so do not use `display: none`
     // or `visibility: hidden`. Without offsets, it needs no positioned ancestor.
     [`& .${c.cell} > [data-cell-editor="preMounted"]`]: {
