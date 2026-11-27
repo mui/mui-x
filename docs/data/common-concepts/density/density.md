@@ -10,6 +10,10 @@ Material UI v9.6 adds a theme enhancer that sizes its components from one [dens
 Each MUI X package has a matching enhancer.
 With both applied, the Data Grid, Date and Time Pickers, Tree View, and Charts use the same spacing steps, control heights, and icon size as the Material UI components around them.
 
+Select a density and a component to compare how the scale resizes it:
+
+{{"demo": "DensityDemo.js", "bg": "inline"}}
+
 ## Apply density
 
 Apply the Material UI enhancer first, then the enhancer of each MUI X product you use:
