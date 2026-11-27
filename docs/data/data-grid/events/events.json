@@ -238,6 +238,13 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "conditionalFormattingChange",
+    "description": "Fired when the conditional formatting rules change.",
+    "params": "GridConditionalFormattingModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "debouncedResize",
     "description": "Fired when the grid is resized with a debounced time of 60ms.",

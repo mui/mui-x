@@ -84,6 +84,9 @@
     "computedColumns": {
       "description": "Set the computed columns of the grid: read-only columns whose value is a formula evaluated for every row from the other fields of the same row. Has no effect unless the formula feature is provided through <code>featureDependencies</code>."
     },
+    "conditionalFormatting": {
+      "description": "Set the conditional formatting rules of the grid: styles applied to the cells that match a condition. Rules with a <code>formula</code> condition have no effect unless the formula feature is provided through <code>featureDependencies</code>."
+    },
     "dataSource": { "description": "Data source object." },
     "dataSourceCache": { "description": "Data source cache object." },
     "dataSourceKeepPreviousData": {
@@ -672,6 +675,13 @@
       "description": "Callback fired when the computed columns model changes.",
       "typeDescriptions": {
         "model": { "name": "model", "description": "The new computed columns model." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
+      }
+    },
+    "onConditionalFormattingChange": {
+      "description": "Callback fired when the conditional formatting rules change.",
+      "typeDescriptions": {
+        "model": { "name": "model", "description": "The new conditional formatting rules." },
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },

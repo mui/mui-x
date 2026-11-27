@@ -280,6 +280,10 @@ const pages: MuiPage[] = [
                 title: 'Computed columns',
               },
               {
+                pathname: '/x/react-data-grid/conditional-formatting',
+                title: 'Conditional formatting',
+              },
+              {
                 pathname: '/x/react-data-grid/formula-syntax',
                 title: 'Syntax reference',
               },

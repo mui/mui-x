@@ -183,6 +183,7 @@
     },
     "setColumnWidth": { "description": "Updates the width of a column." },
     "setComputedColumns": { "description": "Sets the computed columns model." },
+    "setConditionalFormatting": { "description": "Sets the conditional formatting rules." },
     "setDensity": { "description": "Sets the density of the grid." },
     "setEditCellValue": {
       "description": "Sets the value of the edit cell.<br />Commonly used inside the edit cell component."

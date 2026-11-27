@@ -37,6 +37,10 @@ import type {
   GridComputedColumnsInternalCache,
   GridComputedColumnsModel,
 } from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
+import type {
+  GridConditionalFormattingInternalCache,
+  GridConditionalFormattingModel,
+} from '../hooks/features/conditionalFormatting/gridConditionalFormattingInterfaces';
 
 export interface GridControlledStateEventLookupPremium {
   /**
@@ -80,6 +84,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the computed columns model changes.
    */
   computedColumnsChange: { params: GridComputedColumnsModel };
+  /**
+   * Fired when the conditional formatting rules change.
+   */
+  conditionalFormattingChange: { params: GridConditionalFormattingModel };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {
@@ -204,6 +212,7 @@ export interface GridApiCachesPremium extends GridApiCachesPro {
   aggregation: GridAggregationInternalCache;
   formula?: GridFormulaInternalCache;
   computedColumns: GridComputedColumnsInternalCache;
+  conditionalFormatting: GridConditionalFormattingInternalCache;
 }
 
 export interface GridPipeProcessingLookupPremium {

@@ -99,6 +99,11 @@ import { findComputedColumnCellCycle } from './gridFormulaDraftCycles';
 import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 import { useGridFormulaReferencePicking } from './useGridFormulaReferencePicking';
 import { clearFormulaPickSession } from './gridFormulaReferencePicking';
+import type { GridCellConditionPrivateApi } from '../cellCondition/gridCellConditionInterfaces';
+import {
+  evaluateCellFormulaCondition,
+  getCellFormulaConditionExcelFormula,
+} from './gridCellConditionFormula';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
@@ -731,6 +736,25 @@ export const useGridFormula = (
   };
 
   useGridApiMethod(apiRef, formulaPrivateApi, 'private');
+
+  // Formula conditions follow the formulas of the grid: off with `disableFormulas` or a `dataSource`.
+  const cellFormulaConditionsEnabled = !props.disableFormulas && !props.dataSource;
+  const cellConditionPrivateApi: GridCellConditionPrivateApi = {
+    evaluateCellFormulaCondition: React.useCallback(
+      (formula, row) =>
+        cellFormulaConditionsEnabled && evaluateCellFormulaCondition(apiRef, formula, row),
+      [apiRef, cellFormulaConditionsEnabled],
+    ),
+    getCellFormulaConditionExcelFormula: React.useCallback(
+      (formula, fieldToColumnLetter, rowNumber) =>
+        cellFormulaConditionsEnabled
+          ? getCellFormulaConditionExcelFormula(apiRef, formula, fieldToColumnLetter, rowNumber)
+          : null,
+      [apiRef, cellFormulaConditionsEnabled],
+    ),
+  };
+
+  useGridApiMethod(apiRef, cellConditionPrivateApi, 'private');
 
   const validateComputedColumnDefinitionMethod = React.useCallback<
     GridComputedColumnsPrivateApi['validateComputedColumnDefinition']

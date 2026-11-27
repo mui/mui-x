@@ -50,6 +50,7 @@ import type {
   GridComputedColumnDefinition,
   GridComputedColumnsModel,
 } from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
+import type { GridConditionalFormattingModel } from '../hooks/features/conditionalFormatting/gridConditionalFormattingInterfaces';
 import type { GridPremiumFeatureDependencies } from './gridFeatureDependencies';
 import type { GridClipboardPasteOptions } from './gridClipboardPasteOptions';
 
@@ -283,6 +284,20 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
   computedColDef?:
     | GridComputedColDefOverrides
     | ((definition: GridComputedColumnDefinition) => GridComputedColDefOverrides);
+  /**
+   * Set the conditional formatting rules of the grid: styles applied to the cells that match a condition.
+   * Rules with a `formula` condition have no effect unless the formula feature is provided through `featureDependencies`.
+   */
+  conditionalFormatting?: GridConditionalFormattingModel;
+  /**
+   * Callback fired when the conditional formatting rules change.
+   * @param {GridConditionalFormattingModel} model The new conditional formatting rules.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onConditionalFormattingChange?: (
+    model: GridConditionalFormattingModel,
+    details: GridCallbackDetailsPremium,
+  ) => void;
   /**
    * Set the row grouping model of the grid.
    */

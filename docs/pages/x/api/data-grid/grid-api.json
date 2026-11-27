@@ -409,6 +409,11 @@
       "required": true,
       "isPremiumPlan": true
     },
+    "setConditionalFormatting": {
+      "type": { "description": "(model: GridConditionalFormattingModel) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "setDensity": {
       "type": { "description": "(density: GridDensity) =&gt; void" },
       "required": true

@@ -21,6 +21,7 @@ import {
 } from './utils';
 import type { FormulaExcelExportLayout } from '../../formula/gridFormulaExcelExport';
 import type { SerializedColumns, SerializedRow, ValueOptionsData } from './utils';
+import { getConditionalFormattingExcelExport } from '../../conditionalFormatting/gridConditionalFormattingUtils';
 
 export type { ExcelExportInitEvent } from './utils';
 
@@ -392,6 +393,7 @@ export async function buildExcel(
         includeColumnGroupsHeaders,
       }) ?? null);
 
+  const firstDataRowNumber = worksheet.rowCount + 1;
   apiRef.current.resetColSpan();
   rowIds.forEach((id) => {
     const serializedRow = serializeRowUnsafe(
@@ -405,6 +407,10 @@ export async function buildExcel(
     addSerializedRowToWorksheet(serializedRow, worksheet);
   });
   apiRef.current.resetColSpan();
+
+  getConditionalFormattingExcelExport(apiRef, columns, rowIds, firstDataRowNumber).forEach(
+    (conditionalFormatting) => worksheet.addConditionalFormatting(conditionalFormatting),
+  );
 
   if (exceljsPostProcess) {
     await exceljsPostProcess({

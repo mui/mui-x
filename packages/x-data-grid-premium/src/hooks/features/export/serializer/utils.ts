@@ -147,6 +147,7 @@ export interface ExcelExportInitEvent {
   columnGroupPaths: Record<string, string[]>;
   columnGroupDetails: GridColumnGroupLookup;
   valueOptionsData: ValueOptionsData;
+  conditionalFormatting?: Excel.ConditionalFormattingOptions[];
   options: Omit<
     GridExcelExportOptions,
     'exceljsPreProcess' | 'exceljsPostProcess' | 'columnsStyles' | 'valueOptionsSheetName'

@@ -24,6 +24,8 @@ export type {
   GridFormulaValidationResult,
 } from './formula';
 export * from './computedColumns';
+export * from './cellCondition';
+export * from './conditionalFormatting';
 export * from './rowGrouping';
 export * from './export';
 export * from './cellSelection';

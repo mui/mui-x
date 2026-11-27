@@ -23,7 +23,7 @@ import {
   getFormulaExpression,
   toFormulaText,
 } from './engine';
-import type { FormulaErrorValue, FormulaScalar } from './engine';
+import type { FormulaErrorValue, FormulaEvaluationContext, FormulaScalar } from './engine';
 import { EMPTY_POSITION_CONTEXT } from './gridFormulaPositionContext';
 import {
   applyComputedColDefOverrides,
@@ -141,6 +141,45 @@ function isLockedByCycle(
 }
 
 /**
+ * The evaluation context of a formula that only references the same row.
+ * Only same-row field references reach `getCellValue`: callers reject every other kind first.
+ */
+export function createSameRowEvaluationContext(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  cache: GridFormulaInternalCache,
+  row: GridValidRowModel,
+  id: GridRowId,
+  field: string,
+): FormulaEvaluationContext {
+  const columnsLookup = gridColumnLookupSelector(apiRef);
+  return {
+    currentCell: { id, field },
+    getCellValue: (ref) => {
+      const colDef = columnsLookup[ref.field];
+      if (colDef === undefined) {
+        return undefined;
+      }
+      if (colDef.computed) {
+        return toResolvedValue(evaluateComputedCell(apiRef, row, ref.field));
+      }
+      // The records hold the freshest cell-formula results: the state lookup is
+      // only written after a pass. A pass evaluates the formula cells a computed
+      // cell reads before the formulas that read it, and drops the results of the
+      // row each time one of them is evaluated.
+      const formulaRecord = cache.records.get(createFormulaCellKey(id, ref.field));
+      if (formulaRecord !== undefined) {
+        return toResolvedValue(formulaRecord.result);
+      }
+      return getRowValueUtil(row, colDef, apiRef) as FormulaScalar;
+    },
+    hasRow: () => true,
+    hasField: (referencedField) => columnsLookup[referencedField] !== undefined,
+    position: EMPTY_POSITION_CONTEXT,
+    functions: cache.registry,
+  };
+}
+
+/**
  * Evaluates one computed cell. The result is memoized by row identity, so each
  * (row, column) pair walks its AST once until the row or the definitions change.
  */
@@ -180,35 +219,8 @@ export function evaluateComputedCell(
   let result: GridFormulaResult | undefined;
   try {
     const id = gridRowIdSelector(apiRef, row);
-    const columnsLookup = gridColumnLookupSelector(apiRef);
     result = coerceComputedResult(
-      evaluateFormula(record.ast!, {
-        currentCell: { id, field },
-        // Only same-row field references reach the resolver: every other kind of
-        // reference makes the record static.
-        getCellValue: (ref) => {
-          const colDef = columnsLookup[ref.field];
-          if (colDef === undefined) {
-            return undefined;
-          }
-          if (colDef.computed) {
-            return toResolvedValue(evaluateComputedCell(apiRef, row, ref.field));
-          }
-          // The records hold the freshest cell-formula results — the state lookup is
-          // only written after a pass. A pass evaluates the formula cells a computed
-          // cell reads before the formulas that read it, and drops the results of the
-          // row each time one of them is evaluated.
-          const formulaRecord = cache.records.get(createFormulaCellKey(id, ref.field));
-          if (formulaRecord !== undefined) {
-            return toResolvedValue(formulaRecord.result);
-          }
-          return getRowValueUtil(row, colDef, apiRef) as FormulaScalar;
-        },
-        hasRow: () => true,
-        hasField: (referencedField) => columnsLookup[referencedField] !== undefined,
-        position: EMPTY_POSITION_CONTEXT,
-        functions: cache.registry,
-      }),
+      evaluateFormula(record.ast!, createSameRowEvaluationContext(apiRef, cache, row, id, field)),
       record.definition.type,
     );
   } finally {
