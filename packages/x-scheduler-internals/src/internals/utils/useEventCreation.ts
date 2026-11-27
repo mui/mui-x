@@ -8,7 +8,7 @@ import type {
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 
-interface GetCreationPlaceholderParams {
+export interface GetCreationPlaceholderParams {
   event: React.MouseEvent<HTMLDivElement>;
   creationConfig: SchedulerEventCreationConfig;
   /**

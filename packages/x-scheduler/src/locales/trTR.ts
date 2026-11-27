@@ -54,6 +54,8 @@ const trTRDialog: SchedulerDialogTranslations = {
   editEvent: 'Etkinliği düzenle',
   showEventDetails: 'Ayrıntıları göster',
   eventContextMenuAriaLabel: 'Etkinlik işlemleri',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'Açıklama',
   endDateLabel: 'Bitiş tarihi',
   endTimeLabel: 'Bitiş saati',

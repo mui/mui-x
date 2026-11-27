@@ -19,6 +19,7 @@ import {
   SchedulerDirectionProvider,
   eventDialogSlots,
   eventContextMenuSlots,
+  gridContextMenuSlots,
   EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
@@ -86,6 +87,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     errorMessage: ['errorMessage'],
     ...eventDialogSlots,
     ...eventContextMenuSlots,
+    ...gridContextMenuSlots,
   };
 
   return composeClasses(slots, getEventTimelinePremiumUtilityClass, classes);

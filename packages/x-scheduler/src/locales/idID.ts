@@ -62,6 +62,8 @@ const idIDDialog: SchedulerDialogTranslations = {
   editEvent: 'Edit acara',
   showEventDetails: 'Tampilkan detail',
   eventContextMenuAriaLabel: 'Tindakan acara',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'Deskripsi',
   endDateLabel: 'Tanggal selesai',
   endTimeLabel: 'Waktu selesai',

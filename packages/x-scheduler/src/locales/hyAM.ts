@@ -26,6 +26,8 @@ const hyAMDialog: SchedulerDialogTranslations = {
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   // descriptionLabel: 'Description',
   // endDateLabel: 'End date',
   // endTimeLabel: 'End time',

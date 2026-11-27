@@ -22,6 +22,7 @@ import {
   FormContent,
 } from '../event-editing';
 import { EventContextMenuProvider } from '../event-context-menu';
+import { GridContextMenuProvider } from '../grid-context-menu';
 import { useDraggableAnchoredPaper } from '../../hooks/useDraggableAnchoredPaper';
 import { dialogRootBaseStyles, getDialogPaperBaseStyles } from '../../constants/dialogStyles';
 import { AnchoredEventToolbar } from '../event-toolbar';
@@ -170,7 +171,9 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
     >
       <EventEditingProvider surface="dialog">
         <DeleteConfirmationDialogHostContext.Provider value>
-          <EventContextMenuProvider>{children}</EventContextMenuProvider>
+          <GridContextMenuProvider>
+            <EventContextMenuProvider>{children}</EventContextMenuProvider>
+          </GridContextMenuProvider>
         </DeleteConfirmationDialogHostContext.Provider>
         <AnchoredEventToolbarSurface />
         <EventDialogSurface />

@@ -907,6 +907,18 @@
       "isGlobal": false
     },
     {
+      "key": "gridContextMenu",
+      "className": "MuiEventCalendar-gridContextMenu",
+      "description": "Styles applied to the grid context menu root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "gridContextMenuNewEventItem",
+      "className": "MuiEventCalendar-gridContextMenuNewEventItem",
+      "description": "Styles applied to the grid context menu new event item element.",
+      "isGlobal": false
+    },
+    {
       "key": "headerToolbar",
       "className": "MuiEventCalendar-headerToolbar",
       "description": "Styles applied to the header toolbar element.",

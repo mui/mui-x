@@ -8,6 +8,7 @@ import { toEpochMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
+import { useEventCreationContextMenu } from '../../internals/utils/useEventCreationContextMenu';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
@@ -65,6 +66,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   const eventCreationProps = useEventCreation(getPlaceholderFields);
   const triggerKeyboardCreation = useKeyboardEventCreation(getPlaceholderFields);
+  const contextMenuProps = useEventCreationContextMenu(getPlaceholderFields);
 
   // Apply DOM focus when this cell becomes the focused cell
   React.useEffect(() => {
@@ -128,6 +130,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
       },
       keyboardProps,
       eventCreationProps,
+      contextMenuProps,
       restElementProps,
     ],
   });

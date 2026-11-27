@@ -26,6 +26,8 @@ const plPLDialog: SchedulerDialogTranslations = {
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'Opis',
   endDateLabel: 'Data zakończenia',
   endTimeLabel: 'Godzina zakończenia',

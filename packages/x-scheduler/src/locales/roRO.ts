@@ -26,6 +26,8 @@ const roRODialog: SchedulerDialogTranslations = {
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'Descriere',
   endDateLabel: 'Data de sfârșit',
   endTimeLabel: 'Ora de sfârșit',

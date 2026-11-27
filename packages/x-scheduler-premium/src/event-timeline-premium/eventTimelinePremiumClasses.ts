@@ -3,18 +3,25 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import type {
   EventDialogClasses,
   EventContextMenuClasses,
+  GridContextMenuClasses,
   ErrorContainerClasses,
   EventSkeletonClasses,
 } from '@mui/x-scheduler/internals';
 import {
   eventDialogClassKeys,
   eventContextMenuClassKeys,
+  gridContextMenuClassKeys,
   errorContainerClassKeys,
   eventSkeletonClassKeys,
 } from '@mui/x-scheduler/internals';
 
 export interface EventTimelinePremiumClasses
-  extends EventDialogClasses, EventContextMenuClasses, ErrorContainerClasses, EventSkeletonClasses {
+  extends
+    EventDialogClasses,
+    EventContextMenuClasses,
+    GridContextMenuClasses,
+    ErrorContainerClasses,
+    EventSkeletonClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the content section element. */
@@ -153,5 +160,6 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     ...eventSkeletonClassKeys,
     ...eventDialogClassKeys,
     ...eventContextMenuClassKeys,
+    ...gridContextMenuClassKeys,
   ],
 );

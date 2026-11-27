@@ -2,11 +2,12 @@
 import * as React from 'react';
 import type { EventDialogClasses } from '../event-dialog/eventDialogClasses';
 import type { EventContextMenuClasses } from '../event-context-menu/eventContextMenuClasses';
+import type { GridContextMenuClasses } from '../grid-context-menu/gridContextMenuClasses';
 import type { EventEditingLocaleText } from '../../../models/translations';
 
 export interface EventEditingStyledContextValue {
   schedulerId: string | undefined;
-  classes: EventDialogClasses & EventContextMenuClasses;
+  classes: EventDialogClasses & EventContextMenuClasses & GridContextMenuClasses;
   localeText: EventEditingLocaleText;
 }
 

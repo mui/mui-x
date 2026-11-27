@@ -47,6 +47,8 @@ const arSDDialog: SchedulerDialogTranslations = {
   editEvent: 'تعديل الحدث',
   showEventDetails: 'إظهار التفاصيل',
   eventContextMenuAriaLabel: 'إجراءات الحدث',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'الوصف',
   endDateLabel: 'تاريخ الانتهاء',
   endTimeLabel: 'وقت الانتهاء',
