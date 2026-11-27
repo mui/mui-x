@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import type { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
@@ -29,21 +29,14 @@ const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   },
 ];
 
-export default function FocusVisibleTreeView() {
-  // Inherit the theme from the docs site (dark/light mode)
-  const existingTheme = useTheme();
-  const theme = React.useMemo(
-    () =>
-      createTheme(
-        {
-          focusVisible: true,
-          components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
-        },
-        existingTheme,
-      ),
-    [existingTheme],
-  );
+const theme = createTheme({
+  cssVariables: { colorSchemeSelector: 'data-mui-color-scheme' },
+  colorSchemes: { light: true, dark: true },
+  focusVisible: true,
+  components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+});
 
+export default function FocusVisibleTreeView() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ minHeight: 260, minWidth: 300 }}>

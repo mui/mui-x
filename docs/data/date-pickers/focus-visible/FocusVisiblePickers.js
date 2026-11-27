@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -25,21 +25,14 @@ const shortcutsItems = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-export default function FocusVisiblePickers() {
-  // Inherit the theme from the docs site (dark/light mode)
-  const existingTheme = useTheme();
-  const theme = React.useMemo(
-    () =>
-      createTheme(
-        {
-          focusVisible: true,
-          components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
-        },
-        existingTheme,
-      ),
-    [existingTheme],
-  );
+const theme = createTheme({
+  cssVariables: { colorSchemeSelector: 'data-mui-color-scheme' },
+  colorSchemes: { light: true, dark: true },
+  focusVisible: true,
+  components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+});
 
+export default function FocusVisiblePickers() {
   const value = dayjs().date(15).startOf('day').hour(9).minute(30);
   const range = [value, value.add(4, 'day').hour(17)];
 

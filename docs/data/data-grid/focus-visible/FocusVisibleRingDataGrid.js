@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -16,28 +16,21 @@ const rows = Array.from({ length: 4 }, (_, index) => ({
   score: (index * 7) % 40,
 }));
 
-export default function FocusVisibleRingDataGrid() {
-  // Inherit the theme from the docs site (dark/light mode)
-  const existingTheme = useTheme();
-  const theme = React.useMemo(() => {
-    const surface = (existingTheme.vars || existingTheme).palette.background.paper;
-    return createTheme(
-      {
-        focusVisible: {
-          outlineWidth: 2,
-          outlineOffset: 1,
-          boxShadow: `0 0 0 1px ${surface}`,
-          insetOverrides: { boxShadow: `inset 0 0 0 3px ${surface}` },
-        },
-        components: {
-          MuiButtonBase: { defaultProps: { disableRipple: true } },
-          MuiCheckbox: { defaultProps: { disableRipple: true } },
-        },
-      },
-      existingTheme,
-    );
-  }, [existingTheme]);
+const theme = createTheme({
+  cssVariables: { colorSchemeSelector: 'data-mui-color-scheme' },
+  colorSchemes: { light: true, dark: true },
+  focusVisible: {
+    outlineWidth: 2,
+    outlineOffset: 1,
+    boxShadow: '0 0 0 1px var(--mui-palette-background-paper)',
+    insetOverrides: {
+      boxShadow: 'inset 0 0 0 3px var(--mui-palette-background-paper)',
+    },
+  },
+  components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+});
 
+export default function FocusVisibleRingDataGrid() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: 260, width: '100%' }}>

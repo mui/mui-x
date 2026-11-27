@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import type { GridColDef } from '@mui/x-data-grid-premium';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
@@ -17,24 +17,14 @@ const rows = Array.from({ length: 24 }, (_, index) => ({
   score: (index * 7) % 40,
 }));
 
-export default function FocusVisibleDataGrid() {
-  // Inherit the theme from the docs site (dark/light mode)
-  const existingTheme = useTheme();
-  const theme = React.useMemo(
-    () =>
-      createTheme(
-        {
-          focusVisible: true,
-          components: {
-            MuiButtonBase: { defaultProps: { disableRipple: true } },
-            MuiCheckbox: { defaultProps: { disableRipple: true } },
-          },
-        },
-        existingTheme,
-      ),
-    [existingTheme],
-  );
+const theme = createTheme({
+  cssVariables: { colorSchemeSelector: 'data-mui-color-scheme' },
+  colorSchemes: { light: true, dark: true },
+  focusVisible: true,
+  components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+});
 
+export default function FocusVisibleDataGrid() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: 460, width: '100%' }}>

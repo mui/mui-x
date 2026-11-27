@@ -1,31 +1,27 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-export default function FocusVisibleRingPickers() {
-  // Inherit the theme from the docs site (dark/light mode)
-  const existingTheme = useTheme();
-  const theme = React.useMemo(() => {
-    const surface = (existingTheme.vars || existingTheme).palette.background.paper;
-    return createTheme(
-      {
-        focusVisible: {
-          outlineWidth: 2,
-          outlineOffset: 1,
-          boxShadow: `0 0 0 1px ${surface}`,
-          insetOverrides: { boxShadow: `inset 0 0 0 3px ${surface}` },
-        },
-        components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
-      },
-      existingTheme,
-    );
-  }, [existingTheme]);
+const theme = createTheme({
+  cssVariables: { colorSchemeSelector: 'data-mui-color-scheme' },
+  colorSchemes: { light: true, dark: true },
+  focusVisible: {
+    outlineWidth: 2,
+    outlineOffset: 1,
+    boxShadow: '0 0 0 1px var(--mui-palette-background-paper)',
+    insetOverrides: {
+      boxShadow: 'inset 0 0 0 3px var(--mui-palette-background-paper)',
+    },
+  },
+  components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+});
 
+export default function FocusVisibleRingPickers() {
   const value = dayjs().date(15).startOf('day');
 
   return (
