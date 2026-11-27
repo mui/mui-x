@@ -1,15 +1,15 @@
 import type { RefObject } from '@mui/x-internals/types';
-import type { GridColDef, GridValidRowModel } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridSingleSelectColDef, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { isGroupingColumn } from '@mui/x-data-grid-pro/internals';
 import {
   FORMULA_BUILT_IN_FUNCTIONS,
   createFormulaFunctionRegistry,
   createFormulaParser,
 } from './engine';
-import type { FormulaCellRef, FormulaScalar } from './engine';
+import type { FormulaScalar } from './engine';
 import type {
   GridComputedColumnsRuntimeCache,
-  GridFormulaFormattedReads,
+  GridFormulaFormattedRead,
   GridFormulaFunctionDefinition,
   GridFormulaInternalCache,
 } from './gridFormulaInterfaces';
@@ -79,6 +79,8 @@ export function createFormulaInternalCache(
     typeChangeReset: null,
     trackedValues: new Map(),
     formattedReads: new Map(),
+    formattedReadsByReader: new Map(),
+    formattedColumnInputs: new Map(),
     lastRowIdToModelLookup: null,
     formulaFields: [],
     lastColumnsSignature: new Map(),
@@ -125,6 +127,7 @@ export function resetFormulaEvaluationCache(cache: GridFormulaInternalCache) {
   cache.positionContextFields = null;
   cache.trackedValues = new Map();
   cache.formattedReads = new Map();
+  cache.formattedReadsByReader = new Map();
   cache.lastRowIdToModelLookup = null;
 }
 
@@ -255,26 +258,57 @@ export function formatFormulaCellValue(
 }
 
 /**
- * `formatFormulaCellValue`, recording the read so that `isFormattedReadStale` can re-check it.
+ * `Object.is`, with dates compared by time.
  */
-export function readFormattedCellValue(
+export function areFormulaValuesEqual(a: unknown, b: unknown): boolean {
+  return Object.is(a, b) || (a instanceof Date && b instanceof Date && a.getTime() === b.getTime());
+}
+
+function getFormattedColumnInputs(colDef: GridColDef | undefined): readonly unknown[] {
+  const selectColDef = colDef as Partial<GridSingleSelectColDef> | undefined;
+  return [
+    colDef?.valueFormatter,
+    selectColDef?.valueOptions,
+    selectColDef?.getOptionLabel,
+    selectColDef?.getOptionValue,
+  ];
+}
+
+/**
+ * Formats the value of `read` into it, and snapshots the formatting inputs of its column.
+ */
+export function recordFormattedRead(
   apiRef: RefObject<GridPrivateApiPremium>,
-  reads: GridFormulaFormattedReads,
-  ref: FormulaCellRef,
+  read: GridFormulaFormattedRead,
   row: GridValidRowModel | undefined,
   colDef: GridColDef | undefined,
-  value: FormulaScalar,
 ): FormulaScalar {
-  const rowKey = String(ref.id);
-  let rowReads = reads.get(rowKey);
-  if (rowReads === undefined) {
-    rowReads = new Map();
-    reads.set(rowKey, rowReads);
+  const inputs = apiRef.current.caches.formula?.formattedColumnInputs;
+  if (inputs !== undefined && colDef !== undefined && !inputs.has(colDef.field)) {
+    inputs.set(colDef.field, getFormattedColumnInputs(colDef));
   }
-  const read = { value, formatted: undefined as unknown };
-  rowReads.set(ref.field, read);
-  read.formatted = formatFormulaCellValue(apiRef, row, colDef, value);
+  read.formatted = undefined;
+  read.formatted = formatFormulaCellValue(apiRef, row, colDef, read.value as FormulaScalar);
   return read.formatted as FormulaScalar;
+}
+
+/**
+ * Tells whether a field read through `FORMATTED(...)` got new formatting inputs since the
+ * last check, and records them.
+ */
+export function haveFormattedColumnInputsChanged(
+  cache: GridFormulaInternalCache,
+  columnsLookup: Record<string, GridColDef>,
+): boolean {
+  let changed = false;
+  for (const [field, previous] of cache.formattedColumnInputs) {
+    const next = getFormattedColumnInputs(columnsLookup[field]);
+    if (next.some((input, index) => input !== previous[index])) {
+      cache.formattedColumnInputs.set(field, next);
+      changed = true;
+    }
+  }
+  return changed;
 }
 
 /**
@@ -284,7 +318,7 @@ export function isFormattedReadStale(
   apiRef: RefObject<GridPrivateApiPremium>,
   row: GridValidRowModel | undefined,
   colDef: GridColDef | undefined,
-  read: { value: unknown; formatted: unknown },
+  read: GridFormulaFormattedRead,
 ): boolean {
   let formatted: unknown;
   try {
@@ -292,5 +326,5 @@ export function isFormattedReadStale(
   } catch {
     formatted = undefined;
   }
-  return !Object.is(formatted, read.formatted);
+  return !areFormulaValuesEqual(formatted, read.formatted);
 }

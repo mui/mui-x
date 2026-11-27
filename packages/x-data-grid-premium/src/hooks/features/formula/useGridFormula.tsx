@@ -79,6 +79,7 @@ import {
   areFormulaFunctionRecordsEqual,
   computeColumnsSignature,
   haveComputedInputsChanged,
+  haveFormattedColumnInputsChanged,
   ensureFormulaInternalCache,
   getEffectiveFormulaFunctions,
   getFormulaFields,
@@ -91,6 +92,7 @@ import {
   evictComputedResultsForRows,
   haveComputedColDefOverridesChanged,
   haveComputedFormattedReadsChanged,
+  pruneComputedFormattedReads,
   resetComputedResults,
 } from './gridComputedColumnsRuntime';
 import {
@@ -788,12 +790,13 @@ export const useGridFormula = (
     // after this one in the same cascade and must read fresh formula values.
     // No aggregation/row-spanning refresh: both recompute later in the
     // cascade, on `filteredRowsSet`/`sortedRowsSet`.
+    pruneComputedFormattedReads(apiRef);
     triggerDependentFeatures(runPass('diff'), {
       aggregation: false,
       rowSpanning: false,
       insideRowsSet: true,
     });
-  }, [runPass, triggerDependentFeatures]);
+  }, [apiRef, runPass, triggerDependentFeatures]);
 
   const handleSortedRowsSet = React.useCallback<GridEventListener<'sortedRowsSet'>>(() => {
     // One-shot rebind (D4): position-dependent formulas re-evaluate against
@@ -981,14 +984,22 @@ export const useGridFormula = (
       cache.lastColumnsSignature,
     );
     // A new label or `valueFormatter` keeps the signature but changes what `FORMATTED()` reads.
-    const computedFormattedChanged = haveComputedFormattedReadsChanged(apiRef, cache);
+    // The reads are only re-checked when a field read through it got new formatting inputs.
+    const formattedColumnsChanged = haveFormattedColumnInputsChanged(
+      cache,
+      gridColumnLookupSelector(apiRef),
+    );
+    const computedFormattedChanged =
+      formattedColumnsChanged && haveComputedFormattedReadsChanged(apiRef, cache);
     if (!fieldsChanged && !signatureChanged && !computedFormattedChanged) {
       // The column set is stable, but columns may have moved: visibility
       // toggles and reorders (programmatic `setColumnIndex` included) all
       // funnel through this event. The rebind pass compares the visible
       // field order itself and exits cheaply when nothing moved.
       triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: false });
-      triggerDependentFeatures(runPass('formatted'), { aggregation: true, rowSpanning: false });
+      if (formattedColumnsChanged) {
+        triggerDependentFeatures(runPass('formatted'), { aggregation: true, rowSpanning: false });
+      }
       // A record rebuilt with the same getters (a new name or format) leaves the grouping
       // columns that copy from it stale. The nested `columnsChange` of the extra hydration finds
       // the identities recorded. A type change rebuilds the getters, so it takes the other

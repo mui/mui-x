@@ -22,6 +22,7 @@ import type {
   FormulaRowSelector,
 } from './engine';
 import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionContext';
+import { gridCellFormulaResultSelector } from './gridFormulaSelectors';
 
 const RAW_EXPORT_COLUMN_TYPES = new Set(['number', 'date', 'dateTime', 'boolean']);
 
@@ -159,7 +160,7 @@ export function getCellExcelFormula(
   // exporting it verbatim would hand untrusted row data a live formula that
   // Excel evaluates on recalc (formula injection). Fall back to the evaluated
   // value instead — the export then shows exactly what the grid shows.
-  const { ranges, calls, formattedColumns } = extractFormulaDependencies(ast);
+  const { ranges, calls, formattedRefs } = extractFormulaDependencies(ast);
   const registry = apiRef.current.caches.formula!.registry;
   for (const name of calls) {
     if (registry.get(name) === undefined) {
@@ -167,15 +168,35 @@ export function getCellExcelFormula(
     }
   }
 
-  // These types export their raw value, so a live reference would not read the formatted one.
+  // A live reference reads the exported value: the raw one for these types, and the
+  // unformatted result for a formatted formula cell.
   const columnsLookup = gridColumnLookupSelector(apiRef);
-  for (const selector of formattedColumns) {
+  for (const ref of formattedRefs) {
+    const column: FormulaColumnSelector =
+      ref.type === 'fieldRef' ? { kind: 'field', field: ref.field } : ref.column;
     const formattedField =
-      selector.kind === 'field'
-        ? selector.field
-        : layout.positionContext.getFieldAtPosition(selector.index);
-    const type = formattedField === undefined ? undefined : columnsLookup[formattedField]?.type;
-    if (type !== undefined && RAW_EXPORT_COLUMN_TYPES.has(type)) {
+      column.kind === 'field'
+        ? column.field
+        : layout.positionContext.getFieldAtPosition(column.index);
+    const colDef = formattedField === undefined ? undefined : columnsLookup[formattedField];
+    if (formattedField === undefined || colDef === undefined) {
+      continue;
+    }
+    if (colDef.type !== undefined && RAW_EXPORT_COLUMN_TYPES.has(colDef.type)) {
+      return null;
+    }
+    let rowId: FormulaRowId | undefined = id;
+    if (ref.type === 'cellRef') {
+      rowId =
+        ref.row.kind === 'id'
+          ? ref.row.id
+          : layout.positionContext.getRowIdAtPosition(ref.row.index);
+    }
+    if (
+      rowId !== undefined &&
+      colDef.valueFormatter !== undefined &&
+      gridCellFormulaResultSelector(apiRef, { id: rowId, field: formattedField }) != null
+    ) {
       return null;
     }
   }

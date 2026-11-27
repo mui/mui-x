@@ -29,21 +29,22 @@ describe('formulaDependencies', () => {
     it('collects FORMATTED() references like plain ones', () => {
       expect({
         ...extract('FORMATTED(price) & FORMATTED(FIELD("d e"))'),
-        formattedColumns: [],
+        formattedRefs: [],
       }).to.deep.equal(extract('price & FIELD("d e")'));
       const deps = extract('FORMATTED(REF(COLUMN("total"), ROW_POSITION(1)))');
       expect(deps.cellRefs).to.have.length(1);
       expect(deps.usesPositionContext).to.equal(true);
     });
 
-    it('collects the columns read through FORMATTED()', () => {
-      expect(
-        extract('FORMATTED(price) & qty & FORMATTED(REF(COLUMN_POSITION(2), ROW(1)))')
-          .formattedColumns,
-      ).to.deep.equal([
-        { kind: 'field', field: 'price' },
-        { kind: 'position', index: 2 },
-      ]);
+    it('collects the references read through FORMATTED()', () => {
+      const { formattedRefs } = extract(
+        'FORMATTED(price) & qty & FORMATTED(REF(COLUMN_POSITION(2), ROW(1)))',
+      );
+      expect(formattedRefs.map((ref) => ref.type)).to.deep.equal(['fieldRef', 'cellRef']);
+      expect(formattedRefs[1]).to.deep.include({
+        column: { kind: 'position', index: 2 },
+        row: { kind: 'id', id: 1 },
+      });
     });
 
     it('collects explicit cell refs', () => {

@@ -44,8 +44,9 @@ import type {
 } from './gridFormulaInterfaces';
 import {
   areFormulaFieldsEqual,
+  areFormulaValuesEqual,
   isFormattedReadStale,
-  readFormattedCellValue,
+  recordFormattedRead,
   resetFormulaEvaluationCache,
 } from './gridFormulaUtils';
 import {
@@ -135,12 +136,7 @@ function areResultsEqual(a: GridFormulaResult, b: GridFormulaResult): boolean {
   if (a.type === 'error' || b.type === 'error') {
     return a.type === 'error' && b.type === 'error' && a.code === b.code && a.message === b.message;
   }
-  if (Object.is(a.value, b.value)) {
-    return true;
-  }
-  return (
-    a.value instanceof Date && b.value instanceof Date && a.value.getTime() === b.value.getTime()
-  );
+  return areFormulaValuesEqual(a.value, b.value);
 }
 
 /**
@@ -241,11 +237,38 @@ function sweepTrackedValuesForField(cache: GridFormulaInternalCache, field: stri
   }
 }
 
+/**
+ * Drops the `FORMATTED(...)` reads of a formula; a read without readers left is dropped too.
+ */
+function releaseFormattedReads(cache: GridFormulaInternalCache, readerKey: GridFormulaCellKey) {
+  const readCells = cache.formattedReadsByReader.get(readerKey);
+  if (readCells === undefined) {
+    return;
+  }
+  cache.formattedReadsByReader.delete(readerKey);
+  for (const cellKey of readCells) {
+    const { id: rowKey, field } = parseFormulaCellKey(cellKey);
+    const rowReads = cache.formattedReads.get(rowKey);
+    const read = rowReads?.get(field);
+    if (rowReads === undefined || read === undefined) {
+      continue;
+    }
+    read.readers.delete(readerKey);
+    if (read.readers.size === 0) {
+      rowReads.delete(field);
+      if (rowReads.size === 0) {
+        cache.formattedReads.delete(rowKey);
+      }
+    }
+  }
+}
+
 function detachRecordEdges(
   cache: GridFormulaInternalCache,
   key: GridFormulaCellKey,
   record: GridFormulaCellRecord,
 ) {
+  releaseFormattedReads(cache, key);
   const fieldRecords = cache.recordsByField.get(record.field);
   if (fieldRecords !== undefined) {
     fieldRecords.delete(key);
@@ -264,13 +287,6 @@ function detachRecordEdges(
       dependents.delete(key);
       if (dependents.size === 0) {
         cache.dependents.delete(dependency);
-        const formattedReads = cache.formattedReads.get(rowKey);
-        if (formattedReads !== undefined) {
-          formattedReads.delete(field);
-          if (formattedReads.size === 0) {
-            cache.formattedReads.delete(rowKey);
-          }
-        }
         // No formula reads this cell anymore — stop tracking its raw value,
         // unless a range dependent of the field still does.
         if (!cache.rangeDependentsByField.has(field)) {
@@ -613,7 +629,11 @@ function scanRow(
 
 interface FormulaPassResolver {
   getCellValue: (ref: FormulaCellRef) => FormulaScalar | FormulaErrorValue | undefined;
-  formatCellValue: (ref: FormulaCellRef, value: FormulaScalar) => FormulaScalar;
+  formatCellValue: (
+    ref: FormulaCellRef,
+    value: FormulaScalar,
+    readerKey: GridFormulaCellKey,
+  ) => FormulaScalar;
   hasRow: (id: GridRowId) => boolean;
   hasField: (field: string) => boolean;
 }
@@ -652,15 +672,30 @@ function createPassResolver(ctx: FormulaPassContext): FormulaPassResolver {
       }
       return value as FormulaScalar;
     },
-    formatCellValue: (ref, value) =>
-      readFormattedCellValue(
-        apiRef,
-        cache.formattedReads,
-        ref,
-        rowsLookup[ref.id],
-        columnsLookup[ref.field],
-        value,
-      ),
+    formatCellValue: (ref, value, readerKey) => {
+      const rowKey = String(ref.id);
+      let rowReads = cache.formattedReads.get(rowKey);
+      if (rowReads === undefined) {
+        rowReads = new Map();
+        cache.formattedReads.set(rowKey, rowReads);
+      }
+      let read = rowReads.get(ref.field);
+      if (read === undefined) {
+        read = { value, formatted: undefined, readers: new Set() };
+        rowReads.set(ref.field, read);
+      }
+      read.value = value;
+      if (!read.readers.has(readerKey)) {
+        read.readers.add(readerKey);
+        let readCells = cache.formattedReadsByReader.get(readerKey);
+        if (readCells === undefined) {
+          readCells = [];
+          cache.formattedReadsByReader.set(readerKey, readCells);
+        }
+        readCells.push(createFormulaCellKey(ref.id, ref.field));
+      }
+      return recordFormattedRead(apiRef, read, rowsLookup[ref.id], columnsLookup[ref.field]);
+    },
     hasRow: (id) => rowsLookup[id] !== undefined,
     hasField: (field) => columnsLookup[field] !== undefined,
   };
@@ -682,13 +717,16 @@ function evaluateRecordResult(
       message: record.parse.error?.message ?? 'The formula could not be parsed.',
     };
   }
+  // The evaluation records the reads it still makes.
+  const readerKey = createFormulaCellKey(record.id, record.field);
+  releaseFormattedReads(ctx.cache, readerKey);
   // Binding errors are not short-circuited: the evaluator re-resolves
   // positions against the same context snapshot, so it reaches the same
   // errors itself, with strict left-to-right propagation order.
   return evaluateFormula(record.parse.ast, {
     currentCell: { id: record.id, field: record.field },
     getCellValue: resolver.getCellValue,
-    formatCellValue: resolver.formatCellValue,
+    formatCellValue: (ref, value) => resolver.formatCellValue(ref, value, readerKey),
     hasRow: resolver.hasRow,
     hasField: resolver.hasField,
     position: record.usesPositionContext ? getPassPositionContext(ctx) : EMPTY_POSITION_CONTEXT,
@@ -940,13 +978,12 @@ export function computeFullFormulaPass(ctx: FormulaPassContext): FormulaPassResu
 }
 
 /**
- * Dirties the dependents of the `FORMATTED(...)` reads of a row whose formatted value changed.
+ * Dirties the formulas that read a cell of the row through `FORMATTED(...)` whose output changed.
  */
 function addStaleFormattedReadsToDirty(
   ctx: FormulaPassContext,
   rowKey: string,
   row: GridValidRowModel,
-  id: GridRowId,
   dirty: Set<GridFormulaCellKey>,
 ) {
   const reads = ctx.cache.formattedReads.get(rowKey);
@@ -955,7 +992,9 @@ function addStaleFormattedReadsToDirty(
   }
   for (const [field, read] of reads) {
     if (isFormattedReadStale(ctx.apiRef, row, ctx.columnsLookup[field], read)) {
-      addDependentsToDirty(ctx.cache, createFormulaCellKey(id, field), dirty);
+      for (const readerKey of read.readers) {
+        dirty.add(readerKey);
+      }
     }
   }
 }
@@ -965,12 +1004,12 @@ function addStaleFormattedReadsToDirty(
  * change that keeps the raw values (labels, `valueFormatter`). Returns `null` when none does.
  */
 export function computeFormattedReadsPass(ctx: FormulaPassContext): FormulaPassResult | null {
-  const { cache, rowsLookup, apiRef } = ctx;
+  const { cache, rowsLookup } = ctx;
   const dirty = new Set<GridFormulaCellKey>();
   for (const rowKey of cache.formattedReads.keys()) {
     const row = rowsLookup[rowKey];
     if (row !== undefined) {
-      addStaleFormattedReadsToDirty(ctx, rowKey, row, gridRowIdSelector(apiRef, row), dirty);
+      addStaleFormattedReadsToDirty(ctx, rowKey, row, dirty);
     }
   }
   const changedKeys = runEvaluation(ctx, dirty);
@@ -1033,7 +1072,7 @@ export function computeRowsDiffFormulaPass(ctx: FormulaPassContext): FormulaPass
         }
       }
     }
-    addStaleFormattedReadsToDirty(ctx, rowKey, row, id, dirty);
+    addStaleFormattedReadsToDirty(ctx, rowKey, row, dirty);
   }
 
   const removedRowCells: GridCellCoordinates[] = [];
