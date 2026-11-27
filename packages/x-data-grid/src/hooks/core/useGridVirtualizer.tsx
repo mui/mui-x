@@ -41,8 +41,7 @@ import { getTotalHeaderHeight } from '../features/columns/gridColumnsUtils';
 import { useGridOverlays } from '../features/overlays/useGridOverlays';
 import { useGridRootProps } from '../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../utils/useGridPrivateApiContext';
-import { useGridRowsMeta } from '../features/rows/useGridRowsMeta';
-import type { GridRowsMetaState } from '../features/rows/gridRowsMetaState';
+import { useGridRowsMeta, toGridRowsMeta } from '../features/rows/useGridRowsMeta';
 import { eslintUseValue } from '../../utils/utils';
 
 /** Translates virtualizer state to grid state */
@@ -68,15 +67,7 @@ const addGridDimensionsCreator = () =>
   );
 
 /** Adds the deprecated rows meta names to the virtualizer rows meta */
-const addGridRowsMetaCreator = () =>
-  lruMemoize(
-    (rowsMeta: Dimensions.State['rowsMeta']): GridRowsMetaState => ({
-      ...rowsMeta,
-      pinnedTopRowsTotalHeight: rowsMeta.topPinnedHeight,
-      pinnedBottomRowsTotalHeight: rowsMeta.bottomPinnedHeight,
-    }),
-    { maxSize: 1 },
-  );
+const addGridRowsMetaCreator = () => lruMemoize(toGridRowsMeta, { maxSize: 1 });
 
 /**
  * Virtualizer setup
