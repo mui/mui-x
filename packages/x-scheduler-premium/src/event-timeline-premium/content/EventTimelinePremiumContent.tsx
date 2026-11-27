@@ -10,7 +10,13 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
-import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
+import {
+  useVirtualizer,
+  LayoutDataGrid,
+  Dimensions,
+  RowsMeta,
+  Virtualization,
+} from '@mui/x-virtualizer';
 import {
   TimelineGrid,
   useTimelineGridEventRowContext,
@@ -861,12 +867,13 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const scrollRowIntoView = useStableCallback((rowIndex: number) => {
     const scroller = gridRef.current;
     const state = virtualizer.store.state;
-    const { positions, currentPageTotalHeight } = Dimensions.selectors.rowsMeta(state);
-    const rowTop = positions[rowIndex];
+    const rowsMeta = Dimensions.selectors.rowsMeta(state);
+    const rowTop = RowsMeta.getPosition(rowsMeta, rowIndex);
     if (!scroller || rowTop === undefined) {
       return;
     }
-    const rowBottom = positions[rowIndex + 1] ?? currentPageTotalHeight;
+    const rowBottom =
+      RowsMeta.getPosition(rowsMeta, rowIndex + 1) ?? rowsMeta.currentPageTotalHeight;
     const { viewportInnerSize, scrollbarSize } = Dimensions.selectors.dimensions(state);
     // `viewportInnerSize` excludes the native scrollbar; use the bottom scrollbars instead,
     // which are drawn over the rows.

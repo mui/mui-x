@@ -4,8 +4,6 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { ChatProvider } from '../ChatProvider';
 import type { ChatProviderProps } from '../ChatProvider';
-import type { ChatLocaleText } from './internals/chatLocaleText';
-import { ChatLocaleProvider } from './internals/ChatLocaleContext';
 import { ChatVariantProvider } from './internals/ChatVariantContext';
 import type { ChatVariant } from './internals/ChatVariantContext';
 import { ChatDensityProvider } from './internals/ChatDensityContext';
@@ -32,10 +30,6 @@ export interface ChatRootProps<Cursor = string>
   extends
     ChatProviderProps<Cursor>,
     Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onError'> {
-  /**
-   * The props used for the locale text slot.
-   */
-  localeText?: Partial<ChatLocaleText>;
   /**
    * The visual layout variant of the chat.
    * When provided, wraps descendant components with `ChatVariantProvider`
@@ -153,19 +147,18 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       storeClass={storeClass}
       roleDisplayNames={roleDisplayNames}
       features={features}
+      localeText={localeText}
     >
-      <ChatLocaleProvider localeText={localeText}>
-        {(() => {
-          let content = <Root {...rootProps}>{children}</Root>;
-          if (variant) {
-            content = <ChatVariantProvider variant={variant}>{content}</ChatVariantProvider>;
-          }
-          if (density) {
-            content = <ChatDensityProvider density={density}>{content}</ChatDensityProvider>;
-          }
-          return content;
-        })()}
-      </ChatLocaleProvider>
+      {(() => {
+        let content = <Root {...rootProps}>{children}</Root>;
+        if (variant) {
+          content = <ChatVariantProvider variant={variant}>{content}</ChatVariantProvider>;
+        }
+        if (density) {
+          content = <ChatDensityProvider density={density}>{content}</ChatDensityProvider>;
+        }
+        return content;
+      })()}
     </ChatProvider>
   );
 }) as ChatRootComponent;

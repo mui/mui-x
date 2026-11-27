@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { useChatStore } from '../hooks/useChatStore';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import { ChatRoot } from './ChatRoot';
+import { useChatLocaleText } from './internals/ChatLocaleContext';
 
 const { render } = createRenderer();
 
@@ -61,5 +62,16 @@ describe('ChatRoot', () => {
 
     expect(ref.current).to.be.instanceOf(window.HTMLDivElement);
     expect(ref.current).to.have.text('content');
+  });
+
+  it('forwards localeText to descendants', () => {
+    const wrapper = ({ children }: React.PropsWithChildren) => (
+      <ChatRoot adapter={createAdapter()} localeText={{ retryButtonLabel: 'Reintentar' }}>
+        {children}
+      </ChatRoot>
+    );
+    const { result } = renderHook(() => useChatLocaleText(), { wrapper });
+
+    expect(result.current.retryButtonLabel).toBe('Reintentar');
   });
 });

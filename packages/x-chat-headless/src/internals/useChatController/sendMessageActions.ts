@@ -408,6 +408,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     const removedMessages = assistantMessageIds
       .map((id) => store.state.messagesById[id])
       .filter((message): message is ChatMessage => message != null);
+    const originalMessageIds = store.state.messageIds;
 
     removeAssistantMessageIds(
       storeUnknown,
@@ -463,10 +464,42 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      // Pre-stream rejection: restore the snapshot assistant messages (D4) and
-      // surface a REGENERATE_ERROR.
-      for (const removedMessage of removedMessages) {
-        store.addMessage(removedMessage);
+      // Pre-stream rejection: put each removed message back after its nearest surviving
+      // original predecessor (or before the first survivor), keeping changes made meanwhile.
+      const removedById = new Map(removedMessages.map((message) => [message.id, message]));
+      const currentMessages = getMessages(storeUnknown);
+      // A Map lookup avoids inherited keys (e.g. an id of "constructor") on `messagesById`.
+      const currentById = new Map(currentMessages.map((message) => [message.id, message]));
+      const liveMessages = currentMessages.filter((message) => !removedById.has(message.id));
+      const liveIds = new Set(liveMessages.map((message) => message.id));
+      const restoredAfter = new Map<string | undefined, ChatMessage[]>();
+      let previousLiveId: string | undefined;
+      let firstLiveId: string | undefined;
+      for (const id of originalMessageIds) {
+        const removedMessage = removedById.get(id);
+        if (removedMessage) {
+          const group = restoredAfter.get(previousLiveId) ?? [];
+          group.push(currentById.get(id) ?? removedMessage);
+          restoredAfter.set(previousLiveId, group);
+        } else if (liveIds.has(id)) {
+          previousLiveId = id;
+          firstLiveId ??= id;
+        }
+      }
+      // No original message survived (e.g. the thread was replaced): leave it untouched.
+      if (firstLiveId !== undefined) {
+        const nextMessages = liveMessages.flatMap((message) => [
+          ...(message.id === firstLiveId ? (restoredAfter.get(undefined) ?? []) : []),
+          message,
+          ...(restoredAfter.get(message.id) ?? []),
+        ]);
+        const currentIds = store.state.messageIds;
+        if (
+          nextMessages.length !== currentIds.length ||
+          nextMessages.some((message, index) => message.id !== currentIds[index])
+        ) {
+          store.setMessages(nextMessages);
+        }
       }
 
       store.setStreaming(false);
