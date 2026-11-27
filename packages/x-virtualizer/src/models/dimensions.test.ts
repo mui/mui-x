@@ -8,8 +8,8 @@ const createUniform = () =>
     hasUniformRowHeight: true,
     positions: null,
     currentPageTotalHeight: 150,
-    pinnedTopRowsTotalHeight: 0,
-    pinnedBottomRowsTotalHeight: 0,
+    topPinnedHeight: 0,
+    bottomPinnedHeight: 0,
   });
 
 const uniform = createUniform();
@@ -19,8 +19,8 @@ const variable: RowsMetaState = {
   hasUniformRowHeight: false,
   positions: [0, 50, 130],
   currentPageTotalHeight: 180,
-  pinnedTopRowsTotalHeight: 0,
-  pinnedBottomRowsTotalHeight: 0,
+  topPinnedHeight: 0,
+  bottomPinnedHeight: 0,
 };
 
 describe('RowsMeta', () => {
@@ -47,8 +47,8 @@ describe('RowsMeta', () => {
         hasUniformRowHeight: true,
         positions: null,
         currentPageTotalHeight: 0,
-        pinnedTopRowsTotalHeight: 0,
-        pinnedBottomRowsTotalHeight: 0,
+        topPinnedHeight: 0,
+        bottomPinnedHeight: 0,
       });
       expect(RowsMeta.getUniformRowHeight(empty)).to.equal(0);
       expect(RowsMeta.getPosition(empty, 0)).to.equal(undefined);
@@ -67,8 +67,8 @@ describe('RowsMeta', () => {
         hasUniformRowHeight: true,
         positions: null,
         currentPageTotalHeight: totalHeight,
-        pinnedTopRowsTotalHeight: 0,
-        pinnedBottomRowsTotalHeight: 0,
+        topPinnedHeight: 0,
+        bottomPinnedHeight: 0,
       });
       expect(RowsMeta.getPosition(rowsMeta, rowCount - 1)).to.be.closeTo(
         (rowCount - 1) * rowHeight,
