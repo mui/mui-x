@@ -1,4 +1,5 @@
 import { warnOnce } from '@mui/x-internals/warning';
+import { getContrastRatio } from '@mui/system/colorManipulator';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   gridClasses,
@@ -95,17 +96,12 @@ const toHexDigits = (color: string) =>
     : color.slice(1);
 
 /**
- * Black or white, whichever reads better on the background (WCAG relative luminance).
+ * Black or white, whichever has the higher contrast ratio with the background.
  */
-export const getContrastTextColor = (backgroundColor: string) => {
-  const digits = toHexDigits(backgroundColor);
-  const [red, green, blue] = [0, 2, 4].map((start) => {
-    const channel = parseInt(digits.slice(start, start + 2), 16) / 255;
-    return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
-  });
-  const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-  return luminance > 0.179 ? '#000000' : '#ffffff';
-};
+export const getContrastTextColor = (backgroundColor: string) =>
+  getContrastRatio(backgroundColor, '#000000') >= getContrastRatio(backgroundColor, '#ffffff')
+    ? '#000000'
+    : '#ffffff';
 
 /**
  * The global styles of the rules. The first rule is written last so it wins
