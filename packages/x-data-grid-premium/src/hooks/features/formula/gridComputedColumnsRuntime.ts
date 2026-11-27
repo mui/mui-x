@@ -25,6 +25,7 @@ import {
 } from './engine';
 import type { FormulaErrorValue, FormulaScalar } from './engine';
 import { EMPTY_POSITION_CONTEXT } from './gridFormulaPositionContext';
+import { formatFormulaCellValue } from './gridFormulaUtils';
 import {
   applyComputedColDefOverrides,
   areComputedColDefOverridesEqual,
@@ -204,6 +205,8 @@ export function evaluateComputedCell(
           }
           return getRowValueUtil(row, colDef, apiRef) as FormulaScalar;
         },
+        formatCellValue: (ref, value) =>
+          formatFormulaCellValue(apiRef, row, columnsLookup[ref.field], value),
         hasRow: () => true,
         hasField: (referencedField) => columnsLookup[referencedField] !== undefined,
         position: EMPTY_POSITION_CONTEXT,

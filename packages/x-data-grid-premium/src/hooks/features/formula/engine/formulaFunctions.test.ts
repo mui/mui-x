@@ -68,6 +68,7 @@ describe('formulaFunctions', () => {
         'FIXED',
         'ANCHOR',
         'COLUMN_VALUES',
+        'FORMATTED',
         'TRUE',
         'FALSE',
       ];

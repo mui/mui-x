@@ -1,11 +1,12 @@
 import type { RefObject } from '@mui/x-internals/types';
-import type { GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { isGroupingColumn } from '@mui/x-data-grid-pro/internals';
 import {
   FORMULA_BUILT_IN_FUNCTIONS,
   createFormulaFunctionRegistry,
   createFormulaParser,
 } from './engine';
+import type { FormulaScalar } from './engine';
 import type {
   GridComputedColumnsRuntimeCache,
   GridFormulaFunctionDefinition,
@@ -221,4 +222,30 @@ export function areFormulaFunctionRecordsEqual(
     }
   }
   return true;
+}
+
+/**
+ * The value `FORMATTED(...)` reads: the `valueFormatter` output, as `getRowFormattedValue` does
+ * for a resolved value. An option object reads as its label, like in the Excel export.
+ */
+export function formatFormulaCellValue(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  row: GridValidRowModel | undefined,
+  colDef: GridColDef | undefined,
+  value: FormulaScalar,
+): FormulaScalar {
+  if (row === undefined || colDef?.valueFormatter === undefined) {
+    return value;
+  }
+  let formatted: unknown = colDef.valueFormatter(value as never, row, colDef, apiRef);
+  if (typeof formatted === 'object' && formatted !== null && 'label' in formatted) {
+    formatted = formatted.label;
+  }
+  if (formatted === undefined || formatted === null) {
+    return null;
+  }
+  if (typeof formatted === 'object' && !(formatted instanceof Date)) {
+    return String(formatted);
+  }
+  return formatted as FormulaScalar;
 }

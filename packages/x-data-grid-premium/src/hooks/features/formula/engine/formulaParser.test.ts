@@ -64,6 +64,53 @@ describe('formulaParser', () => {
     });
   });
 
+  describe('FORMATTED()', () => {
+    it('flags same-row field references', () => {
+      expect(parseOk('FORMATTED(price)')).to.deep.equal({
+        type: 'fieldRef',
+        field: 'price',
+        formatted: true,
+      });
+      expect(parseOk('formatted(FIELD("unit price"))')).to.deep.equal({
+        type: 'fieldRef',
+        field: 'unit price',
+        formatted: true,
+      });
+    });
+
+    it('flags cell references', () => {
+      expect(parseOk('FORMATTED(REF(COLUMN("price"), ROW_POSITION(2)))')).to.deep.equal({
+        type: 'cellRef',
+        column: { kind: 'field', field: 'price' },
+        row: { kind: 'position', index: 2 },
+        formatted: true,
+      });
+    });
+
+    it('keeps the span on the inner reference', () => {
+      expect(parseFormula('FORMATTED(price)').ast?.span).to.deep.equal({ start: 10, end: 15 });
+    });
+
+    it('rejects anything but a single-cell reference', () => {
+      const message = 'FORMATTED() expects a single-cell reference.';
+      expect(parseError('FORMATTED(1)')).to.equal(message);
+      expect(parseError('FORMATTED("a")')).to.equal(message);
+      expect(parseError('FORMATTED(price + 1)')).to.equal(message);
+      expect(parseError('FORMATTED(SUM(price))')).to.equal(message);
+      expect(parseError('FORMATTED(COLUMN_VALUES("price"))')).to.equal(message);
+      expect(
+        parseError('FORMATTED(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(2)))'),
+      ).to.equal(message);
+      expect(parseError('FORMATTED(FORMATTED(price))')).to.equal(message);
+      expect(parseError('FORMATTED(price, qty)')).to.equal('Expected ")".');
+      expect(parseError('FORMATTED()')).to.equal('Unexpected ")".');
+    });
+
+    it('reads a bare FORMATTED as a field reference', () => {
+      expect(parseOk('FORMATTED')).to.deep.equal({ type: 'fieldRef', field: 'FORMATTED' });
+    });
+  });
+
   describe('operator precedence and associativity', () => {
     it('gives multiplication precedence over addition', () => {
       expect(parseOk('1 + 2 * 3')).to.deep.equal({

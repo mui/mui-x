@@ -76,6 +76,15 @@ function serializeOperand(node: FormulaAstNode, minPrecedence: number): string {
   return text;
 }
 
+/**
+ * Wraps a reference read as formatted in `FORMATTED(...)`.
+ */
+export function wrapFormattedRef(node: FormulaAstNode, text: string): string {
+  return (node.type === 'fieldRef' || node.type === 'cellRef') && node.formatted
+    ? `FORMATTED(${text})`
+    : text;
+}
+
 function serializeNode(node: FormulaAstNode): string {
   switch (node.type) {
     case 'numberLiteral':
@@ -85,9 +94,12 @@ function serializeNode(node: FormulaAstNode): string {
     case 'booleanLiteral':
       return node.value ? 'TRUE' : 'FALSE';
     case 'fieldRef':
-      return serializeFieldRef(node.field);
+      return wrapFormattedRef(node, serializeFieldRef(node.field));
     case 'cellRef':
-      return `REF(${serializeColumnSelector(node.column)}, ${serializeRowSelector(node.row)})`;
+      return wrapFormattedRef(
+        node,
+        `REF(${serializeColumnSelector(node.column)}, ${serializeRowSelector(node.row)})`,
+      );
     case 'rangeRef':
       return `RANGE_REF(${serializeRangeAxis('COLUMN_FROM', node.columnFrom)}, ${serializeRangeAxis('ROW_FROM', node.rowFrom)}, ${serializeRangeAxis('COLUMN_TO', node.columnTo)}, ${serializeRangeAxis('ROW_TO', node.rowTo)})`;
     case 'columnValues':

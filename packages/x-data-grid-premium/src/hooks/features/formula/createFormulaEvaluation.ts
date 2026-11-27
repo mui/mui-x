@@ -42,7 +42,11 @@ import type {
   GridFormulaRangeDependency,
   GridFormulaResult,
 } from './gridFormulaInterfaces';
-import { areFormulaFieldsEqual, resetFormulaEvaluationCache } from './gridFormulaUtils';
+import {
+  areFormulaFieldsEqual,
+  formatFormulaCellValue,
+  resetFormulaEvaluationCache,
+} from './gridFormulaUtils';
 import {
   arePositionArraysEqual,
   createFormulaPositionContext,
@@ -601,6 +605,7 @@ function scanRow(
 
 interface FormulaPassResolver {
   getCellValue: (ref: FormulaCellRef) => FormulaScalar | FormulaErrorValue | undefined;
+  formatCellValue: (ref: FormulaCellRef, value: FormulaScalar) => FormulaScalar;
   hasRow: (id: GridRowId) => boolean;
   hasField: (field: string) => boolean;
 }
@@ -639,6 +644,8 @@ function createPassResolver(ctx: FormulaPassContext): FormulaPassResolver {
       }
       return value as FormulaScalar;
     },
+    formatCellValue: (ref, value) =>
+      formatFormulaCellValue(apiRef, rowsLookup[ref.id], columnsLookup[ref.field], value),
     hasRow: (id) => rowsLookup[id] !== undefined,
     hasField: (field) => columnsLookup[field] !== undefined,
   };
@@ -666,6 +673,7 @@ function evaluateRecordResult(
   return evaluateFormula(record.parse.ast, {
     currentCell: { id: record.id, field: record.field },
     getCellValue: resolver.getCellValue,
+    formatCellValue: resolver.formatCellValue,
     hasRow: resolver.hasRow,
     hasField: resolver.hasField,
     position: record.usesPositionContext ? getPassPositionContext(ctx) : EMPTY_POSITION_CONTEXT,

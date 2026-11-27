@@ -550,6 +550,38 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect((worksheet.getCell('A2').value as any).result).to.deep.equal({ error: '#REF!' });
     });
 
+    it('exports FORMATTED() as a plain reference to the exported label', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
+              columns={[
+                {
+                  field: 'status',
+                  type: 'singleSelect',
+                  valueOptions: [{ value: 'd', label: 'Discontinued' }],
+                },
+                { field: 'label', allowFormulas: true },
+              ]}
+              rows={[{ id: 0, status: 'd', label: '=FORMATTED(status)' }]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('A2').value).to.equal('Discontinued');
+      expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.Formula);
+      expect((worksheet.getCell('B2').value as any).formula).to.equal('A2');
+      expect((worksheet.getCell('B2').value as any).result).to.equal('Discontinued');
+    });
+
     it('exports an evaluation error as a formula with an error result', async () => {
       function Test() {
         apiRef = useGridApiRef();

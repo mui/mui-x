@@ -459,6 +459,18 @@ describe('formulaA1', () => {
       roundTrips('FIELD("q1")');
     });
 
+    it('is stable for FORMATTED() references', () => {
+      roundTrips('FORMATTED(B5)');
+      roundTrips('FORMATTED($A$1) & FORMATTED(price)');
+      roundTrips('FORMATTED(FIELD("q1"))');
+      expect(toCanonical('FORMATTED(B5)')).to.equal('FORMATTED(REF(COLUMN("qty"), ROW("r5")))');
+      expect(toDisplay('FORMATTED(REF(COLUMN("qty"), ROW("r5")))')).to.equal('FORMATTED(B5)');
+      // A reference without a current position falls back to canonical, still wrapped.
+      expect(toDisplay('FORMATTED(REF(COLUMN("qty"), ROW("gone")))')).to.equal(
+        'FORMATTED(REF(COLUMN("qty"), ROW("gone")))',
+      );
+    });
+
     it('is stable for every range window shape', () => {
       roundTrips('SUM(A1:B5)');
       roundTrips('SUM($A$1:$A$4)');

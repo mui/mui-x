@@ -26,6 +26,15 @@ describe('formulaDependencies', () => {
       expect(Array.from(deps.fieldRefs).sort()).to.deep.equal(['a', 'b', 'c', 'd e']);
     });
 
+    it('collects FORMATTED() references like plain ones', () => {
+      expect(extract('FORMATTED(price) & FORMATTED(FIELD("d e"))')).to.deep.equal(
+        extract('price & FIELD("d e")'),
+      );
+      const deps = extract('FORMATTED(REF(COLUMN("total"), ROW_POSITION(1)))');
+      expect(deps.cellRefs).to.have.length(1);
+      expect(deps.usesPositionContext).to.equal(true);
+    });
+
     it('collects explicit cell refs', () => {
       const deps = extract('REF(COLUMN("total"), ROW("r1")) + REF(COLUMN("total"), ROW("r2"))');
       expect(deps.cellRefs).to.have.length(2);

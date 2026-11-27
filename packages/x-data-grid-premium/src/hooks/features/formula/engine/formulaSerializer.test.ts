@@ -62,6 +62,16 @@ describe('formulaSerializer', () => {
     expectSerialized('1 - 2 - 3', '1 - 2 - 3');
   });
 
+  it('serializes FORMATTED() around the inner reference', () => {
+    expectSerialized('formatted(price)', 'FORMATTED(price)');
+    expectSerialized('FORMATTED(FIELD("unit price"))', 'FORMATTED(FIELD("unit price"))');
+    expectSerialized(
+      'FORMATTED(REF(COLUMN("price"), ROW(2))) & status',
+      'FORMATTED(REF(COLUMN("price"), ROW(2))) & status',
+    );
+    expectRoundTrip('FORMATTED(status) = "Discontinued"');
+  });
+
   it('parenthesizes compound unary operands', () => {
     expectSerialized('-(1 + 2)', '-(1 + 2)');
     expectSerialized('-(-1)', '-(-1)');

@@ -1026,6 +1026,88 @@ describe('<DataGridPremium /> - Formulas', () => {
     });
   });
 
+  describe('FORMATTED()', () => {
+    const statusColumns: DataGridPremiumProps['columns'] = [
+      {
+        field: 'status',
+        type: 'singleSelect',
+        valueOptions: [
+          { value: 'd', label: 'Discontinued' },
+          { value: 'a', label: 'Active' },
+        ],
+      },
+      {
+        field: 'total',
+        type: 'number',
+        allowFormulas: true,
+        valueFormatter: (value: number) => `${value} USD`,
+      },
+      { field: 'result', allowFormulas: true },
+    ];
+
+    it('should read the option label of a single select while a bare reference reads the value', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, status: 'd', total: 1, result: '=FORMATTED(status)' },
+            { id: 1, status: 'd', total: 1, result: '=status' },
+            { id: 2, status: 'd', total: 1, result: '=FORMATTED(status) = "Discontinued"' },
+            { id: 3, status: 'd', total: 1, result: '=status = "d"' },
+            { id: 4, status: 'a', total: 1, result: '=FORMATTED(REF(COLUMN("status"), ROW(0)))' },
+          ]}
+          columns={statusColumns}
+        />,
+      );
+      expect(apiRef.current!.getCellValue(0, 'result')).to.equal('Discontinued');
+      expect(apiRef.current!.getCellValue(1, 'result')).to.equal('d');
+      expect(apiRef.current!.getCellValue(2, 'result')).to.equal(true);
+      expect(apiRef.current!.getCellValue(3, 'result')).to.equal(true);
+      expect(apiRef.current!.getCellValue(4, 'result')).to.equal('Discontinued');
+    });
+
+    it('should format the result of a formula cell and propagate its errors', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, status: 'a', total: '=2 * 3', result: '=FORMATTED(total)' },
+            { id: 1, status: 'a', total: '=1 / 0', result: '=FORMATTED(total)' },
+          ]}
+          columns={statusColumns}
+        />,
+      );
+      expect(apiRef.current!.getCellValue(0, 'result')).to.equal('6 USD');
+      expect(apiRef.current!.getCellValue(1, 'result')).to.equal('#DIV/0!');
+    });
+
+    it('should recompute when the referenced cell changes', async () => {
+      await render(
+        <Test
+          rows={[{ id: 0, status: 'd', total: 1, result: '=FORMATTED(status)' }]}
+          columns={statusColumns}
+        />,
+      );
+      await act(async () => {
+        apiRef.current!.updateRows([{ id: 0, status: 'a' }]);
+      });
+      expect(apiRef.current!.getCellValue(0, 'result')).to.equal('Active');
+    });
+
+    it('should read the formatted value in a computed column', async () => {
+      await render(
+        <Test
+          rows={[{ id: 0, status: 'd', total: 1, result: null }]}
+          columns={statusColumns}
+          computedColumns={[
+            { field: 'label', headerName: 'Label', formula: '=FORMATTED(status)', type: 'string' },
+            { field: 'raw', headerName: 'Raw', formula: '=status', type: 'string' },
+          ]}
+        />,
+      );
+      expect(apiRef.current!.getCellValue(0, 'label')).to.equal('Discontinued');
+      expect(apiRef.current!.getCellValue(0, 'raw')).to.equal('d');
+    });
+  });
+
   describe('custom functions', () => {
     const DOUBLE: GridFormulaFunctionDefinition = {
       name: 'DOUBLE',

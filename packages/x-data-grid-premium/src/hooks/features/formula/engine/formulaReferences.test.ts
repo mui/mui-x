@@ -49,6 +49,15 @@ describe('formulaReferences', () => {
       ]);
     });
 
+    it('collects the reference inside FORMATTED() in both dialects', () => {
+      const expression = 'FORMATTED(price) & FORMATTED(REF(COLUMN("total"), ROW("r1")))';
+      expect(slices(expression, canonical(expression))).to.deep.equal([
+        'price',
+        'REF(COLUMN("total"), ROW("r1"))',
+      ]);
+      expect(slices('FORMATTED(B2)', a1('FORMATTED(B2)'))).to.deep.equal(['B2']);
+    });
+
     it('collects an explicit cell reference as one whole chunk', () => {
       const expression = 'REF(COLUMN("total"), ROW("r1"))';
       const references = canonical(expression);
