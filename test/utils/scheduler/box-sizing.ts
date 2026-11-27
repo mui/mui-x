@@ -193,6 +193,8 @@ function getStyleRules() {
  * Finds the scheduler rules that set a size on a rendered `content-box` element with padding or a
  * border on the same axis. This also finds a constraint that the current state does not reach,
  * for example a `maxWidth` on an element with short content.
+ * It does not evaluate container queries or the cascade on purpose: a size that applies in another
+ * state needs `border-box` too.
  */
 function findContentBoxSizes() {
   const issues = new Set<string>();

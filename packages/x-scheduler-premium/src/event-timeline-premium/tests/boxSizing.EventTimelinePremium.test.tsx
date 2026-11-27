@@ -7,10 +7,13 @@ import {
   ResourceBuilder,
   expectBoxSizingIndependentLayout,
 } from 'test/utils/scheduler';
-import type { SchedulerDependency } from '@mui/x-scheduler-premium/models';
+import type {
+  EventTimelinePremiumSlots,
+  SchedulerDependency,
+} from '@mui/x-scheduler-premium/models';
 import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { describe, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 const features = { dependencies: dependenciesFeature };
 
@@ -19,7 +22,9 @@ const features = { dependencies: dependenciesFeature };
  * Each test renders one surface in the state that reaches its size constraints.
  */
 describe.skipIf(isJSDOM)('EventTimelinePremium - box-sizing', () => {
-  const { renderSettled } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
+  const { render, renderSettled } = createSchedulerRenderer({
+    clockConfig: new Date('2025-07-03Z'),
+  });
 
   const design = ResourceBuilder.new().id('design').title('Design').build();
   const development = ResourceBuilder.new().id('development').title('Development').build();
@@ -41,7 +46,7 @@ describe.skipIf(isJSDOM)('EventTimelinePremium - box-sizing', () => {
     { id: 'd1', source: 'design', target: 'build', type: 'FinishToStart' },
   ];
 
-  function renderTimeline() {
+  function renderTimeline(slots?: EventTimelinePremiumSlots) {
     return renderSettled(
       <div style={{ height: 600 }}>
         <EventTimelinePremium
@@ -50,6 +55,7 @@ describe.skipIf(isJSDOM)('EventTimelinePremium - box-sizing', () => {
           dependencies={dependencies}
           features={features}
           defaultPreset="dayAndWeek"
+          slots={slots}
         />
       </div>,
     );
@@ -69,5 +75,21 @@ describe.skipIf(isJSDOM)('EventTimelinePremium - box-sizing', () => {
     fireEvent.doubleClick(hitArea);
     await screen.findByRole('dialog');
     expectBoxSizingIndependentLayout();
+  });
+
+  it('should keep the box-sizing of the app for slot content', async () => {
+    // Content that the scheduler does not own must render as it does outside the scheduler.
+    const probeStyle = { display: 'inline-block', width: 40, height: 10, padding: 4 };
+    render(<span data-testid="reference-probe" style={probeStyle} />);
+    await renderTimeline({
+      timelineEventContent: () => <span data-testid="slot-probe" style={probeStyle} />,
+    });
+
+    const reference = screen.getByTestId('reference-probe').getBoundingClientRect();
+    const probe = screen.getAllByTestId('slot-probe')[0].getBoundingClientRect();
+    expect({ width: probe.width, height: probe.height }).to.deep.equal({
+      width: reference.width,
+      height: reference.height,
+    });
   });
 });
