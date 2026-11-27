@@ -5,6 +5,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { platform } from '@base-ui/utils/platform';
 import type { Store } from '@base-ui/utils/store';
 import { createSelectorMemoized } from '@base-ui/utils/store';
+import { RowsMeta } from '../../models';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization } from './virtualization';
 import type { VirtualizationLayoutParams } from './virtualization';
@@ -422,14 +423,15 @@ export class LayoutListSticky extends Layout<ListElements> {
 
     windowProps: createSelectorMemoized(
       Virtualization.selectors.renderContext,
-      Dimensions.selectors.rowPositions,
+      Dimensions.selectors.rowsMeta,
       Dimensions.selectors.contentHeight,
       Dimensions.selectors.dimensions,
-      (renderContext, rowPositions, contentHeight, dimensions) => {
-        const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
+      (renderContext, rowsMeta, contentHeight, dimensions) => {
+        const firstPosition = RowsMeta.getPosition(rowsMeta, renderContext.firstRowIndex) ?? 0;
         // `lastRowIndex` is exclusive: when it points past the last row, the window
         // extends to the end of the content.
-        const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
+        const lastPosition =
+          RowsMeta.getPosition(rowsMeta, renderContext.lastRowIndex) ?? contentHeight;
         const renderedHeight = lastPosition - firstPosition;
         // Clamped to 0: if the rendered window is smaller than the viewport (few rows),
         // sticky positioning must stay inert.
@@ -512,7 +514,7 @@ export class LayoutListSticky extends Layout<ListElements> {
  *           {header, pinned top rows}
  *         </div>
  *       </div>
- *       <div {...spacerTopProps} />        // height: rowPositions[firstRowIndex]
+ *       <div {...spacerTopProps} />        // height: position of firstRowIndex
  *       <div {...windowProps}>             // sticky (vertical) + flex row
  *         <div {...spacerLeftProps} />     // flex: 0 0 offsetLeft
  *         <div {...innerWindowProps}>      // flex item, horizontally-sticky
@@ -587,16 +589,17 @@ const horizontalGeometry = createSelectorMemoized(
  */
 const verticalGeometry = createSelectorMemoized(
   Virtualization.selectors.renderContext,
-  Dimensions.selectors.rowPositions,
+  Dimensions.selectors.rowsMeta,
   Dimensions.selectors.contentHeight,
   Dimensions.selectors.dimensions,
   Virtualization.selectors.anchorTop,
-  (renderContext, rowPositions, contentHeight, dimensions, anchorTop) => {
+  (renderContext, rowsMeta, contentHeight, dimensions, anchorTop) => {
     const { viewportInnerSize, topContainerHeight, bottomContainerHeight } = dimensions;
-    const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
+    const firstPosition = RowsMeta.getPosition(rowsMeta, renderContext.firstRowIndex) ?? 0;
     // `lastRowIndex` is exclusive: when it points past the last row, the window extends
     // to the end of the content.
-    const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
+    const lastPosition =
+      RowsMeta.getPosition(rowsMeta, renderContext.lastRowIndex) ?? contentHeight;
     const renderedHeight = lastPosition - firstPosition;
     const offsetTop = firstPosition;
     const padTop = padTopFor(offsetTop, anchorTop);

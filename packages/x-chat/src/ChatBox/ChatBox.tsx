@@ -494,7 +494,8 @@ ChatBox.propTypes /* remove-proptypes */ = {
     split: PropTypes.number,
   }),
   /**
-   * The props used for the locale text slot.
+   * Overrides for the user-facing strings of every chat component rendered below the provider.
+   * Omitted keys fall back to the locale of the closest parent provider, then to the built-in English defaults.
    */
   localeText: PropTypes.object,
   /**

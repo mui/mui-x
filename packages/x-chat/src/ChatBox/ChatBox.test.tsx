@@ -968,6 +968,119 @@ describe('ChatBox', () => {
       expect(threadPane.style.backgroundColor).toBe('rgb(7, 8, 9)');
     });
 
+    it('applies theme styleOverrides to the layout and pane slots', () => {
+      const theme = createTheme({
+        components: {
+          MuiChatBox: {
+            styleOverrides: {
+              layout: { backgroundColor: 'rgb(1, 2, 3)' },
+              conversationsPane: { backgroundColor: 'rgb(4, 5, 6)' },
+              threadPane: { backgroundColor: 'rgb(7, 8, 9)' },
+            },
+          },
+        },
+      });
+      render(
+        <ThemeProvider theme={theme}>
+          <ChatBox
+            adapter={createAdapter()}
+            initialConversations={conversations}
+            features={conversationListFeatures}
+          >
+            {null}
+          </ChatBox>
+        </ThemeProvider>,
+      );
+
+      expect(document.querySelector('.MuiChatBox-layout')).toHaveComputedStyle({
+        backgroundColor: 'rgb(1, 2, 3)',
+      });
+      expect(document.querySelector('.MuiChatBox-conversationsPane')).toHaveComputedStyle({
+        backgroundColor: 'rgb(4, 5, 6)',
+      });
+      expect(document.querySelector('.MuiChatBox-threadPane')).toHaveComputedStyle({
+        backgroundColor: 'rgb(7, 8, 9)',
+      });
+    });
+
+    it('passes the ChatBox variant to the layout and pane slots for theme styleOverrides', () => {
+      // MUI resolves every MuiChatBox override for each styled slot, some without ownerState.
+      const compactOnly = ({ ownerState }: { ownerState?: { variant?: string } }) =>
+        ownerState?.variant === 'compact' ? { backgroundColor: 'rgb(1, 2, 3)' } : {};
+      const theme = createTheme({
+        components: {
+          MuiChatBox: {
+            styleOverrides: {
+              layout: compactOnly,
+              conversationsPane: compactOnly,
+              threadPane: compactOnly,
+            },
+          },
+        },
+      });
+      const renderChatBox = (variant: 'default' | 'compact') =>
+        render(
+          <ThemeProvider theme={theme}>
+            <ChatBox
+              adapter={createAdapter()}
+              initialConversations={conversations}
+              features={conversationListFeatures}
+              variant={variant}
+            >
+              {null}
+            </ChatBox>
+          </ThemeProvider>,
+        );
+      const slotSelectors = [
+        '.MuiChatBox-layout',
+        '.MuiChatBox-conversationsPane',
+        '.MuiChatBox-threadPane',
+      ];
+
+      const { unmount } = renderChatBox('default');
+      slotSelectors.forEach((selector) => {
+        expect(document.querySelector(selector)).not.toHaveComputedStyle({
+          backgroundColor: 'rgb(1, 2, 3)',
+        });
+      });
+      unmount();
+
+      renderChatBox('compact');
+      slotSelectors.forEach((selector) => {
+        expect(document.querySelector(selector)).toHaveComputedStyle({
+          backgroundColor: 'rgb(1, 2, 3)',
+        });
+      });
+    });
+
+    it('applies slotProps sx to the layout and pane slots without leaking it to the DOM', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={conversations}
+          features={conversationListFeatures}
+          slotProps={{
+            layout: { sx: { backgroundColor: 'rgb(1, 2, 3)' } },
+            conversationsPane: { sx: { backgroundColor: 'rgb(4, 5, 6)' } },
+            threadPane: { sx: { backgroundColor: 'rgb(7, 8, 9)' } },
+          }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const layout = document.querySelector('.MuiChatBox-layout')!;
+      const conversationsPane = document.querySelector('.MuiChatBox-conversationsPane')!;
+      const threadPane = document.querySelector('.MuiChatBox-threadPane')!;
+
+      expect(layout).toHaveComputedStyle({ backgroundColor: 'rgb(1, 2, 3)' });
+      expect(conversationsPane).toHaveComputedStyle({ backgroundColor: 'rgb(4, 5, 6)' });
+      expect(threadPane).toHaveComputedStyle({ backgroundColor: 'rgb(7, 8, 9)' });
+      [layout, conversationsPane, threadPane].forEach((element) => {
+        expect(element.hasAttribute('sx')).toBe(false);
+      });
+    });
+
     // Computed layout width is only meaningful in a real browser; JSDOM does not
     // resolve `width: 100%` against the pane, so this assertion runs browser-only.
     it.skipIf(isJSDOM)(

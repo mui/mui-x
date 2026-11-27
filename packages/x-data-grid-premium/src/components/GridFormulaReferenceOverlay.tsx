@@ -10,7 +10,8 @@ import {
   useGridEvent,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
+import type { GridEventListener, GridRowId, GridRowsMetaState } from '@mui/x-data-grid-pro';
+import { RowsMeta } from '@mui/x-data-grid/internals';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useStore } from '@base-ui/utils/store';
 import type { RefObject } from '@mui/x-internals/types';
@@ -71,7 +72,9 @@ const selectFirstRenderedRowTop = (
   state: GridPrivateApiPremium['virtualizer']['store']['state'],
   active: boolean,
 ) =>
-  active ? (state.rowsMeta.positions[state.virtualization.renderContext.firstRowIndex] ?? 0) : 0;
+  active
+    ? (RowsMeta.getPosition(state.rowsMeta, state.virtualization.renderContext.firstRowIndex) ?? 0)
+    : 0;
 
 interface OverlayRect {
   key: string;
@@ -111,7 +114,7 @@ function computeOverlayRects(
   apiRef: RefObject<GridPrivateApiPremium>,
   references: FormulaReference[],
   columnPositions: number[],
-  rowsMeta: { positions: number[]; currentPageTotalHeight: number },
+  rowsMeta: GridRowsMetaState,
   topOffset: number,
   pinnedFields: Set<string>,
   widthOverride: { field: string; width: number } | null,
@@ -143,13 +146,11 @@ function computeOverlayRects(
     if (rowIndex === undefined || rowIndex < 0) {
       return null;
     }
-    const top = rowsMeta.positions[rowIndex];
+    const top = RowsMeta.getPosition(rowsMeta, rowIndex);
     if (top === undefined) {
       return null;
     }
-    const nextTop = rowsMeta.positions[rowIndex + 1];
-    const height = nextTop !== undefined ? nextTop - top : rowsMeta.currentPageTotalHeight - top;
-    return { top: topOffset + top, height };
+    return { top: topOffset + top, height: RowsMeta.getSlotHeight(rowsMeta, rowIndex) };
   };
 
   const toRect = (

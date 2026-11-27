@@ -10,10 +10,7 @@ import type {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import type { DayGridEventProps } from './DayGridEvent.types';
@@ -269,10 +266,7 @@ const isResizableSelector = (
 
   // In month view, only multi-day and all-day events can be resized
   if (view === 'month') {
-    return isOccurrenceAllDayOrMultipleDay(
-      occurrence,
-      schedulerOtherSelectors.displayTimezone(state),
-    );
+    return isOccurrenceAllDayOrMultipleDay(occurrence);
   }
 
   return true;

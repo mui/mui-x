@@ -2,7 +2,6 @@
   "componentDescription": "Orchestrates the data providers for the chart components and hooks.\n\nUse this component if you have custom HTML components that need to access the chart data.",
   "propDescriptions": {
     "apiRef": { "description": "The ref object that exposes the chart API methods." },
-    "children": { "description": "The content of the component." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."

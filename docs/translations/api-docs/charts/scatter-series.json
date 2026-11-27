@@ -1,7 +1,6 @@
 {
   "interfaceDescription": "",
   "propertiesDescriptions": {
-    "type": { "description": "" },
     "color": {
       "description": "Color to use when displaying the series.<br />If <code>colorGetter</code> is provided, it will be used to get the color for each data point instead.<br />Otherwise, this color will be used for all data points in the series."
     },
@@ -28,6 +27,7 @@
     "sizeAxisId": {
       "description": "The id of the size axis used to compute the size of the scatter points.<br />It points to the id of an axis defined with the <code>zAxis</code> prop."
     },
+    "type": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },

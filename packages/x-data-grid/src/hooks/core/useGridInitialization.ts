@@ -9,6 +9,7 @@ import { useGridPipeProcessing } from './pipeProcessing';
 import { useGridStrategyProcessing } from './strategyProcessing';
 import { useGridStateInitialization } from './useGridStateInitialization';
 import { useGridProps } from './useGridProps';
+import { useGridLiveRegion } from './useGridLiveRegion';
 
 /**
  * Initialize the technical pieces of the DataGrid (logger, state, ...) that any DataGrid implementation needs
@@ -25,6 +26,7 @@ export const useGridInitialization = <PrivateApi extends GridPrivateApiCommon>(
   useGridPipeProcessing(privateApiRef);
   useGridStrategyProcessing(privateApiRef);
   useGridLocaleText(privateApiRef, props);
+  useGridLiveRegion(privateApiRef);
 
   privateApiRef.current.register('private', { rootProps: props });
 };

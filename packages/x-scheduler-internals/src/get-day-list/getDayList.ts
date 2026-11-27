@@ -1,9 +1,7 @@
-import type { SchedulerProcessedDay } from '../models';
 import type { BaseTemporal } from '../internals/utils/base-temporal';
-import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
+import { getSkippedDays } from '../internals/utils/plain-date-utils/timeZone';
 import {
   getDayNumber,
-  getPlainDateKey,
   plainDateFromDayNumber,
 } from '../internals/utils/plain-date-utils/plainDate';
 
@@ -18,21 +16,17 @@ export function getDayListFromPlainDates(parameters: {
    * The ISO weekdays to leave out, like the weekend of the locale.
    */
   excludedWeekdays?: readonly number[];
-}): SchedulerProcessedDay[] {
+}): BaseTemporal.PlainDate[] {
   const { firstPlainDate, lastPlainDate, timezone, excludedWeekdays } = parameters;
   // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, has no instant.
   const skippedDays = getSkippedDays(firstPlainDate, lastPlainDate.add({ days: 1 }), timezone);
   const lastDayNumber = getDayNumber(lastPlainDate);
-  const days: SchedulerProcessedDay[] = [];
+  const days: BaseTemporal.PlainDate[] = [];
   // Walks the day numbers, so each day reuses its cached plain date instead of building one with `add()`.
   for (let dayNumber = getDayNumber(firstPlainDate); dayNumber <= lastDayNumber; dayNumber += 1) {
     const plainDate = plainDateFromDayNumber(dayNumber);
     if (!skippedDays.has(dayNumber) && !excludedWeekdays?.includes(plainDate.dayOfWeek)) {
-      days.push({
-        plainDate,
-        key: getPlainDateKey(plainDate),
-        timestamp: toEpochMs(plainDate, timezone),
-      });
+      days.push(plainDate);
     }
   }
 
