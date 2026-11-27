@@ -280,6 +280,7 @@ export interface GridLocaleText {
   rowReorderingAnnouncementSorted: () => string;
   rowReorderingAnnouncementInvalid: () => string;
   rowReorderingAnnouncementDisabled: () => string;
+  rowReorderingKeyboardDescription: (params: { modifierKey: 'Alt' | 'Option' }) => string;
 
   // Column reordering text
   columnReorderingAnnouncementMoved: (params: {
@@ -292,6 +293,7 @@ export interface GridLocaleText {
     direction: 'left' | 'right';
   }) => string;
   columnReorderingAnnouncementDisabled: (params: { columnName: string }) => string;
+  columnReorderingKeyboardDescription: (params: { modifierKey: 'Alt' | 'Option' }) => string;
 
   // Aggregation
   aggregationMenuItemHeader: string;

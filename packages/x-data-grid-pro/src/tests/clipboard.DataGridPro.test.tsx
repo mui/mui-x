@@ -73,7 +73,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
-      cell.focus();
+      act(() => cell.focus());
       fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });

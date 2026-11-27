@@ -311,6 +311,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // rowReorderingAnnouncementSorted: () => "Rows can't be reordered while the grid is sorted.",
   // rowReorderingAnnouncementInvalid: () => "The row can't be moved there.",
   // rowReorderingAnnouncementDisabled: () => "This row can't be reordered.",
+  // rowReorderingKeyboardDescription: ({
+  //   modifierKey
+  // }) => `Press ${modifierKey}+Up Arrow or ${modifierKey}+Down Arrow to move the row.`,
 
   // Column reordering text
   // columnReorderingAnnouncementMoved: ({
@@ -325,6 +328,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // columnReorderingAnnouncementDisabled: ({
   //   columnName
   // }) => `Column ${columnName} can't be reordered.`,
+  // columnReorderingKeyboardDescription: ({
+  //   modifierKey
+  // }) => `Press ${modifierKey}+Left Arrow or ${modifierKey}+Right Arrow to move the column.`,
 
   // Aggregation
   aggregationMenuItemHeader: '集合',

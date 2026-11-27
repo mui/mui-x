@@ -181,6 +181,18 @@ describe('<DataGrid /> - Accessibility', () => {
     );
   });
 
+  it('should not describe the keyboard reorder keys, which need Pro', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} />
+      </div>,
+    );
+    act(() => getCell(0, 0).focus());
+
+    expect(getColumnHeaderCell(0)).not.to.have.attribute('aria-describedby');
+    expect(getCell(0, 0)).not.to.have.attribute('aria-describedby');
+  });
+
   describe('popups', () => {
     it('should not use role="tooltip" on the column menu popper', async () => {
       const { user } = render(<DataGrid {...baselineProps} />);

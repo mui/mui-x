@@ -10,6 +10,7 @@ import type {
   GridColumnReorderState,
 } from '../hooks';
 import type { GridDataSourceState } from '../hooks/features/dataSource/models';
+import type { GridKeyboardReorderState } from '../hooks/features/keyboardReorder/keyboardReorderInterfaces';
 
 /**
  * The state of Data Grid Pro.
@@ -19,6 +20,7 @@ export interface GridStatePro extends GridStateCommunity {
   pinnedColumns: GridColumnPinningState;
   detailPanel: GridDetailPanelState;
   dataSource: GridDataSourceState;
+  keyboardReorder: GridKeyboardReorderState;
 }
 
 /**

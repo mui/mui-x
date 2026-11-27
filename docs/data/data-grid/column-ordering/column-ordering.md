@@ -41,6 +41,9 @@ A keyboard move follows the same rules as a drag: [pinned](/x/react-data-grid/co
 
 While the keyboard is in use, the header of the column that a key press would move has a blue tint, with the `columnHeader--reorderTarget` class.
 Screen readers announce the new position after each move, or the reason why the column can't move.
+They also read a short description of the keys on the column headers, and on the first focused cell whose column can move, each time the focus enters the Data Grid.
+On macOS and iOS, the description names the <kbd class="key">⌥ Option</kbd> key instead of <kbd class="key">Alt</kbd>.
+Customize it with the `columnReorderingKeyboardDescription` locale text, which receives the name of the key as `modifierKey`, or make it return an empty string to remove it.
 
 To turn off a key from a cell, set `event.defaultMuiPrevented` in `onCellKeyDown()`.
 From a column header, do the same in a `columnHeaderKeyDown` listener registered with `isFirst`:

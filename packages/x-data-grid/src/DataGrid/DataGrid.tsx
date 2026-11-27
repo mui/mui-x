@@ -35,6 +35,8 @@ const configuration: GridConfiguration = {
     useColumnHeaderAdornment: () => null,
     useIsRowKeyboardReorderTarget: () => false,
     useIsColumnKeyboardReorderTarget: () => false,
+    useKeyboardReorderCellDescription: () => null,
+    useKeyboardReorderColumnHeaderDescribedBy: () => undefined,
   },
 };
 
