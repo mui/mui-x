@@ -4,10 +4,10 @@ import {
   formatAuthor,
   formatDate,
   formatReference,
-  groupBy,
   joinBlocks,
   joinWords,
   labelValues,
+  matchPrefix,
   parseTitle,
   section,
 } from '@mui/internal-code-infra/changelog';
@@ -18,16 +18,16 @@ const DOCS = 'Docs';
 const CORE = 'Core';
 const MISCELLANEOUS = 'Miscellaneous';
 const CODEMOD_LABEL = 'package: codemod';
+const DOCS_LABEL = 'docs';
 
-const EXCLUDED_LABELS = new Set(['dependencies']);
+const EXCLUDED_LABELS = new Set(['dependencies', 'internal', 'release']);
 
 const PRO_ICON = `[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')`;
 const PREMIUM_ICON = `[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')`;
 
-/** The package or section of a title prefix. Prefixes match as written. */
+/** The package or section of a title prefix, spelled in any case and with any separators. */
 const PREFIXES = new Map([
   ['DataGrid', 'x-data-grid'],
-  ['data grid', 'x-data-grid'],
   ['DataGridPro', 'x-data-grid-pro'],
   ['DataGridPremium', 'x-data-grid-premium'],
   ['DatePicker', 'x-date-pickers'],
@@ -44,20 +44,25 @@ const PREFIXES = new Map([
   ['charts-premium', 'x-charts-premium'],
   ['TreeView', 'x-tree-view'],
   ['RichTreeView', 'x-tree-view'],
-  ['tree view', 'x-tree-view'],
   ['TreeItem', 'x-tree-view'],
+  ['TreeViewPro', 'x-tree-view-pro'],
   ['RichTreeViewPro', 'x-tree-view-pro'],
-  ['tree view pro', 'x-tree-view-pro'],
   ['scheduler', 'x-scheduler'],
   ['scheduler-premium', 'x-scheduler-premium'],
   ['codemod', 'x-codemod'],
-  ['internal', CORE],
-  ['support-infra', CORE],
   ['code-infra', CORE],
   ['docs-infra', CORE],
+  ['internal', CORE],
+  ['support-infra', CORE],
 ]);
 
-const L10N_PREFIXES = new Set(['l10n', '118n']);
+/** How a prefix is written in the changelog. */
+const SPELLINGS = new Map([
+  ['DataGrid', 'DataGrid'],
+  ['x-virtualizer', 'virtualizer'],
+]);
+
+const L10N_PREFIXES = ['l10n', '118n'];
 
 /** The package of a `scope:` label, for translations. */
 const L10N_SCOPES = new Map([
@@ -68,11 +73,16 @@ const L10N_SCOPES = new Map([
   ['scheduler', 'x-scheduler'],
 ]);
 
+/** A heading in the body of a pull request, above notes on how to migrate. */
+const BREAKING_HEADING = /^(#{1,6})\s*breaking changes?\b.*$/im;
+
 interface Product {
   name: string;
   /** Without the `@mui/` scope. */
   packageName: string;
   tiers: ('pro' | 'premium')[];
+  /** Packages of their own, listed only when released. */
+  companions?: string[];
   /** Left out when it has no changes, even if its version changed. */
   optional?: true;
 }
@@ -80,7 +90,12 @@ interface Product {
 const PRODUCTS: Product[] = [
   { name: 'Data Grid', packageName: 'x-data-grid', tiers: ['pro', 'premium'] },
   { name: 'Date and Time Pickers', packageName: 'x-date-pickers', tiers: ['pro'] },
-  { name: 'Charts', packageName: 'x-charts', tiers: ['pro', 'premium'] },
+  {
+    name: 'Charts',
+    packageName: 'x-charts',
+    tiers: ['pro', 'premium'],
+    companions: ['x-charts-vendor'],
+  },
   { name: 'Tree View', packageName: 'x-tree-view', tiers: ['pro'] },
   { name: 'Scheduler', packageName: 'x-scheduler', tiers: ['premium'] },
   { name: 'Codemod', packageName: 'x-codemod', tiers: [], optional: true },
@@ -88,62 +103,137 @@ const PRODUCTS: Product[] = [
 
 const TIER_ICONS = { pro: PRO_ICON, premium: PREMIUM_ICON };
 
+interface Entry {
+  change: ChangelogChange;
+  /** The prefixes to show: the one that routed it here, if any. */
+  prefixes: string[];
+}
+
 function compareText(a: string, b: string) {
   return a.localeCompare(b);
 }
 
-/** The title prefixes, in alphabetical order. */
-function getPrefixes({ title }: ChangelogChange) {
-  return parseTitle(title).prefixes.sort(compareText);
+function spell(prefix: string) {
+  const known = matchPrefix(prefix, SPELLINGS.keys());
+
+  return known ? (SPELLINGS.get(known) ?? prefix) : prefix;
 }
 
-function route(change: ChangelogChange) {
-  if (change.labels.includes(CODEMOD_LABEL)) {
-    return 'x-codemod';
-  }
-
-  const prefixes = getPrefixes(change);
-
-  // `[docs][charts]` is a docs change.
-  if (prefixes.includes('docs')) {
-    return DOCS;
-  }
-
-  // Only the first prefix in alphabetical order counts: `[l10n][DataGrid]` is a Data Grid change.
-  const [prefix = ''] = prefixes;
-
-  if (!L10N_PREFIXES.has(prefix)) {
-    return PREFIXES.get(prefix) ?? MISCELLANEOUS;
-  }
-
-  const packages = labelValues(change.labels, 'scope').flatMap((scope) => {
-    const packageName = L10N_SCOPES.get(scope);
-
-    return packageName ? [packageName] : [];
-  });
-
-  return packages.length > 0 ? packages : MISCELLANEOUS;
+function getPackage(data: ChangelogData, packageName: string) {
+  return data.packages.find(({ path }) => path === `packages/${packageName}`);
 }
 
-/** By prefixes, then by message. */
-function compareChanges(a: ChangelogChange, b: ChangelogChange) {
-  const order = compareText(getPrefixes(a).join(','), getPrefixes(b).join(','));
+function createRouter() {
+  return (change: ChangelogChange): [string, string[]][] => {
+    const { prefixes } = parseTitle(change.title);
 
-  if (order !== 0) {
-    return order;
-  }
+    if (change.labels.includes(CODEMOD_LABEL)) {
+      return [['x-codemod', prefixes]];
+    }
 
-  return a.message < b.message ? -1 : 1;
+    // `[docs][charts]` is a docs change, and so is one labeled `docs` that no product scope claims.
+    const isDocs =
+      prefixes.some((prefix) => matchPrefix(prefix, [DOCS])) ||
+      (change.labels.includes(DOCS_LABEL) &&
+        !labelValues(change.labels, 'scope').some((scope) => L10N_SCOPES.has(scope)));
+
+    if (isDocs) {
+      return [[DOCS, prefixes]];
+    }
+
+    // `[tree view][scheduler]` is listed in both, with its own prefix in each.
+    const routes = prefixes.flatMap((prefix): [string, string[]][] => {
+      const known = matchPrefix(prefix, PREFIXES.keys());
+      const group = known && PREFIXES.get(known);
+
+      if (group) {
+        return [[group, [prefix]]];
+      }
+
+      if (!matchPrefix(prefix, L10N_PREFIXES)) {
+        return [];
+      }
+
+      return labelValues(change.labels, 'scope').flatMap((scope): [string, string[]][] => {
+        const packageName = L10N_SCOPES.get(scope);
+
+        return packageName ? [[packageName, prefixes]] : [];
+      });
+    });
+
+    // The first prefix of a group is the one shown: `[DataGrid][data grid]` is listed once.
+    const unique = new Map<string, string[]>();
+
+    for (const [group, shown] of routes) {
+      if (!unique.has(group)) {
+        unique.set(group, shown);
+      }
+    }
+
+    return unique.size > 0 ? [...unique] : [[MISCELLANEOUS, prefixes]];
+  };
 }
 
-function renderEntries(changes: ChangelogChange[] = []) {
+function groupChanges(changes: ChangelogChange[], route: ReturnType<typeof createRouter>) {
+  const groups = new Map<string, Entry[]>();
+
+  for (const change of changes) {
+    for (const [group, prefixes] of route(change)) {
+      groups.set(group, [...(groups.get(group) ?? []), { change, prefixes }]);
+    }
+  }
+
+  return groups;
+}
+
+function renderLine({ change, prefixes }: Entry) {
+  const shown = prefixes.map((prefix) => `[${spell(prefix)}]`).join('');
+
+  return joinWords(shown, parseTitle(change.title).text);
+}
+
+function renderEntries(entries: Entry[] = []) {
   return bulletList(
-    [...changes]
-      .sort(compareChanges)
-      .map((change) =>
-        joinWords(change.title, `(${formatReference(change)})`, formatAuthor(change.author)),
+    entries
+      .map((entry) => ({ entry, line: renderLine(entry) }))
+      .sort(
+        (a, b) =>
+          compareText(a.line, b.line) ||
+          (a.entry.change.pullRequest?.number ?? 0) - (b.entry.change.pullRequest?.number ?? 0),
+      )
+      .map(({ entry, line }) =>
+        joinWords(line, `(${formatReference(entry.change)})`, formatAuthor(entry.change.author)),
       ),
   );
+}
+
+/** The section on breaking changes in the body of a pull request, without its heading. */
+function getBreakingNotes({ pullRequest }: ChangelogChange) {
+  const body = (pullRequest?.body ?? '').replace(/\r\n/g, '\n');
+  const heading = BREAKING_HEADING.exec(body);
+
+  if (!heading) {
+    return '';
+  }
+
+  const rest = body.slice(heading.index + heading[0].length);
+  const end = rest.search(new RegExp(`^#{1,${heading[1].length}}\\s`, 'm'));
+
+  return (end === -1 ? rest : rest.slice(0, end)).trim();
+}
+
+function renderBreakingChanges(entries: Entry[]) {
+  const notes = [...new Set(entries.map(({ change }) => change))].flatMap((change) => {
+    const note = getBreakingNotes(change);
+
+    if (!note) {
+      return [];
+    }
+
+    return note.startsWith('- ') ? [note] : [bulletList([note])];
+  });
+
+  return section('#### Breaking changes', notes);
 }
 
 function compareLogins(a: string, b: string) {
@@ -169,18 +259,22 @@ function renderContributors(changes: ChangelogChange[]) {
 }
 
 function renderProduct(
-  { name, packageName, tiers, optional }: Product,
-  groups: Map<string, ChangelogChange[]>,
+  { name, packageName, tiers, companions = [], optional }: Product,
+  groups: Map<string, Entry[]>,
   data: ChangelogData,
   nextVersion: string | undefined,
 ) {
-  const pkg = data.packages.find(({ path }) => path === `packages/${packageName}`);
-  const version = (nextVersion && pkg?.version) || VERSION_PLACEHOLDER;
-  const tierPackages = tiers.map((tier) => `${packageName}-${tier}`);
-  const hasChanges = [packageName, ...tierPackages].some((group) => groups.has(group));
+  const getVersion = (pkg: string) =>
+    (nextVersion && getPackage(data, pkg)?.version) || VERSION_PLACEHOLDER;
 
-  // Without the next version, every product is listed so that the release manager can pick.
-  const isBumped = !nextVersion || pkg?.changed !== false;
+  const isReleased = (pkg: string) => !nextVersion || getPackage(data, pkg)?.changed !== false;
+
+  const version = getVersion(packageName);
+  const tierPackages = tiers.map((tier) => `${packageName}-${tier}`);
+  const shownCompanions = companions.filter((pkg) => groups.has(pkg) || isReleased(pkg));
+  const packages = [packageName, ...tierPackages, ...shownCompanions];
+  const hasChanges = packages.some((pkg) => groups.has(pkg));
+  const isBumped = [packageName, ...shownCompanions].some(isReleased);
 
   if (!hasChanges && (optional || !isBumped)) {
     return '';
@@ -191,6 +285,7 @@ function renderProduct(
 
   return joinBlocks(
     `### ${name}`,
+    renderBreakingChanges(packages.flatMap((pkg) => groups.get(pkg) ?? [])),
     `#### ${base}`,
     renderEntries(groups.get(packageName)) || 'Internal changes.',
     tiers.map((tier, index) => {
@@ -205,6 +300,12 @@ function renderProduct(
         entries,
       );
     }),
+    shownCompanions.map((pkg) =>
+      joinBlocks(
+        `#### \`@mui/${pkg}@${getVersion(pkg)}\``,
+        renderEntries(groups.get(pkg)) || 'Internal changes.',
+      ),
+    ),
   );
 }
 
@@ -224,7 +325,7 @@ export function renderChangelog(data: ChangelogData, nextVersion?: string) {
     ({ labels }) => !labels.some((label) => EXCLUDED_LABELS.has(label)),
   );
 
-  const groups = groupBy(listed, route);
+  const groups = groupChanges(listed, createRouter());
 
   return joinBlocks(
     [
