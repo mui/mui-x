@@ -21,14 +21,15 @@ See Material UI's [Focus visible](/material-ui/customization/focus-visible/) pa
 
 ## Usage
 
-When `focusVisible` is enabled, these elements show the focus ring: day cells, month and year buttons, clocks, and the buttons in the calendar header.
+When `focusVisible` is enabled, these elements show the focus ring: day cells, month and year buttons, clocks and their items, the buttons in the calendar header, shortcuts, and the toolbar buttons and tabs of the range pickers.
 
 The fields follow the Material UI inputs.
 A standard or filled field shows the focus ring when its underline is turned off with `disableUnderline`.
 An outlined field, or a field that keeps its underline, uses the border or the underline to show focus instead.
 
 :::info
-The focus ring only shows when you use the keyboard. Clicking doesn't show it.
+The focus ring only shows when you use the keyboard.
+Clicking doesn't show it.
 
 The demos on this page turn off the ripple effect, so you only see the focus ring.
 :::
@@ -38,13 +39,24 @@ To reach the year list, open the month dropdown in the calendar header.
 
 {{"demo": "FocusVisiblePickers.js", "bg": "inline"}}
 
+## Style changes
+
+When `focusVisible` is enabled, the Pickers change how days, months, years, and clock items show focus:
+
+- The focus ring replaces the background color that these elements show on focus.
+- A selected item with focus shows a band in the contrast color between its fill and the focus ring, so the ring stays visible next to the fill.
+- While today's date has focus, it draws its circle with `box-shadow` instead of `outline`, so you see both the circle and the focus ring.
+
 :::warning
-Today's date is marked with a circle drawn with the CSS `outline` property.
-The focus ring also uses `outline`, and an element can only have one.
-
-So when today's date has focus, the circle is drawn with `box-shadow` instead, and you see both the ring and the circle.
-A `boxShadow` set in `theme.focusVisible` is drawn together with the circle.
-
-This only happens when the focus ring is turned on.
-Otherwise, today's date still uses `outline`, so your existing styles on the `today` class keep working.
+A style override that sets the `outline` of the `today` class also replaces the focus ring while today's date has focus.
+To keep the focus ring, add `:not(.Mui-focusVisible)` to the selector of the override.
 :::
+
+## Custom focus ring
+
+The Pickers use the focus ring that you set in `theme.focusVisible`.
+Days, month and year buttons, clock items, and the buttons in the calendar header and the toolbar use the [inner focus indicator](/material-ui/customization/focus-visible/#customizing-the-inner-focus-indicator), so `insetOverrides` applies to them.
+
+The demo below uses a two-color focus ring: an outline, with a band in the paper color between the outline and the element.
+
+{{"demo": "FocusVisibleRingPickers.js", "bg": "inline"}}
