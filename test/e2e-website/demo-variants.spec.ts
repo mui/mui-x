@@ -229,7 +229,6 @@ test.describe('Demo source variants', () => {
     const editor = demo.locator('textarea:visible');
 
     await expect(editor).toBeFocused();
-    await page.waitForLoadState('networkidle');
     await expect(type).toHaveText('Bar');
     expect(await plot!.evaluate((node) => node.isConnected)).toBe(true);
 
