@@ -141,6 +141,7 @@ const pages: MuiPage[] = [
     title: 'Common concepts',
     children: [
       { pathname: `/x/common-concepts/custom-components`, title: 'Slots and subcomponents' },
+      { pathname: `/x/common-concepts/density`, title: 'Density', unstable: true },
     ],
   },
   {

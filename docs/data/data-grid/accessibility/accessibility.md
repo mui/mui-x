@@ -51,6 +51,9 @@ While outside the rendered columns, these cells take up no space.
 - `compact`
 - `comfortable`
 
+The prop scales the row and header heights by a factor, so it works the same with a [density-enhanced theme](/x/common-concepts/density/).
+In that case the theme sets the base heights, and the `density` value multiplies them.
+
 ### Set the density programmatically
 
 You can set the density programmatically in one of the following ways:
