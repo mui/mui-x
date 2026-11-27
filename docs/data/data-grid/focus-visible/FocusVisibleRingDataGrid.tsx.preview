@@ -1,0 +1,5 @@
+<ThemeProvider theme={theme}>
+  <Box sx={{ height: 260, width: '100%' }}>
+    <DataGrid rows={rows} columns={columns} checkboxSelection hideFooter />
+  </Box>
+</ThemeProvider>
