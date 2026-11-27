@@ -18,6 +18,13 @@ import type {
   EventEditingTriggerProps,
 } from './EventEditing.types';
 import { getInitialEditingMode } from './editingModePolicy';
+import type { FocusFallbackSnapshot } from '../../utils/focus-utils';
+import {
+  captureFocusFallback,
+  getOccurrenceTimestamp,
+  isFocusOnDocument,
+  resolveConnectedFocusFallback,
+} from '../../utils/focus-utils';
 
 export const EventEditingContext = React.createContext<EventEditingContextValue | undefined>(
   undefined,
@@ -46,6 +53,33 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
   // An armed start skips `onEventEditingStart`, so the activation's stable anchor is retained
   // here until the toolbar's Edit finally fires the callback.
   const stableAnchorRef = React.useRef<HTMLElement | null>(null);
+  // Where focus goes once editing ends, when the surface can't give it back to the edited event
+  // (for example once "Only this event" moves the occurrence out of its series).
+  const focusFallbackRef = React.useRef<{
+    element: HTMLElement;
+    snapshot: FocusFallbackSnapshot;
+  } | null>(null);
+  const isEditing = useStore(store, schedulerOtherSelectors.editingOccurrence) != null;
+
+  React.useEffect(() => {
+    const focusFallback = focusFallbackRef.current;
+    if (isEditing || focusFallback == null) {
+      return undefined;
+    }
+    focusFallbackRef.current = null;
+    const { element, snapshot } = focusFallback;
+    if (element.isConnected) {
+      return undefined;
+    }
+    const ownerDocument = element.ownerDocument;
+    // Deferred: the surface gives focus back to the edited event as it closes.
+    const timeout = setTimeout(() => {
+      if (isFocusOnDocument(ownerDocument)) {
+        resolveConnectedFocusFallback(snapshot)?.focus({ preventScroll: true });
+      }
+    });
+    return () => clearTimeout(timeout);
+  }, [isEditing]);
 
   const registerAnchor = useStableCallback((node: HTMLElement) => {
     registeredAnchorsRef.current.add(node);
@@ -86,6 +120,11 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
         // Batched with the store write above, so the surface never renders anchored to `null`.
         setAnchor(forwardedAnchorRef.current);
         stableAnchorRef.current = stableAnchor ?? null;
+        const element = forwardedAnchorRef.current;
+        const snapshot = element
+          ? captureFocusFallback(element, occurrence.id, getOccurrenceTimestamp(occurrence))
+          : null;
+        focusFallbackRef.current = element && snapshot ? { element, snapshot } : null;
       }
       return started;
     },
