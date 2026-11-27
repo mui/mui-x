@@ -19,6 +19,7 @@ const CORE = 'Core';
 const MISCELLANEOUS = 'Miscellaneous';
 const CODEMOD_LABEL = 'package: codemod';
 const DOCS_LABEL = 'docs';
+const TEST_PREFIX = 'test';
 
 const EXCLUDED_LABELS = new Set(['dependencies', 'internal', 'release']);
 
@@ -139,6 +140,13 @@ function createRouter() {
 
     if (isDocs) {
       return [[DOCS, prefixes]];
+    }
+
+    // `[test][charts]` is a test change.
+    const test = prefixes.find((prefix) => matchPrefix(prefix, [TEST_PREFIX]));
+
+    if (test) {
+      return [[MISCELLANEOUS, [test]]];
     }
 
     // `[tree view][scheduler]` is listed in both, with its own prefix in each.
