@@ -481,7 +481,12 @@ export const useGridCellEditing = (
             ) {
               // Mark the stop as done, as the effect does, so that a later stop does not save again.
               prevCellModesModel.current[id][field].mode = GridCellModes.View;
-              updateStateToStopCellEditMode({ id, field, ...modelParams });
+              // If the row was removed during the validation, only clear its edit.
+              updateStateToStopCellEditMode(
+                apiRef.current.getRow(id)
+                  ? { id, field, ...modelParams }
+                  : { id, field, ignoreModifications: true },
+              );
             }
           });
           return;
@@ -624,6 +629,22 @@ export const useGridCellEditing = (
     [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
   );
 
+  const cancelCellEditingStop = React.useCallback<
+    GridCellEditingPrivateApi['cancelCellEditingStop']
+  >(
+    (id, field) => {
+      if (
+        cellModesModelRef.current[id]?.[field]?.mode === GridCellModes.View &&
+        prevCellModesModel.current[id]?.[field]?.mode === GridCellModes.Edit &&
+        apiRef.current.getCellMode(id, field) === GridCellModes.Edit
+      ) {
+        // Revert the mode in the cellModesModel prop back to "edit"
+        updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+      }
+    },
+    [apiRef, updateFieldInCellModesModel],
+  );
+
   const getRowWithUpdatedValuesFromCellEditing = React.useCallback<
     GridCellEditingPrivateApi['getRowWithUpdatedValuesFromCellEditing']
   >(
@@ -652,6 +673,7 @@ export const useGridCellEditing = (
 
   const editingPrivateApi: Omit<GridCellEditingPrivateApi, keyof GridEditingSharedPrivateApi> = {
     setCellEditingEditCellValue,
+    cancelCellEditingStop,
     getRowWithUpdatedValuesFromCellEditing,
   };
 

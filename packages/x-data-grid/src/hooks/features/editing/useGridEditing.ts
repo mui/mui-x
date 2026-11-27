@@ -195,6 +195,13 @@ export const useGridEditing = (
     (params) => {
       const { id, field, debounceMs } = params;
 
+      // A stop must not save a value that is set after it.
+      if (props.editMode === GridEditModes.Row) {
+        apiRef.current.cancelRowEditingStop(id);
+      } else {
+        apiRef.current.cancelCellEditingStop(id, field);
+      }
+
       return new Promise((resolve) => {
         maybeDebounce(id, field, debounceMs, async () => {
           const setEditCellValueToCall =
