@@ -16,6 +16,7 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
+import { CALENDAR_GRID_ITEM_PROPS } from '../../internals/utils/calendar-grid-items';
 
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
@@ -231,6 +232,39 @@ describe('<CalendarGrid.DayCell />', () => {
       await user.click(button);
       await user.keyboard('c');
 
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+
+    it('should not create an event on C when typing in an input inside an entered cell', async () => {
+      let store: AnyEventCalendarStore | null = null;
+
+      const { user } = render(
+        <DayCellWrapper>
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')}>
+            <div {...CALENDAR_GRID_ITEM_PROPS}>
+              <input aria-label="note" />
+            </div>
+          </CalendarGrid.DayCell>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </DayCellWrapper>,
+      );
+
+      act(() => {
+        screen.getByRole('gridcell').focus();
+      });
+      await user.keyboard('{Enter}');
+      const input = screen.getByRole('textbox', { name: 'note' });
+      act(() => {
+        input.focus();
+      });
+      await user.keyboard('cat');
+
+      expect(input).to.have.property('value', 'cat');
       expect(store!.state.occurrencePlaceholder).to.equal(null);
     });
 

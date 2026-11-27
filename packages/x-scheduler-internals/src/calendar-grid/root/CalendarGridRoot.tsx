@@ -191,7 +191,10 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     }
 
     if (isCreateEventKey(event)) {
-      const createEvent = cellsRef.current.get(cell)?.createEvent;
+      // Not from an element inside an item, like an input in a custom event.
+      const isItem = (target as HTMLElement).hasAttribute(CALENDAR_GRID_ITEM_ATTRIBUTE);
+      const createEvent =
+        target === cell || isItem ? cellsRef.current.get(cell)?.createEvent : undefined;
       if (createEvent) {
         event.preventDefault();
         createEvent(event.nativeEvent);
