@@ -634,6 +634,28 @@ describe('CalendarGrid keyboard navigation', () => {
     });
 
     it.each([
+      { direction: 'ltr' as const, next: '{ArrowRight}', previous: '{ArrowLeft}' },
+      { direction: 'rtl' as const, next: '{ArrowLeft}', previous: '{ArrowRight}' },
+    ])(
+      'should move between the items of the cell with the inline arrow keys in $direction',
+      async ({ direction, next, previous }) => {
+        const { user } = render(
+          <DirectionProvider direction={direction}>
+            <GridWithEvents />
+          </DirectionProvider>,
+        );
+
+        await user.click(screen.getByTestId('cell-0'));
+        await user.keyboard('{Enter}');
+
+        await user.keyboard(next);
+        expect(screen.getByTestId('event-1')).toHaveFocus();
+        await user.keyboard(previous);
+        expect(screen.getByTestId('day-button')).toHaveFocus();
+      },
+    );
+
+    it.each([
       { name: 'Escape', keys: '{Escape}' },
       { name: 'F2', keys: '{F2}' },
     ])('should move focus back to the cell on $name', async ({ keys }) => {

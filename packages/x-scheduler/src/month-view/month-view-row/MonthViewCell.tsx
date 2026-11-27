@@ -253,7 +253,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     >
       <span
         id={labelId}
-        aria-label={`${formatMonthAndDayOfMonth(locale, day.plainDate)}, ${localeText.eventCountAriaLabel(day.withPosition.length)}`}
+        aria-label={
+          // The events are unknown while loading.
+          isLoading
+            ? formatMonthAndDayOfMonth(locale, day.plainDate)
+            : `${formatMonthAndDayOfMonth(locale, day.plainDate)}, ${localeText.eventCountAriaLabel(day.withPosition.length)}`
+        }
         hidden
       />
       {hasDayView ? (

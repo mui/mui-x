@@ -49,6 +49,8 @@ export function EventContextMenu(props: EventContextMenuProps) {
       anchorReference={anchorPosition ? 'anchorPosition' : 'anchorEl'}
       anchorPosition={anchorPosition ?? undefined}
       anchorEl={anchorPosition ? undefined : anchorEl}
+      // The Menu key can fire `contextmenu` once focus is already in the menu (on key up on Windows).
+      onContextMenu={(event) => event.preventDefault()}
       slotProps={{
         list: { 'aria-label': localeText.eventContextMenuAriaLabel },
         transition: { onExited: handleExited },

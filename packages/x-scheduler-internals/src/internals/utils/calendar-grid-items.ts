@@ -8,7 +8,7 @@ export const CALENDAR_GRID_ITEM_ATTRIBUTE = 'data-calendar-grid-item';
 
 /**
  * The props of an element of a cell that is not an event, like the day number button.
- * The items are never in the Tab sequence: the grid has a single tab stop, its focused cell.
+ * The items are never in the Tab sequence: the grid has a single tab stop, one of its cells.
  */
 export const CALENDAR_GRID_ITEM_PROPS = getCalendarGridItemProps('');
 
@@ -51,6 +51,27 @@ export function getCalendarGridCellItems(cell: HTMLElement): HTMLElement[] {
   });
 
   return items;
+}
+
+/**
+ * The move between items an arrow key makes: 1 to the next one, -1 to the previous one, 0 for
+ * another key.
+ */
+export function getCalendarGridItemOffset(key: string, isRtl: boolean): -1 | 0 | 1 {
+  if (key === 'ArrowDown' || key === (isRtl ? 'ArrowLeft' : 'ArrowRight')) {
+    return 1;
+  }
+  if (key === 'ArrowUp' || key === (isRtl ? 'ArrowRight' : 'ArrowLeft')) {
+    return -1;
+  }
+  return 0;
+}
+
+/**
+ * Focuses the item at `index`, wrapping around the list.
+ */
+export function focusCalendarGridItem(items: HTMLElement[], index: number) {
+  items[(index + items.length) % items.length]?.focus();
 }
 
 function isHidden(element: HTMLElement) {

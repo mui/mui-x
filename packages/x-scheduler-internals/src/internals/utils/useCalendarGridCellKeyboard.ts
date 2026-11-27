@@ -10,7 +10,8 @@ import { useCalendarGridCellsRefsContext } from './CalendarGridCellsRefsContext'
 
 /**
  * The keyboard behavior shared by the cells of the calendar grid: a roving tab stop, the arrow
- * keys to move between cells, Enter or F2 to move into the cell's items, and C to create an event.
+ * keys to move between cells, and Enter or F2 to move into the cell's items. It also registers the
+ * cell, so C creates an event in it.
  */
 export function useCalendarGridCellKeyboard(
   parameters: useCalendarGridCellKeyboard.Parameters,

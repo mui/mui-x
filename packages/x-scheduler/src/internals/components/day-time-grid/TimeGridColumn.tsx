@@ -90,6 +90,7 @@ export const TimeGridColumn = React.memo(function TimeGridColumn(props: TimeGrid
   const labelId = useId();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
   const dayStartMinute = startTime * 60;
   const dayEndMinute = endTime * 60;
   // The bounds of the column, which builds them the same way.
@@ -124,7 +125,8 @@ export const TimeGridColumn = React.memo(function TimeGridColumn(props: TimeGrid
       dayEndMinute={dayEndMinute}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
-      aria-labelledby={labelId}
+      // The events are unknown while loading.
+      aria-labelledby={isLoading ? undefined : labelId}
       data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >

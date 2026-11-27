@@ -6,9 +6,13 @@ import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useDirection } from '@base-ui/react/direction-provider';
 import { DEFAULT_ROW_TYPES } from '../../internals/utils/getNavigationTarget';
+import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
+import { schedulerOtherSelectors } from '../../scheduler-selectors';
 import {
   CALENDAR_GRID_ITEM_ATTRIBUTE,
+  focusCalendarGridItem,
   getCalendarGridCellItems,
+  getCalendarGridItemOffset,
 } from '../../internals/utils/calendar-grid-items';
 import type { GridCellCoordinates, GridRowType } from '../../models/calendarGrid';
 import { CalendarGridRootContext } from './CalendarGridRootContext';
@@ -26,11 +30,14 @@ function isSameCell(a: GridCellCoordinates | null, b: GridCellCoordinates | null
   );
 }
 
-/** C, without the modifiers used by the browser and the assistive technologies. */
+/**
+ * C, without the modifiers used by the browser and the assistive technologies.
+ * On a layout without Latin letters (Cyrillic, Greek), the key in the position of C.
+ */
 function isCreateEventKey(event: React.KeyboardEvent) {
-  return (
-    (event.key === 'c' || event.key === 'C') && !event.ctrlKey && !event.metaKey && !event.altKey
-  );
+  const isC =
+    event.key.toLowerCase() === 'c' || (event.code === 'KeyC' && !/^[a-z]$/i.test(event.key));
+  return isC && !event.ctrlKey && !event.metaKey && !event.altKey && !event.nativeEvent.isComposing;
 }
 
 export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
@@ -54,6 +61,7 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   const id = useId(idProp);
   const rowsPerType = rowsPerTypeProp;
   const isRtl = useDirection() === 'rtl';
+  const store = useSchedulerStoreContext(true);
 
   const rootRef = React.useRef<HTMLDivElement>(null);
   const cellsRef = React.useRef(new Map<HTMLElement, CalendarGridCellRegistration>());
@@ -119,8 +127,7 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     cell.focus({ preventScroll: true });
   };
 
-  const isInGrid = (target: EventTarget) =>
-    target instanceof Node && rootRef.current?.contains(target) === true;
+  const isInGrid = (target: EventTarget) => rootRef.current?.contains(target as Node) === true;
 
   const handleFocus = useStableCallback((event: React.FocusEvent<HTMLDivElement>) => {
     const target = event.target;
@@ -184,19 +191,21 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     }
 
     if (event.key === 'Escape' || event.key === 'F2') {
+      // Escape disarms an armed event first (`useDisarmOnEscape`), the next one leaves the cell.
+      if (
+        event.key === 'Escape' &&
+        store != null &&
+        schedulerOtherSelectors.editingMode(store.state) === 'armed'
+      ) {
+        return;
+      }
       event.preventDefault();
       exitCell(cell);
       return;
     }
 
-    const previousKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
-    const nextKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
-    let offset = 0;
-    if (event.key === 'ArrowDown' || event.key === nextKey) {
-      offset = 1;
-    } else if (event.key === 'ArrowUp' || event.key === previousKey) {
-      offset = -1;
-    } else if (event.key === 'Tab') {
+    let offset = getCalendarGridItemOffset(event.key, isRtl);
+    if (event.key === 'Tab') {
       offset = event.shiftKey ? -1 : 1;
     }
     if (offset === 0) {
@@ -209,7 +218,7 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
       return;
     }
     event.preventDefault();
-    items[(index + offset + items.length) % items.length].focus();
+    focusCalendarGridItem(items, index + offset);
   });
 
   const contextValue: CalendarGridRootContext = React.useMemo(

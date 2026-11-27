@@ -11,7 +11,11 @@ import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { formatWeekdayShortMonthShortAndDayOfMonth } from '@mui/x-scheduler-internals/internals';
+import {
+  focusCalendarGridItem,
+  formatWeekdayShortMonthShortAndDayOfMonth,
+  getCalendarGridItemOffset,
+} from '@mui/x-scheduler-internals/internals';
 import type {
   MoreEventsPopoverProps,
   MoreEventsPopoverProviderProps,
@@ -188,26 +192,18 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   // The arrow keys move between the events, wrapping around, like inside a grid cell.
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const items = Array.from(bodyRef.current?.children ?? []) as HTMLElement[];
-    if (event.defaultPrevented || items.length === 0) {
+    const offset = getCalendarGridItemOffset(event.key, isRtl);
+    if (event.defaultPrevented || offset === 0 || items.length === 0) {
       return;
     }
-    const previousKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
-    const nextKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
-    let offset = 0;
-    if (event.key === 'ArrowDown' || event.key === nextKey) {
-      offset = 1;
-    } else if (event.key === 'ArrowUp' || event.key === previousKey) {
-      offset = -1;
-    } else {
-      return;
-    }
-    // From the popover itself (index -1), the first or the last event.
-    let index = items.indexOf(event.target as HTMLElement);
-    if (index === -1 && offset === -1) {
-      index = 0;
-    }
+    const index = items.indexOf(event.target as HTMLElement);
     event.preventDefault();
-    items[(index + offset + items.length) % items.length].focus();
+    // From the popover itself, the first or the last event.
+    if (index === -1) {
+      focusCalendarGridItem(items, offset === 1 ? 0 : -1);
+    } else {
+      focusCalendarGridItem(items, index + offset);
+    }
   };
 
   // Like a menu, the popover opens with focus on its first event.

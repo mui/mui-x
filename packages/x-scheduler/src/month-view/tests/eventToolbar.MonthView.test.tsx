@@ -1,4 +1,4 @@
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { act, screen, fireEvent } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import { vi, describe, it, expect, afterEach } from 'vitest';
@@ -53,5 +53,24 @@ describe('MonthView - event toolbar', () => {
     fireEvent.click(document.body);
 
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+  });
+
+  it('should disarm on Escape before moving focus back to the cell', () => {
+    window.matchMedia = createMatchMedia(true);
+    renderEvent();
+    const event = getEvent();
+
+    act(() => {
+      event.focus();
+    });
+    fireEvent.click(event);
+    expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+
+    fireEvent.keyDown(event, { key: 'Escape' });
+    expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+    expect(document.activeElement).to.equal(event);
+
+    fireEvent.keyDown(event, { key: 'Escape' });
+    expect(document.activeElement).to.equal(event.closest('[role="gridcell"]'));
   });
 });

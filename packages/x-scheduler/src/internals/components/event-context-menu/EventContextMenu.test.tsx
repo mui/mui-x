@@ -92,15 +92,36 @@ describe('EventContextMenu', () => {
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
   });
 
-  it('should not open the menu twice when the browser also fires contextmenu for the key', () => {
+  it('should keep the menu anchored to the event when the browser also fires contextmenu for the key', () => {
     renderEvent();
     const event = getEvent();
     event.focus();
 
     fireEvent.keyDown(event, { key: 'ContextMenu' });
-    fireEvent.contextMenu(event);
+    const paper = screen.getByRole('menu').parentElement!;
+    const { top, left } = paper.style;
 
-    expect(screen.getAllByRole('menu')).to.have.length(1);
+    // Not moved to the pointer.
+    expect(fireEvent.contextMenu(event, { clientX: 500, clientY: 400 })).to.equal(false);
+    expect([paper.style.top, paper.style.left]).to.deep.equal([top, left]);
+    // Nor the browser menu once focus is in the menu.
+    expect(fireEvent.contextMenu(screen.getAllByRole('menuitem')[0])).to.equal(false);
+  });
+
+  it('should open the menu at the pointer on a right-click after the keyboard opened it', async () => {
+    renderEvent();
+    const event = getEvent();
+    event.focus();
+
+    fireEvent.keyDown(event, { key: 'F10', shiftKey: true });
+    fireEvent.keyDown(screen.getAllByRole('menuitem')[0], { key: 'Escape' });
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+
+    fireEvent.contextMenu(event, { clientX: 500, clientY: 400 });
+
+    expect(screen.getByRole('menu').parentElement!.style.top).to.equal('396px');
   });
 
   it.each([

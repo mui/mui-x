@@ -187,15 +187,18 @@ export const MonthView = React.memo(
       [weeks.length],
     );
 
-    // Today, else the first day of the visible month. A new object for other days resets the tab stop.
-    const defaultFocusedCell = React.useMemo(
-      () =>
-        getDefaultFocusedCell(weeks, 'day-grid', [
-          nowDayNumber,
-          getDayNumber(visiblePlainDate.with({ day: 1 })),
-        ]),
-      [weeks, nowDayNumber, visiblePlainDate],
-    );
+    // Today, else the first visible day of the visible month (the 1st can be a hidden weekday).
+    // A new object resets the tab stop, so it only depends on the days, not on the visible date.
+    const startOfMonthDayNumber = getDayNumber(visiblePlainDate.with({ day: 1 }));
+    const defaultFocusedCell = React.useMemo(() => {
+      const firstDayOfMonth = weeks
+        .flat()
+        .find((day) => getDayNumber(day) >= startOfMonthDayNumber);
+      return getDefaultFocusedCell(weeks, 'day-grid', [
+        nowDayNumber,
+        ...(firstDayOfMonth ? [getDayNumber(firstDayOfMonth)] : []),
+      ]);
+    }, [weeks, nowDayNumber, startOfMonthDayNumber]);
 
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 

@@ -20,7 +20,7 @@ export interface CalendarGridRootContext {
   id: string | undefined;
   /**
    * The coordinates of the cell that currently has keyboard focus.
-   * `null` when focus is outside of the grid's cells.
+   * `null` when focus is outside of the grid.
    */
   focusedCell: GridCellCoordinates | null;
   /**

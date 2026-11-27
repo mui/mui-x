@@ -552,6 +552,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           // Unlike the time grid, the all-day scroll position means nothing in another period.
           key={start}
           ref={allDayRowRef}
+          // Chromium makes a scroller with no tabbable child a tab stop, the grid has its own.
+          tabIndex={-1}
           start={start}
           end={end}
           days={days}
@@ -572,11 +574,14 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       <DayTimeGridRoot
         className={classes.dayTimeGrid}
         ref={scrollRootRef}
+        // Same as the all-day row.
+        tabIndex={-1}
         data-has-scroll={hasScroll || undefined}
       >
         <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
           <DayTimeGridScrollableContent
             className={classes.dayTimeGridScrollableContent}
+            tabIndex={-1}
             scrollableRef={scrollRootRef}
             style={{ '--hours-count': hoursCount } as React.CSSProperties}
           >

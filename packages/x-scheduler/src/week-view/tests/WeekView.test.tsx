@@ -9,7 +9,7 @@ import {
   ResourceBuilder,
   startOfWeek,
 } from 'test/utils/scheduler';
-import { screen, within } from '@mui/internal-test-utils';
+import { act, screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { vi, describe, it, expect } from 'vitest';
@@ -492,5 +492,59 @@ describe('<WeekView />', () => {
     expect(
       screen.getAllByRole('gridcell').filter((cell) => cell.getAttribute('tabindex') === '0'),
     ).to.deep.equal([columns[0]]);
+  });
+
+  describe('keyboard navigation', () => {
+    // A Wednesday, so today's column is not the first one.
+    const { render: renderMidWeek } = createSchedulerRenderer({
+      clockConfig: new Date('2025-05-07T12:00:00Z'),
+    });
+
+    function renderWeekView() {
+      return renderMidWeek(
+        <EventCalendarProvider
+          events={[
+            EventBuilder.new().singleDay('2025-05-07T09:00:00Z').title('Standup').build(),
+            EventBuilder.new().singleDay('2025-05-07T14:00:00Z').title('Review').build(),
+          ]}
+          resources={[]}
+        >
+          <EventDialogProvider>
+            <WeekView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    function getColumns() {
+      return Array.from(
+        document.querySelectorAll<HTMLElement>(`.${eventCalendarClasses.dayTimeGridColumn}`),
+      );
+    }
+
+    it("should make today's column the tab stop", () => {
+      renderWeekView();
+
+      expect(
+        screen.getAllByRole('gridcell').filter((cell) => cell.getAttribute('tabindex') === '0'),
+      ).to.deep.equal([getColumns()[3]]);
+    });
+
+    it('should move through the events of a time column with Enter, the arrow keys and Escape', async () => {
+      const { user } = renderWeekView();
+      const column = getColumns()[3];
+
+      act(() => {
+        column.focus();
+      });
+      await user.keyboard('{Enter}');
+      expect(document.activeElement).to.equal(screen.getByRole('button', { name: /^Standup,/ }));
+
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).to.equal(screen.getByRole('button', { name: /^Review,/ }));
+
+      await user.keyboard('{Escape}');
+      expect(document.activeElement).to.equal(column);
+    });
   });
 });

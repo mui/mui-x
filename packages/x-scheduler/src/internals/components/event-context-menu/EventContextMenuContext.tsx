@@ -101,9 +101,13 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
     }
   });
 
+  const isMenuOpenForAnchor = useStableCallback(
+    (anchorEl: HTMLElement) => state.open && state.anchorEl === anchorEl,
+  );
+
   const contextValue = React.useMemo<EventContextMenuContextValue>(
-    () => ({ openMenu, closeMenuForAnchor }),
-    [openMenu, closeMenuForAnchor],
+    () => ({ openMenu, closeMenuForAnchor, isMenuOpenForAnchor }),
+    [openMenu, closeMenuForAnchor, isMenuOpenForAnchor],
   );
 
   return (
@@ -134,9 +138,9 @@ function isContextMenuKey(event: React.KeyboardEvent) {
  * Wraps an element so it edits its occurrence on click (same as `EventEditingTrigger`) and opens
  * the event context menu on right-click, or on Shift+F10 or the Menu key while it is focused.
  * `onEditingCanceled` and `stableAnchor` behave exactly as they do on `EventEditingTrigger` —
- * forwarded to `startEditing` both for the direct click and for Edit chosen from the menu. Unmounting closes the menu opened
- * from it, and moves focus to the event's cell, column or row (or the next agenda event) when it
- * was focused.
+ * forwarded to `startEditing` both for the direct click and for Edit chosen from the menu.
+ * Unmounting closes the menu opened from it, and moves focus to the event's cell, column or row
+ * (or the next agenda event) when it was focused.
  *
  * On a coarse pointer, activation arms the toolbar instead of opening the dialog directly
  * (`editingModePolicy.ts`), and that toolbar already exposes Edit and Delete — so right-click and
@@ -160,7 +164,6 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
   // The "+N more" popover, which passes `getFocusFallback`, moves focus out of its own items.
   useMoveFocusOutOnUnmount(editing.ref, occurrence, getFocusFallback == null);
 
-  const openedFromKeyboardRef = React.useRef(false);
   const child = children as React.ReactElement<any>;
   const childProps = child.props as React.HTMLAttributes<HTMLElement>;
 
@@ -171,8 +174,8 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
       editing.onClick(event);
     },
     onContextMenu: (event: React.MouseEvent<HTMLElement>) => {
-      if (openedFromKeyboardRef.current) {
-        openedFromKeyboardRef.current = false;
+      // The browser can still fire `contextmenu` for the key that just opened the menu.
+      if (menuContext?.isMenuOpenForAnchor(event.currentTarget)) {
         event.preventDefault();
         return;
       }
@@ -187,19 +190,12 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
         getFocusFallback,
       });
     },
-    onPointerDown: (event: React.PointerEvent<HTMLElement>) => {
-      childProps.onPointerDown?.(event);
-      // A right-click fires `pointerdown` first, so it is never mistaken for the keyboard one.
-      openedFromKeyboardRef.current = false;
-    },
     onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
       childProps.onKeyDown?.(event);
       if (!isContextMenuKey(event) || !menuContext || isCoarsePointer()) {
         return;
       }
       event.preventDefault();
-      // The browser can still fire `contextmenu` for this key (on key up on Windows).
-      openedFromKeyboardRef.current = true;
       menuContext.openMenu(occurrence, event.currentTarget, {
         onEditingCanceled,
         stableAnchor,

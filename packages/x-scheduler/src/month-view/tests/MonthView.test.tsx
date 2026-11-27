@@ -326,6 +326,66 @@ describe('<MonthView />', () => {
       expect(document.activeElement).to.equal(eventButtons[0]);
     });
 
+    it('should swap the inline arrow keys between the events in RTL', async () => {
+      const { user, popover } = await renderAndOpenPopover({
+        theme: createTheme({ direction: 'rtl' }),
+      });
+      const eventButtons = within(popover).getAllByRole('button');
+
+      await act(async () => {
+        eventButtons[0].focus();
+      });
+      await user.keyboard('{ArrowLeft}');
+      expect(document.activeElement).to.equal(eventButtons[1]);
+
+      await user.keyboard('{ArrowRight}');
+      expect(document.activeElement).to.equal(eventButtons[0]);
+    });
+
+    it.each([
+      { key: '{ArrowDown}', target: 'first' },
+      { key: '{ArrowUp}', target: 'last' },
+    ])(
+      'should move from the popover itself to the $target event on $key',
+      async ({ key, target }) => {
+        const { user, popover } = await renderAndOpenPopover();
+        const eventButtons = within(popover).getAllByRole('button');
+        const paper = popover.querySelector(
+          `.${eventCalendarClasses.moreEventsPopoverBody}`,
+        )!.parentElement!;
+
+        await act(async () => {
+          paper.focus();
+        });
+        await user.keyboard(key);
+
+        expect(document.activeElement).to.equal(
+          target === 'first' ? eventButtons[0] : eventButtons[eventButtons.length - 1],
+        );
+      },
+    );
+
+    it('should focus the first event when the popover is opened with the keyboard', async () => {
+      const { user } = render(
+        <EventCalendarProvider events={manyEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+      const [moreButton] = await screen.findAllByRole('button', { name: /more/i });
+
+      await act(async () => {
+        moreButton.focus();
+      });
+      await user.keyboard('{Enter}');
+      const popover = await screen.findByRole('presentation');
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(within(popover).getAllByRole('button')[0]);
+      });
+    });
+
     it('should focus the first event when the popover opens', async () => {
       const { popover } = await renderAndOpenPopover();
 
@@ -1684,6 +1744,57 @@ describe('<MonthView />', () => {
       expect(tabbableCells).to.deep.equal([getCell(/May 1,/)]);
     });
 
+    function getTabStops() {
+      return screen
+        .getAllByRole('gridcell')
+        .filter((cell) => cell.getAttribute('tabindex') === '0');
+    }
+
+    it('should make the first day of the visible month the tab stop when today is not visible', () => {
+      renderMonthView({ visibleDate: new Date('2025-06-15T00:00:00Z') });
+
+      expect(getTabStops()).to.deep.equal([getCell(/June 1,/)]);
+    });
+
+    it('should make the first visible day of the month the tab stop when the 1st is hidden', () => {
+      // November 1st, 2025 is a Saturday.
+      renderMonthView({
+        visibleDate: new Date('2025-11-15T00:00:00Z'),
+        defaultPreferences: { showWeekends: false },
+      });
+
+      expect(getTabStops()).to.deep.equal([getCell(/November 3,/)]);
+    });
+
+    it('should keep the tab stop when the visible date changes within the month', () => {
+      const { setProps } = renderMonthView({ visibleDate: new Date('2025-05-01T00:00:00Z') });
+
+      act(() => {
+        getCell(/May 20,/).focus();
+      });
+      act(() => {
+        (document.activeElement as HTMLElement).blur();
+      });
+      setProps({ visibleDate: new Date('2025-05-15T00:00:00Z') });
+
+      expect(getTabStops()).to.deep.equal([getCell(/May 20,/)]);
+    });
+
+    it('should reset the tab stop when moving to another month', () => {
+      const { setProps } = renderMonthView({ visibleDate: new Date('2025-05-01T00:00:00Z') });
+
+      act(() => {
+        getCell(/May 20,/).focus();
+      });
+      // Moved from the toolbar, outside of the grid.
+      act(() => {
+        (document.activeElement as HTMLElement).blur();
+      });
+      setProps({ visibleDate: new Date('2025-06-15T00:00:00Z') });
+
+      expect(getTabStops()).to.deep.equal([getCell(/June 1,/)]);
+    });
+
     it('should name each cell with its date and its number of events', () => {
       renderMonthView({
         events: [EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Meeting').build()],
@@ -1691,6 +1802,29 @@ describe('<MonthView />', () => {
 
       expect(getCell(/^Thursday May 1, 1 event$/)).not.to.equal(null);
       expect(getCell(/^Friday May 2, No events$/)).not.to.equal(null);
+    });
+
+    it('should leave the number of events out of the cell names while loading', () => {
+      let store: AnyEventCalendarStore | null = null;
+      render(
+        <EventCalendarProvider {...standaloneDefaults}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </EventCalendarProvider>,
+      );
+
+      act(() => {
+        store!.set('isLoading', true);
+      });
+
+      expect(getCell(/^Friday May 2$/)).not.to.equal(null);
     });
 
     it('should move through the day number button, the events and the "+N more" button', async () => {

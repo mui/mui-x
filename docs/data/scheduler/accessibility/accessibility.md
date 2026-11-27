@@ -128,7 +128,7 @@ In right-to-left layouts, <kbd class="key">Arrow Left</kbd> and <kbd class="key"
 | <kbd class="key">Enter</kbd> or <kbd class="key">F2</kbd> | On a day-grid or time-grid cell: moves focus to the first item of the cell. On a header cell, <kbd class="key">Enter</kbd> opens that day's view                                                                           |
 |                                  <kbd class="key">C</kbd> | Creates an event in the focused cell                                                                                                                                                                                       |
 
-Each cell's accessible name includes its number of events, for example "Wednesday July 2, 2 events".
+Each day cell's accessible name includes its number of events, for example "Wednesday July 2, 2 events".
 
 #### Tab sequence
 
@@ -136,7 +136,7 @@ Each cell's accessible name includes its number of events, for example "Wednesda
 
 #### Inside a cell
 
-Once you move into a cell, focus goes through its items: the day number button, the events, and the "+N more" button.
+Once you move into a cell, focus goes through its items: the events, and in the Month view the day number button first and the "+N more" button last.
 
 |                                                                                 Keys | Description                                       |
 | -----------------------------------------------------------------------------------: | :------------------------------------------------ |
@@ -217,7 +217,7 @@ Right-clicking an event, or pressing <kbd class="key">Shift</kbd>+<kbd class="ke
 - If the event is removed while the menu is open, for example by an update of the `events` prop, the menu closes and focus moves the same way as after **Delete**.
 - For a read-only event, **Edit** is replaced by **Show details** — it opens the same read-only view a click would, and **Delete** is omitted, matching every other surface's mutation gate (the dialog swaps to its read-only content, and the armed toolbar never appears for one).
 
-The menu is suppressed on a coarse pointer (touch): activating an event there arms its toolbar instead of opening the dialog directly — which already exposes Edit and Delete — so right-click and the keyboard shortcuts fall through to that same behavior rather than opening a redundant menu. This check is on pointer type alone; it doesn't depend on which view or layout is rendering the event.
+The menu is suppressed on a coarse pointer (touch): activating an event there arms its toolbar instead of opening the dialog directly — which already exposes Edit and Delete — so right-click falls through to that same behavior rather than opening a redundant menu. This check is on pointer type alone; it doesn't depend on which view or layout is rendering the event.
 
 ## Localization of ARIA labels
 

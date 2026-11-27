@@ -29,6 +29,8 @@ export interface EventContextMenuContextValue {
   ) => void;
   /** Closes the menu if it was opened from `anchorEl`, which is about to unmount. */
   closeMenuForAnchor: (anchorEl: HTMLElement) => void;
+  /** Whether the menu is open and was opened from `anchorEl`. */
+  isMenuOpenForAnchor: (anchorEl: HTMLElement) => boolean;
 }
 
 export interface EventContextMenuProviderProps {

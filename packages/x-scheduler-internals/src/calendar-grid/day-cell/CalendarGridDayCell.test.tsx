@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { GridRowType } from '@mui/x-scheduler-internals/models';
@@ -149,6 +149,7 @@ describe('<CalendarGrid.DayCell />', () => {
       { name: 'Enter', keys: '{Enter}' },
       { name: 'Ctrl+C', keys: '{Control>}c{/Control}' },
       { name: 'Meta+C', keys: '{Meta>}c{/Meta}' },
+      { name: 'Alt+C', keys: '{Alt>}c{/Alt}' },
     ])('should not create an event on $name', async ({ keys }) => {
       let store: AnyEventCalendarStore | null = null;
 
@@ -170,6 +171,43 @@ describe('<CalendarGrid.DayCell />', () => {
       await user.keyboard(keys);
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+
+    it.each([
+      {
+        result: 'create an event',
+        name: 'the key in the position of C on a Cyrillic layout',
+        key: 'с',
+        expected: true,
+      },
+      {
+        result: 'not create an event',
+        name: 'a Latin letter in the position of C',
+        key: 'j',
+        expected: false,
+      },
+    ])('should $result on $name', ({ key, expected }) => {
+      let store: AnyEventCalendarStore | null = null;
+
+      render(
+        <DayCellWrapper>
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </DayCellWrapper>,
+      );
+
+      const cell = screen.getByRole('gridcell');
+      act(() => {
+        cell.focus();
+      });
+      fireEvent.keyDown(cell, { key, code: 'KeyC' });
+
+      expect(store!.state.occurrencePlaceholder != null).to.equal(expected);
     });
 
     it('should not create an event on C when pressed on a child element', async () => {

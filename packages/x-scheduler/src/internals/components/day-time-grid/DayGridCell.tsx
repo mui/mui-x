@@ -101,7 +101,8 @@ export function DayGridCell(props: DayGridCellProps) {
           '--row-count': rowCount,
         } as React.CSSProperties
       }
-      aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell ${labelId}`}
+      // The events are unknown while loading.
+      aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell${isLoading ? '' : ` ${labelId}`}`}
       aria-colindex={colIndex}
       role="gridcell"
       data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
