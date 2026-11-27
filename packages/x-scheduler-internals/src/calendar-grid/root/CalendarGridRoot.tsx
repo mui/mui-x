@@ -69,8 +69,7 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   // Read in focus handlers that run before a re-render, so it is not a state.
   const enteredCellRef = React.useRef<HTMLElement | null>(null);
 
-  const [focusedCell, setFocusedCellState] = React.useState<GridCellCoordinates | null>(null);
-  // The tab stop, kept when focus leaves the grid so Tab comes back to the same cell.
+  // The tab stop: the last focused cell, kept when focus leaves the grid so Tab comes back to it.
   const [activeCell, setActiveCell] = React.useState<GridCellCoordinates | null>(null);
 
   // A new default (for example once the visible days change) resets the tab stop.
@@ -90,9 +89,14 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   );
   const tabStop = activeCell ?? defaultFocusedCell ?? fallbackTabStop;
 
-  const setFocusedCell = React.useCallback((coordinates: GridCellCoordinates) => {
-    setFocusedCellState((prev) => (isSameCell(prev, coordinates) ? prev : coordinates));
-    setActiveCell((prev) => (isSameCell(prev, coordinates) ? prev : coordinates));
+  // Focusing the cell makes it the tab stop (`handleFocus`).
+  const focusCell = React.useCallback((coordinates: GridCellCoordinates) => {
+    for (const [cell, registration] of cellsRef.current) {
+      if (isSameCell(registration.coordinates, coordinates)) {
+        cell.focus({ preventScroll: true });
+        return;
+      }
+    }
   }, []);
 
   const isTabStop = React.useCallback(
@@ -135,8 +139,12 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     if (!isInGrid(target)) {
       return;
     }
-    if (cellsRef.current.has(target)) {
+    const focusedCell = cellsRef.current.get(target as HTMLElement);
+    if (focusedCell != null) {
       enteredCellRef.current = null;
+      if (!isSameCell(focusedCell.coordinates, tabStop)) {
+        setActiveCell(focusedCell.coordinates);
+      }
       return;
     }
     if (!target.hasAttribute(CALENDAR_GRID_ITEM_ATTRIBUTE)) {
@@ -158,7 +166,6 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
 
   const handleBlur = useStableCallback((event: React.FocusEvent<HTMLDivElement>) => {
     if (!rootRef.current?.contains(event.relatedTarget as Node)) {
-      setFocusedCellState(null);
       enteredCellRef.current = null;
     }
   });
@@ -224,15 +231,14 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   const contextValue: CalendarGridRootContext = React.useMemo(
     () => ({
       id,
-      focusedCell,
-      setFocusedCell,
+      focusCell,
       isTabStop,
       enterCell,
       registerCell,
       rowTypes,
       rowsPerType,
     }),
-    [id, focusedCell, setFocusedCell, isTabStop, enterCell, registerCell, rowTypes, rowsPerType],
+    [id, focusCell, isTabStop, enterCell, registerCell, rowTypes, rowsPerType],
   );
 
   const element = useRenderElement('div', componentProps, {

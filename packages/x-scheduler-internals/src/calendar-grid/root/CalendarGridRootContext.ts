@@ -19,15 +19,9 @@ export interface CalendarGridRootContext {
    */
   id: string | undefined;
   /**
-   * The coordinates of the cell that currently has keyboard focus.
-   * `null` when focus is outside of the grid.
+   * Moves focus to the cell with these coordinates, which makes it the tab stop of the grid.
    */
-  focusedCell: GridCellCoordinates | null;
-  /**
-   * Updates the focused cell coordinates.
-   * The cell matching these coordinates receives DOM focus and becomes the tab stop of the grid.
-   */
-  setFocusedCell: (coordinates: GridCellCoordinates) => void;
+  focusCell: (coordinates: GridCellCoordinates) => void;
   /**
    * Whether the cell is the single tab stop of the grid.
    */

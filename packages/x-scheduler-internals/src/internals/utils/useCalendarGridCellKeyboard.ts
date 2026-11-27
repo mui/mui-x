@@ -18,7 +18,7 @@ export function useCalendarGridCellKeyboard(
 ): useCalendarGridCellKeyboard.ReturnValue {
   const { rowType, rowIndex, columnIndex, cellRef, createEvent, onEnter } = parameters;
 
-  const { focusedCell, setFocusedCell, isTabStop, enterCell, registerCell, rowTypes, rowsPerType } =
+  const { focusCell, isTabStop, enterCell, registerCell, rowTypes, rowsPerType } =
     useCalendarGridRootContext();
   const isRtl = useDirection() === 'rtl';
   const cellsRefs = useCalendarGridCellsRefsContext();
@@ -27,11 +27,6 @@ export function useCalendarGridCellKeyboard(
     () => ({ rowType, rowIndex, columnIndex }),
     [rowType, rowIndex, columnIndex],
   );
-
-  const hasFocus =
-    focusedCell?.rowType === rowType &&
-    focusedCell?.rowIndex === rowIndex &&
-    focusedCell?.columnIndex === columnIndex;
 
   const stableCreateEvent = useStableCallback((event: Event) => createEvent?.(event));
   const canCreateEvent = createEvent != null;
@@ -47,13 +42,6 @@ export function useCalendarGridCellKeyboard(
     });
   }, [cellRef, coordinates, canCreateEvent, stableCreateEvent, registerCell]);
 
-  // Apply DOM focus when this cell becomes the focused cell
-  React.useEffect(() => {
-    if (hasFocus && cellRef.current && !cellRef.current.contains(document.activeElement)) {
-      cellRef.current.focus({ preventScroll: true });
-    }
-  }, [hasFocus, cellRef]);
-
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.target !== event.currentTarget) {
       return;
@@ -67,7 +55,7 @@ export function useCalendarGridCellKeyboard(
     });
     if (target) {
       event.preventDefault();
-      setFocusedCell(target);
+      focusCell(target);
       return;
     }
 
@@ -80,16 +68,9 @@ export function useCalendarGridCellKeyboard(
     }
   };
 
-  const onFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      setFocusedCell(coordinates);
-    }
-  };
-
   return {
     tabIndex: isTabStop(coordinates) ? 0 : -1,
     onKeyDown,
-    onFocus,
   };
 }
 
@@ -115,6 +96,5 @@ export namespace useCalendarGridCellKeyboard {
   export interface ReturnValue {
     tabIndex: number;
     onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
-    onFocus: (event: React.FocusEvent<HTMLDivElement>) => void;
   }
 }

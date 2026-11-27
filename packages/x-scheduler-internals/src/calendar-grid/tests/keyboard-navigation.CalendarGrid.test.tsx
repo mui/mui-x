@@ -17,7 +17,7 @@ import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 /**
  * Integration tests for keyboard navigation across the CalendarGrid.
- * These test the full navigation flow: arrow keys → getNavigationTarget → setFocusedCell → DOM focus.
+ * These test the full navigation flow: arrow keys → getNavigationTarget → focusCell → DOM focus.
  */
 describe('CalendarGrid keyboard navigation', () => {
   const { render } = createSchedulerRenderer();
