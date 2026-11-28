@@ -41,6 +41,7 @@ import {
   validateFormulaExpression,
 } from './engine';
 import {
+  computeFormattedReadsPass,
   computeFullFormulaPass,
   computePositionRebindFormulaPass,
   computeRowsDiffFormulaPass,
@@ -78,6 +79,7 @@ import {
   areFormulaFunctionRecordsEqual,
   computeColumnsSignature,
   haveComputedInputsChanged,
+  haveFormattedColumnInputsChanged,
   ensureFormulaInternalCache,
   getEffectiveFormulaFunctions,
   getFormulaFields,
@@ -89,6 +91,8 @@ import {
   bumpComputedColumnsRevision,
   evictComputedResultsForRows,
   haveComputedColDefOverridesChanged,
+  haveComputedFormattedReadsChanged,
+  pruneComputedFormattedReads,
   resetComputedResults,
 } from './gridComputedColumnsRuntime';
 import {
@@ -437,7 +441,7 @@ export const useGridFormula = (
   }, [apiRef, props.disableFormulas, props.dataSource]);
 
   const runPass = React.useCallback(
-    (mode: 'diff' | 'full' | 'rebind'): GridCellCoordinates[] | null => {
+    (mode: 'diff' | 'full' | 'rebind' | 'formatted'): GridCellCoordinates[] | null => {
       const cache = apiRef.current.caches.formula!;
       const formulaFields = computeEffectiveFormulaFields();
       const previousLookup = gridFormulaLookupSelector(apiRef);
@@ -502,6 +506,8 @@ export const useGridFormula = (
         result = computeFullFormulaPass(ctx);
       } else if (mode === 'diff') {
         result = computeRowsDiffFormulaPass(ctx);
+      } else if (mode === 'formatted') {
+        result = computeFormattedReadsPass(ctx);
       } else {
         result = computePositionRebindFormulaPass(ctx);
       }
@@ -784,12 +790,13 @@ export const useGridFormula = (
     // after this one in the same cascade and must read fresh formula values.
     // No aggregation/row-spanning refresh: both recompute later in the
     // cascade, on `filteredRowsSet`/`sortedRowsSet`.
+    pruneComputedFormattedReads(apiRef);
     triggerDependentFeatures(runPass('diff'), {
       aggregation: false,
       rowSpanning: false,
       insideRowsSet: true,
     });
-  }, [runPass, triggerDependentFeatures]);
+  }, [apiRef, runPass, triggerDependentFeatures]);
 
   const handleSortedRowsSet = React.useCallback<GridEventListener<'sortedRowsSet'>>(() => {
     // One-shot rebind (D4): position-dependent formulas re-evaluate against
@@ -976,12 +983,23 @@ export const useGridFormula = (
       columnsSignature,
       cache.lastColumnsSignature,
     );
-    if (!fieldsChanged && !signatureChanged) {
+    // A new label or `valueFormatter` keeps the signature but changes what `FORMATTED()` reads.
+    // The reads are only re-checked when a field read through it got new formatting inputs.
+    const formattedColumnsChanged = haveFormattedColumnInputsChanged(
+      cache,
+      gridColumnLookupSelector(apiRef),
+    );
+    const computedFormattedChanged =
+      formattedColumnsChanged && haveComputedFormattedReadsChanged(apiRef, cache);
+    if (!fieldsChanged && !signatureChanged && !computedFormattedChanged) {
       // The column set is stable, but columns may have moved: visibility
       // toggles and reorders (programmatic `setColumnIndex` included) all
       // funnel through this event. The rebind pass compares the visible
       // field order itself and exits cheaply when nothing moved.
       triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: false });
+      if (formattedColumnsChanged) {
+        triggerDependentFeatures(runPass('formatted'), { aggregation: true, rowSpanning: false });
+      }
       // A record rebuilt with the same getters (a new name or format) leaves the grouping
       // columns that copy from it stale. The nested `columnsChange` of the extra hydration finds
       // the identities recorded. A type change rebuilds the getters, so it takes the other
@@ -995,13 +1013,14 @@ export const useGridFormula = (
       // inputs drops the memoized results (an unrelated column re-created with an
       // inline getter on every parent render does not).
       const computedColumnsChanged =
-        signatureChanged &&
-        cache.computedColumns.records.size > 0 &&
-        haveComputedInputsChanged(columnsSignature, previousSignature, cache.computedColumns);
+        computedFormattedChanged ||
+        (signatureChanged &&
+          cache.computedColumns.records.size > 0 &&
+          haveComputedInputsChanged(columnsSignature, previousSignature, cache.computedColumns));
       if (computedColumnsChanged) {
         resetComputedResults(cache);
       }
-      if (signatureChanged) {
+      if (signatureChanged || computedFormattedChanged) {
         // Not only the computed cells read the revision: the preview of a draft
         // (the first computed column included) reads the same getters.
         bumpComputedColumnsRevision(apiRef);

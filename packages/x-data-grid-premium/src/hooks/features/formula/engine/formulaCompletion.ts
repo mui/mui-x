@@ -148,6 +148,10 @@ const SPECIAL_FORM_META: Record<string, { signature: string; description: string
     signature: 'COLUMN_VALUES("field")',
     description: 'Every value of a field over the current sorted and filtered rows.',
   },
+  FORMATTED: {
+    signature: 'FORMATTED(reference)',
+    description: 'The formatted value of a single cell, as the grid shows it.',
+  },
 };
 
 const CONSTANT_NAMES = ['TRUE', 'FALSE'];

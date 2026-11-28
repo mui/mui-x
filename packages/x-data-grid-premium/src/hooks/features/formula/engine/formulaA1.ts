@@ -19,7 +19,11 @@ import {
 } from './formulaA1Tokens';
 import type { ParsedRef } from './formulaA1Tokens';
 import { parseFormula } from './formulaParser';
-import { serializeEscapedFieldRef, serializeFormulaAst } from './formulaSerializer';
+import {
+  serializeEscapedFieldRef,
+  serializeFormulaAst,
+  wrapFormattedRef,
+} from './formulaSerializer';
 import type { FormulaCellRef, FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
 
 /**
@@ -504,7 +508,7 @@ function serializeA1Node(
   switch (node.type) {
     case 'cellRef': {
       const a1 = cellRefToA1(node, context);
-      return a1 ?? serializeFormulaAst(node);
+      return a1 === null ? serializeFormulaAst(node) : wrapFormattedRef(node, a1);
     }
     case 'rangeRef': {
       const a1 = rangeRefToA1(node, anchor);
@@ -538,7 +542,7 @@ function serializeA1Node(
       // bare: the commit transform and the highlighter would take it for a
       // cell reference and rewrite it (`q1` → column Q, row 1 → `#REF!`).
       if (isA1AmbiguousFieldName(node.field)) {
-        return serializeEscapedFieldRef(node.field);
+        return wrapFormattedRef(node, serializeEscapedFieldRef(node.field));
       }
       return serializeFormulaAst(node);
     default:

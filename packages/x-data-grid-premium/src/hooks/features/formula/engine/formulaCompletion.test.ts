@@ -62,9 +62,20 @@ describe('getFormulaCompletionTokens', () => {
       'FIXED',
       'ANCHOR',
       'COLUMN_VALUES',
+      'FORMATTED',
     ]);
     // The old RANGE() grammar is gone from the vocabulary entirely.
     expect(tokens.some((token) => token.label === 'RANGE')).toEqual(false);
+  });
+
+  it('describes FORMATTED()', () => {
+    const tokens = getFormulaCompletionTokens();
+    expect(tokens.find((token) => token.label === 'FORMATTED')).toMatchObject({
+      kind: 'specialForm',
+      callable: true,
+      signature: 'FORMATTED(reference)',
+      category: 'References',
+    });
   });
 
   it('describes the RANGE_REF window forms', () => {

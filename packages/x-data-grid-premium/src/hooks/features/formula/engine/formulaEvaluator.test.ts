@@ -518,6 +518,89 @@ describe('formulaEvaluator', () => {
     });
   });
 
+  describe('FORMATTED()', () => {
+    const STATUS_ROWS: TestRow[] = [
+      { id: 'r1', status: 'd', price: 5 },
+      { id: 'r2', status: 'a', price: createFormulaError('#DIV/0!') },
+    ];
+    const LABELS: Record<string, string> = { d: 'Discontinued', a: 'Active' };
+
+    const evaluateFormatted = (expression: string, canFormat = true) => {
+      const { ast } = parseFormula(expression);
+      if (ast === null) {
+        throw new Error(`Test expression did not parse: ${expression}`);
+      }
+      const context = createTestContext(STATUS_ROWS);
+      if (canFormat) {
+        context.formatCellValue = (ref, value) =>
+          ref.field === 'status' ? LABELS[String(value)] : `USD ${value}`;
+      }
+      return evaluateFormula(ast, context);
+    };
+
+    it('reads the formatted value of a same-row reference', () => {
+      expect(evaluateFormatted('FORMATTED(status)')).to.deep.equal({
+        type: 'value',
+        value: 'Discontinued',
+      });
+      expect(evaluateFormatted('FORMATTED(FIELD("price")) & "!"')).to.deep.equal({
+        type: 'value',
+        value: 'USD 5!',
+      });
+    });
+
+    it('keeps bare references raw', () => {
+      expect(evaluateFormatted('status = "d"')).to.deep.equal({ type: 'value', value: true });
+      expect(evaluateFormatted('FORMATTED(status) = "d"')).to.deep.equal({
+        type: 'value',
+        value: false,
+      });
+    });
+
+    it('reads the formatted value of a cell reference', () => {
+      expect(evaluateFormatted('FORMATTED(REF(COLUMN("status"), ROW("r2")))')).to.deep.equal({
+        type: 'value',
+        value: 'Active',
+      });
+    });
+
+    it('propagates errors without formatting them', () => {
+      expect(evaluateFormatted('FORMATTED(REF(COLUMN("price"), ROW("r2")))')).to.deep.include({
+        code: '#DIV/0!',
+      });
+      expect(evaluateFormatted('FORMATTED(missing)')).to.deep.include({ code: '#REF!' });
+    });
+
+    it('turns a throwing formatter into a catchable #ERROR!', () => {
+      const { ast } = parseFormula('IFERROR(FORMATTED(status), "fallback")');
+      if (ast === null) {
+        throw new Error('Test expression did not parse.');
+      }
+      const context = createTestContext(STATUS_ROWS);
+      context.formatCellValue = () => {
+        throw new Error('Boom');
+      };
+      expect(evaluateFormula(ast, context)).to.deep.equal({ type: 'value', value: 'fallback' });
+      const { ast: bare } = parseFormula('FORMATTED(status)');
+      if (bare === null) {
+        throw new Error('Test expression did not parse.');
+      }
+      expect(evaluateFormula(bare, context)).to.deep.equal({
+        type: 'error',
+        code: '#ERROR!',
+        message: 'Boom',
+      });
+    });
+
+    it('is #VALUE! when the context cannot format', () => {
+      expect(evaluateFormatted('FORMATTED(status)', false)).to.deep.equal({
+        type: 'error',
+        code: '#VALUE!',
+        message: 'FORMATTED() is not supported here.',
+      });
+    });
+  });
+
   describe('empty cell semantics', () => {
     it('empty equals empty, not zero or the empty string', () => {
       expectValue('note = note', true);

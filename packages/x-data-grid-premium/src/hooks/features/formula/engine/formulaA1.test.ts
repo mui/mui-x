@@ -221,6 +221,12 @@ describe('formulaA1', () => {
   });
 
   describe('toCanonicalFormula — paste offset', () => {
+    it('keeps the FORMATTED() wrapper when shifting', () => {
+      expect(toDisplay(toCanonical('FORMATTED(B5)', { rowOffset: -1, columnOffset: 1 }))).to.equal(
+        'FORMATTED(C4)',
+      );
+    });
+
     it('shifts relative axes by the paste offset before freezing', () => {
       // Pasting `A1` one row down and one column right → B2.
       expect(toCanonical('A1', { rowOffset: 1, columnOffset: 1 })).to.equal(
@@ -457,6 +463,18 @@ describe('formulaA1', () => {
 
     it('is stable for an escaped ambiguous field name', () => {
       roundTrips('FIELD("q1")');
+    });
+
+    it('is stable for FORMATTED() references', () => {
+      roundTrips('FORMATTED(B5)');
+      roundTrips('FORMATTED($A$1) & FORMATTED(price)');
+      roundTrips('FORMATTED(FIELD("q1"))');
+      expect(toCanonical('FORMATTED(B5)')).to.equal('FORMATTED(REF(COLUMN("qty"), ROW("r5")))');
+      expect(toDisplay('FORMATTED(REF(COLUMN("qty"), ROW("r5")))')).to.equal('FORMATTED(B5)');
+      // A reference without a current position falls back to canonical, still wrapped.
+      expect(toDisplay('FORMATTED(REF(COLUMN("qty"), ROW("gone")))')).to.equal(
+        'FORMATTED(REF(COLUMN("qty"), ROW("gone")))',
+      );
     });
 
     it('is stable for every range window shape', () => {

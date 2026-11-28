@@ -73,6 +73,23 @@ describe('previewFormulaResult', () => {
     ).to.deep.equal({ type: 'value', value: 7 });
   });
 
+  it('evaluates FORMATTED() against the formatted value', async () => {
+    render(
+      <Test
+        columns={[
+          { field: 'item', valueFormatter: (value: string) => value.toUpperCase() },
+          ...baselineProps.columns.slice(1),
+        ]}
+      />,
+    );
+    await microtasks();
+    expect(
+      previewFormulaResult(privateApi(), { id: 0, field: 'total' }, '=FORMATTED(item) & item', {
+        a1Notation: false,
+      }),
+    ).to.deep.equal({ type: 'value', value: 'APPLEApple' });
+  });
+
   it('resolves formula-cell dependencies from the committed lookup', async () => {
     render(<Test />);
     await microtasks();

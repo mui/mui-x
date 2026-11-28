@@ -25,6 +25,7 @@ import {
 } from './engine';
 import type { FormulaErrorValue, FormulaScalar } from './engine';
 import { EMPTY_POSITION_CONTEXT } from './gridFormulaPositionContext';
+import { isFormattedReadStale, recordFormattedRead } from './gridFormulaUtils';
 import {
   applyComputedColDefOverrides,
   areComputedColDefOverridesEqual,
@@ -203,6 +204,16 @@ export function evaluateComputedCell(
             return toResolvedValue(formulaRecord.result);
           }
           return getRowValueUtil(row, colDef, apiRef) as FormulaScalar;
+        },
+        formatCellValue: (ref, value) => {
+          let rowReads = runtime.formattedReads.get(row);
+          if (rowReads === undefined) {
+            rowReads = new Map();
+            runtime.formattedReads.set(row, rowReads);
+          }
+          const read = { value, formatted: undefined };
+          rowReads.set(ref.field, read);
+          return recordFormattedRead(apiRef, read, row, columnsLookup[ref.field]);
         },
         hasRow: () => true,
         hasField: (referencedField) => columnsLookup[referencedField] !== undefined,
@@ -486,6 +497,29 @@ export function haveComputedColDefOverridesChanged(
 
 export function resetComputedResults(cache: GridFormulaInternalCache) {
   cache.computedColumns.results = new WeakMap();
+  cache.computedColumns.formattedReads = new Map();
+}
+
+/**
+ * Tells whether a `FORMATTED(...)` read of the memoized results gives another output with the
+ * current columns (a new label or `valueFormatter`).
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ * @param {GridFormulaInternalCache} cache The internal cache of the formula feature.
+ * @returns {boolean} `true` when the memoized results may be stale.
+ */
+export function haveComputedFormattedReadsChanged(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  cache: GridFormulaInternalCache,
+): boolean {
+  const columnsLookup = gridColumnLookupSelector(apiRef);
+  for (const [row, reads] of cache.computedColumns.formattedReads) {
+    for (const [field, read] of reads) {
+      if (isFormattedReadStale(apiRef, row, columnsLookup[field], read)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 /**
@@ -500,6 +534,25 @@ export function evictComputedResultsForRow(
 ) {
   if (row !== undefined) {
     cache.computedColumns.results.delete(row);
+    cache.computedColumns.formattedReads.delete(row);
+  }
+}
+
+/**
+ * Drops the `FORMATTED(...)` reads of the rows replaced or removed since they were made:
+ * their memoized results are gone with the old row objects.
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ */
+export function pruneComputedFormattedReads(apiRef: RefObject<GridPrivateApiPremium>) {
+  const reads = apiRef.current.caches.formula?.computedColumns.formattedReads;
+  if (reads === undefined || reads.size === 0) {
+    return;
+  }
+  const rowsLookup = gridRowsLookupSelector(apiRef);
+  for (const row of reads.keys()) {
+    if (rowsLookup[gridRowIdSelector(apiRef, row)] !== row) {
+      reads.delete(row);
+    }
   }
 }
 
@@ -520,6 +573,7 @@ export function evictComputedResultsForRows(
     const row = rowsLookup[id];
     if (row !== undefined) {
       cache.computedColumns.results.delete(row);
+      cache.computedColumns.formattedReads.delete(row);
     }
   }
 }

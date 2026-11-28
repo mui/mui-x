@@ -265,6 +265,22 @@ export interface GridComputedColumnRecord {
   colDef: GridColDef;
 }
 
+/**
+ * A cell read through `FORMATTED(...)`: the value given to the formatter and its output
+ * (`undefined` when it threw).
+ */
+export interface GridFormulaFormattedRead {
+  value: unknown;
+  formatted: unknown;
+}
+
+/**
+ * A `FORMATTED(...)` read of the cell-formula runtime, with the formulas that made it.
+ */
+export interface GridFormulaCellFormattedRead extends GridFormulaFormattedRead {
+  readers: Set<GridFormulaCellKey>;
+}
+
 export interface GridComputedColumnsRuntimeCache {
   /**
    * Keyed by field, in the order of the model.
@@ -285,6 +301,11 @@ export interface GridComputedColumnsRuntimeCache {
    * The union of `dependencyClosure`: every field a computed column reads.
    */
   referencedFields: Set<string>;
+  /**
+   * The `FORMATTED(...)` reads of the memoized results, by row object then field,
+   * re-checked when the columns change.
+   */
+  formattedReads: Map<GridValidRowModel, Map<GridColDef['field'], GridFormulaFormattedRead>>;
   /**
    * The inputs the records were last built from, compared by reference.
    */
@@ -409,6 +430,20 @@ export interface GridFormulaInternalCache {
    * whether dependents must recompute.
    */
   trackedValues: Map<string, Map<GridColDef['field'], unknown>>;
+  /**
+   * The `FORMATTED(...)` reads, by stringified row id then field, re-checked on row and
+   * column changes: a formatted value can change while the raw value stays the same.
+   */
+  formattedReads: Map<string, Map<GridColDef['field'], GridFormulaCellFormattedRead>>;
+  /**
+   * The cells each formula read through `FORMATTED(...)` in its last evaluation.
+   */
+  formattedReadsByReader: Map<GridFormulaCellKey, GridFormulaCellKey[]>;
+  /**
+   * The formatting inputs of the fields read through `FORMATTED(...)` (cell formulas and
+   * computed columns), so a column change only re-checks the reads when one changed.
+   */
+  formattedColumnInputs: Map<GridColDef['field'], readonly unknown[]>;
   /**
    * Rows lookup snapshot from the last pass — rows are replaced immutably,
    * so a reference diff finds the changed/added/removed ids.

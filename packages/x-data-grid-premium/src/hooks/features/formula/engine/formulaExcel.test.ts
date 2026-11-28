@@ -123,6 +123,17 @@ describe('serializeFormulaAstToExcel', () => {
     });
   });
 
+  describe('FORMATTED()', () => {
+    it('renders as the plain cell reference', () => {
+      expect(toExcel('FORMATTED(price) & FORMATTED(FIELD("qty"))')).to.deep.equal({
+        formula: 'B2&C2',
+        hasRefError: false,
+      });
+      expect(toExcel('FORMATTED(REF(COLUMN_POSITION(2), ROW("r3")))').formula).to.equal('$B4');
+      expect(toExcel('FORMATTED(missing)')).to.deep.equal({ formula: '#REF!', hasRefError: true });
+    });
+  });
+
   describe('ranges and whole columns', () => {
     it('renders a RANGE_REF window as start:end', () => {
       expect(toExcel(`SUM(${PRICE_WINDOW})`).formula).to.equal('SUM(B2:B4)');

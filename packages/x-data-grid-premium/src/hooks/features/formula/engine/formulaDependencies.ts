@@ -1,6 +1,7 @@
 import type {
   FormulaAstNode,
   FormulaCellRefNode,
+  FormulaFieldRefNode,
   FormulaRangeAxis,
   FormulaRangeRefNode,
 } from './formulaAst';
@@ -40,6 +41,10 @@ export interface FormulaStaticDependencies {
    * registry-change invalidation.
    */
   calls: Set<string>;
+  /**
+   * The references wrapped in `FORMATTED(...)`.
+   */
+  formattedRefs: (FormulaFieldRefNode | FormulaCellRefNode)[];
 }
 
 export function extractFormulaDependencies(ast: FormulaAstNode): FormulaStaticDependencies {
@@ -50,6 +55,7 @@ export function extractFormulaDependencies(ast: FormulaAstNode): FormulaStaticDe
     columnValues: new Set(),
     usesPositionContext: false,
     calls: new Set(),
+    formattedRefs: [],
   };
 
   const stack: FormulaAstNode[] = [ast];
@@ -58,9 +64,15 @@ export function extractFormulaDependencies(ast: FormulaAstNode): FormulaStaticDe
     switch (node.type) {
       case 'fieldRef':
         dependencies.fieldRefs.add(node.field);
+        if (node.formatted) {
+          dependencies.formattedRefs.push(node);
+        }
         break;
       case 'cellRef':
         dependencies.cellRefs.push(node);
+        if (node.formatted) {
+          dependencies.formattedRefs.push(node);
+        }
         if (node.column.kind === 'position' || node.row.kind === 'position') {
           dependencies.usesPositionContext = true;
         }

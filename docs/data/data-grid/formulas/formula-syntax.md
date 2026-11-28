@@ -62,6 +62,22 @@ References by row id require stable ids: if you provide [`getRowId()`](/x/react-
 A row whose id changes is a removed row from the formula engine's perspective, and references to it resolve to `#REF!`.
 :::
 
+## Formatted values
+
+References read the raw cell value: the result of the column's `valueGetter`, before any `valueFormatter`.
+For a single select column, that is the option value, not its label.
+Wrap a single-cell reference in `FORMATTED()` to read the value as the grid shows it.
+For example, with a `status` single select column that has the option `{ value: 'd', label: 'Discontinued' }`, both `=status = "d"` and `=FORMATTED(status) = "Discontinued"` are `TRUE`.
+
+`FORMATTED()` accepts a same-row reference (`price`, `FIELD("unit price")`) or a single-cell `REF()`, and a single-cell address such as `FORMATTED(B5)` in [A1 notation](#a1-notation).
+Ranges, `COLUMN_VALUES()`, literals, and expressions are syntax errors.
+The formatted value is the output of the column's `valueFormatter`, and an option object reads as its label.
+When the referenced cell holds an error, `FORMATTED()` returns that error.
+
+In the Excel export, `FORMATTED(status)` is written as the plain cell reference, like `status`.
+Single select columns, and the other columns with a `valueFormatter` except number, date, and boolean columns, export their formatted text, so Excel reads the same value as the grid.
+Number, date, and boolean columns export their raw value, so a formula that reads one of them through `FORMATTED()` exports its evaluated value instead of a live formula.
+
 ## Ranges and whole columns
 
 Two range forms aggregate over many cells at once.

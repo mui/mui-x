@@ -29,6 +29,13 @@ describe('offsetFormulaReferences', () => {
     expect(offsetFormulaReferences(ast, 0, 0, context)).toBe(ast);
   });
 
+  it('keeps the FORMATTED() wrapper on fill', () => {
+    expect(offset('FORMATTED(REF(COLUMN("qty"), ROW("r5")))', -1, 1)).toBe(
+      'FORMATTED(REF(COLUMN("total"), ROW("r4")))',
+    );
+    expect(offset('FORMATTED(price)', 0, 1)).toBe('FORMATTED(qty)');
+  });
+
   describe('stable references (relative)', () => {
     it('shifts a stable row reference down', () => {
       expect(offset('REF(COLUMN("price"), ROW("r1"))', 1, 0)).toBe(

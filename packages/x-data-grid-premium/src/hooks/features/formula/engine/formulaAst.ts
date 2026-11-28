@@ -18,6 +18,7 @@ export const FORMULA_RESERVED_NAMES: readonly string[] = [
   'FIXED',
   'ANCHOR',
   'COLUMN_VALUES',
+  'FORMATTED',
   'TRUE',
   'FALSE',
 ];
@@ -47,6 +48,10 @@ export interface FormulaBooleanLiteralNode extends FormulaAstBase {
 export interface FormulaFieldRefNode extends FormulaAstBase {
   type: 'fieldRef';
   field: string;
+  /**
+   * `true` when wrapped in `FORMATTED(...)`: reads the formatted value instead of the raw one.
+   */
+  formatted?: boolean;
 }
 
 /**
@@ -70,6 +75,10 @@ export interface FormulaCellRefNode extends FormulaAstBase {
   type: 'cellRef';
   column: FormulaColumnSelector;
   row: FormulaRowSelector;
+  /**
+   * `true` when wrapped in `FORMATTED(...)`: reads the formatted value instead of the raw one.
+   */
+  formatted?: boolean;
 }
 
 /**

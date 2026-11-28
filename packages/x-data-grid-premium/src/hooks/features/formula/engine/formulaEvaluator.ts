@@ -44,6 +44,13 @@ import type {
 export interface FormulaEvaluationContext {
   currentCell: FormulaCellRef;
   getCellValue: (ref: FormulaCellRef) => FormulaScalar | FormulaErrorValue | undefined;
+  /**
+   * Formats a non-error value read by `FORMATTED(...)`. Without it, `FORMATTED` is `#VALUE!`.
+   * @param {FormulaCellRef} ref The referenced cell.
+   * @param {FormulaScalar} value The raw value of the cell.
+   * @returns {FormulaScalar | undefined} The formatted value.
+   */
+  formatCellValue?: (ref: FormulaCellRef, value: FormulaScalar) => FormulaScalar | undefined;
   hasRow: (id: FormulaRowId) => boolean;
   hasField: (field: string) => boolean;
   position: FormulaPositionContext;
@@ -64,6 +71,33 @@ function normalizeResolvedValue(
   value: FormulaScalar | FormulaErrorValue | undefined,
 ): FormulaScalar | FormulaErrorValue {
   return value === undefined ? null : value;
+}
+
+function readCellValue(
+  ref: FormulaCellRef,
+  formatted: boolean | undefined,
+  context: FormulaEvaluationContext,
+): FormulaScalar | FormulaErrorValue {
+  if (!formatted) {
+    return normalizeResolvedValue(context.getCellValue(ref));
+  }
+  const { formatCellValue } = context;
+  if (formatCellValue === undefined) {
+    return createFormulaError('#VALUE!', 'FORMATTED() is not supported here.');
+  }
+  const value = normalizeResolvedValue(context.getCellValue(ref));
+  if (isFormulaErrorValue(value)) {
+    return value;
+  }
+  // A cell error, so that `IFERROR` can catch a throwing formatter.
+  try {
+    return normalizeResolvedValue(formatCellValue(ref, value));
+  } catch (error) {
+    return createFormulaError(
+      '#ERROR!',
+      error instanceof Error ? error.message : 'The value could not be formatted.',
+    );
+  }
 }
 
 function evaluateCellRef(
@@ -98,7 +132,7 @@ function evaluateCellRef(
   if (!context.hasRow(id)) {
     return createFormulaError('#REF!', `The row with id "${id}" does not exist.`);
   }
-  return normalizeResolvedValue(context.getCellValue({ id, field }));
+  return readCellValue({ id, field }, node.formatted, context);
 }
 
 /**
@@ -331,8 +365,10 @@ function evaluateNode(node: FormulaAstNode, context: FormulaEvaluationContext): 
       if (!context.hasField(node.field)) {
         return createFormulaError('#REF!', `The field "${node.field}" does not exist.`);
       }
-      return normalizeResolvedValue(
-        context.getCellValue({ id: context.currentCell.id, field: node.field }),
+      return readCellValue(
+        { id: context.currentCell.id, field: node.field },
+        node.formatted,
+        context,
       );
     }
     case 'cellRef':

@@ -550,6 +550,121 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect((worksheet.getCell('A2').value as any).result).to.deep.equal({ error: '#REF!' });
     });
 
+    it('exports FORMATTED() as a plain reference to the exported label', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
+              columns={[
+                {
+                  field: 'status',
+                  type: 'singleSelect',
+                  valueOptions: [{ value: 'd', label: 'Discontinued' }],
+                },
+                { field: 'label', allowFormulas: true },
+              ]}
+              rows={[{ id: 0, status: 'd', label: '=FORMATTED(status)' }]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook?.worksheets[0];
+      if (worksheet === undefined) {
+        throw new Error('The export produced no worksheet.');
+      }
+
+      expect(worksheet.getCell('A2').value).to.equal('Discontinued');
+      expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.Formula);
+      expect((worksheet.getCell('B2').value as any).formula).to.equal('A2');
+      expect((worksheet.getCell('B2').value as any).result).to.equal('Discontinued');
+    });
+
+    it('exports the evaluated value of FORMATTED() on a number column', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
+              columns={[
+                {
+                  field: 'price',
+                  type: 'number',
+                  valueFormatter: (value: number) => `${value} USD`,
+                },
+                { field: 'label', allowFormulas: true },
+                { field: 'raw', type: 'number', allowFormulas: true },
+              ]}
+              rows={[{ id: 0, price: 5, label: '=FORMATTED(price)', raw: '=price' }]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook?.worksheets[0];
+      if (worksheet === undefined) {
+        throw new Error('The export produced no worksheet.');
+      }
+
+      // The number cell exports 5, so a live `A2` would not read "5 USD".
+      expect(worksheet.getCell('A2').value).to.equal(5);
+      expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('B2').value).to.equal('5 USD');
+      expect((worksheet.getCell('C2').value as any).formula).to.equal('A2');
+    });
+
+    it('exports the evaluated value of FORMATTED() on a formatted formula cell', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
+              columns={[
+                {
+                  field: 'total',
+                  allowFormulas: true,
+                  valueFormatter: (value: number) => `${value} USD`,
+                },
+                { field: 'label', allowFormulas: true },
+                { field: 'other', allowFormulas: true },
+              ]}
+              rows={[
+                {
+                  id: 0,
+                  total: '=2*3',
+                  label: '=FORMATTED(total)',
+                  other: '=FORMATTED(REF(COLUMN_POSITION(1), ROW_POSITION(1)))',
+                },
+              ]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook?.worksheets[0];
+      if (worksheet === undefined) {
+        throw new Error('The export produced no worksheet.');
+      }
+
+      // The live `2*3` makes Excel read 6, not "6 USD".
+      expect((worksheet.getCell('A2').value as any).formula).to.equal('2*3');
+      expect(worksheet.getCell('B2').value).to.equal('6 USD');
+      expect(worksheet.getCell('C2').value).to.equal('6 USD');
+    });
+
     it('exports an evaluation error as a formula with an error result', async () => {
       function Test() {
         apiRef = useGridApiRef();

@@ -313,6 +313,20 @@ class Parser {
       }
       case 'REF':
         return this.parseRef(nameToken);
+      case 'FORMATTED': {
+        this.expectPunctuation('(');
+        const reference = this.parseExpression(1);
+        if (
+          (reference.type !== 'fieldRef' && reference.type !== 'cellRef') ||
+          reference.formatted
+        ) {
+          throw this.failure('FORMATTED() expects a single-cell reference.', reference.span);
+        }
+        this.expectPunctuation(')');
+        // Keeps the inner reference's span on purpose (highlights and picks), so a binary or
+        // root span starts at the inner reference, not at `FORMATTED`.
+        return { ...reference, formatted: true };
+      }
       case 'RANGE_REF': {
         this.expectPunctuation('(');
         const columnFrom = this.parseRangeAxis('COLUMN_FROM');

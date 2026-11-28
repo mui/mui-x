@@ -30,6 +30,7 @@ import {
   getComputedColumnVerdict,
 } from './gridComputedColumnsValidation';
 import { isDraftCellCyclic } from './gridFormulaDraftCycles';
+import { formatFormulaCellValue } from './gridFormulaUtils';
 
 /**
  * The owner field of a computed column draft that has no field yet.
@@ -147,6 +148,8 @@ function evaluateDraftFormula(
       }
       return getRowValueUtil(row, colDef, apiRef) as FormulaScalar;
     },
+    formatCellValue: (ref, value) =>
+      formatFormulaCellValue(apiRef, rowsLookup[ref.id], columnsLookup[ref.field], value),
     hasRow: (id) => rowsLookup[id] !== undefined,
     hasField: (field) => columnsLookup[field] !== undefined,
     position: positionContext,

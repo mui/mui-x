@@ -1,13 +1,15 @@
 import type { RefObject } from '@mui/x-internals/types';
-import type { GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridSingleSelectColDef, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { isGroupingColumn } from '@mui/x-data-grid-pro/internals';
 import {
   FORMULA_BUILT_IN_FUNCTIONS,
   createFormulaFunctionRegistry,
   createFormulaParser,
 } from './engine';
+import type { FormulaScalar } from './engine';
 import type {
   GridComputedColumnsRuntimeCache,
+  GridFormulaFormattedRead,
   GridFormulaFunctionDefinition,
   GridFormulaInternalCache,
 } from './gridFormulaInterfaces';
@@ -45,6 +47,7 @@ export function createComputedColumnsRuntimeCache(): GridComputedColumnsRuntimeC
     results: new WeakMap(),
     dependencyClosure: new Map(),
     referencedFields: new Set(),
+    formattedReads: new Map(),
     model: null,
     computedColDef: undefined,
     hydratedColDefs: new Map(),
@@ -75,6 +78,9 @@ export function createFormulaInternalCache(
     pendingFilterItemsReset: null,
     typeChangeReset: null,
     trackedValues: new Map(),
+    formattedReads: new Map(),
+    formattedReadsByReader: new Map(),
+    formattedColumnInputs: new Map(),
     lastRowIdToModelLookup: null,
     formulaFields: [],
     lastColumnsSignature: new Map(),
@@ -120,6 +126,8 @@ export function resetFormulaEvaluationCache(cache: GridFormulaInternalCache) {
   cache.positionContextRowIds = null;
   cache.positionContextFields = null;
   cache.trackedValues = new Map();
+  cache.formattedReads = new Map();
+  cache.formattedReadsByReader = new Map();
   cache.lastRowIdToModelLookup = null;
 }
 
@@ -221,4 +229,102 @@ export function areFormulaFunctionRecordsEqual(
     }
   }
   return true;
+}
+
+/**
+ * The value `FORMATTED(...)` reads: the `valueFormatter` output, as `getRowFormattedValue` does
+ * for a resolved value. An option object reads as its label, like in the Excel export.
+ */
+export function formatFormulaCellValue(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  row: GridValidRowModel | undefined,
+  colDef: GridColDef | undefined,
+  value: FormulaScalar,
+): FormulaScalar {
+  if (row === undefined || colDef?.valueFormatter === undefined) {
+    return value;
+  }
+  let formatted: unknown = colDef.valueFormatter(value as never, row, colDef, apiRef);
+  if (typeof formatted === 'object' && formatted !== null && 'label' in formatted) {
+    formatted = formatted.label;
+  }
+  if (formatted === undefined || formatted === null) {
+    return null;
+  }
+  if (typeof formatted === 'object' && !(formatted instanceof Date)) {
+    return String(formatted);
+  }
+  return formatted as FormulaScalar;
+}
+
+/**
+ * `Object.is`, with dates compared by time.
+ */
+export function areFormulaValuesEqual(a: unknown, b: unknown): boolean {
+  return Object.is(a, b) || (a instanceof Date && b instanceof Date && a.getTime() === b.getTime());
+}
+
+function getFormattedColumnInputs(colDef: GridColDef | undefined): readonly unknown[] {
+  const selectColDef = colDef as Partial<GridSingleSelectColDef> | undefined;
+  return [
+    colDef?.valueFormatter,
+    selectColDef?.valueOptions,
+    selectColDef?.getOptionLabel,
+    selectColDef?.getOptionValue,
+  ];
+}
+
+/**
+ * Formats the value of `read` into it, and snapshots the formatting inputs of its column.
+ */
+export function recordFormattedRead(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  read: GridFormulaFormattedRead,
+  row: GridValidRowModel | undefined,
+  colDef: GridColDef | undefined,
+): FormulaScalar {
+  const inputs = apiRef.current.caches.formula?.formattedColumnInputs;
+  if (inputs !== undefined && colDef !== undefined && !inputs.has(colDef.field)) {
+    inputs.set(colDef.field, getFormattedColumnInputs(colDef));
+  }
+  read.formatted = undefined;
+  read.formatted = formatFormulaCellValue(apiRef, row, colDef, read.value as FormulaScalar);
+  return read.formatted as FormulaScalar;
+}
+
+/**
+ * Tells whether a field read through `FORMATTED(...)` got new formatting inputs since the
+ * last check, and records them.
+ */
+export function haveFormattedColumnInputsChanged(
+  cache: GridFormulaInternalCache,
+  columnsLookup: Record<string, GridColDef>,
+): boolean {
+  let changed = false;
+  for (const [field, previous] of cache.formattedColumnInputs) {
+    const next = getFormattedColumnInputs(columnsLookup[field]);
+    if (next.some((input, index) => input !== previous[index])) {
+      cache.formattedColumnInputs.set(field, next);
+      changed = true;
+    }
+  }
+  return changed;
+}
+
+/**
+ * Tells whether formatting the recorded value again gives another output.
+ */
+export function isFormattedReadStale(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  row: GridValidRowModel | undefined,
+  colDef: GridColDef | undefined,
+  read: GridFormulaFormattedRead,
+): boolean {
+  let formatted: unknown;
+  try {
+    formatted = formatFormulaCellValue(apiRef, row, colDef, read.value as FormulaScalar);
+  } catch {
+    formatted = undefined;
+  }
+  return !areFormulaValuesEqual(formatted, read.formatted);
 }

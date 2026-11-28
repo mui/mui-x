@@ -52,6 +52,28 @@ describe('formulaValidation', () => {
     ).to.deep.equal({ valid: true, issues: [] });
   });
 
+  it('accepts FORMATTED() as a reference, not a function', () => {
+    const functions = createFormulaFunctionRegistry();
+    expect(
+      validateFormulaExpression('FORMATTED(status) & FORMATTED(REF(COLUMN("a"), ROW(1)))', {
+        functions,
+      }),
+    ).to.deep.equal({ valid: true, issues: [] });
+  });
+
+  it('reports a FORMATTED() argument that is not a single-cell reference', () => {
+    expect(validateFormulaExpression('FORMATTED(COLUMN_VALUES("a"))')).to.deep.equal({
+      valid: false,
+      issues: [
+        {
+          code: '#ERROR!',
+          message: 'FORMATTED() expects a single-cell reference.',
+          span: { start: 10, end: 28 },
+        },
+      ],
+    });
+  });
+
   it('reports an unknown function once even when called repeatedly', () => {
     const functions = createFormulaFunctionRegistry();
     const result = validateFormulaExpression('NOPE(1) + NOPE(2)', { functions });
