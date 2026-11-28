@@ -11,7 +11,7 @@ import {
 import { DataGrid, gridClasses, GridLogicOperator, useGridApiRef } from '@mui/x-data-grid';
 import type { DataGridProps, GridRowsProp, GridApi } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
@@ -761,6 +761,120 @@ describe('<DataGrid /> - Pagination', () => {
     fireUserEvent.mousePress(getCell(0, 0));
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
     expect(getCell(1, 0)).to.have.attr('tabindex', '0');
+  });
+
+  it('should allow keyboard re-entry after clicking the next page button', async () => {
+    const { user } = render(
+      <BaselineTestCase
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+        pageSizeOptions={[1]}
+      />,
+    );
+    await user.click(getCell(0, 0));
+    await user.keyboard('{ArrowRight}');
+    expect(getCell(0, 1)).toHaveFocus();
+
+    const nextPageButton = screen.getByRole('button', { name: /next page/i });
+    await user.click(nextPageButton);
+
+    expect(nextPageButton).toHaveFocus();
+    expect(getCell(1, 0)).to.have.attr('tabindex', '0');
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    expect(getCell(1, 0)).toHaveFocus();
+  });
+
+  it.each(['{Enter}', ' '])('should allow keyboard re-entry after paging with %s', async (key) => {
+    const { user } = render(
+      <BaselineTestCase
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+        pageSizeOptions={[1]}
+      />,
+    );
+    await user.click(getCell(0, 0));
+    await user.keyboard('{ArrowRight}');
+    await user.tab();
+    const nextPageButton = screen.getByRole('button', { name: /next page/i });
+    expect(nextPageButton).toHaveFocus();
+
+    await user.keyboard(key);
+
+    expect(nextPageButton).toHaveFocus();
+    expect(getCell(1, 0)).to.have.attr('tabindex', '0');
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    expect(getCell(1, 0)).toHaveFocus();
+  });
+
+  it('should preserve the cell tab stop when it remains on the current page', async () => {
+    const { user, setProps } = render(
+      <BaselineTestCase paginationModel={{ page: 0, pageSize: 2 }} pageSizeOptions={[1, 2, 3]} />,
+    );
+    await user.click(getCell(1, 1));
+
+    setProps({ paginationModel: { page: 0, pageSize: 3 } });
+
+    expect(getCell(1, 1)).to.have.attr('tabindex', '0');
+    expect(getCell(0, 0)).to.have.attr('tabindex', '-1');
+  });
+
+  it('should allow keyboard re-entry after clicking next with controlled pagination', async () => {
+    function TestCase() {
+      const [paginationModel, setPaginationModel] = React.useState({ page: 0, pageSize: 1 });
+      return (
+        <BaselineTestCase
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[1]}
+        />
+      );
+    }
+    const { user } = render(<TestCase />);
+    await user.click(getCell(0, 1));
+    const nextPageButton = screen.getByRole('button', { name: /next page/i });
+
+    await user.click(nextPageButton);
+
+    expect(nextPageButton).toHaveFocus();
+    expect(getCell(1, 0)).to.have.attr('tabindex', '0');
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    expect(getCell(1, 0)).toHaveFocus();
+  });
+
+  it('should preserve the column header tab stop when changing the page', async () => {
+    const { user } = render(
+      <BaselineTestCase
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+        pageSizeOptions={[1]}
+      />,
+    );
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+    expect(getColumnHeaderCell(1)).toHaveFocus();
+
+    await user.click(screen.getByRole('button', { name: /next page/i }));
+
+    expect(getColumnHeaderCell(1)).to.have.attr('tabindex', '0');
+    expect(getCell(1, 0)).to.have.attr('tabindex', '-1');
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    expect(getColumnHeaderCell(1)).toHaveFocus();
+  });
+
+  it('should allow pagination with a stored cell tab stop and no visible columns', async () => {
+    const { user, setProps } = render(
+      <BaselineTestCase
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+        pageSizeOptions={[1]}
+      />,
+    );
+    await user.click(getCell(0, 0));
+    setProps({ columnVisibilityModel: { id: false, idBis: false } });
+
+    await user.click(screen.getByRole('button', { name: /next page/i }));
+
+    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
   });
 
   // Need layout
