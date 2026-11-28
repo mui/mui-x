@@ -3,6 +3,7 @@ import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import { styled } from '@mui/material/styles';
+import { buttonBaseClasses } from '@mui/material/ButtonBase';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -31,6 +32,11 @@ const CustomPickerDay = styled(PickerDay, {
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
     },
+    ...(theme.focusVisible && {
+      [`&.${buttonBaseClasses.focusVisible}`]: {
+        outlineColor: theme.palette.primary.contrastText,
+      },
+    }),
   }),
   ...(isHovered && {
     backgroundColor: theme.palette.primary.light,

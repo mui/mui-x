@@ -25,6 +25,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { getSelectedFocusVisible } from '../internals/utils/focusVisible';
 
 const useUtilityClasses = (classes: Partial<DigitalClockClasses> | undefined) => {
   const slots = {
@@ -85,16 +86,30 @@ export const DigitalClockItem = styled(MenuItem, {
   '&.Mui-selected': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
     color: (theme.vars || theme).palette.primary.contrastText,
-    '&:focus-visible, &:hover': {
+    '&:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible
+      ? {
+          '&.Mui-focusVisible': getSelectedFocusVisible(
+            theme,
+            (theme.vars || theme).palette.primary.contrastText,
+          ),
+        }
+      : {
+          '&:focus-visible': {
+            backgroundColor: (theme.vars || theme).palette.primary.dark,
+          },
+        }),
   },
-  '&.Mui-focusVisible': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity,
-    ),
-  },
+  ...(!theme.focusVisible && {
+    '&.Mui-focusVisible': {
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        (theme.vars || theme).palette.action.focusOpacity,
+      ),
+    },
+  }),
 }));
 
 type DigitalClockComponent = ((

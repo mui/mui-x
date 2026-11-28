@@ -1,7 +1,9 @@
 import { act, screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<MonthCalendar />', () => {
@@ -363,4 +365,28 @@ describe('<MonthCalendar />', () => {
       });
     });
   });
+
+  it.skipIf(isJSDOM)(
+    'draws an inset ring with a contrast band on the selected month with theme.focusVisible',
+    async () => {
+      const { user } = render(
+        <ThemeProvider
+          theme={createTheme({
+            focusVisible: true,
+            palette: { primary: { main: '#1976d2', contrastText: 'rgb(1, 2, 3)' } },
+          })}
+        >
+          <MonthCalendar defaultValue={adapterToUse.date('2019-02-02')} />
+        </ThemeProvider>,
+      );
+
+      await user.keyboard('{Tab}');
+
+      const selectedMonth = screen.getByRole('radio', { name: 'February' });
+      expect(document.activeElement).to.equal(selectedMonth);
+      expect(selectedMonth).to.have.style('outline-offset', '-2px');
+      expect(selectedMonth).to.have.style('box-shadow', 'rgb(1, 2, 3) 0px 0px 0px 4px inset');
+      expect(selectedMonth).to.have.style('background-color', 'rgb(25, 118, 210)');
+    },
+  );
 });

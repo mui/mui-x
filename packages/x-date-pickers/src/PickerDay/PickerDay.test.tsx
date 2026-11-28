@@ -2,9 +2,12 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import ButtonBase from '@mui/material/ButtonBase';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import { PickerDay, pickerDayClasses as classes } from '@mui/x-date-pickers/PickerDay';
+import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 
 describe('<PickerDay />', () => {
@@ -129,5 +132,124 @@ describe('<PickerDay />', () => {
     );
 
     expect(screen.getByRole('button')).to.have.style('color', 'rgb(1, 2, 3)');
+  });
+
+  describe('theme.focusVisible', () => {
+    const renderDay = (theme: Theme, props: Partial<PickerDayProps> = {}) =>
+      render(
+        <ThemeProvider theme={theme}>
+          <PickerDay
+            day={adapterToUse.date('2020-02-02')}
+            outsideCurrentMonth={false}
+            isFirstVisibleCell={false}
+            isLastVisibleCell={false}
+            onDaySelect={() => {}}
+            tabIndex={0}
+            {...props}
+          />
+        </ThemeProvider>,
+      );
+
+    it.skipIf(isJSDOM)('draws a contrast band inside the ring of a selected day', async () => {
+      const { user } = renderDay(
+        createTheme({
+          focusVisible: true,
+          palette: { primary: { main: '#1976d2', contrastText: 'rgb(1, 2, 3)' } },
+        }),
+        { selected: true },
+      );
+
+      await user.keyboard('{Tab}');
+
+      expect(screen.getByRole('button')).to.have.style('outline-style', 'solid');
+      expect(screen.getByRole('button')).to.have.style('outline-offset', '-2px');
+      expect(screen.getByRole('button')).to.have.style(
+        'box-shadow',
+        'rgb(1, 2, 3) 0px 0px 0px 4px inset',
+      );
+    });
+
+    it.skipIf(isJSDOM)('keeps the outline color set in the theme on a selected day', async () => {
+      const { user } = renderDay(createTheme({ focusVisible: { outlineColor: 'rgb(4, 5, 6)' } }), {
+        selected: true,
+      });
+
+      await user.keyboard('{Tab}');
+
+      expect(screen.getByRole('button')).to.have.style('outline-color', 'rgb(4, 5, 6)');
+    });
+
+    it.skipIf(isJSDOM)('widens the contrast band with the ring on a selected day', async () => {
+      const { user } = renderDay(
+        createTheme({
+          focusVisible: { outlineWidth: 4 },
+          palette: { primary: { main: '#1976d2', contrastText: 'rgb(1, 2, 3)' } },
+        }),
+        { selected: true },
+      );
+
+      await user.keyboard('{Tab}');
+
+      expect(screen.getByRole('button')).to.have.style('outline-offset', '-4px');
+      expect(screen.getByRole('button')).to.have.style(
+        'box-shadow',
+        'rgb(1, 2, 3) 0px 0px 0px 6px inset',
+      );
+    });
+
+    it.skipIf(isJSDOM)(
+      'keeps the contrast band when the theme ring has its own box-shadow',
+      async () => {
+        const { user } = renderDay(
+          createTheme({
+            focusVisible: { boxShadow: '0 0 0 1px rgb(7, 8, 9)' },
+            palette: { primary: { main: '#1976d2', contrastText: 'rgb(1, 2, 3)' } },
+          }),
+          { selected: true },
+        );
+
+        await user.keyboard('{Tab}');
+
+        expect(screen.getByRole('button')).to.have.style(
+          'box-shadow',
+          'rgb(1, 2, 3) 0px 0px 0px 4px inset, rgb(7, 8, 9) 0px 0px 0px 1px inset',
+        );
+      },
+    );
+
+    it.skipIf(isJSDOM)('keeps the today marker when the theme ring has no box-shadow', async () => {
+      const { user } = renderDay(
+        createTheme({
+          focusVisible: { boxShadow: 'none' },
+          palette: { text: { secondary: 'rgb(7, 8, 9)' } },
+        }),
+        { today: true },
+      );
+
+      await user.keyboard('{Tab}');
+
+      expect(screen.getByRole('button')).to.have.style(
+        'box-shadow',
+        'rgb(7, 8, 9) 0px 0px 0px 1px inset',
+      );
+      expect(screen.getByRole('button')).to.have.style('outline-offset', '-4px');
+    });
+
+    it.skipIf(isJSDOM)('joins the today marker with the box-shadow of the theme ring', async () => {
+      const { user } = renderDay(
+        createTheme({
+          focusVisible: { insetOverrides: { boxShadow: 'inset 0 0 0 3px rgb(10, 11, 12)' } },
+          palette: { text: { secondary: 'rgb(7, 8, 9)' } },
+        }),
+        { today: true },
+      );
+
+      await user.keyboard('{Tab}');
+
+      expect(screen.getByRole('button')).to.have.style(
+        'box-shadow',
+        'rgb(7, 8, 9) 0px 0px 0px 1px inset, rgb(10, 11, 12) 0px 0px 0px 3px inset',
+      );
+    });
   });
 });

@@ -23,6 +23,7 @@ import { getFocusedListItemIndex } from '../internals/utils/utils';
 import type { FormProps } from '../internals/models/formProps';
 import type { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { getSelectedFocusVisible } from '../internals/utils/focusVisible';
 import type { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
@@ -113,16 +114,30 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   '&.Mui-selected': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
     color: (theme.vars || theme).palette.primary.contrastText,
-    '&:focus-visible, &:hover': {
+    '&:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible
+      ? {
+          '&.Mui-focusVisible': getSelectedFocusVisible(
+            theme,
+            (theme.vars || theme).palette.primary.contrastText,
+          ),
+        }
+      : {
+          '&:focus-visible': {
+            backgroundColor: (theme.vars || theme).palette.primary.dark,
+          },
+        }),
   },
-  '&.Mui-focusVisible': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity,
-    ),
-  },
+  ...(!theme.focusVisible && {
+    '&.Mui-focusVisible': {
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        (theme.vars || theme).palette.action.focusOpacity,
+      ),
+    },
+  }),
 }));
 
 type MultiSectionDigitalClockSectionComponent = <TSectionValue extends number | string>(

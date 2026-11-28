@@ -9,13 +9,14 @@ import type { CheckboxProps } from '@mui/material/Checkbox';
 import MuiCheckbox from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
+import { getFocusVisibleReach } from '@mui/x-internals/focusVisible';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import type { TreeItemProps } from './TreeItem.types';
 import type { UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
 import { useTreeItem } from '../useTreeItem';
 import type { TreeItemClasses } from './treeItemClasses';
-import { getTreeItemUtilityClass } from './treeItemClasses';
+import { getTreeItemUtilityClass, treeItemClasses } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
@@ -64,9 +65,35 @@ export const TreeItemContent = styled('div', {
     backgroundColor: 'transparent',
     cursor: 'auto',
   },
-  '&[data-focused]': {
-    backgroundColor: (theme.vars || theme).palette.action.focus,
-  },
+  ...(theme.focusVisible
+    ? {
+        '[role="treeitem"]:focus-visible > &':
+          theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
+        [`&:has(.${treeItemClasses.checkbox} input:focus-visible)`]:
+          theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
+        '[role="treeitem"]:focus-visible > &[data-disabled]': {
+          opacity: 1,
+          // The row opacity would also fade the ring, so the children are dimmed instead.
+          // `*` also dims custom content, whose children may have no slot class (`useTreeItem`).
+          '& > *': {
+            opacity: (theme.vars || theme).palette.action.disabledOpacity,
+          },
+        },
+        '[role="treeitem"]:focus:not(:focus-visible) > &': {
+          backgroundColor: (theme.vars || theme).palette.action.focus,
+        },
+        '[role="treeitem"]:focus:not(:focus-visible) > &[data-selected]': {
+          backgroundColor: theme.alpha(
+            (theme.vars || theme).palette.primary.main,
+            `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
+          ),
+        },
+      }
+    : {
+        '&[data-focused]': {
+          backgroundColor: (theme.vars || theme).palette.action.focus,
+        },
+      }),
   '&[data-selected]': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.primary.main,
@@ -86,12 +113,14 @@ export const TreeItemContent = styled('div', {
       },
     },
   },
-  '&[data-selected][data-focused]': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
-    ),
-  },
+  ...(!theme.focusVisible && {
+    '&[data-selected][data-focused]': {
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
+      ),
+    },
+  }),
 }));
 
 export const TreeItemLabel = styled('div', {
@@ -105,12 +134,16 @@ export const TreeItemLabel = styled('div', {
   minWidth: 0,
   position: 'relative',
   overflow: 'hidden',
+  ...(theme.focusVisible && {
+    overflow: 'clip',
+    overflowClipMargin: getFocusVisibleReach(theme.focusVisible),
+  }),
   ...theme.typography.body1,
   variants: [
     {
       props: ({ editable }: UseTreeItemLabelSlotOwnProps) => editable,
       style: {
-        paddingLeft: '2px',
+        paddingLeft: theme.focusVisible ? 4 : '2px',
       },
     },
   ],

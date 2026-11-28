@@ -1,0 +1,15 @@
+<ThemeProvider theme={theme}>
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 2,
+      }}
+    >
+      <DatePicker label="Date" defaultValue={value} />
+      <DateCalendar defaultValue={value} sx={{ m: 0 }} />
+    </Box>
+  </LocalizationProvider>
+</ThemeProvider>

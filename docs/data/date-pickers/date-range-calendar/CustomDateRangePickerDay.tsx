@@ -2,6 +2,7 @@ import * as React from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { styled } from '@mui/material/styles';
+import { buttonBaseClasses } from '@mui/material/ButtonBase';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
@@ -22,9 +23,20 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(({ theme }) => ({
         borderRadius: 0,
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
-        '&:hover, &:focus': {
+        '&:hover': {
           backgroundColor: theme.palette.primary.dark,
         },
+        ...(theme.focusVisible
+          ? {
+              [`&.${buttonBaseClasses.focusVisible}`]: {
+                outlineColor: theme.palette.common.white,
+              },
+            }
+          : {
+              '&:focus': {
+                backgroundColor: theme.palette.primary.dark,
+              },
+            }),
       },
     },
     {

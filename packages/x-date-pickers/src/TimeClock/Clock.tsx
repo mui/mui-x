@@ -107,11 +107,17 @@ const ClockClock = styled('div', {
 const ClockWrapper = styled('div', {
   name: 'MuiClock',
   slot: 'Wrapper',
-})({
+})(({ theme }) => ({
   '&:focus': {
     outline: 'none',
   },
-});
+  ...(theme.focusVisible && {
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
+    '&:focus-visible': theme.focusVisible,
+  }),
+}));
 
 const ClockSquareMask = styled('div', {
   name: 'MuiClock',

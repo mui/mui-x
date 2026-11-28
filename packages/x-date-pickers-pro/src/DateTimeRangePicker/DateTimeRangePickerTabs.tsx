@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { buttonBaseClasses } from '@mui/material/ButtonBase';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TimeIcon, DateRangeIcon, ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers/icons';
@@ -82,6 +83,10 @@ const DateTimeRangePickerTabsRoot = styled('div', {
   alignItems: 'center',
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   minHeight: 48,
+  ...(theme.focusVisible && {
+    [`& .${buttonBaseClasses.root}.${buttonBaseClasses.focusVisible}`]:
+      theme.applyFocusVisible?.('inset') ?? theme.focusVisible,
+  }),
 }));
 
 const DateTimeRangePickerTab = styled(Button, {

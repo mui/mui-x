@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { CSSInterpolation } from '@mui/material/styles';
 import { styled, useThemeProps } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
+import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -15,6 +15,7 @@ import { pickerDayClasses, getPickerDayUtilityClass } from './pickerDayClasses';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import type { PickerDayOwnerState, PickerDayProps } from './PickerDay.types';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
+import { getSelectedFocusVisible, getTodayFocusVisible } from '../internals/utils/focusVisible';
 
 const useUtilityClasses = (
   ownerState: PickerDayOwnerState,
@@ -82,12 +83,18 @@ const PickerDayRoot = styled(ButtonBase, {
       ),
     },
   },
-  '&:focus': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity,
-    ),
-  },
+  ...(theme.focusVisible
+    ? {
+        [`&.${buttonBaseClasses.focusVisible}`]: theme.applyFocusVisible?.('inset'),
+      }
+    : {
+        '&:focus': {
+          backgroundColor: theme.alpha(
+            (theme.vars || theme).palette.primary.main,
+            (theme.vars || theme).palette.action.focusOpacity,
+          ),
+        },
+      }),
   marginLeft: 'var(--PickerDay-horizontalMargin)',
   marginRight: 'var(--PickerDay-horizontalMargin)',
   variants: [
@@ -97,10 +104,23 @@ const PickerDayRoot = styled(ButtonBase, {
         color: (theme.vars || theme).palette.primary.contrastText,
         backgroundColor: (theme.vars || theme).palette.primary.main,
         fontWeight: theme.typography.fontWeightMedium,
-        '&:focus, &:hover': {
+        '&:hover': {
           willChange: 'background-color',
           backgroundColor: (theme.vars || theme).palette.primary.dark,
         },
+        ...(theme.focusVisible
+          ? {
+              [`&.${buttonBaseClasses.focusVisible}`]: getSelectedFocusVisible(
+                theme,
+                (theme.vars || theme).palette.primary.contrastText,
+              ),
+            }
+          : {
+              '&:focus': {
+                willChange: 'background-color',
+                backgroundColor: (theme.vars || theme).palette.primary.dark,
+              },
+            }),
         [`&.${pickerDayClasses.disabled}`]: {
           opacity: 0.6,
         },
@@ -137,6 +157,12 @@ const PickerDayRoot = styled(ButtonBase, {
       style: {
         outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
         outlineOffset: -1,
+        ...(theme.focusVisible && {
+          [`&.${buttonBaseClasses.focusVisible}`]: getTodayFocusVisible(
+            theme,
+            (theme.vars || theme).palette.text.secondary,
+          ),
+        }),
       },
     },
   ],

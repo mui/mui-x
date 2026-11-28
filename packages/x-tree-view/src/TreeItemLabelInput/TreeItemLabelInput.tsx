@@ -14,9 +14,10 @@ const TreeItemLabelInput = styled('input', {
   border: 'none',
   padding: '0 2px',
   boxSizing: 'border-box',
-  '&:focus': {
-    outline: `1px solid ${(theme.vars || theme).palette.primary.main}`,
-  },
+  ...(theme.focusVisible && { paddingInline: 4 }),
+  '&:focus': theme.focusVisible
+    ? (theme.applyFocusVisible?.('inset') ?? theme.focusVisible)
+    : { outline: `1px solid ${(theme.vars || theme).palette.primary.main}` },
 }));
 
 export { TreeItemLabelInput };

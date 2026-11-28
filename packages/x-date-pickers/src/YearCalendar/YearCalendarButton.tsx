@@ -11,6 +11,7 @@ import type {
 } from './YearCalendar.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import type { PickerOwnerState } from '../models/pickers';
+import { getSelectedFocusVisible } from '../internals/utils/focusVisible';
 import type { YearCalendarClasses } from './yearCalendarClasses';
 import { getYearCalendarUtilityClass, yearCalendarClasses } from './yearCalendarClasses';
 
@@ -70,6 +71,12 @@ const DefaultYearButton = styled('button', {
       (theme.vars || theme).palette.action.focusOpacity,
     ),
   },
+  ...(theme.focusVisible && {
+    '&:focus-visible': {
+      backgroundColor: 'transparent',
+      ...(theme.applyFocusVisible?.('inset') ?? theme.focusVisible),
+    },
+  }),
   '&:hover': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
@@ -86,9 +93,21 @@ const DefaultYearButton = styled('button', {
   [`&.${yearCalendarClasses.selected}`]: {
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
-    '&:focus, &:hover': {
+    '&:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible
+      ? {
+          '&:focus-visible': getSelectedFocusVisible(
+            theme,
+            (theme.vars || theme).palette.primary.contrastText,
+          ),
+        }
+      : {
+          '&:focus': {
+            backgroundColor: (theme.vars || theme).palette.primary.dark,
+          },
+        }),
   },
 }));
 

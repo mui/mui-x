@@ -147,6 +147,12 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
           paddingRight: 12,
         },
       },
+      {
+        props: ({ ownerState }) => Boolean(theme.focusVisible) && !ownerState.inputHasUnderline,
+        style: {
+          [`&.${pickersFilledInputClasses.focused}`]: theme.focusVisible,
+        },
+      },
     ],
   };
 });

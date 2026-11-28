@@ -1,4 +1,5 @@
 import { fireEvent, screen, within } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import {
   createPickerRenderer,
@@ -6,6 +7,7 @@ import {
   fireClockPointerEvent,
   timeClockHandler,
 } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 
 describe('<TimeClock />', () => {
@@ -800,6 +802,26 @@ describe('<TimeClock />', () => {
       );
       expect(onChange.mock.calls.length).to.equal(2);
       expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
+    });
+  });
+
+  describe.skipIf(isJSDOM)('theme.focusVisible', () => {
+    it('leaves the box of the focusable wrapper unchanged without the option', () => {
+      render(<TimeClock value={null} onChange={() => {}} />);
+
+      expect(screen.getByRole('listbox')).to.have.style('height', '0px');
+      expect(screen.getByRole('listbox')).to.have.style('border-radius', '0px');
+    });
+
+    it('sizes the focusable wrapper to the clock face with the option', () => {
+      render(
+        <ThemeProvider theme={createTheme({ focusVisible: true })}>
+          <TimeClock value={null} onChange={() => {}} />
+        </ThemeProvider>,
+      );
+
+      expect(screen.getByRole('listbox')).to.have.style('height', '220px');
+      expect(screen.getByRole('listbox')).to.have.style('border-radius', '50%');
     });
   });
 });
