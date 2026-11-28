@@ -215,6 +215,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     counter: 0,
     heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
     lastFlipTimestamp: 0,
+    prevHasScrollY: false,
   });
 
   // In a layout that grows with its content, the root takes the height of the
@@ -356,7 +357,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
             };
           }
 
-          if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
+          if (prevDimensions.isReady && hasScrollY !== osc.prevHasScrollY) {
             // performance.now is monotonic; Date.now can jump (NTP, clock change).
             const now = performance.now();
             if (now - osc.lastFlipTimestamp > OSCILLATION_FLIP_WINDOW_MS) {
@@ -384,12 +385,15 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         }
       }
 
+      scrollYOscillation.current.prevHasScrollY = hasScrollY;
+
       if (params.disableHorizontalScroll) {
         hasScrollX = false;
       }
 
       if (params.disableVerticalScroll) {
         hasScrollY = false;
+        scrollYOscillation.current.counter = 0;
       }
 
       const rowWidth = Math.max(
