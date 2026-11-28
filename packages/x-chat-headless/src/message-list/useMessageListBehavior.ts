@@ -101,6 +101,7 @@ export function useMessageListBehavior(parameters: {
   const mountScrollTopRef = React.useRef<number | null>(null);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
+  const wasStreamingRef = React.useRef(isStreaming);
   const [isAtBottom, setIsAtBottom] = React.useState(true);
   const [unseenMessageCount, setUnseenMessageCount] = React.useState(0);
   const isAtBottomRef = React.useRef(true);
@@ -348,6 +349,9 @@ export function useMessageListBehavior(parameters: {
   React.useLayoutEffect(() => {
     const previousItemIds = previousItemIdsRef.current;
     const changeKind = classifyItemChange(previousItemIds, itemIds);
+    // The commit that ends a stream can also carry its last chunk.
+    const wasStreaming = wasStreamingRef.current;
+    wasStreamingRef.current = isStreaming;
 
     if (changeKind === 'prepend' || changeKind === 'other') {
       restoreAnchor(anchorRef.current);
@@ -362,6 +366,9 @@ export function useMessageListBehavior(parameters: {
       } else if (appendedIds.length > 0) {
         updateUnseenMessageCount(unseenMessageCountRef.current + appendedIds.length);
       }
+    } else if (autoScrollEnabled && isAtBottomRef.current && (isStreaming || wasStreaming)) {
+      // Follow streamed content before measuring, or a chunk taller than the buffer reads as scrolled away.
+      scrollToBottom();
     }
 
     const nextIsAtBottom = updateIsAtBottom({ silent: changeKind === 'other' });
@@ -376,6 +383,7 @@ export function useMessageListBehavior(parameters: {
   }, [
     autoScrollEnabled,
     captureAnchor,
+    isStreaming,
     itemIds,
     messageById,
     restoreAnchor,

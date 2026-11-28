@@ -138,8 +138,12 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
   );
 });
 
-function StreamingMessageList(props: { onReachBottom?: MessageListRootProps['onReachBottom'] }) {
-  const { onReachBottom } = props;
+function StreamingMessageList(props: {
+  onReachBottom?: MessageListRootProps['onReachBottom'];
+  growBy?: number;
+  endStreamOnGrow?: boolean;
+}) {
+  const { onReachBottom, growBy = 40, endStreamOnGrow = false } = props;
   const [growCount, setGrowCount] = React.useState(0);
   const [messages, setMessages] = React.useState<ChatMessage[]>([
     createMessage('m1', 'assistant'),
@@ -163,6 +167,7 @@ function StreamingMessageList(props: { onReachBottom?: MessageListRootProps['onR
                 ? {
                     ...message,
                     parts: [{ type: 'text', text: `grown-${growCount + 1}` }],
+                    status: endStreamOnGrow ? 'sent' : message.status,
                   }
                 : message,
             ),
@@ -173,10 +178,6 @@ function StreamingMessageList(props: { onReachBottom?: MessageListRootProps['onR
         grow streaming row
       </button>
       <MessageListRoot
-        // Buffer wider than the row growth so `isAtBottomRef.current` remains
-        // true after the in-place resize. Otherwise the bottom check itself
-        // (not the lifecycle bug we want to cover) would short-circuit the
-        // auto-scroll.
         autoScroll={{ buffer: 60 }}
         estimatedItemSize={40}
         onReachBottom={onReachBottom}
@@ -185,7 +186,7 @@ function StreamingMessageList(props: { onReachBottom?: MessageListRootProps['onR
             data-testid={`message-${id}`}
             style={{
               boxSizing: 'border-box',
-              height: id === 'm-streaming' ? 40 + growCount * 40 : 40,
+              height: id === 'm-streaming' ? 40 + growCount * growBy : 40,
             }}
           >
             {id}
@@ -835,6 +836,47 @@ describe('MessageListRoot', () => {
       });
     },
   );
+
+  it.skipIf(isJSDOM)(
+    'auto-scrolls when a streaming row grows by more than the buffer at once',
+    async () => {
+      render(<StreamingMessageList growBy={200} />);
+      const log = screen.getByRole('log');
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
+
+      log.scrollTop = log.scrollHeight - log.clientHeight;
+      fireEvent.scroll(log);
+
+      fireEvent.click(screen.getByRole('button', { name: 'grow streaming row' }));
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBe(400);
+        expect(log.scrollTop).toBe(log.scrollHeight - log.clientHeight);
+      });
+    },
+  );
+
+  it.skipIf(isJSDOM)('auto-scrolls when the last chunk lands as the stream ends', async () => {
+    render(<StreamingMessageList endStreamOnGrow />);
+    const log = screen.getByRole('log');
+
+    await waitFor(() => {
+      expect(log.scrollHeight).toBeGreaterThan(160);
+    });
+
+    log.scrollTop = log.scrollHeight - log.clientHeight;
+    fireEvent.scroll(log);
+
+    fireEvent.click(screen.getByRole('button', { name: 'grow streaming row' }));
+
+    await waitFor(() => {
+      expect(log.scrollHeight).toBe(240);
+      expect(log.scrollTop).toBe(log.scrollHeight - log.clientHeight);
+    });
+  });
 
   it.skipIf(isJSDOM)('updates the internal bottom state as the user scrolls', async () => {
     render(
