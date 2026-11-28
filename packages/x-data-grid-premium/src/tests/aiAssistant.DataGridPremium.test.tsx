@@ -1,6 +1,11 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
-import { DataGridPremium, GridAiAssistantPanel, useGridApiRef } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridAiAssistantPanel,
+  GridPreferencePanelsValue,
+  useGridApiRef,
+} from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
@@ -190,6 +195,32 @@ describe('<DataGridPremium /> - AI Assistant', () => {
       )) as Error;
 
       expect(response.message).to.equal(errorMsg);
+    });
+
+    it('should keep AiAssistantPanelTrigger aria-controls pointing to the open panel', async () => {
+      const { user, unmount } = render(<Test />);
+
+      const expectControlsDialog = () => {
+        const trigger = screen.getByRole('button', { name: 'AI Assistant' });
+        const dialog = screen.getByRole('dialog');
+        expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+        expect(dialog.id).not.to.equal('');
+        expect(trigger.getAttribute('aria-controls')).to.equal(dialog.id);
+        expect(document.getElementById(dialog.id)).to.equal(dialog);
+        return { trigger, dialog };
+      };
+
+      await act(async () => apiRef.current?.showPreferences(GridPreferencePanelsValue.aiAssistant));
+      expectControlsDialog();
+
+      await act(async () => apiRef.current?.hidePreferences());
+      const triggerButton = screen.getByRole('button', { name: 'AI Assistant' });
+      expect(triggerButton.getAttribute('aria-controls')).to.equal(null);
+
+      await user.click(triggerButton);
+      const { dialog } = expectControlsDialog();
+      expect(dialog.getAttribute('aria-labelledby')).to.equal(triggerButton.id);
+      unmount();
     });
   });
 });

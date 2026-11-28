@@ -13,6 +13,7 @@ import {
   gridPivotActiveSelector,
 } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { GridSidebarValue } from '../../hooks/features/sidebar';
+import { gridSidebarPanelIdSelector } from '../../hooks/features/sidebar/gridSidebarSelector';
 
 export interface PivotPanelState {
   /**
@@ -52,10 +53,10 @@ const PivotPanelTrigger = forwardRef<HTMLButtonElement, PivotPanelTriggerProps>(
   function PivotPanelTrigger(props, ref) {
     const { render, className, onClick, onPointerUp, ...other } = props;
     const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const panelId = useId();
+    const buttonId = useId(other.id);
     const apiRef = useGridApiContext();
     const open = useGridSelector(apiRef, gridPivotPanelOpenSelector);
+    const panelId = useGridSelector(apiRef, gridSidebarPanelIdSelector, GridSidebarValue.Pivot);
     const active = useGridSelector(apiRef, gridPivotActiveSelector);
     const state = { open, active };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
@@ -64,7 +65,7 @@ const PivotPanelTrigger = forwardRef<HTMLButtonElement, PivotPanelTriggerProps>(
       if (open) {
         apiRef.current.hideSidebar();
       } else {
-        apiRef.current.showSidebar(GridSidebarValue.Pivot, panelId, buttonId);
+        apiRef.current.showSidebar(GridSidebarValue.Pivot, undefined, buttonId);
       }
       onClick?.(event);
     };
@@ -75,9 +76,8 @@ const PivotPanelTrigger = forwardRef<HTMLButtonElement, PivotPanelTriggerProps>(
       {
         ...rootProps.slotProps?.baseButton,
         id: buttonId,
-        // TODO: Hook up the panel/trigger IDs to the pivot panel
         'aria-expanded': open ? 'true' : undefined,
-        'aria-controls': open ? panelId : undefined,
+        'aria-controls': panelId,
         onClick: handleClick,
         className: resolvedClassName,
         ...other,

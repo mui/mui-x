@@ -65,7 +65,7 @@ export const gridComputedColumnsPanelOpenSelector = createSelector(
 
 /**
  * Get the id of the sidebar element while it shows the computed columns panel.
- * `undefined` when the panel is closed, or was opened without an id.
+ * `undefined` when the panel is closed.
  * @ignore - do not document.
  */
 export const gridComputedColumnsPanelIdSelector = createSelector(

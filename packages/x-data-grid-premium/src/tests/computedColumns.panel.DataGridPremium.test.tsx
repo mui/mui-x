@@ -1818,12 +1818,12 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expectControlsSidebar(getTrigger()!);
     });
 
-    it('leaves aria-controls out when the panel was opened without an id', async () => {
+    it('points at the panel when opened through showSidebar without an id', async () => {
       await render(<Test showToolbar />);
       await act(async () => apiRef.current!.showSidebar(GridSidebarValue.ComputedColumns));
       const trigger = getTrigger()!;
-      expect(trigger.getAttribute('aria-expanded')).to.equal('true');
-      expect(trigger.getAttribute('aria-controls')).to.equal(null);
+      expectControlsSidebar(trigger);
+      expect(getSidebar().labelId).to.equal(undefined);
     });
 
     it('gives each grid its own panel id', async () => {
