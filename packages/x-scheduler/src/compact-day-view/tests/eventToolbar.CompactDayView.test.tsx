@@ -27,7 +27,7 @@ describe('CompactDayView - event toolbar', () => {
       .readOnly(readOnly)
       .build();
 
-    const { setProps } = render(
+    const { setProps, user } = render(
       <StandaloneCompactDayView
         events={[event]}
         resources={[]}
@@ -38,7 +38,7 @@ describe('CompactDayView - event toolbar', () => {
       />,
     );
 
-    return { onEventsChange, setProps };
+    return { onEventsChange, setProps, user };
   }
 
   function getEvent(): HTMLElement {
@@ -417,5 +417,47 @@ describe('CompactDayView - event toolbar', () => {
     // The read-only summary renders: its Close button + title (scoped to the header to skip the grid event).
     const summaryHeader = screen.getByRole('button', { name: 'Close' }).closest('header')!;
     expect(within(summaryHeader).getByText('Morning Meeting')).not.to.equal(null);
+  });
+
+  it('should move focus between the armed event and the docked toolbar with Tab', async () => {
+    const { user } = renderEvent();
+    const event = getEvent();
+
+    act(() => {
+      event.focus();
+    });
+    await user.keyboard('{Enter}');
+    const editButton = screen.getByRole('button', { name: 'Edit event' });
+
+    await user.keyboard('{Tab}');
+    expect(document.activeElement).to.equal(editButton);
+
+    await user.keyboard('{ArrowRight}');
+    expect(document.activeElement).to.equal(screen.getByRole('button', { name: 'Delete event' }));
+
+    await user.keyboard('{Tab}');
+    expect(document.activeElement).to.equal(event);
+
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+    expect(document.activeElement).to.equal(event);
+  });
+
+  it('should move focus back to the event once the drawer opened from the toolbar Edit closes', async () => {
+    const { user } = renderEvent();
+    const event = getEvent();
+
+    act(() => {
+      event.focus();
+    });
+    await user.keyboard('{Enter}');
+    await user.keyboard('{Tab}');
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('textbox', { name: /Event title/i })).not.to.equal(null);
+
+    await user.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(event);
+    });
   });
 });

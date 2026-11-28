@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { useId } from '@base-ui/utils/useId';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
@@ -63,10 +64,11 @@ export function DayGridCell(props: DayGridCellProps) {
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { startEditing } = useEventEditingContext();
-  const { schedulerId, classes } = useEventCalendarStyledContext();
+  const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
+  const labelId = useId();
 
   // Selector hooks
   const isCreatingAnEvent = useStore(
@@ -99,11 +101,17 @@ export function DayGridCell(props: DayGridCellProps) {
           '--row-count': rowCount,
         } as React.CSSProperties
       }
-      aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
+      // The events are unknown while loading.
+      aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell${isLoading ? '' : ` ${labelId}`}`}
       aria-colindex={colIndex}
       role="gridcell"
       data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
     >
+      <span
+        id={labelId}
+        aria-label={localeText.eventCountAriaLabel(day.withPosition.length)}
+        hidden
+      />
       <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
         {isLoading && <EventSkeleton data-variant="day-grid" />}
         {day.withPosition.map((occurrence) => {

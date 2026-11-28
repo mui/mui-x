@@ -14,7 +14,7 @@ interface GetKeyboardCreationPlaceholderParams {
 }
 
 /**
- * Hook that returns a function to trigger event creation via keyboard (Enter key).
+ * Hook that returns a function to trigger event creation via keyboard (C key).
  * Returns `undefined` when event creation is disabled.
  *
  * This is the keyboard counterpart of `useEventCreation` (which handles mouse clicks).

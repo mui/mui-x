@@ -4,9 +4,12 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useId } from '@base-ui/utils/useId';
 import {
+  CALENDAR_GRID_ITEM_PROPS,
   createStartOfPlainDate,
   formatDayOfMonth,
+  formatMonthAndDayOfMonth,
   formatMonthShortAndDayOfMonth,
   getDayNumber,
   getOccurrenceFirstDayNumber,
@@ -197,6 +200,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
+  const labelId = useId();
 
   const isCurrentMonth =
     day.plainDate.year === visiblePlainDate.year && day.plainDate.month === visiblePlainDate.month;
@@ -238,7 +242,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       ref={handleRef}
       value={day.plainDate}
       aria-colindex={colIndex}
-      aria-labelledby={ariaLabelledBy}
+      // The column header gives the weekday.
+      aria-labelledby={[labelId, ariaLabelledBy].filter(Boolean).join(' ')}
       data-current={isToday || undefined}
       aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
@@ -246,6 +251,16 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >
+      <span
+        id={labelId}
+        aria-label={
+          // The events are unknown while loading.
+          isLoading
+            ? formatMonthAndDayOfMonth(locale, day.plainDate)
+            : `${formatMonthAndDayOfMonth(locale, day.plainDate)}, ${localeText.eventCountAriaLabel(day.withPosition.length)}`
+        }
+        hidden
+      />
       {hasDayView ? (
         <MonthViewCellNumberButton
           type="button"
@@ -259,7 +274,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               event,
             )
           }
-          tabIndex={-1}
+          {...CALENDAR_GRID_ITEM_PROPS}
         >
           {cellNumberContent}
         </MonthViewCellNumberButton>
@@ -291,6 +306,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         {hiddenCount > 0 && (
           <MoreEventsPopoverTrigger occurrences={day.withPosition} day={day}>
             <MonthViewMoreEvents
+              {...CALENDAR_GRID_ITEM_PROPS}
               size="small"
               aria-label={localeText.hiddenEvents(hiddenCount)}
               className={classes.monthViewMoreEvents}

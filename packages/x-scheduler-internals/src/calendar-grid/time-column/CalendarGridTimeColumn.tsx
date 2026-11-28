@@ -4,7 +4,6 @@ import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
-import { useDirection } from '@base-ui/react/direction-provider';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import type { SchedulerEvent } from '../../models';
 import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
@@ -18,8 +17,8 @@ import type { BaseTemporal } from '../../internals/utils/base-temporal';
 import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
-import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
-import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
+import { useCalendarGridCellKeyboard } from '../../internals/utils/useCalendarGridCellKeyboard';
+import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useTimeDropTarget } from './useTimeDropTarget';
@@ -43,18 +42,12 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   } = componentProps;
 
   const store = useEventCalendarStoreContext();
-  const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
-  const isRtl = useDirection() === 'rtl';
+  const { id: rootId } = useCalendarGridRootContext();
   const isCurrentDay = useStore(store, schedulerNowSelectors.nowDayNumber) === getDayNumber(value);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { ref: listItemRef, index } = useCompositeListItem();
-  const cellsRefs = useCalendarGridCellsRefsContext();
 
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const hasFocus =
-    focusedCell?.rowType === 'time-grid' &&
-    focusedCell?.rowIndex === 0 &&
-    focusedCell?.columnIndex === index;
 
   const axis = React.useMemo(
     () => getPlainDateTimelineAxis(value, { dayStartMinute, dayEndMinute }, displayTimezone),
@@ -98,37 +91,13 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     };
   });
 
-  // Apply DOM focus when this cell becomes the focused cell
-  React.useEffect(() => {
-    if (hasFocus && cellRef.current && !cellRef.current.contains(document.activeElement)) {
-      cellRef.current.focus({ preventScroll: true });
-    }
-  }, [hasFocus]);
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const target = getNavigationTarget(event.key, 'time-grid', 0, index, {
-      columnCount: cellsRefs.current.length,
-      rowTypes,
-      rowsPerType,
-      isRtl,
-    });
-    if (target) {
-      event.preventDefault();
-      setFocusedCell(target);
-      return;
-    }
-
-    if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
-      event.preventDefault();
-      triggerKeyboardCreation(event.nativeEvent);
-    }
-  };
-
-  const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      setFocusedCell({ rowType: 'time-grid', rowIndex: 0, columnIndex: index });
-    }
-  };
+  const keyboardProps = useCalendarGridCellKeyboard({
+    rowType: 'time-grid',
+    rowIndex: 0,
+    columnIndex: index,
+    cellRef,
+    createEvent: triggerKeyboardCreation,
+  });
 
   const state: CalendarGridTimeColumn.State = React.useMemo(
     () => ({
@@ -141,27 +110,27 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     () => ({
       plainDate: value,
       axis,
-      hasFocus,
       getCursorPositionInElementMs,
       getTimestampAtPointer,
     }),
-    [value, axis, hasFocus, getCursorPositionInElementMs, getTimestampAtPointer],
+    [value, axis, getCursorPositionInElementMs, getTimestampAtPointer],
   );
 
-  const keyboardProps = {
-    tabIndex: 0,
-    onKeyDown: handleKeyDown,
-    onFocus: handleFocus,
-  };
+  // Associate this column with its column header.
+  // Any additional aria-labelledby passed by the styled layer is appended.
+  const { 'aria-labelledby': elementAriaLabelledBy, ...restElementProps } = elementProps;
+  const ariaLabelledBy = [getCalendarGridHeaderCellId(rootId, index), elementAriaLabelledBy]
+    .filter(Boolean)
+    .join(' ');
 
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, dropTargetRef, listItemRef, cellRef],
     props: [
-      { role: 'gridcell', 'aria-colindex': index + 1 },
+      { role: 'gridcell', 'aria-labelledby': ariaLabelledBy, 'aria-colindex': index + 1 },
       keyboardProps,
       eventCreationProps,
-      elementProps,
+      restElementProps,
     ],
   });
 

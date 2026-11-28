@@ -171,6 +171,14 @@ const arSDCalendar: SchedulerCalendarTranslations = {
   weekdayMonday: 'الاثنين',
   weekdaySaturday: 'السبت',
 
+  // Grid cells
+  // eventCountAriaLabel: eventCount => {
+  //   if (eventCount === 0) {
+  //     return 'No events';
+  //   }
+  //   return eventCount === 1 ? '1 event' : `${eventCount} events`;
+  // },
+
   // WeekView
   allDay: 'طوال اليوم',
   dayGridLabel: 'الأحداث التي تستمر طوال اليوم والأحداث الممتدة على عدة أيام',

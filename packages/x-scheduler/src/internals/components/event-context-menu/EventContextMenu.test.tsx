@@ -78,26 +78,65 @@ describe('EventContextMenu', () => {
     expect(screen.getByRole('menuitem', { name: /delete/i })).not.to.equal(null);
   });
 
-  it('should open the menu on Space without also opening Edit', () => {
+  it.each([
+    { name: 'Shift+F10', key: 'F10', shiftKey: true },
+    { name: 'the Menu key', key: 'ContextMenu', shiftKey: false },
+  ])('should open the menu anchored to the event on $name', ({ key, shiftKey }) => {
     renderEvent();
     const event = getEvent();
     event.focus();
 
-    fireEvent.keyDown(event, { key: ' ' });
-    fireEvent.keyUp(event, { key: ' ' });
+    fireEvent.keyDown(event, { key, shiftKey });
 
     expect(screen.getByRole('menu')).not.to.equal(null);
-    // Regression guard: Space must not also fall through to Base UI's default click synthesis,
-    // which would open the edit dialog underneath the menu.
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
   });
 
-  it('should still open Edit directly on Enter (unaffected by the Space interception)', () => {
+  it('should keep the menu anchored to the event when the browser also fires contextmenu for the key', () => {
     renderEvent();
     const event = getEvent();
     event.focus();
 
-    fireEvent.keyDown(event, { key: 'Enter' });
+    fireEvent.keyDown(event, { key: 'ContextMenu' });
+    const paper = screen.getByRole('menu').parentElement!;
+    const { top, left } = paper.style;
+
+    // Not moved to the pointer.
+    expect(fireEvent.contextMenu(event, { clientX: 500, clientY: 400 })).to.equal(false);
+    expect([paper.style.top, paper.style.left]).to.deep.equal([top, left]);
+    // Nor the browser menu once focus is in the menu.
+    expect(fireEvent.contextMenu(screen.getAllByRole('menuitem')[0])).to.equal(false);
+  });
+
+  it('should open the menu at the pointer on a right-click after the keyboard opened it', async () => {
+    renderEvent();
+    const event = getEvent();
+    event.focus();
+
+    fireEvent.keyDown(event, { key: 'F10', shiftKey: true });
+    fireEvent.keyDown(screen.getAllByRole('menuitem')[0], { key: 'Escape' });
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+
+    fireEvent.contextMenu(event, { clientX: 500, clientY: 400 });
+
+    expect(screen.getByRole('menu').parentElement!.style.top).to.equal('396px');
+  });
+
+  it.each([
+    { name: 'Enter', key: 'Enter' },
+    { name: 'Space', key: ' ' },
+  ])('should open Edit directly on $name', ({ key }) => {
+    renderEvent();
+    const event = getEvent();
+    event.focus();
+
+    fireEvent.keyDown(event, { key });
+    // Base UI's `useButton` clicks on key down for Enter and on key up for Space.
+    if (key === ' ') {
+      fireEvent.keyUp(event, { key });
+    }
 
     expect(screen.getByRole('textbox', { name: /Event title/i })).not.to.equal(null);
     expect(screen.queryByRole('menu')).to.equal(null);
@@ -307,8 +346,7 @@ describe('EventContextMenu', () => {
     const column = event.closest<HTMLElement>('[role="gridcell"]')!;
     event.focus();
 
-    fireEvent.keyDown(event, { key: ' ' });
-    fireEvent.keyUp(event, { key: ' ' });
+    fireEvent.keyDown(event, { key: 'F10', shiftKey: true });
     expect(screen.getByRole('menu')).not.to.equal(null);
 
     setProps({ events: [] });
@@ -436,15 +474,14 @@ describe('EventContextMenu', () => {
       expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
     });
 
-    it('should not offer Delete on Space either (regression guard: the menu still gates on read-only when opened via keyboard)', () => {
+    it('should not offer Delete when opened with the keyboard either', () => {
       renderReadOnlyEvent();
       const event = getEvent(/Read-only event/i);
       event.focus();
 
-      fireEvent.keyDown(event, { key: ' ' });
-      fireEvent.keyUp(event, { key: ' ' });
+      fireEvent.keyDown(event, { key: 'F10', shiftKey: true });
 
-      // Asserted first: without it, a regression that stops Space from opening the menu at all
+      // Asserted first: without it, a regression that stops the key from opening the menu at all
       // would leave Delete absent for the wrong reason and this test would pass vacuously.
       expect(screen.getByRole('menuitem', { name: /show details/i })).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: /delete/i })).to.equal(null);
@@ -466,7 +503,17 @@ describe('EventContextMenu', () => {
       expect(screen.queryByRole('menu')).to.equal(null);
     });
 
-    it('should arm the toolbar on Space instead of opening the menu', () => {
+    it('should not open the menu on Shift+F10', () => {
+      renderEvent();
+      const event = getEvent();
+      event.focus();
+
+      fireEvent.keyDown(event, { key: 'F10', shiftKey: true });
+
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+
+    it('should arm the toolbar on Space', () => {
       renderEvent();
       const event = getEvent();
       event.focus();

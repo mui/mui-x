@@ -26,6 +26,7 @@ export * from './useInitializeApiRef';
 export * from './useEventCreation';
 export * from './useKeyboardEventCreation';
 export * from './getNavigationTarget';
+export * from './calendar-grid-items';
 export * from './getDisplayedHourRange';
 export * from './getAgendaDayCount';
 export * from './getInitialScrollTime';

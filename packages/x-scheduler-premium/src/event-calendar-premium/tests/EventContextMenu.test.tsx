@@ -191,7 +191,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
       await act(async () => {
         eventButton.focus();
       });
-      await user.keyboard(' ');
+      await user.keyboard('{Shift>}{F10}{/Shift}');
       await user.click(await screen.findByRole('menuitem', { name: /delete/i }));
       const dialog = await screen.findByRole('dialog', { name: /apply this change to/i });
       await user.click(within(dialog).getByRole('radio', { name: scope }));

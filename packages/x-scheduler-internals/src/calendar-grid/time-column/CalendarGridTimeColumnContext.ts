@@ -14,12 +14,6 @@ export interface CalendarGridTimeColumnContext {
    */
   axis: TimelineAxis;
   /**
-   * Whether this column currently owns focus within the grid.
-   * When `true`, interactive children (e.g. events) should use `tabIndex={0}`
-   * so they are reachable via Tab; when `false`, they should use `tabIndex={-1}`.
-   */
-  hasFocus: boolean;
-  /**
    * Gets the cursor position in the element in milliseconds.
    * @param {Object} parameters The parameters of the method.
    * @param {{ clientY: number }} parameters.input The input object provided by the drag and drop library for the current event.

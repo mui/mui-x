@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { useId } from '@base-ui/utils/useId';
 import {
   getPlainDateTimelineAxis,
   isWeekendPlainDate,
@@ -85,9 +86,11 @@ export const TimeGridColumn = React.memo(function TimeGridColumn(props: TimeGrid
   const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
   const store = useEventCalendarStoreContext();
-  const { classes } = useEventCalendarStyledContext();
+  const { classes, localeText } = useEventCalendarStyledContext();
+  const labelId = useId();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
   const dayStartMinute = startTime * 60;
   const dayEndMinute = endTime * 60;
   // The bounds of the column, which builds them the same way.
@@ -122,9 +125,12 @@ export const TimeGridColumn = React.memo(function TimeGridColumn(props: TimeGrid
       dayEndMinute={dayEndMinute}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
+      // The events are unknown while loading.
+      aria-labelledby={isLoading ? undefined : labelId}
       data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
+      <span id={labelId} aria-label={localeText.eventCountAriaLabel(occurrences.length)} hidden />
       <ColumnInteractiveLayer
         showCurrentTimeIndicator={showCurrentTimeIndicator}
         index={index}

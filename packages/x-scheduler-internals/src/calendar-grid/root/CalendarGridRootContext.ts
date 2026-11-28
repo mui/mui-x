@@ -2,22 +2,40 @@
 import * as React from 'react';
 import type { GridRowType, GridCellCoordinates } from '../../models/calendarGrid';
 
+export interface CalendarGridCellRegistration {
+  /**
+   * The coordinates of the cell.
+   */
+  coordinates: GridCellCoordinates;
+  /**
+   * Creates an event in the cell, `undefined` when the cell can't create one.
+   */
+  createEvent: ((event: Event) => void) | undefined;
+}
+
 export interface CalendarGridRootContext {
   /**
    * The id of the grid (used for accessibility purposes).
    */
   id: string | undefined;
   /**
-   * The coordinates of the cell that currently has keyboard focus.
-   * Controls which cell's interactive children (events) are in the Tab order.
-   * `null` when no cell has been focused via keyboard yet.
+   * Moves focus to the cell with these coordinates, which makes it the tab stop of the grid.
    */
-  focusedCell: GridCellCoordinates | null;
+  focusCell: (coordinates: GridCellCoordinates) => void;
   /**
-   * Updates the focused cell coordinates.
-   * The cell matching these coordinates will receive `tabIndex={0}` and DOM focus.
+   * Whether the cell is the single tab stop of the grid.
    */
-  setFocusedCell: (coordinates: GridCellCoordinates) => void;
+  isTabStop: (coordinates: GridCellCoordinates) => boolean;
+  /**
+   * Moves focus to the first item of the cell (Enter or F2).
+   * Returns `false` when the cell has no items.
+   */
+  enterCell: (cell: HTMLElement) => boolean;
+  /**
+   * Registers a cell so the grid can map its element to its coordinates.
+   * Returns the cleanup.
+   */
+  registerCell: (cell: HTMLElement, registration: CalendarGridCellRegistration) => () => void;
   /**
    * The ordered list of row types that are rendered in the grid.
    * Used for vertical arrow-key navigation so it only targets rows that actually exist.

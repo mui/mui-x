@@ -11,7 +11,11 @@ import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { formatWeekdayShortMonthShortAndDayOfMonth } from '@mui/x-scheduler-internals/internals';
+import {
+  focusCalendarGridItem,
+  formatWeekdayShortMonthShortAndDayOfMonth,
+  getCalendarGridItemOffset,
+} from '@mui/x-scheduler-internals/internals';
 import type {
   MoreEventsPopoverProps,
   MoreEventsPopoverProviderProps,
@@ -185,6 +189,28 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     [anchor],
   );
 
+  // The arrow keys move between the events, wrapping around, like inside a grid cell.
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const items = Array.from(bodyRef.current?.children ?? []) as HTMLElement[];
+    const offset = getCalendarGridItemOffset(event.key, isRtl);
+    if (event.defaultPrevented || offset === 0 || items.length === 0) {
+      return;
+    }
+    const index = items.indexOf(event.target as HTMLElement);
+    event.preventDefault();
+    // From the popover itself, the first or the last event.
+    if (index === -1) {
+      focusCalendarGridItem(items, offset === 1 ? 0 : -1);
+    } else {
+      focusCalendarGridItem(items, index + offset);
+    }
+  };
+
+  // Like a menu, the popover opens with focus on its first event.
+  const focusFirstItem = () => {
+    (bodyRef.current?.firstElementChild as HTMLElement | null)?.focus();
+  };
+
   const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
     if (isFocusLostWith(paper)) {
       getFocusFallback()?.focus({ preventScroll: true });
@@ -200,7 +226,10 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       anchorOrigin={{ vertical: 'top', horizontal: isRtl ? 'right' : 'left' }}
       transformOrigin={{ vertical: 'top', horizontal: isRtl ? 'right' : 'left' }}
       onClose={onClose}
-      slotProps={{ transition: { onExited: restoreFocusOnExit } }}
+      slotProps={{
+        paper: { onKeyDown: handleKeyDown },
+        transition: { onEntering: focusFirstItem, onExited: restoreFocusOnExit },
+      }}
     >
       <MoreEventsPopoverHeader className={classes.moreEventsPopoverHeader}>
         <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>

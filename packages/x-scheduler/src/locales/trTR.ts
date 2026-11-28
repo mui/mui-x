@@ -177,6 +177,14 @@ const trTRCalendar: SchedulerCalendarTranslations = {
   weekdayMonday: 'Pazartesi',
   weekdaySaturday: 'Cumartesi',
 
+  // Grid cells
+  // eventCountAriaLabel: eventCount => {
+  //   if (eventCount === 0) {
+  //     return 'No events';
+  //   }
+  //   return eventCount === 1 ? '1 event' : `${eventCount} events`;
+  // },
+
   // WeekView
   allDay: 'Tüm gün',
   // dayGridLabel: 'All-day and multi-day events',

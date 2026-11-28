@@ -4,13 +4,11 @@ import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
-import { useDirection } from '@base-ui/react/direction-provider';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import type { BaseTemporal } from '../../internals/utils/base-temporal';
 import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
-import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
-import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
+import { useCalendarGridCellKeyboard } from '../../internals/utils/useCalendarGridCellKeyboard';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { formatWeekday } from '../../internals/utils/date-locale';
@@ -32,61 +30,28 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   } = componentProps;
 
   const store = useEventCalendarStoreContext();
-  const {
-    id: rootId,
-    focusedCell,
-    setFocusedCell,
-    rowTypes,
-    rowsPerType,
-  } = useCalendarGridRootContext();
-  const isRtl = useDirection() === 'rtl';
+  const { id: rootId } = useCalendarGridRootContext();
   const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const isCurrentDay = !skipDataCurrent && nowDayNumber === getDayNumber(date);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   const { ref: listItemRef, index } = useCompositeListItem();
-  const cellsRefs = useCalendarGridCellsRefsContext();
   const id = getCalendarGridHeaderCellId(rootId, index);
 
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const hasFocus =
-    focusedCell?.rowType === 'header' &&
-    focusedCell?.rowIndex === 0 &&
-    focusedCell?.columnIndex === index;
 
-  // Apply DOM focus when this cell becomes the focused cell
-  React.useEffect(() => {
-    if (hasFocus && cellRef.current && !cellRef.current.contains(document.activeElement)) {
-      cellRef.current.focus({ preventScroll: true });
-    }
-  }, [hasFocus]);
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const target = getNavigationTarget(event.key, 'header', 0, index, {
-      columnCount: cellsRefs.current.length,
-      rowTypes,
-      rowsPerType,
-      isRtl,
-    });
-    if (target) {
-      event.preventDefault();
-      setFocusedCell(target);
-      return;
-    }
-
-    if (event.key === 'Enter' && event.target === event.currentTarget) {
-      const button = event.currentTarget.querySelector('button');
-      if (button) {
-        button.click();
+  const keyboardProps = useCalendarGridCellKeyboard({
+    rowType: 'header',
+    rowIndex: 0,
+    columnIndex: index,
+    cellRef,
+    // The header has no items to move through, Enter activates its button instead.
+    onEnter: (event) => {
+      if (event.key === 'Enter') {
+        event.currentTarget.querySelector('button')?.click();
       }
-    }
-  };
-
-  const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      setFocusedCell({ rowType: 'header', rowIndex: 0, columnIndex: index });
-    }
-  };
+    },
+  });
 
   const state: CalendarGridHeaderCell.State = React.useMemo(
     () => ({
@@ -94,12 +59,6 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     }),
     [isCurrentDay],
   );
-
-  const keyboardProps = {
-    tabIndex: 0,
-    onKeyDown: handleKeyDown,
-    onFocus: handleFocus,
-  };
 
   return useRenderElement('div', componentProps, {
     state,

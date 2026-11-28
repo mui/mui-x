@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { GridRowType } from '@mui/x-scheduler-internals/models';
@@ -16,6 +16,7 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
+import { CALENDAR_GRID_ITEM_PROPS } from '../../internals/utils/calendar-grid-items';
 
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
@@ -56,7 +57,7 @@ describe('<CalendarGrid.DayCell />', () => {
   );
 
   describe('keyboard interactions', () => {
-    it('should create an all-day event placeholder on Enter keypress', async () => {
+    it('should create an all-day event placeholder on C', async () => {
       let store: AnyEventCalendarStore | null = null;
       const onEventEditingStart = vi.fn();
 
@@ -73,11 +74,11 @@ describe('<CalendarGrid.DayCell />', () => {
       );
 
       const cell = screen.getByRole('gridcell');
-      // Focus without clicking, so the Enter keypress is the only creation trigger.
+      // Focus without clicking, so the key press is the only creation trigger.
       act(() => {
         cell.focus();
       });
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
@@ -113,7 +114,7 @@ describe('<CalendarGrid.DayCell />', () => {
       act(() => {
         screen.getByRole('gridcell').focus();
       });
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       const placeholder = store!.state.occurrencePlaceholder!;
       return {
@@ -145,7 +146,72 @@ describe('<CalendarGrid.DayCell />', () => {
       });
     });
 
-    it('should not create event on Enter when pressed on a child element', async () => {
+    it.each([
+      { name: 'Enter', keys: '{Enter}' },
+      { name: 'Ctrl+C', keys: '{Control>}c{/Control}' },
+      { name: 'Meta+C', keys: '{Meta>}c{/Meta}' },
+      { name: 'Alt+C', keys: '{Alt>}c{/Alt}' },
+    ])('should not create an event on $name', async ({ keys }) => {
+      let store: AnyEventCalendarStore | null = null;
+
+      const { user } = render(
+        <DayCellWrapper>
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </DayCellWrapper>,
+      );
+
+      act(() => {
+        screen.getByRole('gridcell').focus();
+      });
+      await user.keyboard(keys);
+
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+
+    it.each([
+      {
+        result: 'create an event',
+        name: 'the key in the position of C on a Cyrillic layout',
+        key: 'с',
+        expected: true,
+      },
+      {
+        result: 'not create an event',
+        name: 'a Latin letter in the position of C',
+        key: 'j',
+        expected: false,
+      },
+    ])('should $result on $name', ({ key, expected }) => {
+      let store: AnyEventCalendarStore | null = null;
+
+      render(
+        <DayCellWrapper>
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </DayCellWrapper>,
+      );
+
+      const cell = screen.getByRole('gridcell');
+      act(() => {
+        cell.focus();
+      });
+      fireEvent.keyDown(cell, { key, code: 'KeyC' });
+
+      expect(store!.state.occurrencePlaceholder != null).to.equal(expected);
+    });
+
+    it('should not create an event on C when pressed on a child element', async () => {
       let store: AnyEventCalendarStore | null = null;
 
       const { user } = render(
@@ -164,12 +230,45 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const button = screen.getByRole('button', { name: 'child' });
       await user.click(button);
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
     });
 
-    it('should not create event on Enter when eventCreation is false', async () => {
+    it('should not create an event on C when typing in an input inside an entered cell', async () => {
+      let store: AnyEventCalendarStore | null = null;
+
+      const { user } = render(
+        <DayCellWrapper>
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')}>
+            <div {...CALENDAR_GRID_ITEM_PROPS}>
+              <input aria-label="note" />
+            </div>
+          </CalendarGrid.DayCell>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </DayCellWrapper>,
+      );
+
+      act(() => {
+        screen.getByRole('gridcell').focus();
+      });
+      await user.keyboard('{Enter}');
+      const input = screen.getByRole('textbox', { name: 'note' });
+      act(() => {
+        input.focus();
+      });
+      await user.keyboard('cat');
+
+      expect(input).to.have.property('value', 'cat');
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+
+    it('should not create an event on C when eventCreation is false', async () => {
       let store: AnyEventCalendarStore | null = null;
 
       const { user } = render(
@@ -186,7 +285,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const cell = screen.getByRole('gridcell');
       await user.click(cell);
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
     });

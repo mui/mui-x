@@ -111,7 +111,7 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 
 ### Calendar grid
 
-The Week, Day, and Month views implement a `role="grid"` with full arrow key navigation between cells.
+The Week, Day, and Month views implement the [grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/): the grid is a single tab stop, and the arrow keys move between its cells.
 
 **Week and Day views** expose three logical rows: the header row (day names), the all-day row, and the timed-events row. Arrow keys move across all three rows.
 
@@ -119,17 +119,31 @@ The Week, Day, and Month views implement a `role="grid"` with full arrow key nav
 
 In right-to-left layouts, <kbd class="key">Arrow Left</kbd> and <kbd class="key">Arrow Right</kbd> are swapped, so the focus follows the visual direction.
 
-|                               Keys | Description                                                                                                                                                                                                                |
-| ---------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|  <kbd class="key">Arrow Left</kbd> | Moves focus to the previous column in the same row                                                                                                                                                                         |
-| <kbd class="key">Arrow Right</kbd> | Moves focus to the next column in the same row                                                                                                                                                                             |
-|    <kbd class="key">Arrow Up</kbd> | Moves focus to the same column in the row above. In Week/Day view: from all-day row to header, or from time-grid row to all-day. In Month view: from a week row to the one above, or from the first week row to the header |
-|  <kbd class="key">Arrow Down</kbd> | Moves focus to the same column in the row below                                                                                                                                                                            |
-|       <kbd class="key">Enter</kbd> | On a day-grid or time-grid cell: starts event creation for that date or time slot. On a header cell: activates the day button (navigates to that day's view)                                                               |
+|                                                      Keys | Description                                                                                                                                                                                                                |
+| --------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|                         <kbd class="key">Arrow Left</kbd> | Moves focus to the previous column in the same row                                                                                                                                                                         |
+|                        <kbd class="key">Arrow Right</kbd> | Moves focus to the next column in the same row                                                                                                                                                                             |
+|                           <kbd class="key">Arrow Up</kbd> | Moves focus to the same column in the row above. In Week/Day view: from all-day row to header, or from time-grid row to all-day. In Month view: from a week row to the one above, or from the first week row to the header |
+|                         <kbd class="key">Arrow Down</kbd> | Moves focus to the same column in the row below                                                                                                                                                                            |
+| <kbd class="key">Enter</kbd> or <kbd class="key">F2</kbd> | On a day-grid or time-grid cell: moves focus to the first item of the cell. On a header cell, <kbd class="key">Enter</kbd> opens that day's view                                                                           |
+|                                  <kbd class="key">C</kbd> | Creates an event in the focused cell                                                                                                                                                                                       |
+
+Each day cell's accessible name includes its number of events, for example "Wednesday July 2, 2 events".
 
 #### Tab sequence
 
-All grid cells have `tabIndex="0"`, so the <kbd class="key">Tab</kbd> key flows through the grid cell by cell in document order. When a focused cell contains events, <kbd class="key">Tab</kbd> enters the events inside it before moving to the next cell.
+<kbd class="key">Tab</kbd> moves into the grid, on the last focused cell or on the current day, and the next <kbd class="key">Tab</kbd> moves out of it.
+
+#### Inside a cell
+
+Once you move into a cell, focus goes through its items: the events, and in the Month view the day number button first and the "+N more" button last.
+
+|                                                                                 Keys | Description                                       |
+| -----------------------------------------------------------------------------------: | :------------------------------------------------ |
+|              <kbd class="key">Arrow Down</kbd> or <kbd class="key">Arrow Right</kbd> | Moves focus to the next item, wrapping around     |
+|                 <kbd class="key">Arrow Up</kbd> or <kbd class="key">Arrow Left</kbd> | Moves focus to the previous item, wrapping around |
+| <kbd class="key">Tab</kbd> / <kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd> | Same as the arrow keys                            |
+|                           <kbd class="key">Escape</kbd> or <kbd class="key">F2</kbd> | Moves focus back to the cell                      |
 
 ### Resources sidebar
 
@@ -139,11 +153,11 @@ The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) inte
 
 ### Menus and popovers
 
-|                          Keys | Description                                                                                                             |
-| ----------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
-| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, or delete confirmation dialog |
-|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                                       |
-|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below)               |
+|                                                                                   Keys | Description                                                                                                             |
+| -------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
+|                                                          <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, or delete confirmation dialog |
+|                           <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd> | Activates (opens) a focused event                                                                                       |
+| <kbd class="key">Shift</kbd>+<kbd class="key">F10</kbd> or <kbd class="key">Menu</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below)               |
 
 ## Live region announcements
 
@@ -174,7 +188,7 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 
 - The popover header shows the formatted date (for example, `"Mon, May 26"`).
 - Each event inside the popover has the same `aria-label` as in the grid (see [Events](#events)).
-- Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd>. On a mouse/trackpad, <kbd class="key">Space</kbd> opens the [event context menu](#event-context-menu) instead of activating the event directly.
+- Opening the popover moves focus to its first event, and the arrow keys move between the events, wrapping around. Event items have `role="button"` with `tabIndex="0"`, and respond to the [same keys](#menus-and-popovers) as in the grid.
 - Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
 - The popover's list follows the day's events, and stays open while the day still has more events than the cell can display. When the focused event, or the one whose context menu is open, is removed (for example, deleted from that menu), focus moves to the next event in the list, or to the previous one if it was the last. Once every event fits in the cell, the **"X more"** button is no longer displayed, so the popover closes and focus moves to the day cell.
 
@@ -194,7 +208,7 @@ Inside the menu:
 
 ## Event context menu
 
-Right-clicking an event, or pressing <kbd class="key">Space</kbd> while it is focused, opens a context menu with **Edit** and **Delete** actions.
+Right-clicking an event, or pressing <kbd class="key">Shift</kbd>+<kbd class="key">F10</kbd> or the <kbd class="key">Menu</kbd> key while it is focused, opens a context menu with **Edit** and **Delete** actions.
 
 - The menu exposes `role="menu"` (via MUI's `Menu`) with a localized `aria-label` (default: `"Event actions"`).
 - **Edit** opens the event dialog directly, the same as clicking the event on a mouse/trackpad.
@@ -203,7 +217,7 @@ Right-clicking an event, or pressing <kbd class="key">Space</kbd> while it is fo
 - If the event is removed while the menu is open, for example by an update of the `events` prop, the menu closes and focus moves the same way as after **Delete**.
 - For a read-only event, **Edit** is replaced by **Show details** — it opens the same read-only view a click would, and **Delete** is omitted, matching every other surface's mutation gate (the dialog swaps to its read-only content, and the armed toolbar never appears for one).
 
-The menu is suppressed on a coarse pointer (touch): activating an event there arms its toolbar instead of opening the dialog directly — which already exposes Edit and Delete — so right-click and <kbd class="key">Space</kbd> fall through to that same behavior rather than opening a redundant menu. This check is on pointer type alone; it doesn't depend on which view or layout is rendering the event.
+The menu is suppressed on a coarse pointer (touch): activating an event there arms its toolbar instead of opening the dialog directly — which already exposes Edit and Delete — so right-click falls through to that same behavior rather than opening a redundant menu. This check is on pointer type alone; it doesn't depend on which view or layout is rendering the event.
 
 ## Localization of ARIA labels
 

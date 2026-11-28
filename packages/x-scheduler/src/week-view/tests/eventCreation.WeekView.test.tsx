@@ -31,14 +31,14 @@ describe('<WeekView /> event creation', () => {
       </EventCalendarProvider>,
     );
 
-    // Focus a timed column without clicking, so the Enter keydown is the only creation trigger.
+    // Focus a timed column without clicking, so the C keydown is the only creation trigger.
     const column = document.querySelector<HTMLElement>(
       `.${eventCalendarClasses.dayTimeGridColumn}`,
     )!;
     act(() => {
       column.focus();
     });
-    await user.keyboard('{Enter}');
+    await user.keyboard('c');
 
     expect(onEventEditingStart.mock.calls.length).to.equal(1);
     expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
@@ -64,7 +64,7 @@ describe('<WeekView /> event creation', () => {
     act(() => {
       document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridColumn}`)!.focus();
     });
-    await user.keyboard('{Enter}');
+    await user.keyboard('c');
     const allDaySwitch = await screen.findByRole('switch', { name: /all day/i });
     await user.click(allDaySwitch);
     await user.click(allDaySwitch);
@@ -99,7 +99,7 @@ describe('<WeekView /> event creation', () => {
       act(() => {
         document.querySelector<HTMLElement>(`[role="gridcell"].${className}`)!.focus();
       });
-      await user.keyboard('{Enter}');
+      await user.keyboard('c');
 
       expect(onEventEditingStart.mock.calls.length).to.equal(1);
       return onEventEditingStart.mock.lastCall![0];

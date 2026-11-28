@@ -38,6 +38,7 @@ import { DayGridCell, EVENT_HEIGHT } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
+import { getDefaultFocusedCell } from '../../utils/date-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
@@ -423,6 +424,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const isTodayInView = nowDayNumber >= firstDayNumber && nowDayNumber <= lastDayNumber;
 
+  // Today's column, else the first one. A new object for other days resets the tab stop.
+  const defaultFocusedCell = React.useMemo(
+    () => getDefaultFocusedCell([days], 'time-grid', [nowDayNumber]),
+    [days, nowDayNumber],
+  );
+
   const updateHasScroll = React.useCallback(() => {
     const body = bodyRef.current;
     const allDayHeader = allDayHeaderWrapperRef.current;
@@ -484,6 +491,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       className={clsx(className, classes.dayTimeGridContainer)}
       aria-rowcount={3}
       aria-colcount={days.length}
+      defaultFocusedCell={defaultFocusedCell}
     >
       <DayTimeGridHeader
         className={classes.dayTimeGridHeader}
@@ -544,6 +552,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           // Unlike the time grid, the all-day scroll position means nothing in another period.
           key={start}
           ref={allDayRowRef}
+          // Chromium makes a scroller with no tabbable child a tab stop, the grid has its own.
+          tabIndex={-1}
           start={start}
           end={end}
           days={days}
@@ -564,11 +574,14 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       <DayTimeGridRoot
         className={classes.dayTimeGrid}
         ref={scrollRootRef}
+        // Same as the all-day row.
+        tabIndex={-1}
         data-has-scroll={hasScroll || undefined}
       >
         <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
           <DayTimeGridScrollableContent
             className={classes.dayTimeGridScrollableContent}
+            tabIndex={-1}
             scrollableRef={scrollRootRef}
             style={{ '--hours-count': hoursCount } as React.CSSProperties}
           >

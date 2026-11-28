@@ -7,8 +7,8 @@ import { useEventContextMenuItems } from './EventContextMenuItems';
 import type { EventContextMenuProps } from './EventContextMenu.types';
 
 /**
- * The menu shown on right-click of an event, or on pressing `Space` while it is focused. Wraps
- * `@mui/material/Menu`; the item logic lives in `useEventContextMenuItems`.
+ * The menu shown on right-click of an event, or on Shift+F10 or the Menu key while it is focused.
+ * Wraps `@mui/material/Menu`; the item logic lives in `useEventContextMenuItems`.
  */
 export function EventContextMenu(props: EventContextMenuProps) {
   const {
@@ -49,6 +49,8 @@ export function EventContextMenu(props: EventContextMenuProps) {
       anchorReference={anchorPosition ? 'anchorPosition' : 'anchorEl'}
       anchorPosition={anchorPosition ?? undefined}
       anchorEl={anchorPosition ? undefined : anchorEl}
+      // The Menu key can fire `contextmenu` once focus is already in the menu (on key up on Windows).
+      onContextMenu={(event) => event.preventDefault()}
       slotProps={{
         list: { 'aria-label': localeText.eventContextMenuAriaLabel },
         transition: { onExited: handleExited },

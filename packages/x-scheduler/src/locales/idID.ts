@@ -195,6 +195,14 @@ const idIDCalendar: SchedulerCalendarTranslations = {
   weekdayMonday: 'Senin',
   weekdaySaturday: 'Sabtu',
 
+  // Grid cells
+  // eventCountAriaLabel: eventCount => {
+  //   if (eventCount === 0) {
+  //     return 'No events';
+  //   }
+  //   return eventCount === 1 ? '1 event' : `${eventCount} events`;
+  // },
+
   // WeekView
   allDay: 'Sepanjang hari',
   dayGridLabel: 'Acara sepanjang hari dan beberapa hari',

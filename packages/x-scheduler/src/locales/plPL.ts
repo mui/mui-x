@@ -166,6 +166,14 @@ const plPLCalendar: SchedulerCalendarTranslations = {
   weekdayMonday: 'Poniedziałek',
   weekdaySaturday: 'Sobota',
 
+  // Grid cells
+  // eventCountAriaLabel: eventCount => {
+  //   if (eventCount === 0) {
+  //     return 'No events';
+  //   }
+  //   return eventCount === 1 ? '1 event' : `${eventCount} events`;
+  // },
+
   // WeekView
   allDay: 'Cały dzień',
   // dayGridLabel: 'All-day and multi-day events',

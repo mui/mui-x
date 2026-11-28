@@ -155,6 +155,14 @@ const deDECalendar: SchedulerCalendarTranslations = {
   // weekdayMonday: 'Monday',
   // weekdaySaturday: 'Saturday',
 
+  // Grid cells
+  // eventCountAriaLabel: eventCount => {
+  //   if (eventCount === 0) {
+  //     return 'No events';
+  //   }
+  //   return eventCount === 1 ? '1 event' : `${eventCount} events`;
+  // },
+
   // WeekView
   allDay: 'Ganztägig',
   // dayGridLabel: 'All-day and multi-day events',

@@ -22,7 +22,7 @@ import {
 } from '../../scheduler-selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
+import { getCalendarGridItemProps } from '../../internals/utils/calendar-grid-items';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
 import { getOccurrenceLastDayNumber } from '../../internals/utils/event-utils';
 
@@ -60,7 +60,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const store = useEventCalendarStoreContext();
   const { axis: rowAxis, dayNumbers } = useCalendarGridDayRowContext();
   const { start: rowStart, end: rowEnd } = rowAxis;
-  const { hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
   const isRtl = useDirection() === 'rtl';
 
   // Ref hooks
@@ -153,7 +152,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
     native: nativeButton,
-    tabIndex: cellHasFocus ? 0 : -1,
+    // The grid has a single tab stop, the events are reached by moving into their cell.
+    tabIndex: -1,
   });
 
   // Rendering hooks
@@ -172,6 +172,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
         style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
       },
       getButtonProps,
+      getCalendarGridItemProps(occurrenceKey),
     ],
     stateAttributesMapping: overflowStateAttributesMapping,
   });
