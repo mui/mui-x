@@ -5,6 +5,9 @@
 The columns are defined with the `columns` prop which has the type `GridColDef[]`.
 
 `field` is the only required property since it's the column identifier. It's also used to match with `GridRowModel` values.
+Each column must have a unique `field`.
+If several columns share a `field`, only one of them is rendered, but the behavior is unsupported and could change in a future version.
+To display the same row property in several columns, give each column its own `field` and read the property with a [`valueGetter()`](#value-getter).
 
 ```ts
 interface GridColDef {

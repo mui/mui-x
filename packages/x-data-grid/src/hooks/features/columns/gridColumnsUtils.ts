@@ -1,5 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
 import resolveProps from '@mui/utils/resolveProps';
+import { warnOnce } from '@mui/x-internals/warning';
 import type {
   GridColumnLookup,
   GridColumnsState,
@@ -364,8 +365,21 @@ export const createColumnsState = ({
 
   columnsToUpsert.forEach((newColumn) => {
     const { field } = newColumn;
+    const isDuplicate = keepOnlyColumnsToUpsert && columnsToKeep[field] === true;
     columnsToKeep[field] = true;
     let existingState = columnsState.lookup[field];
+
+    if (isDuplicate) {
+      warnOnce(
+        [
+          `MUI X Data Grid: More than one column uses the field "${field}".`,
+          'The field is the column identifier, so these columns share their state and only one of them is rendered.',
+          'This behavior is unsupported and could change in a future version.',
+          'Give each column a unique `field`, and use `valueGetter()` to display the same row property in several columns.',
+          'See https://mui.com/x/react-data-grid/column-definition/.',
+        ].join('\n'),
+      );
+    }
 
     if (existingState == null) {
       existingState = {
@@ -374,7 +388,7 @@ export const createColumnsState = ({
         hasBeenResized: false,
       };
       columnsState.orderedFields.push(field);
-    } else if (keepOnlyColumnsToUpsert) {
+    } else if (keepOnlyColumnsToUpsert && !isDuplicate) {
       columnsState.orderedFields.push(field);
     }
 
