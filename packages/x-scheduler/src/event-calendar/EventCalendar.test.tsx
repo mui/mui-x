@@ -222,7 +222,7 @@ describe('EventCalendar', () => {
   describe('current day', () => {
     // Browsers cannot change their timezone through process.env.TZ.
     it.skipIf(!isJSDOM).each([
-      { view: 'month', viewLabel: '30', currentColumnCount: 0 },
+      { view: 'month', viewLabel: 'Friday, December 30', currentColumnCount: 0 },
       { view: 'week', viewLabel: 'Friday, December 30', currentColumnCount: 1 },
       { view: 'agenda', viewLabel: 'Friday, December 30', currentColumnCount: 0 },
     ] as const)(
@@ -244,10 +244,10 @@ describe('EventCalendar', () => {
         );
 
         // The mini calendar of the side panel marks the current day too.
-        const currentLabels = Array.from(document.querySelectorAll('[aria-current="date"]')).map(
-          (element) => element.getAttribute('aria-label') ?? element.textContent,
-        );
-        expect(currentLabels).to.deep.equal(['Friday, December 30, 2011', viewLabel]);
+        const currentDates = document.querySelectorAll('[aria-current="date"]');
+        expect(currentDates).to.have.length(2);
+        expect(currentDates[0]).toHaveAccessibleName('Friday, December 30, 2011');
+        expect(currentDates[1]).toHaveAccessibleName(viewLabel);
         expect(
           document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridColumn}[data-current]`),
         ).to.have.length(currentColumnCount);

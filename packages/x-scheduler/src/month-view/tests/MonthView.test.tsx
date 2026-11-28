@@ -27,7 +27,7 @@ import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 
 describe('<MonthView />', () => {
-  const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
+  const { render } = createSchedulerRenderer({ clockConfig: createDate('2025-05-01') });
 
   const events = [
     EventBuilder.new().startAt('2025-05-01T09:00:00Z').title('Meeting').build(),
@@ -57,7 +57,11 @@ describe('<MonthView />', () => {
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
-      <EventCalendarProvider {...standaloneDefaults}>
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        defaultVisibleDate={createDate('2025-09-01T12:00:00Z')}
+        dateLocale="en-US"
+      >
         <EventDialogProvider>
           <MonthView />
         </EventDialogProvider>
@@ -68,7 +72,10 @@ describe('<MonthView />', () => {
 
     expect(headerTexts).to.include.members(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
     expect(gridCells.length).to.be.at.least(31);
-    expect(screen.getByText(/may 1/i)).not.to.equal(null);
+    const september1 = screen.getByRole('gridcell', { name: 'Monday, September 1' });
+    const button = within(september1).getByRole('button');
+    expect(button.textContent).to.equal('Sep 1');
+    expect(button).toHaveAccessibleName('Go to Sep 1');
   });
 
   it('should render events in the correct cell', () => {
@@ -80,20 +87,64 @@ describe('<MonthView />', () => {
       </EventCalendarProvider>,
     );
 
-    const gridCells = screen.getAllByRole('gridcell');
-    const may1Cell = gridCells.find((cell) => within(cell).queryByText(/may 1/i));
-    const may15Cell = gridCells.find((cell) => within(cell).queryByText(/15/));
+    const may1Cell = screen.getByRole('gridcell', { name: 'Thursday, May 1' });
+    const may15Cell = screen.getByRole('gridcell', { name: 'Thursday, May 15' });
 
-    expect(within(may1Cell!).getByText('Meeting')).not.to.equal(null);
-    expect(within(may15Cell!).getByText('Doctor Appointment')).not.to.equal(null);
+    expect(within(may1Cell).getByText('Meeting')).not.to.equal(null);
+    expect(within(may15Cell).getByText('Doctor Appointment')).not.to.equal(null);
   });
 
-  it('should move to the day view when a day is clicked', async () => {
+  it.each([
+    { dateLocale: 'en-US', buttonName: 'Go to May 15', cellName: 'Thursday, May 15' },
+    { dateLocale: 'ja-JP', buttonName: 'Go to 5月15日', cellName: '5月15日木曜日' },
+  ])(
+    'should use the $dateLocale weekday and date order for the month cell',
+    ({ dateLocale, buttonName, cellName }) => {
+      render(
+        <EventCalendarProvider {...standaloneDefaults} dateLocale={dateLocale}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const button = screen.getByRole('button', { name: buttonName });
+      expect(button.closest('[role="gridcell"]')).toHaveAccessibleName(cellName);
+    },
+  );
+
+  it('should name month cells and day buttons with their date, including adjacent months', () => {
+    render(
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        defaultVisibleDate={createDate('2025-07-02T12:00:00Z')}
+        dateLocale="fr-FR"
+        localeText={{ goToDay: (date) => `Aller au ${date}` }}
+      >
+        <EventDialogProvider>
+          <MonthView />
+        </EventDialogProvider>
+      </EventCalendarProvider>,
+    );
+
+    const june30 = screen.getByRole('gridcell', { name: 'lundi 30 juin' });
+    const july1 = screen.getByRole('gridcell', { name: 'mardi 1 juillet' });
+    const july2 = screen.getByRole('gridcell', { name: 'mercredi 2 juillet' });
+    expect(within(june30).getByRole('button', { name: 'Aller au 30 juin' })).not.to.equal(null);
+    const firstDayButton = within(july1).getByRole('button');
+    expect(firstDayButton.textContent).to.equal('1 juil.');
+    expect(firstDayButton).toHaveAccessibleName('Aller au 1 juil.');
+    expect(within(july2).getByRole('button', { name: 'Aller au 2 juillet' })).not.to.equal(null);
+  });
+
+  it('should open the named day at midnight in the display timezone when clicked', async () => {
     const handleViewChange = vi.fn();
     const handleVisibleDateChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
         {...standaloneDefaults}
+        displayTimezone="America/New_York"
+        defaultVisibleDate={createDate('2025-05-01T12:00:00Z')}
         onViewChange={handleViewChange}
         onVisibleDateChange={handleVisibleDateChange}
       >
@@ -102,14 +153,14 @@ describe('<MonthView />', () => {
         </EventDialogProvider>
       </EventCalendarProvider>,
     );
-    const button = screen.getByRole('button', { name: '15' });
+    const button = screen.getByRole('button', { name: 'Go to May 15' });
     await user.click(button);
 
     expect(handleViewChange.mock.calls.length).to.equal(1);
     expect(handleViewChange.mock.calls[0][0]).to.equal('day');
     expect(handleVisibleDateChange.mock.calls.length).to.equal(1);
     expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(
-      createDate('2025-05-15T00:00:00Z'),
+      createDate('2025-05-15', 'America/New_York'),
     );
   });
 
@@ -121,8 +172,8 @@ describe('<MonthView />', () => {
         </EventDialogProvider>
       </EventCalendarProvider>,
     );
-    expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
-    expect(screen.getByText('15')).not.to.equal(null);
+    const cell = screen.getByRole('gridcell', { name: 'Thursday, May 15' });
+    expect(within(cell).getByText('15').closest('button')).to.equal(null);
   });
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
@@ -249,7 +300,7 @@ describe('<MonthView />', () => {
     }
 
     function getMay1Cell() {
-      return screen.getAllByRole('gridcell').find((cell) => within(cell).queryByText(/may 1/i));
+      return screen.getByRole('gridcell', { name: 'Thursday, May 1' });
     }
 
     function getPopoverEventTitles(popover: HTMLElement) {
@@ -462,9 +513,7 @@ describe('<MonthView />', () => {
         expect(document.body.contains(popover)).to.equal(false);
       });
 
-      const may1Cell = screen
-        .getAllByRole('gridcell')
-        .find((cell) => within(cell).queryByText(/may 1/i));
+      const may1Cell = getMay1Cell();
       await waitFor(() => {
         expect(document.activeElement).to.equal(may1Cell);
       });
@@ -486,7 +535,7 @@ describe('<MonthView />', () => {
       expect(document.body.contains(popover), 'the popover exited too fast to move focus').to.equal(
         true,
       );
-      const movedTo = screen.getByRole('button', { name: '15' });
+      const movedTo = screen.getByRole('button', { name: 'Go to May 15' });
       await act(async () => {
         movedTo.focus();
       });
@@ -1094,12 +1143,10 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const gridCells = screen.getAllByRole('gridcell');
-      // Find the first cell of the first week in May 2025
-      const firstCell = gridCells.find((cell) => within(cell).queryByText(/4/));
+      const firstCell = screen.getByRole('gridcell', { name: 'Sunday, May 4' });
 
       // Event should render in the first cell of the week since it started before
-      expect(within(firstCell!).getByText('Long Event')).not.to.equal(null);
+      expect(within(firstCell).getByText('Long Event')).not.to.equal(null);
     });
 
     it('should place invisible events on the same grid row as the main event', () => {
@@ -1394,6 +1441,9 @@ describe('<MonthView />', () => {
 
       const weekNumberLabels = document.querySelectorAll<HTMLElement>(
         `.${eventCalendarClasses.monthViewWeekNumberCell}`,
+      );
+      expect(within(grid).getByRole('gridcell', { name: 'Thursday, May 1 Week 18' })).not.to.equal(
+        null,
       );
       expect(weekNumberLabels.length).to.be.greaterThan(0);
       weekNumberLabels.forEach((label) => {

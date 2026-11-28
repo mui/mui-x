@@ -28,6 +28,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     value,
     addPropertiesToDroppedEvent,
     lockSurfaceType,
+    includeColumnHeaderInLabel = true,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -44,7 +45,6 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
   const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
-  const columnHeaderId = getCalendarGridHeaderCellId(rootId, index);
 
   const cellRef = React.useRef<HTMLDivElement>(null);
   const hasFocus =
@@ -105,9 +105,10 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     [hasFocus],
   );
 
-  // Associate this cell with its column header.
-  // Any additional aria-labelledby passed by the styled layer (e.g., an "All day" row header) is appended.
   const { 'aria-labelledby': elementAriaLabelledBy, ...restElementProps } = elementProps;
+  const columnHeaderId = includeColumnHeaderInLabel
+    ? getCalendarGridHeaderCellId(rootId, index)
+    : undefined;
   const ariaLabelledBy = [columnHeaderId, elementAriaLabelledBy].filter(Boolean).join(' ');
 
   const keyboardProps = {
@@ -149,5 +150,10 @@ export namespace CalendarGridDayCell {
      * When true, the surfaceType will not be updated when editing the placeholder.
      */
     lockSurfaceType?: boolean;
+    /**
+     * Whether to include the column header in the cell's accessible name.
+     * @default true
+     */
+    includeColumnHeaderInLabel?: boolean;
   }
 }

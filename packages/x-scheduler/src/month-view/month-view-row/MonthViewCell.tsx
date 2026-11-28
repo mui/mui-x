@@ -7,7 +7,9 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   createStartOfPlainDate,
   formatDayOfMonth,
+  formatMonthAndDayOfMonth,
   formatMonthShortAndDayOfMonth,
+  formatWeekdayMonthAndDayOfMonth,
   getDayNumber,
   getOccurrenceFirstDayNumber,
   isWeekendPlainDate,
@@ -177,7 +179,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { classes, localeText } = useEventCalendarStyledContext();
+  const { classes, localeText, schedulerId } = useEventCalendarStyledContext();
   const { startEditing } = useEventEditingContext();
 
   // Selector hooks
@@ -213,11 +215,15 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
+  const dateLabelId = schedulerId
+    ? `${schedulerId}-MonthViewDate-${day.plainDate.toString()}`
+    : undefined;
+  const dayNumberText = isFirstDayOfMonth
+    ? formatMonthShortAndDayOfMonth(locale, day.plainDate)
+    : formatDayOfMonth(locale, day.plainDate);
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
-      {isFirstDayOfMonth
-        ? formatMonthShortAndDayOfMonth(locale, day.plainDate)
-        : formatDayOfMonth(locale, day.plainDate)}
+      {dayNumberText}
     </MonthViewCellNumber>
   );
 
@@ -238,7 +244,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       ref={handleRef}
       value={day.plainDate}
       aria-colindex={colIndex}
-      aria-labelledby={ariaLabelledBy}
+      includeColumnHeaderInLabel={!dateLabelId}
+      aria-labelledby={[dateLabelId, ariaLabelledBy].filter(Boolean).join(' ') || undefined}
       data-current={isToday || undefined}
       aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
@@ -246,10 +253,16 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >
+      <span id={dateLabelId} hidden>
+        {formatWeekdayMonthAndDayOfMonth(locale, day.plainDate)}
+      </span>
       {hasDayView ? (
         <MonthViewCellNumberButton
           type="button"
           className={classes.monthViewCellNumberButton}
+          aria-label={localeText.goToDay(
+            isFirstDayOfMonth ? dayNumberText : formatMonthAndDayOfMonth(locale, day.plainDate),
+          )}
           onClick={(event) =>
             store.switchToDay(
               createStartOfPlainDate(

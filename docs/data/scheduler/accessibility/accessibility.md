@@ -48,6 +48,8 @@ The time axis (hour labels and grid lines) is `aria-hidden="true"` as it is deco
 
 The month grid uses the same `role="grid"` pattern with `aria-rowcount`, `aria-colcount`, `aria-rowindex`, and `aria-colindex`.
 Each weekday header cell carries a `role="columnheader"`.
+Each date cell's accessible name includes its weekday, month, and day in the order used by the active locale, including dates outside the displayed month.
+When the Day view is available, the day number button is labeled with its action and date, for example "Go to July 2". To translate the action, set `localeText.goToDay`.
 Today's cell carries `aria-current="date"`.
 
 When `showWeekNumber` is enabled, the week-number labels are `aria-hidden="true"` but each day cell in that row references the week-number element via `aria-labelledby`, so screen readers can announce it.
