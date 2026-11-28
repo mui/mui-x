@@ -350,6 +350,19 @@ describe('<DataGrid /> - Layout & warnings', () => {
         });
       });
 
+      it('should allow a column to be narrower than the default minimum width', () => {
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              columns={[{ field: 'flag', width: 30, minWidth: 0, type: 'boolean' }]}
+              rows={[{ id: 1, flag: true }]}
+            />
+          </div>,
+        );
+
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '30px' });
+      });
+
       it('should set the first column to be twice as wide as the second one', () => {
         const rows = [
           {
