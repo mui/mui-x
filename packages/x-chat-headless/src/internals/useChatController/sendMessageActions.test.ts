@@ -1189,6 +1189,31 @@ describe('createSendMessageActions', () => {
       expect(store.state.messagesById.constructor).toBe(reply);
     });
 
+    it('restores a reply with no surviving predecessor before the first message in the live order when regenerating rejects', async () => {
+      const [u1, a1] = makeThread();
+      const u2: ChatMessage = { ...u1, id: 'u2' };
+      const u3: ChatMessage = { ...u1, id: 'u3' };
+      const store = new ChatStore({ initialMessages: [u1, a1, u2, u3] });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          store.setMessages([u3, u2]);
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messageIds).toEqual(['a1', 'u3', 'u2']);
+    });
+
     it('does not write messages when a rejected regenerate had nothing to restore', async () => {
       const [u1] = makeThread();
       const store = new ChatStore({ initialMessages: [u1] });

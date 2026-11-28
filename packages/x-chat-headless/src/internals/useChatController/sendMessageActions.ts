@@ -474,7 +474,6 @@ export function createSendMessageActions<Cursor = string>(params: {
       const liveIds = new Set(liveMessages.map((message) => message.id));
       const restoredAfter = new Map<string | undefined, ChatMessage[]>();
       let previousLiveId: string | undefined;
-      let firstLiveId: string | undefined;
       for (const id of originalMessageIds) {
         const removedMessage = removedById.get(id);
         if (removedMessage) {
@@ -483,13 +482,15 @@ export function createSendMessageActions<Cursor = string>(params: {
           restoredAfter.set(previousLiveId, group);
         } else if (liveIds.has(id)) {
           previousLiveId = id;
-          firstLiveId ??= id;
         }
       }
+      // The first survivor in the live order, which may differ from the snapshot order.
+      const originalIds = new Set(originalMessageIds);
+      const firstSurvivorId = liveMessages.find((message) => originalIds.has(message.id))?.id;
       // No original message survived (e.g. the thread was replaced): leave it untouched.
-      if (firstLiveId !== undefined) {
+      if (firstSurvivorId !== undefined) {
         const nextMessages = liveMessages.flatMap((message) => [
-          ...(message.id === firstLiveId ? (restoredAfter.get(undefined) ?? []) : []),
+          ...(message.id === firstSurvivorId ? (restoredAfter.get(undefined) ?? []) : []),
           message,
           ...(restoredAfter.get(message.id) ?? []),
         ]);
