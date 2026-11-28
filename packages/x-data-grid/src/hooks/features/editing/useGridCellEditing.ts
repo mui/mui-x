@@ -39,7 +39,8 @@ import type {
   GridCellEditStartParams,
   GridCellEditStopParams,
 } from '../../../models/params/gridEditCellParams';
-import { getDefaultCellValue } from './utils';
+import { deleteProcessingProps, getDefaultCellValue, processEditCellProps } from './utils';
+import type { GridProcessingPropsLookup } from './utils';
 import type { GridUpdateRowParams } from '../../../models/gridDataSource';
 
 export const useGridCellEditing = (
@@ -60,6 +61,7 @@ export const useGridCellEditing = (
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
   const cellModesModelRef = React.useRef(cellModesModel);
   const prevCellModesModel = React.useRef<GridCellModesModel>({});
+  const processingPropsLookup = React.useRef<GridProcessingPropsLookup>(new Map());
   const {
     processRowUpdate,
     onProcessRowUpdateError,
@@ -392,7 +394,7 @@ export const useGridCellEditing = (
 
       const shouldProcessEditCellProps = !!column.preProcessEditCellProps && deleteValue;
 
-      let newProps: GridEditCellProps = {
+      const newProps: GridEditCellProps = {
         value: newValue,
         error: false,
         isProcessingProps: shouldProcessEditCellProps,
@@ -403,23 +405,33 @@ export const useGridCellEditing = (
       apiRef.current.setCellFocus(id, field);
 
       if (shouldProcessEditCellProps) {
-        newProps = await Promise.resolve(
-          column.preProcessEditCellProps!({
-            id,
-            row: apiRef.current.getRow(id),
-            props: newProps,
-            hasChanged: newValue !== value,
-          }),
+        const hasChanged = newValue !== value;
+        await processEditCellProps(
+          processingPropsLookup.current,
+          id,
+          field,
+          hasChanged,
+          (hasValueChanged) =>
+            column.preProcessEditCellProps!({
+              id,
+              row: apiRef.current.getRow(id),
+              props: gridEditRowsStateSelector(apiRef)[id][field],
+              hasChanged: hasValueChanged,
+            }),
+          (processedProps, isProcessingProps) => {
+            // Check if still in edit mode before updating
+            if (apiRef.current.getCellMode(id, field) !== GridCellModes.Edit) {
+              return false;
+            }
+            const editingState = gridEditRowsStateSelector(apiRef);
+            updateOrDeleteFieldState(id, field, {
+              ...processedProps,
+              value: editingState[id][field].value,
+              isProcessingProps,
+            });
+            return true;
+          },
         );
-        // Check if still in edit mode before updating
-        if (apiRef.current.getCellMode(id, field) === GridCellModes.Edit) {
-          const editingState = gridEditRowsStateSelector(apiRef);
-          updateOrDeleteFieldState(id, field, {
-            ...newProps,
-            value: editingState[id][field].value,
-            isProcessingProps: false,
-          });
-        }
       }
     },
   ) as GridCellEditingApi['startCellEditMode'];
@@ -446,6 +458,7 @@ export const useGridCellEditing = (
       const finishCellEditMode = () => {
         updateOrDeleteFieldState(id, field, null);
         updateFieldInCellModesModel(id, field, null);
+        deleteProcessingProps(processingPropsLookup.current, id, field);
         if (cellToFocusAfter !== 'none') {
           apiRef.current.moveFocusToRelativeCell(id, field, cellToFocusAfter);
         }
@@ -556,40 +569,60 @@ export const useGridCellEditing = (
         parsedValue = column.valueParser(value, row, column, apiRef);
       }
 
-      let editingState = gridEditRowsStateSelector(apiRef);
-      let newProps: GridEditCellProps = {
+      const editingState = gridEditRowsStateSelector(apiRef);
+      const newProps: GridEditCellProps = {
         ...editingState[id][field],
         value: parsedValue,
         changeReason: debounceMs ? 'debouncedSetEditCellValue' : 'setEditCellValue',
       };
 
-      if (column.preProcessEditCellProps) {
-        const hasChanged = value !== editingState[id][field].value;
+      const applyProps = (processedProps: GridEditCellProps, isProcessingProps: boolean) => {
+        // Check again if the cell is in edit mode because the user may have
+        // discarded the changes while the props were being processed.
+        if (apiRef.current.getCellMode(id, field) === GridCellModes.View) {
+          return false;
+        }
 
-        newProps = { ...newProps, isProcessingProps: true };
-        updateOrDeleteFieldState(id, field, newProps);
+        // We don't update the value with the one coming from the props pre-processing
+        // because when the promise resolves it may be already outdated. The only
+        // exception to this rule is when there's no pre-processing.
+        updateOrDeleteFieldState(id, field, {
+          ...processedProps,
+          isProcessingProps,
+          value: column.preProcessEditCellProps
+            ? gridEditRowsStateSelector(apiRef)[id][field].value
+            : parsedValue,
+        });
+        return true;
+      };
 
-        newProps = await Promise.resolve(
-          column.preProcessEditCellProps({ id, row, props: newProps, hasChanged }),
-        );
+      if (!column.preProcessEditCellProps) {
+        return applyProps(newProps, false) && !newProps.error;
       }
 
-      // Check again if the cell is in edit mode because the user may have
-      // discarded the changes while the props were being processed.
-      if (apiRef.current.getCellMode(id, field) === GridCellModes.View) {
-        return false;
-      }
+      const hasChanged = parsedValue !== editingState[id][field].value;
+      updateOrDeleteFieldState(id, field, { ...newProps, isProcessingProps: true });
 
-      editingState = gridEditRowsStateSelector(apiRef);
-      newProps = { ...newProps, isProcessingProps: false };
-      // We don't update the value with the one coming from the props pre-processing
-      // because when the promise resolves it may be already outdated. The only
-      // exception to this rule is when there's no pre-processing.
-      newProps.value = column.preProcessEditCellProps ? editingState[id][field].value : parsedValue;
-      updateOrDeleteFieldState(id, field, newProps);
-
-      editingState = gridEditRowsStateSelector(apiRef);
-      return !editingState[id]?.[field]?.error;
+      const processedProps = await processEditCellProps(
+        processingPropsLookup.current,
+        id,
+        field,
+        hasChanged,
+        (hasValueChanged) =>
+          column.preProcessEditCellProps!({
+            id,
+            row,
+            // A call that runs again gets the latest props
+            props: {
+              ...gridEditRowsStateSelector(apiRef)[id][field],
+              changeReason: newProps.changeReason,
+            },
+            hasChanged: hasValueChanged,
+          }),
+        applyProps,
+      );
+      // `undefined` when a newer value replaced this one or the cell left edit mode
+      return !!processedProps && !processedProps.error;
     },
     [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
   );

@@ -336,6 +336,34 @@ describe('<DataGridPro /> - Cell editing', () => {
         expect(await act(async () => promise)).to.equal(false);
       });
 
+      it('should return false for a repeated value when a newer value replaces it', async () => {
+        // The validation of the first value never ends
+        const preProcessEditCellProps = ({ props, hasChanged }: GridPreProcessEditCellProps) =>
+          props.value === 'USD GBP' && hasChanged ? new Promise(() => {}) : props;
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        });
+        let isValid: unknown;
+        act(() => {
+          (
+            apiRef.current?.setEditCellValue({
+              id: 0,
+              field: 'currencyPair',
+              value: 'USD GBP',
+            }) as Promise<boolean>
+          ).then((result) => {
+            isValid = result;
+          });
+        });
+
+        await act(() =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD' }),
+        );
+        expect(isValid).to.equal(false);
+      });
+
       describe('with debounceMs > 0', () => {
         it('should debounce multiple changes if debounceMs > 0', async () => {
           const renderEditCell = vi.fn((() => <input />) as (
@@ -439,6 +467,343 @@ describe('<DataGridPro /> - Cell editing', () => {
         resolveCallback!();
 
         await act(() => promise); // Run all updates scheduled for when preProcessEditCellProps resolves
+      });
+
+      it('should do nothing while a validation of the same value is pending', async () => {
+        let resolveValidation: () => void;
+        const preProcessEditCellProps = ({ props, hasChanged }: GridPreProcessEditCellProps) => {
+          if (!hasChanged) {
+            return props;
+          }
+          return new Promise((resolve) => {
+            resolveValidation = () => resolve({ ...props, error: true });
+          });
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' });
+        });
+        // The same value runs the validation again with hasChanged=false
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' });
+        });
+        await act(() => Promise.resolve());
+
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+
+        await act(async () => resolveValidation!());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+      });
+
+      it('should commit a new value whose validation ends while the validation of an earlier value is pending', async () => {
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          props.value === 'USD GBP' ? props : new Promise(() => {});
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        // The deleted value starts a validation that does not end
+        act(() =>
+          apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair', deleteValue: true }),
+        );
+        let isValid: unknown;
+        await act(async () => {
+          isValid = await apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+          });
+        });
+        expect(isValid).to.equal(true);
+
+        // An edit component with auto-stop stops the edit mode when the value is valid
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(processRowUpdate.mock.lastCall?.[0].currencyPair).to.equal('USD GBP');
+      });
+
+      it('should ignore the result of the validation of an earlier value', async () => {
+        let resolveFirstValidation: () => void;
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => {
+          if (props.value === 'BAD') {
+            return { ...props, error: true };
+          }
+          return new Promise((resolve) => {
+            resolveFirstValidation = () => resolve(props);
+          });
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        });
+        await act(() =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' }),
+        );
+        // The validation of 'USD GBP' ends after the error of 'BAD'
+        await act(async () => resolveFirstValidation!());
+
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+      });
+
+      it('should validate a value that the validator sets', async () => {
+        let resolveFirstValidation: () => void;
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => {
+          if (props.value === 'BAD') {
+            return { ...props, error: true };
+          }
+          // The validator sets a newer value of the cell
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' });
+          return new Promise((resolve) => {
+            resolveFirstValidation = () => resolve(props);
+          });
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        });
+        await act(async () => resolveFirstValidation!());
+
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+      });
+
+      it('should keep the edit mode after a repeated value until the validation of the value ends', async () => {
+        let resolveValidation: () => void;
+        const preProcessEditCellProps = ({ props, hasChanged }: GridPreProcessEditCellProps) => {
+          if (!hasChanged) {
+            return props;
+          }
+          return new Promise((resolve) => {
+            resolveValidation = () => resolve(props);
+          });
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        });
+        // The setter does not wait for the validation of the value
+        let isValid: unknown;
+        act(() => {
+          (
+            apiRef.current?.setEditCellValue({
+              id: 0,
+              field: 'currencyPair',
+              value: 'USD GBP',
+            }) as Promise<boolean>
+          ).then((result) => {
+            isValid = result;
+          });
+        });
+        await waitFor(() => expect(isValid).to.equal(true));
+
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+
+        await act(async () => resolveValidation!());
+        await waitFor(() =>
+          expect(apiRef.current?.state.editRows[0].currencyPair.isProcessingProps).to.equal(false),
+        );
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(processRowUpdate.mock.lastCall?.[0].currencyPair).to.equal('USD GBP');
+      });
+
+      it('should keep the error of a value when a later validation of the value returns its props', async () => {
+        let openGate: () => void;
+        const gate = new Promise<void>((resolve) => {
+          openGate = resolve;
+        });
+        const preProcessEditCellProps = ({ props, hasChanged }: GridPreProcessEditCellProps) => {
+          if (hasChanged) {
+            return { ...props, error: true };
+          }
+          return gate.then(() => props);
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' });
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' });
+        });
+        await act(async () => openGate!());
+        await waitFor(() =>
+          expect(apiRef.current?.state.editRows[0].currencyPair.isProcessingProps).to.equal(false),
+        );
+        expect(apiRef.current?.state.editRows[0].currencyPair.error).to.equal(true);
+
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+      });
+
+      it('should commit a value when the validator waits for the same value of the cell', async () => {
+        const preProcessEditCellProps = async ({
+          props,
+          hasChanged,
+        }: GridPreProcessEditCellProps) => {
+          if (hasChanged) {
+            // The trimmed value is the same value
+            await apiRef.current?.setEditCellValue({
+              id: 0,
+              field: 'currencyPair',
+              value: props.value.trim(),
+            });
+          }
+          return props;
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        let isValid: unknown;
+        act(() => {
+          (
+            apiRef.current?.setEditCellValue({
+              id: 0,
+              field: 'currencyPair',
+              value: 'USD GBP',
+            }) as Promise<boolean>
+          ).then((result) => {
+            isValid = result;
+          });
+        });
+        await waitFor(() => expect(isValid).to.equal(true));
+        await waitFor(() =>
+          expect(apiRef.current?.state.editRows[0].currencyPair.isProcessingProps).to.equal(false),
+        );
+
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(processRowUpdate.mock.lastCall?.[0].currencyPair).to.equal('USD GBP');
+      });
+
+      it('should compare the parsed values to find if the value changed', async () => {
+        let resolveFirstValidation: () => void;
+        let calls = 0;
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => {
+          calls += 1;
+          if (calls > 1) {
+            return props;
+          }
+          return new Promise((resolve) => {
+            resolveFirstValidation = () => resolve({ ...props, error: true });
+          });
+        };
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps, valueParser: (value: string) => value.trim() }}
+          />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: ' BAD ' });
+        });
+        // The parsed value is the same, so this call validates the same value
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: ' BAD ' });
+        });
+        await act(() => Promise.resolve());
+
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+
+        await act(async () => resolveFirstValidation!());
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+      });
+
+      it('should ignore a pending validation of a removed row in a new row with the same id', async () => {
+        let resolveValidation: () => void;
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => {
+            resolveValidation = () => resolve({ ...props, error: true });
+          });
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        const row = apiRef.current!.getRow(0);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'BAD' });
+        });
+        act(() => apiRef.current?.updateRows([{ id: 0, _action: 'delete' }]));
+        act(() =>
+          apiRef.current?.stopCellEditMode({
+            id: 0,
+            field: 'currencyPair',
+            ignoreModifications: true,
+          }),
+        );
+        act(() => apiRef.current?.updateRows([row]));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(async () => resolveValidation!());
+
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
       });
 
       it('should do nothing if props contain error=true', async () => {
