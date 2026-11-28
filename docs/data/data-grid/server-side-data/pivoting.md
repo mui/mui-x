@@ -96,7 +96,7 @@ const getRows = async (params) => {
 
 With the required props and parameters in place, server-side pivoting should now be implemented in your Data Grid, as shown in the demo below:
 
-{{"demo": "ServerSidePivotingDataGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-pivoting-data-grid/index.ts", "bg": "inline"}}
 
 :::info
 The Data Source demos use a `useMockServer()` utility function to simulate server-side data fetching.
@@ -172,7 +172,7 @@ The demo below returns a static response to demonstrate how the column structure
 In this case, all groups are strings formatted on the server.
 Pivot data is retrieved from fields whose names are constructed by combining the group keys and pivot value field name.
 
-{{"demo": "ServerSidePivotingColumnStructureSimple.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-pivoting-column-structure-simple/index.ts", "bg": "inline"}}
 
 The following demo formats year column groups on the client side.
 
@@ -182,7 +182,7 @@ Each object contains a `date` property because `year` is a derived column that g
 The Data Grid runs `valueGetter()` on the `year` field and uses the result as a label for the second level column group.
 Since the formatted value is not known on the server, rows contain pivot data in fields whose names are created using the column group keys.
 
-{{"demo": "ServerSidePivotingColumnStructureComplex.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-pivoting-column-structure-complex/index.ts", "bg": "inline"}}
 
 ### Column sorting
 
@@ -205,7 +205,7 @@ This prop is called for each original column and returns an array of derived col
 To sort the derived columns by a value different from the column header name—for instance, to display months of the year—use `valueGetter()` to return the month number for sorting and use `valueFormatter()` for the column header name.
 :::
 
-{{"demo": "ServerSidePivotingDerivedColumns.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-pivoting-derived-columns/index.ts", "bg": "inline"}}
 
 ## Error handling
 
@@ -214,7 +214,7 @@ If an error occurs during a `getRows()` call, the Data Grid displays an error in
 
 The demo below renders a custom Snackbar component to display an error message when requests fail, which you can simulate using the checkbox and the **Refetch rows** button at the top.
 
-{{"demo": "ServerSidePivotingErrorHandling.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-pivoting-error-handling/index.ts", "bg": "inline"}}
 
 ## Group expansion
 
@@ -223,7 +223,7 @@ The difference is that the data is not initially available and is fetched automa
 
 The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all groups by default.
 
-{{"demo": "ServerSidePivotingGroupExpansion.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-pivoting-group-expansion/index.ts", "bg": "inline"}}
 
 ## API
 

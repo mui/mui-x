@@ -1,0 +1,18 @@
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+
+export default function PaginationCommunityNoSnap() {
+  // @focus-start @padding 1
+  const { data, loading } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 500,
+    maxColumns: 6,
+  });
+
+  return (
+    <div style={{ height: 300, width: '100%' }}>
+      <DataGrid {...data} loading={loading} />
+    </div>
+  );
+  // @focus-end
+}

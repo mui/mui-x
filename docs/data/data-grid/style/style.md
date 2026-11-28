@@ -13,7 +13,7 @@ For more details, visit the [`sx` prop page](/system/getting-started/the-sx-prop
 <DataGrid sx={{ m: 2 }} /> // Sets the margin to 2 times the spacing unit = 16px
 ```
 
-{{"demo": "SxProp.js", "bg": "inline"}}
+{{"component": "file://./demos/sx-prop/index.ts", "bg": "inline"}}
 
 ## Styling column headers
 
@@ -37,7 +37,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "StylingHeaderGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/styling-header-grid/index.ts", "bg": "inline"}}
 
 ## Styling rows
 
@@ -60,7 +60,7 @@ interface GridRowParams<R extends GridRowModel = GridRowModel> {
 }
 ```
 
-{{"demo": "StylingRowsGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/styling-rows-grid/index.ts", "bg": "inline"}}
 
 ## Styling cells
 
@@ -89,7 +89,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "StylingCellsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/styling-cells-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 2. Using the `getCellClassName` prop:
 
@@ -97,7 +97,7 @@ This prop is called for every cell in every column.
 Different from the first option, this prop is defined at the Data Grid level, not column level.
 It is also called with a `GridCellParams` object.
 
-{{"demo": "StylingAllCells.js", "bg": "inline"}}
+{{"component": "file://./demos/styling-all-cells/index.ts", "bg": "inline"}}
 
 ## Cell alignment
 
@@ -114,7 +114,7 @@ You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` t
 
 The following demo illustrates how this can be achieved.
 
-{{"demo": "StripedGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/striped-grid/index.ts", "bg": "inline"}}
 
 ## Container, header, and pinned sections
 
@@ -176,13 +176,13 @@ const theme = createTheme({
 
 Material UI v5 supports specifying different colors for light and dark mode with two different themes, as shown in the demo below.
 
-{{"demo": "BackgroundColorsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/background-colors-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Custom theme
 
 The following demo leverages the CSS customization API to match the Ant Design specification.
 
-{{"demo": "AntDesignGrid.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/ant-design-grid/index.ts", "collapseToEmpty": true}}
 
 ## Styling row groups [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -190,7 +190,7 @@ Use `getRowClassName` to add a custom class to the row group and then write CSS 
 
 The example below demonstrates how to style a row group when any of the child rows has a "Gross" value greater than a specific value. The condition uses [`gridRowNodeSelector` and `gridRowSelector`](/x/react-data-grid/row-definition/#selectors) to check for the targeted row type and to get the row data respectively.
 
-{{"demo": "RowGroupingStyling.js", "bg": "inline"}}
+{{"component": "file://./demos/row-grouping-styling/index.ts", "bg": "inline"}}
 
 :::success
 The styling method is not limited to the [`sx` prop](/x/react-data-grid/style/#using-the-sx-prop). You can use other styling solutions like plain CSS files or CSS modules.

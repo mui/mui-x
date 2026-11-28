@@ -104,7 +104,7 @@ function Component(props) {
 The Data Grid memoizes some of its subcomponents to avoid re-rendering more than necessary.
 Below is a visualization that shows you which cells re-render in response to your interactions with the Grid.
 
-{{"demo": "GridVisualization.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-visualization/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## API
 

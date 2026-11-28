@@ -109,7 +109,7 @@ Switching modes means changing which props your code passes — like other MUI c
 
 The demo below controls `activeConversationId` from outside the chat surface — select a conversation with the external buttons, or in the conversation list, and watch the single source of truth stay in sync:
 
-{{"demo": "ControlledActiveConversation.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/controlled-active-conversation/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## State model reference
 
@@ -175,7 +175,7 @@ The runtime still handles streaming, normalization, and derived state — you ju
 Each `ChatProvider` creates an isolated store.
 To render multiple independent chat surfaces, use separate `ChatBox` instances—each one creates its own provider internally.
 
-{{"demo": "../../material/context/MultipleInstances.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/context/demos/multiple-instances/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Provider props reference
 

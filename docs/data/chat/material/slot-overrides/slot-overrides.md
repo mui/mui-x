@@ -19,13 +19,13 @@ The `slots` prop lets you swap any of them with your own component, while `slotP
 
 Pass a custom component to a named slot. Your component receives the same props that the default component would receive.
 
-{{"demo": "SlotBasicReplacement.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/slot-basic-replacement/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Passing extra props with `slotProps`
 
 Use `slotProps` to pass additional props to either the default or a custom slot component without replacing them.
 
-{{"demo": "SlotPropsCustomization.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/slot-props-customization/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Complete slot reference
 
@@ -102,7 +102,7 @@ Return `null` from a slot to remove it entirely:
 
 For common show/hide needs, prefer the `features` prop which handles the logic cleanly:
 
-{{"demo": "FeatureFlags.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/feature-flags/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The `autoScroll` feature flag controls scroll behavior rather than slot visibility:
 
@@ -166,7 +166,7 @@ const mySlotProps: ChatBoxSlotProps = {
 Slots replace the component entirely, while theme `styleOverrides` adjust the default component's styles.
 You can use both together:
 
-{{"demo": "ThemeAndSlotCombination.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/theme-and-slot-combination/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## API
 

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import CompactDayView from 'docs/data/experiments/scheduler/CompactDayView';
-import CompactThreeDayView from 'docs/data/experiments/scheduler/CompactThreeDayView';
-import CompactWeekView from 'docs/data/experiments/scheduler/CompactWeekView';
+import CompactDayView from 'docs/data/experiments/scheduler/demos/compact-day-view/CompactDayView';
+import CompactThreeDayView from 'docs/data/experiments/scheduler/demos/compact-three-day-view/CompactThreeDayView';
+import CompactWeekView from 'docs/data/experiments/scheduler/demos/compact-week-view/CompactWeekView';
 
 export default function CompactViewsExperiment() {
   return (

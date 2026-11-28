@@ -92,7 +92,7 @@ const events: SchedulerEvent[] = [
 
 With the component imported and events defined, you're now ready to render the Event Calendar as shown below:
 
-{{"demo": "RenderEventCalendar.js", "defaultCodeOpen": true, "bg": "inline"}}
+{{"component": "file://./demos/render-event-calendar/index.ts", "bg": "inline", "initialExpanded": true}}
 
 ## Rendering an Event Timeline
 
@@ -146,7 +146,7 @@ const resources: SchedulerResource[] = [
 
 With the component imported and events and resources defined, you're now ready to render the Event Timeline as shown below:
 
-{{"demo": "RenderEventTimelinePremium.js", "defaultCodeOpen": true, "bg": "inline"}}
+{{"component": "file://./demos/render-event-timeline-premium/index.ts", "bg": "inline", "initialExpanded": true}}
 
 ## TypeScript
 

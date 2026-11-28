@@ -30,7 +30,7 @@ You can use the Filter Panel Trigger and [Toolbar](/x/react-data-grid/components
 
 The demo below shows how to add a filter panel trigger to a custom toolbar.
 
-{{"demo": "GridFilterPanelTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-filter-panel-trigger/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 
@@ -50,7 +50,7 @@ It renders the `baseButton` slot.
 `FilterPanelTrigger` only reports `filterCount` to its `render` callback. It doesn't generate a description of the active filters.
 To show one (for example, in a tooltip), build it yourself from `gridFilterActiveItemsSelector`, which lists the currently active `GridFilterItem` objects:
 
-{{"demo": "FilterPanelTriggerDescription.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/filter-panel-trigger-description/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Custom elements
 

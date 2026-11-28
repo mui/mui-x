@@ -19,7 +19,7 @@ Two part types cover the common citation patterns: URL references and document e
 
 The demo below seeds an assistant message containing a `source-url` and a `source-document` part. Both are rendered automatically by the built-in part renderers:
 
-{{"demo": "SourcePartsDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/source-parts-demo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Source URL parts
 
@@ -190,7 +190,7 @@ Source parts render inline where they appear in the message. To present a consol
 
 `ChatMessageSources` renders an ordered list (`ol`/`li`), so assistive technology announces the citation count and position.
 
-{{"demo": "ChatMessageSourcesPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-sources-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## See also
 

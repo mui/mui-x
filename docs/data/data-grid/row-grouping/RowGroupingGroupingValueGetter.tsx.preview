@@ -1,6 +1,0 @@
-<DataGridPremium
-  {...data}
-  columns={columnsWithComposer}
-  apiRef={apiRef}
-  initialState={initialState}
-/>

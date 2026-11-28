@@ -1,5 +1,0 @@
-<DateRangePicker slotProps={{ field: { dateSeparator: 'to' } }} />
-<DateRangePicker
-  slotProps={{ field: { dateSeparator: 'to' } }}
-  slots={{ field: MultiInputDateRangeField }}
-/>

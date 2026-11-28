@@ -1,7 +1,0 @@
-<DataGridPremium
-  {...data}
-  columns={columns}
-  apiRef={apiRef}
-  initialState={initialState}
-  groupingColDef={groupingColDef}
-/>

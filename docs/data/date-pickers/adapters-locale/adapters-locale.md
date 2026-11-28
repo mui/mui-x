@@ -34,7 +34,7 @@ import 'dayjs/locale/de';
 </LocalizationProvider>;
 ```
 
-{{"demo": "LocalizationDayjs.js"}}
+{{"component": "file://./demos/localization-dayjs/index.ts"}}
 
 ### With `date-fns`
 
@@ -63,7 +63,7 @@ import de from 'date-fns/locale/de';
 </LocalizationProvider>;
 ```
 
-{{"demo": "LocalizationDateFns.js"}}
+{{"component": "file://./demos/localization-date-fns/index.ts"}}
 
 ### With `luxon`
 
@@ -77,7 +77,7 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 </LocalizationProvider>;
 ```
 
-{{"demo": "LocalizationLuxon.js"}}
+{{"component": "file://./demos/localization-luxon/index.ts"}}
 
 :::warning
 `AdapterLuxon` does not support `Settings.throwOnInvalid = true` [setting](https://moment.github.io/luxon/api-docs/index.html#settingsthrowoninvalid).
@@ -100,14 +100,14 @@ import 'moment/locale/de';
 </LocalizationProvider>;
 ```
 
-{{"demo": "LocalizationMoment.js"}}
+{{"component": "file://./demos/localization-moment/index.ts"}}
 
 ## Meridiem — 12h/24h format
 
 All the time and datetime components will automatically adjust to the locale's time setting, that is the 12-hour or 24-hour format.
 You can override the default setting with the `ampm` prop:
 
-{{"demo": "AmPMCustomization.js"}}
+{{"component": "file://./demos/am-pm-customization/index.ts"}}
 
 ## Custom formats
 
@@ -129,7 +129,7 @@ If this default format does not suit you, you can customize it using the `format
 This prop is available on all fields and pickers.
 :::
 
-{{"demo": "CustomFieldFormat.js"}}
+{{"component": "file://./demos/custom-field-format/index.ts"}}
 
 :::info
 You can control the field format spacing using the [formatDensity](/x/react-date-pickers/custom-field/#change-the-format-density) prop.
@@ -189,7 +189,7 @@ If you need to get the clean value from the input, you can remove this character
 Luxon is not able to respect the leading zeroes when using macro tokens (for example "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
 :::
 
-{{"demo": "RespectLeadingZerosFieldFormat.js"}}
+{{"component": "file://./demos/respect-leading-zeros-field-format/index.ts"}}
 
 ### Custom field placeholder
 
@@ -198,7 +198,7 @@ For example, if you did not fill any value for the `year` section, the field wil
 
 These placeholders are based on your current component localization, not on your date localization.
 
-{{"demo": "FieldPlaceholder.js"}}
+{{"component": "file://./demos/field-placeholder/index.ts"}}
 
 For more information on how to define your component localization, check out the [Translated components](/x/react-date-pickers/localization/) page.
 
@@ -234,7 +234,7 @@ To customize the format used in the toolbar, use the `toolbarFormat` prop of the
 This prop is available on all pickers.
 :::
 
-{{"demo": "CustomToolbarFormat.js"}}
+{{"component": "file://./demos/custom-toolbar-format/index.ts"}}
 
 ### Custom day of week format
 
@@ -248,7 +248,7 @@ This prop is available on all components that render a day calendar, including t
 
 The example below adds a dot at the end of each day in the calendar header:
 
-{{"demo": "CustomDayOfWeekFormat.js"}}
+{{"component": "file://./demos/custom-day-of-week-format/index.ts"}}
 
 ### Custom calendar header format
 
@@ -258,7 +258,7 @@ To customize the format used on the calendar header, use the `format` prop of th
 This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
 :::
 
-{{"demo": "CustomCalendarHeaderFormat.js"}}
+{{"component": "file://./demos/custom-calendar-header-format/index.ts"}}
 
 ## Custom start of week
 
@@ -369,4 +369,4 @@ Follow [this guide](/material-ui/customization/right-to-left/) to use them.
 
 The example below demonstrates how to use an RTL language (Arabic) with some of the Date and Time Pickers components.
 
-{{"demo": "PickersRTL.js"}}
+{{"component": "file://./demos/pickers-rtl/index.ts"}}

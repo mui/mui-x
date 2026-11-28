@@ -1,6 +1,0 @@
-<DataGrid
-  {...data}
-  loading={loading}
-  isRowSelectable={(params: GridRowParams) => params.row.quantity > 50000}
-  checkboxSelection
-/>

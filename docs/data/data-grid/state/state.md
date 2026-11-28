@@ -15,7 +15,7 @@ If you need to fully control specific models, use the control props instead (for
 You can find more information on the corresponding feature documentation page.
 :::
 
-{{"demo": "InitialState.js", "bg": "inline"}}
+{{"component": "file://./demos/initial-state/index.ts", "bg": "inline"}}
 
 ## Access the state
 
@@ -41,7 +41,7 @@ const paginationModel = gridPaginationModelSelector(apiRef);
 To make the developer experience better, selectors are typed to let `apiRef` reference a `null` value, but they throw an error if called before the state is initialized. Use selectors after the initialization in a `useEffect()` hook or in an event handler.
 :::
 
-{{"demo": "DirectSelector.js", "bg": "inline"}}
+{{"component": "file://./demos/direct-selector/index.ts", "bg": "inline"}}
 
 ### With useGridSelector
 
@@ -57,7 +57,7 @@ This hook can only be used inside the context of the Data Grid, such as within c
 Otherwise, you will get an error saying that the state is not initialized during the first render.
 :::
 
-{{"demo": "UseGridSelector.js", "bg": "inline"}}
+{{"component": "file://./demos/use-grid-selector/index.ts", "bg": "inline"}}
 
 ### In event handlers
 
@@ -65,7 +65,7 @@ The `GridCallbackDetails` object passed as the second argument to callbacks like
 Pass it directly to any selector to read state that is not part of the callback arguments, without needing a separate `useGridApiRef`.
 In the demo below, the current row selection is read inside `onFilterModelChange` to capture which rows are selected at the moment the filter changes:
 
-{{"demo": "SelectorInEventHandler.js", "bg": "inline", "disableAd": true}}
+{{"component": "file://./demos/selector-in-event-handler/index.ts", "bg": "inline", "disableAd": true}}
 
 :::warning
 If the corresponding model is controlled (for example passing a `filterModel` prop alongside `onFilterModelChange`), the Data Grid calls the callback before applying your controlled value.
@@ -93,7 +93,7 @@ You can pass the state returned by `apiRef.current.exportState()` to the `initia
 
 In the demo below, clicking on **Recreate the 2nd grid** will re-mount the second Data Grid with the current state of the first Grid.
 
-{{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/restore-state-initial-state/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 If you restore the page using `initialState` before the data is fetched, the Data Grid will automatically move to the first page.
@@ -108,7 +108,7 @@ In the following demo, the state is saved to `localStorage` and restored when th
 This is done by listening on the `beforeunload` event.
 When the component is unmounted, the `useLayoutEffect()` cleanup function is being used instead.
 
-{{"demo": "SaveAndRestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/save-and-restore-state-initial-state/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Restore the state with apiRef
 
@@ -116,7 +116,7 @@ You can pass the state returned by `apiRef.current.exportState()` to the `apiRef
 In the demo below, clicking on **Save current view** will create a snapshot of the changes made in the state, considering the initial state.
 You can apply these changes on the Data Grid later selecting a saved view in the **Custom view** menu.
 
-{{"demo": "RestoreStateApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/restore-state-api-ref/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 #### Restore part of the state
 

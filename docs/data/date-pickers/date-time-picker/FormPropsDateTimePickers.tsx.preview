@@ -1,3 +1,0 @@
-<DateTimePicker label="disabled" disabled />
-<DateTimePicker label="readOnly" readOnly />
-<DateTimePicker label="name" name="startDateTime" />

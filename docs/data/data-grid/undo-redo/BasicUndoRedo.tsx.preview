@@ -1,8 +1,0 @@
-<DataGridPremium
-  {...data}
-  pagination
-  showToolbar
-  disableRowSelectionOnClick
-  cellSelection
-  disablePivoting
-/>

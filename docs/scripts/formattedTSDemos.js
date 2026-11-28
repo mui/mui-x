@@ -19,8 +19,6 @@ const yargs = require('yargs');
 const { hideBin } = require('yargs/helpers');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
-const DOCS_ROOT = path.resolve(__dirname, '..');
-
 const babelConfig = {
   presets: [
     [
@@ -58,6 +56,13 @@ async function getFiles(root, excludeRoot = false) {
         const stat = await fs.promises.stat(filePath);
 
         if (stat.isDirectory()) {
+          // Docs-infra generates JavaScript and focused source for these demos.
+          if (
+            fs.existsSync(path.join(filePath, 'index.ts')) &&
+            fs.existsSync(path.join(filePath, 'client.ts'))
+          ) {
+            return;
+          }
           files.push(...(await getFiles(filePath)));
         } else if (
           stat.isFile() &&
@@ -86,14 +91,6 @@ const TranspileResult = {
   Failed: 2,
 };
 
-const previewOverride = {
-  'docs/data/charts/axis/GroupedAxes.tsx': { maxLines: 30 },
-  'docs/data/charts/axis/GroupedAxesStyling.tsx': { maxLines: 30 },
-  'docs/data/charts/axis/GroupedAxesTickSize.tsx': { maxLines: 30 },
-  'docs/data/charts/axis/GroupedYAxes.tsx': { maxLines: 30 },
-  'docs/data/charts/sankey/SankeyDetailedDataStructure.tsx': { maxLines: 30 },
-};
-
 async function transpileFile(tsxPath, ignoreCache = false) {
   const jsPath = tsxPath.replace(/\.tsx?$/, '.js');
   try {
@@ -115,20 +112,8 @@ async function transpileFile(tsxPath, ignoreCache = false) {
       /^import type [^;]*;\r?\n/gm,
       '',
     );
-    const overrides = previewOverride[path.join('docs/', tsxPath.split('docs/')[1])];
 
-    const transformOptions = { ...babelConfig, filename: tsxPath };
-    const enableJSXPreview = !tsxPath.includes(path.join('pages', 'premium-themes'));
-    if (enableJSXPreview) {
-      const config = overrides || { maxLines: 16 };
-      transformOptions.plugins = transformOptions.plugins.concat([
-        [
-          path.resolve(DOCS_ROOT, './src/modules/utils/babel-plugin-jsx-preview'),
-          { maxLines: config.maxLines, outputFilename: `${tsxPath}.preview` },
-        ],
-      ]);
-    }
-    const { code } = await babel.transformAsync(source, transformOptions);
+    const { code } = await babel.transformAsync(source, { ...babelConfig, filename: tsxPath });
 
     const prettierConfigPath = await prettier.resolveConfigFile();
     if (!prettierConfigPath) {

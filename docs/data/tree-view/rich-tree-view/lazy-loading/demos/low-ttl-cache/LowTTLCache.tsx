@@ -1,0 +1,43 @@
+import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
+import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
+
+type ItemType = {
+  id: string;
+  label: string;
+  childrenCount?: number;
+  children?: ItemType[];
+};
+
+const fetchData = async (): Promise<ItemType[]> => {
+  const rows = Array.from({ length: 10 }, () => ({
+    id: randomId(),
+    label: randomName({}, {}),
+    ...(randomInt(0, 1) ? { childrenCount: 10 } : {}),
+  }));
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(rows);
+    }, 1000);
+  });
+};
+
+const lowTTLCache = new DataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 seconds
+
+export default function LowTTLCache() {
+  return (
+    <div style={{ width: 300, height: 240 }}>
+      {/* @focus-start */}
+      <RichTreeViewPro
+        items={[]}
+        dataSource={{
+          getChildrenCount: (item) => item?.childrenCount as number,
+          getTreeItems: fetchData,
+        }}
+        dataSourceCache={lowTTLCache}
+      />
+      {/* @focus-end */}
+    </div>
+  );
+}

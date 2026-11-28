@@ -12,7 +12,7 @@ githubLabel: 'scope: chat'
 Indicators are structural affordances rather than floating utilities, so their placement inside the thread layout is part of their behavior.
 The demo below shows where each indicator belongs in a realistic thread:
 
-{{"demo": "IndicatorsInContext.js"}}
+{{"component": "file://./demos/indicators-in-context/index.ts"}}
 
 ## Placement reference
 

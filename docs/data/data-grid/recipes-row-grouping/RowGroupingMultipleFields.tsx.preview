@@ -1,6 +1,0 @@
-<DataGridPremium
-  rows={rows}
-  columns={columns}
-  initialState={initialState}
-  defaultGroupingExpansionDepth={1}
-/>

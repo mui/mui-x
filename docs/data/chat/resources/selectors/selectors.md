@@ -88,7 +88,7 @@ function FailedMessageBadge() {
 }
 ```
 
-{{"demo": "../../core/examples/advanced-store-access/AdvancedStoreAccessHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://../../core/examples/advanced-store-access/demos/advanced-store-access-headless-chat/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Calling parameterized selectors
 
@@ -126,7 +126,7 @@ The design has three benefits:
 
 This is why the `useMessageIds()` + `useMessage(id)` pattern performs well for large threads—the ID list stays stable while individual rows subscribe to their own message record.
 
-{{"demo": "../../core/examples/selector-driven-thread/SelectorDrivenThread.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://../../core/examples/selector-driven-thread/demos/selector-driven-thread/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## See also
 

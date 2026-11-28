@@ -12,7 +12,7 @@ githubLabel: 'scope: chat'
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-{{"demo": "../examples/composer-with-attachments/ComposerWithAttachments.js", "hideToolbar": true}}
+{{"component": "file://../examples/composer-with-attachments/demos/composer-with-attachments/index.ts", "hideToolbar": true}}
 
 ## Composer primitives
 

@@ -30,13 +30,13 @@ import { ChatBox } from '@mui/x-chat';
 All hooks work inside any component rendered as a child or descendant of `ChatBox`.
 The demo below shows a `StreamingBadge` component that reads the streaming status via `useChatStatus()` and displays a chip while the assistant is responding:
 
-{{"demo": "ChatBoxWithHooks.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/chat-box-with-hooks/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Using ChatProvider for a custom layout
 
 When you need full control over the layout, use `ChatProvider` directly and compose the pieces yourself:
 
-{{"demo": "ChatProviderCustomLayout.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/chat-provider-custom-layout/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Controlled and uncontrolled state
 
@@ -131,7 +131,7 @@ function App() {
 Each `ChatProvider` creates an isolated store.
 To render multiple independent chat surfaces, use separate `ChatBox` instances—each one creates its own provider internally:
 
-{{"demo": "MultipleInstances.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/multiple-instances/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Provider props reference
 

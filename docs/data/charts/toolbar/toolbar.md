@@ -18,7 +18,7 @@ The toolbar is only displayed if there are actions available.
 For example, if the chart doesn't have zooming enabled, then the zoom buttons don't appear.
 :::
 
-{{"demo": "ChartsToolbar.js"}}
+{{"component": "file://./demos/charts-toolbar/index.ts"}}
 
 ## Custom toolbar elements
 
@@ -27,7 +27,7 @@ You can use this to replace the default buttons with components from your design
 
 If you're composing a custom component, you can provide these basic components as slots to `ChartsDataProvider`.
 
-{{"demo": "ChartsToolbarCustomElements.js"}}
+{{"component": "file://./demos/charts-toolbar-custom-elements/index.ts"}}
 
 ## Custom element rendering
 
@@ -55,7 +55,7 @@ To do so, provide a custom component to the `toolbar` slot.
 
 You can use components such as `Toolbar` and `ToolbarButton` to build your own toolbar using the default components as a base, or create your own custom toolbar from scratch.
 
-{{"demo": "ChartsToolbarCustomToolbar.js"}}
+{{"component": "file://./demos/charts-toolbar-custom-toolbar/index.ts"}}
 
 :::info
 If you're replacing the toolbar with a custom one, the container should have the CSS class `chartsToolbarClasses.root`.
@@ -72,7 +72,7 @@ They work with both time-series and ordinal (band/point) axes.
 Pass the `rangeButtons` prop to the toolbar to configure the available ranges.
 Each button zooms the chart to show a specific portion of the data.
 
-{{"demo": "ChartsToolbarRangeButtons.js"}}
+{{"component": "file://./demos/charts-toolbar-range-buttons/index.ts"}}
 
 ### Range button values
 
@@ -124,7 +124,7 @@ Use `null` to reset zoom to show all data.
 
 The following demo shows all value types together:
 
-{{"demo": "ChartsToolbarRangeButtonValues.js"}}
+{{"component": "file://./demos/charts-toolbar-range-button-values/index.ts"}}
 
 ### Ordinal axes
 
@@ -132,19 +132,19 @@ Range buttons also work with ordinal (band/point) axes.
 When the axis data contains date-like values, calendar intervals and absolute date ranges are matched against the data points automatically.
 Function values receive index-based domain bounds instead of timestamps.
 
-{{"demo": "ChartsToolbarOrdinalRangeButtons.js"}}
+{{"component": "file://./demos/charts-toolbar-ordinal-range-buttons/index.ts"}}
 
 ### Initial selection
 
 When `initialZoom` (or a controlled `zoomData`) matches a range button's computed range, that button is selected on first render without requiring user interaction.
 
-{{"demo": "ChartsToolbarRangeButtonsInitialSelection.js"}}
+{{"component": "file://./demos/charts-toolbar-range-buttons-initial-selection/index.ts"}}
 
 ### Custom toolbar with range buttons
 
 You can use `ChartsToolbarRangeButtonTrigger` directly in a custom toolbar to have full control over layout and behavior.
 
-{{"demo": "ChartsToolbarCustomRangeButtons.js"}}
+{{"component": "file://./demos/charts-toolbar-custom-range-buttons/index.ts"}}
 
 ## Accessibility
 

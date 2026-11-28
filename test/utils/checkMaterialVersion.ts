@@ -16,6 +16,7 @@ async function getCatalog(): Promise<Record<string, string>> {
     const pnpmWorkspaceConfig = JSON.parse(stdout);
     catalogCache = pnpmWorkspaceConfig.catalog as Record<string, string>;
   }
+
   return catalogCache;
 }
 

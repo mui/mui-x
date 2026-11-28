@@ -14,7 +14,7 @@ githubLabel: 'scope: chat'
 
 The demo below shows a minimal unstyled chat shell composed from the headless primitives:
 
-{{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js", "hideToolbar": true}}
+{{"component": "file://../examples/minimal-shell/demos/minimal-unstyled-shell/index.ts", "hideToolbar": true}}
 
 The canonical headless shell combines a provider-backed root, pane layout, conversation rail, thread view, message list, and composer:
 

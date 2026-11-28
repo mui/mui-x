@@ -21,7 +21,7 @@ One has a linear y-axis and the other has a logarithmic one.
 Each axis definition is identified by its property `id`.
 Then each series specifies the axis it uses with the `xAxisId` and `yAxisId` properties.
 
-{{"demo": "ScaleExample.js"}}
+{{"component": "file://./demos/scale-example/index.ts"}}
 
 :::info
 ID management, as shown in the example above, is not necessary for most common use cases.
@@ -56,7 +56,7 @@ The formatter's second argument provides rendering context for advanced use case
 In the demo below, `valueFormatter` is used to shorten months and introduce a new line for ticks.
 It uses the `context.location` to determine where the value is rendered.
 
-{{"demo": "FormatterDemo.js"}}
+{{"component": "file://./demos/formatter-demo/index.ts"}}
 
 ### Ticks without labels
 
@@ -66,14 +66,14 @@ For example, it's common to use ticks to indicate a logarithmic scale but omit t
 The default tick formatter achieves this by rendering an empty string for ticks that should not show labels.
 If you want to customize the formatting, but want to keep the default behavior for ticks without labels, you can check that the `context.defaultTickLabel` property is different from the empty string:
 
-{{"demo": "TicksWithoutLabels.js"}}
+{{"component": "file://./demos/ticks-without-labels/index.ts"}}
 
 ### Using the D3 formatter
 
 The context gives you access to the axis scale, the number of ticks (if applicable), and the default formatted value.
 You can use the D3 [`tickFormat(tickNumber, specifier)`](https://d3js.org/d3-scale/linear#tickFormat) method to adapt the tick format based on the scale properties as shown below:
 
-{{"demo": "FormatterD3.js"}}
+{{"component": "file://./demos/formatter-d3/index.ts"}}
 
 ## Axis subdomain
 
@@ -89,7 +89,7 @@ xAxis={[
 ]}
 ```
 
-{{"demo": "MinMaxExample.js"}}
+{{"component": "file://./demos/min-max-example/index.ts"}}
 
 ### Relative axis subdomain
 
@@ -102,14 +102,14 @@ This expects one of three possible values:
 
 The demo below illustrates these differences in behavior, showing data ranging from -15 to 92 with different domain limits:
 
-{{"demo": "CustomDomainYAxis.js"}}
+{{"component": "file://./demos/custom-domain-y-axis/index.ts"}}
 
 ## Axis direction
 
 By default, the axes run from left to right and from bottom to top.
 You can apply the `reverse` property to change this:
 
-{{"demo": "ReverseExample.js"}}
+{{"component": "file://./demos/reverse-example/index.ts"}}
 
 ## Position
 
@@ -120,21 +120,21 @@ This property expects the following values:
 - `'left'` or `'right'` for the y-axis
 - `'none'` to hide the axis
 
-{{"demo": "ModifyAxisPosition.js"}}
+{{"component": "file://./demos/modify-axis-position/index.ts"}}
 
 ### Hiding axes
 
 To hide an axis, set its `position` to `'none'`.
 Note that the axis is still computed and used for scaling.
 
-{{"demo": "HidingAxis.js"}}
+{{"component": "file://./demos/hiding-axis/index.ts"}}
 
 ### Multiple axes on one side
 
 You can display multiple axes on one side.
 If two or more axes share the same `position`, they're displayed in the order they're defined from closest to farthest away from the chart.
 
-{{"demo": "MultipleAxes.js"}}
+{{"component": "file://./demos/multiple-axes/index.ts"}}
 
 ### Coordinates
 
@@ -142,7 +142,7 @@ You can obtain the coordinates of the axis by calling the `useXAxisCoordinates()
 
 Below is an example of how to use the these hooks to get the coordinates of several axes and render rectangles delineating their area.
 
-{{"demo": "AxisCoordinatesDemo.js"}}
+{{"component": "file://./demos/axis-coordinates-demo/index.ts"}}
 
 ## Grouped axes
 
@@ -159,26 +159,26 @@ The demos below show the feature with:
 - The x-axis grouped by month, quarter, and year.
 - The y-axis is grouped by category and subcategory.
 
-{{"demo": "GroupedAxes.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grouped-axes/index.ts", "collapseToEmpty": true}}
 
-{{"demo": "GroupedYAxes.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grouped-y-axes/index.ts", "collapseToEmpty": true}}
 
 ## Auto-sizing axes
 
 You can set the axis `height` (for x-axes) or `width` (for y-axes) to `'auto'` to automatically calculate the axis dimension based on the tick label measurements.
 This is useful when your tick labels have varying lengths or when you use rotated labels.
 
-{{"demo": "AxisAutoSize.js"}}
+{{"component": "file://./demos/axis-auto-size/index.ts"}}
 
 Auto-sizing works well with rotated tick labels.
 In the demo below, adjust the angle slider to see how the axis height automatically adapts to accommodate the rotated labels.
 
-{{"demo": "AxisAutoSizeRotated.js"}}
+{{"component": "file://./demos/axis-auto-size-rotated/index.ts"}}
 
 Auto-sizing also works with grouped axes.
 When an axis has `groups` defined, the auto-size calculation accounts for each group level's tick labels and tick sizes.
 
-{{"demo": "GroupedAxesAutoSize.js"}}
+{{"component": "file://./demos/grouped-axes-auto-size/index.ts"}}
 
 :::info
 Auto-sizing is computed on the client side after hydration.
@@ -191,7 +191,7 @@ A log scale cannot plot zero because log(0) is undefined.
 To overcome this, you can use a symlog scale, which uses a linear scale for values close to zero and a logarithmic scale for the rest.
 You can customize the value where the scale switches from linear to logarithmic using the `constant` property, which defaults to 1.
 
-{{"demo": "SymlogScale.js"}}
+{{"component": "file://./demos/symlog-scale/index.ts"}}
 
 ## Composition
 
@@ -202,7 +202,7 @@ In turn, those components require an `axisId` prop to link them to an axis you d
 You can choose their position with the `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
 The props described in the [rendering playground](/x/react-charts/axis-customization/#custom-axis-rendering) are also available.
 
-{{"demo": "AxisWithComposition.js"}}
+{{"component": "file://./demos/axis-with-composition/index.ts"}}
 
 ## Reference line
 
@@ -214,4 +214,4 @@ Elements can be styled with the `lineStyle` and `labelStyle` props.
 
 More examples are available in [docs page about references](/x/react-charts/references/).
 
-{{"demo": "ReferenceLine.js"}}
+{{"component": "file://./demos/reference-line/index.ts"}}

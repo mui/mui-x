@@ -1,3 +1,0 @@
-<DemoItem label="Years in descending order">
-  <YearCalendar maxDate={currentYear} yearsOrder="desc" />
-</DemoItem>

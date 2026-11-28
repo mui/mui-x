@@ -65,7 +65,7 @@ const getRows: async (params) => {
 The following tree data example supports filtering, sorting, and pagination on the server.
 It also caches the data by default.
 
-{{"demo": "ServerSideTreeData.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-tree-data/index.ts", "bg": "inline"}}
 
 :::info
 The Data Source demos use a `useMockServer()` utility function to simulate server-side data fetching.
@@ -82,7 +82,7 @@ This starts a polling timer that revalidates the current server-side query in th
 The demo below uses `dataSourceRevalidateMs={2_000}` and disables the cache to make periodic updates visible.
 It also uses stable row IDs in a nested stock hierarchy so expanded rows stay expanded after updates.
 
-{{"demo": "ServerSideTreeDataRevalidation.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-tree-data-revalidation/index.ts", "bg": "inline"}}
 
 ## Row expansion state persistence
 
@@ -91,7 +91,7 @@ The implementation and behavior are the same when working with tree data.
 
 Expand some rows in the following demo and use two different refetch action buttons to see the difference in the behavior.
 
-{{"demo": "ServerSideTreeDataExpansionPersistence.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-tree-data-expansion-persistence/index.ts", "bg": "inline"}}
 
 ## Error handling
 
@@ -103,7 +103,7 @@ The demo below renders an error message and a notification at the row group leve
 Try expanding a row group with the checkbox enabled to see this behavior.
 Caching has been disabled for simplicity.
 
-{{"demo": "ServerSideTreeDataErrorHandling.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-tree-data-error-handling/index.ts", "bg": "inline"}}
 
 ## Group expansion
 
@@ -112,7 +112,7 @@ The difference is that the data is not initially available and is fetched automa
 
 The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all levels of the tree by default.
 
-{{"demo": "ServerSideTreeDataGroupExpansion.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-tree-data-group-expansion/index.ts", "bg": "inline"}}
 
 ## Custom cache
 
@@ -122,7 +122,7 @@ See [Server-side data overview—Data caching](/x/react-data-grid/server-side-da
 
 The following demo uses `QueryClient` from `@tanstack/react-core` as a Data Source cache.
 
-{{"demo": "ServerSideTreeDataCustomCache.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-tree-data-custom-cache/index.ts", "bg": "inline"}}
 
 ## API
 

@@ -21,7 +21,7 @@ See [Attachments](/x/react-chat/behavior/attachments/) for the upload flow.
 
 The demo below shows a message containing an image part and a document part:
 
-{{"demo": "ChatFilePartsDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-file-parts-demo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## File part structure
 
@@ -124,7 +124,7 @@ Override file part rendering through `slotProps.messageContent.partProps.file`:
 
 The demo below replaces the default chip with a card-style preview:
 
-{{"demo": "ChatFilePartCustomizationDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-file-part-customization-demo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Streaming
 

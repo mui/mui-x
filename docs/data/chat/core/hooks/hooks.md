@@ -30,7 +30,7 @@ All hooks must be called inside a `<ChatProvider>`.
 
 The demo below shows hooks in action inside a minimal custom chat:
 
-{{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/minimal-chat/demos/minimal-headless-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## `useChat()`
 

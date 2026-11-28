@@ -16,7 +16,7 @@ githubLabel: 'scope: chat'
 The adapter below echoes whatever you type after the default 400 ms simulated network delay.
 The reply arrives as a single text chunk once the delay elapses — the Echo adapter doesn't simulate token-by-token streaming. For real streamed output, swap in [`createAiSdkAdapter`](/x/react-chat/backend/built-in-adapters/ai-sdk-adapter/).
 
-{{"demo": "EchoAdapterDemo.js", "defaultCodeOpen": true, "bg": "inline"}}
+{{"component": "file://./demos/echo-adapter-demo/index.ts", "bg": "inline", "initialExpanded": true}}
 
 ## Usage
 
@@ -35,7 +35,7 @@ const adapter = createEchoAdapter({
 
 Return different replies based on the input to script deterministic flows for demos and tests:
 
-{{"demo": "EchoAdapterCannedReplies.js", "bg": "inline"}}
+{{"component": "file://./demos/echo-adapter-canned-replies/index.ts", "bg": "inline"}}
 
 ## Options
 

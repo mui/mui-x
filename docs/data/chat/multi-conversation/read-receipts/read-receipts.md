@@ -17,7 +17,7 @@ Three pieces work together: the `readState` and `unreadCount` fields on `ChatCon
 
 In the demo below, one conversation starts unread. Open it from the sidebar: the "New messages" divider marks the unread boundary, and scrolling to the bottom of the thread fires `onReachBottom`, which calls `markRead` — the sidebar badge and the divider clear together.
 
-{{"demo": "ReadReceiptsTwoPane.js", "bg": "inline"}}
+{{"component": "file://./demos/read-receipts-two-pane/index.ts", "bg": "inline"}}
 
 ## Conversation read state
 

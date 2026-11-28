@@ -1,5 +1,0 @@
-<RichTreeView
-  defaultExpandedItems={['grid']}
-  slots={{ item: CustomTreeItem }}
-  items={MUI_X_PRODUCTS}
-/>

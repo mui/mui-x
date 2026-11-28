@@ -40,7 +40,7 @@ Those concerns belong to [Headless](/x/react-chat/headless/).
 
 The demo below shows the core runtime with a minimal custom UI:
 
-{{"demo": "examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://./examples/minimal-chat/demos/minimal-headless-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 The runtime works as a pipeline:
 

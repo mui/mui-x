@@ -11,7 +11,7 @@ githubLabel: 'scope: chat'
 
 The demo below shows a minimal unstyled chat shell composed from the headless primitives:
 
-{{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js", "hideToolbar": true}}
+{{"component": "file://../examples/minimal-shell/demos/minimal-unstyled-shell/index.ts", "hideToolbar": true}}
 
 ## Root container
 

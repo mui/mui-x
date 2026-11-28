@@ -1,7 +1,0 @@
-<StyledBox>
-  <DataGrid
-    rows={rows}
-    columns={columns}
-    isCellEditable={(params) => params.row.id === 5}
-  />
-</StyledBox>
