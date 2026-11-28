@@ -9,6 +9,7 @@ import type {
   ChatOnData,
   ChatOnError,
   ChatOnFinish,
+  ChatOnFinishPayload,
   ChatOnToolCall,
 } from '../../types';
 import type { ChatDraftAttachment } from '../../types/chat-entities';
@@ -70,15 +71,29 @@ export function createSendMessageActions<Cursor = string>(params: {
     conversationId: string | undefined,
     abortController: AbortController,
     fallbackMessageId: string,
+    onReplyMessageId?: (messageId: string) => void,
   ): Promise<ProcessStreamResult> {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
+    const onFinishAtStart = runtimeRef.current.onFinish;
+    let capturedFinishPayload: ChatOnFinishPayload | undefined;
     const processOptions = {
       conversationId,
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
-      onFinish: shouldDeferFinish ? undefined : runtimeRef.current.onFinish,
+      // Without a wrapper to run, pass the listener through so no unused payload is built.
+      onFinish:
+        shouldDeferFinish || onReplyMessageId
+          ? async (payload: ChatOnFinishPayload) => {
+              onReplyMessageId?.(payload.message.id);
+              if (shouldDeferFinish) {
+                capturedFinishPayload = payload;
+              } else {
+                await onFinishAtStart?.(payload);
+              }
+            }
+          : onFinishAtStart,
       onData: runtimeRef.current.onData,
       // Unique-per-run fallback the stream binds to when the adapter omits a
       // `messageId` on `start`. A backend-supplied id still overrides it (see
@@ -102,7 +117,19 @@ export function createSendMessageActions<Cursor = string>(params: {
       });
     };
 
-    const result = await processStream(store, stream, processOptions);
+    let result: ProcessStreamResult;
+    try {
+      result = await processStream(store, stream, processOptions);
+    } catch (error) {
+      try {
+        if (capturedFinishPayload) {
+          await runtimeRef.current.onFinish?.(capturedFinishPayload);
+        }
+      } catch {
+        // The stream's error explains the failed run; a throwing onFinish must not replace it.
+      }
+      throw error;
+    }
 
     if (
       !result.isDisconnect ||
@@ -114,6 +141,9 @@ export function createSendMessageActions<Cursor = string>(params: {
       return result;
     }
 
+    // Only decides the final result; onFinish runs after so a throwing callback
+    // is not treated as a reconnect failure.
+    let finalResult: ProcessStreamResult;
     try {
       store.setStreaming(true, conversationId);
       const reconnectStream = await adapter.reconnectToStream({
@@ -124,56 +154,54 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       if (!reconnectStream || abortController.signal.aborted) {
         store.setStreaming(false);
-        await emitDeferredFinish(result);
-        return result;
+        finalResult = result;
+      } else {
+        finalResult = await processStream(store, reconnectStream, {
+          ...processOptions,
+          onFinish: undefined,
+          messageId: result.messageId,
+          reconnectFromSequence: result.nextSequence,
+          seenEventIds: result.seenEventIds,
+        });
       }
-
-      return await processStream(store, reconnectStream, {
-        ...processOptions,
-        onFinish: runtimeRef.current.onFinish,
-        messageId: result.messageId,
-        reconnectFromSequence: result.nextSequence,
-        seenEventIds: result.seenEventIds,
-      });
     } catch (error) {
       store.setStreaming(false);
 
       if (abortController.signal.aborted) {
-        const cancelledResult: ProcessStreamResult = {
+        finalResult = {
           messageId: result.messageId,
           status: 'cancelled',
           isAbort: true,
           isDisconnect: false,
           isError: false,
         };
-        await emitDeferredFinish(cancelledResult);
-        return cancelledResult;
+      } else {
+        store.setError(
+          createRuntimeError(
+            'STREAM_ERROR',
+            getErrorMessage('Unable to reconnect to the message stream.', error),
+            'stream',
+            true,
+            true,
+            {
+              messageId: result.messageId,
+              conversationId,
+            },
+          ),
+        );
+
+        finalResult = {
+          messageId: result.messageId,
+          status: 'error',
+          isAbort: false,
+          isDisconnect: true,
+          isError: true,
+        };
       }
-
-      store.setError(
-        createRuntimeError(
-          'STREAM_ERROR',
-          getErrorMessage('Unable to reconnect to the message stream.', error),
-          'stream',
-          true,
-          true,
-          {
-            messageId: result.messageId,
-            conversationId,
-          },
-        ),
-      );
-
-      const errorResult: ProcessStreamResult = {
-        messageId: result.messageId,
-        status: 'error',
-        isAbort: false,
-        isDisconnect: true,
-        isError: true,
-      };
-      await emitDeferredFinish(errorResult);
-      return errorResult;
     }
+
+    await emitDeferredFinish(finalResult);
+    return finalResult;
   }
 
   async function sendExistingMessage(
@@ -426,6 +454,8 @@ export function createSendMessageActions<Cursor = string>(params: {
     // Fresh fallback id: the prior assistant run was just removed above, so a
     // regenerated reply with no adapter-supplied id targets a new message.
     const fallbackMessageId = createLocalId();
+    // Set once the stream binds this run's reply (fallback or backend id).
+    let replyMessageId: string | undefined;
 
     try {
       const stream = await adapter.regenerate({
@@ -441,6 +471,9 @@ export function createSendMessageActions<Cursor = string>(params: {
         conversationId,
         abortController,
         fallbackMessageId,
+        (id) => {
+          replyMessageId = id;
+        },
       );
 
       if (result.messageId) {
@@ -464,12 +497,14 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      // Pre-stream rejection: put each removed message back after its nearest surviving
-      // original predecessor (or before the first survivor), keeping changes made meanwhile.
+      // Restore the removed messages (D4) unless this run already added its reply; a later
+      // failure (e.g. a throwing onFinish) must not overwrite it. Each goes back after its
+      // nearest surviving original predecessor (or before the first survivor).
       const removedById = new Map(removedMessages.map((message) => [message.id, message]));
       const currentMessages = getMessages(storeUnknown);
       // A Map lookup avoids inherited keys (e.g. an id of "constructor") on `messagesById`.
       const currentById = new Map(currentMessages.map((message) => [message.id, message]));
+      const hasReply = replyMessageId !== undefined && currentById.has(replyMessageId);
       const liveMessages = currentMessages.filter((message) => !removedById.has(message.id));
       const liveIds = new Set(liveMessages.map((message) => message.id));
       const restoredAfter = new Map<string | undefined, ChatMessage[]>();
@@ -487,7 +522,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         }
       }
       // No original message survived (e.g. the thread was replaced): leave it untouched.
-      if (firstLiveId !== undefined) {
+      if (!hasReply && firstLiveId !== undefined) {
         const nextMessages = liveMessages.flatMap((message) => [
           ...(message.id === firstLiveId ? (restoredAfter.get(undefined) ?? []) : []),
           message,
