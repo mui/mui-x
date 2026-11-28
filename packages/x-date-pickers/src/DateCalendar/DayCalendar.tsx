@@ -470,8 +470,13 @@ export function DayCalendar(inProps: DayCalendarProps) {
     },
   );
 
+  // A day that gets focus is enabled. Skip `isDateDisabled`: it can be one render old
+  // when a replacement day focuses itself.
   const handleFocus = useEventCallback(
-    (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => focusDay(day),
+    (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => {
+      onFocusedDayChange(day);
+      onFocusedViewChange?.(true);
+    },
   );
 
   const handleBlur = useEventCallback(
