@@ -8,6 +8,14 @@
   },
   {
     "projects": ["x-data-grid-premium"],
+    "name": "aggregationLookupChange",
+    "description": "Fired when the aggregated values are updated. Called with the new GridAggregationLookup once all the aggregated columns are processed.",
+    "params": "GridAggregationLookup",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onAggregationLookupChange"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
     "name": "aggregationModelChange",
     "description": "Fired when the aggregation model changes.",
     "params": "GridAggregationModel",

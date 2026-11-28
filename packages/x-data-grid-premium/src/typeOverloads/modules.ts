@@ -21,6 +21,7 @@ import type {
   GridRowGroupingModel,
   GridAggregationModel,
   GridAggregationHeaderMeta,
+  GridAggregationLookup,
   GridCellSelectionModel,
   Conversation,
 } from '../hooks';
@@ -133,6 +134,11 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when a formula evaluation pass completes.
    */
   formulaEvaluated: { params: { changedCells: GridCellCoordinates[] } };
+  /**
+   * Fired when the aggregated values are updated.
+   * Called with the new [[GridAggregationLookup]] once all the aggregated columns are processed.
+   */
+  aggregationLookupChange: { params: GridAggregationLookup };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {

@@ -2,9 +2,11 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   gridColumnLookupSelector,
   useGridEvent,
+  useGridEventPriority,
   useGridApiMethod,
   useRunOncePerLoop,
   gridRenderContextSelector,
@@ -59,6 +61,7 @@ export const useGridAggregation = (
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'onAggregationModelChange'
+    | 'onAggregationLookupChange'
     | 'initialState'
     | 'aggregationModel'
     | 'getAggregationPosition'
@@ -91,6 +94,7 @@ export const useGridAggregation = (
   );
 
   const abortControllerRef = React.useRef<AbortController | null>(null);
+  const lastPublishedLookupRef = React.useRef<GridAggregationLookup>({});
   const applyAggregation = React.useCallback(() => {
     // Abort previous if we're proceeding
     if (abortControllerRef.current) {
@@ -143,6 +147,15 @@ export const useGridAggregation = (
       chunks.push(otherAggregatedFields.slice(i, i + chunkSize));
     }
 
+    // processChunk() does nothing if there are no aggregated fields
+    // make sure that the lookup is empty before it publishes the lookup events
+    if (aggregatedFields.length === 0 && !isObjectEmpty(currentAggregationLookup)) {
+      apiRef.current.setState((state) => ({
+        ...state,
+        aggregation: { ...state.aggregation, lookup: {} },
+      }));
+    }
+
     let chunkIndex = 0;
     const aggregationLookup: GridAggregationLookup = {};
     let chunkStartTime = performance.now();
@@ -155,6 +168,13 @@ export const useGridAggregation = (
 
       const currentChunk = chunks[chunkIndex];
       if (!currentChunk) {
+        // The aggregation can be re-applied without changing the aggregated values,
+        // for example when the grid processes the same rows twice on mount.
+        const lookup = gridAggregationLookupSelector(apiRef) ?? {};
+        if (!isDeepEqual(lookup, lastPublishedLookupRef.current)) {
+          lastPublishedLookupRef.current = lookup;
+          apiRef.current.publishEvent('aggregationLookupChange', lookup);
+        }
         apiRef.current.publishEvent('aggregationLookupSet');
         abortControllerRef.current = null;
         return;
@@ -203,15 +223,6 @@ export const useGridAggregation = (
     };
 
     processChunk();
-
-    // processChunk() does nothing if there are no aggregated fields
-    // make sure that the lookup is empty in this case
-    if (aggregatedFields.length === 0 && !isObjectEmpty(currentAggregationLookup)) {
-      apiRef.current.setState((state) => ({
-        ...state,
-        aggregation: { ...state.aggregation, lookup: {} },
-      }));
-    }
   }, [
     apiRef,
     props.getAggregationPosition,
@@ -314,6 +325,7 @@ export const useGridAggregation = (
   useGridEvent(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'filteredRowsSet', deferredApplyAggregation);
+  useGridEventPriority(apiRef, 'aggregationLookupChange', props.onAggregationLookupChange);
 
   const lastSortModel = React.useRef(gridSortModelSelector(apiRef));
   useGridEvent(apiRef, 'sortedRowsSet', () => {

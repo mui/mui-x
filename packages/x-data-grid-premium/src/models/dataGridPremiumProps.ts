@@ -310,6 +310,13 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
     details: GridCallbackDetailsPremium,
   ) => void;
   /**
+   * Callback fired when the aggregated values are updated.
+   * @param {GridAggregationLookup} lookup The aggregated values, indexed by row id and field.
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onAggregationLookupChange?: GridEventListener<'aggregationLookupChange', GridApiPremium>;
+  /**
    * Set the cell selection model of the grid.
    */
   cellSelectionModel?: GridCellSelectionModel;
