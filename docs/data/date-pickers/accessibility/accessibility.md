@@ -76,6 +76,9 @@ Among the [available view components](https://mui.com/x/react-date-pickers/date-
 The [Date Picker](/x/react-date-pickers/date-picker/) combines the functionalities of the Date Field and Date Calendar components.
 Depending on which component is in focus, the Picker will provide the corresponding keyboard support, either from [Date Field](/x/react-date-pickers/accessibility/#fields) or [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar).
 
+With focus on a date field section, press <kbd class="key">Alt</kbd> + <kbd class="key">Arrow Down</kbd> to open the calendar without changing the date.
+The same shortcut opens the [Time Picker](/x/react-date-pickers/time-picker/) and [Date Time Picker](/x/react-date-pickers/date-time-picker/) from their fields.
+
 ### Date Range Calendar
 
 The [Date Range Calendar](/x/react-date-pickers/date-range-calendar/) implements similar keyboard support as the day view of the [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference in the navigation between the previous and next months that must be achieved using the arrows in the calendar header.

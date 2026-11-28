@@ -19,6 +19,18 @@ describe('<MobileDatePicker />', () => {
     Component: MobileDatePicker,
   });
 
+  it('should open the calendar dialog with Alt+ArrowDown without editing the value', async () => {
+    const view = renderWithProps(
+      { defaultValue: adapterToUse.date('2022-06-18T00:00:00') },
+      { componentFamily: 'picker' },
+    );
+
+    await view.selectSection('month');
+    await view.user.keyboard('{Alt>}{ArrowDown}{/Alt}');
+    expect(screen.getByRole('dialog')).toBeVisible();
+    expectFieldValue(view.getSectionsContainer(), '06/18/2022');
+  });
+
   it('allows to change only year', async () => {
     const onChangeMock = vi.fn();
     const { user } = render(

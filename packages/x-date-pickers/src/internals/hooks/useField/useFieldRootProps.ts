@@ -18,6 +18,7 @@ import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEdi
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import type { PickerAnyManager, PickerValidValue } from '../../models';
 import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
+import { useNullablePickerContext } from '../useNullablePickerContext';
 import {
   cleanDigitSectionValue,
   getLetterEditingOptions,
@@ -63,6 +64,7 @@ export function useFieldRootProps(
   } = parameters;
 
   const adapter = usePickerAdapter();
+  const pickerContext = useNullablePickerContext();
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLSpanElement>) => {
     if (disabled) {
@@ -71,6 +73,24 @@ export function useFieldRootProps(
 
     // eslint-disable-next-line default-case
     switch (true) {
+      // Open a single-value picker from its field.
+      case event.key === 'ArrowDown' &&
+        event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.shiftKey &&
+        pickerContext?.triggerStatus === 'enabled' &&
+        !Array.isArray(pickerContext.value): {
+        if (event.defaultPrevented) {
+          break;
+        }
+        event.preventDefault();
+        if (!pickerContext.open) {
+          pickerContext.setOpen(true);
+        }
+        break;
+      }
+
       // Select all
       case (event.ctrlKey || event.metaKey) &&
         (event.key?.toUpperCase() === 'A' || String.fromCharCode(event.keyCode) === 'A') &&
