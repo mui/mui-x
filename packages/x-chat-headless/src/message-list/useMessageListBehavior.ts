@@ -98,7 +98,8 @@ export function useMessageListBehavior(parameters: {
   const resizeFrameRef = React.useRef(0);
   const isMountedRef = React.useRef(true);
   const hasMountedRef = React.useRef(false);
-  const mountScrollTopRef = React.useRef<number | null>(null);
+  // Offset of a scroll the hook made itself (mount, resize re-pin); its scroll event must not load history.
+  const programmaticScrollTopRef = React.useRef<number | null>(null);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
@@ -125,6 +126,11 @@ export function useMessageListBehavior(parameters: {
 
   const updateIsAtBottom = React.useCallback(
     (options?: { silent?: boolean }) => {
+      // A hidden list (`display: none` ancestor) measures as at the bottom; keep the last visible state.
+      // A silent re-seed (item-set replacement) still applies so reveal can't fire `onReachBottom`.
+      if (!options?.silent && rootRef.current?.clientHeight === 0) {
+        return isAtBottomRef.current;
+      }
       const nextIsAtBottom = isScrollableToBottom(rootRef.current, autoScrollBuffer);
       const previousIsAtBottom = isAtBottomRef.current;
 
@@ -304,16 +310,16 @@ export function useMessageListBehavior(parameters: {
       updateUnseenMessageCount(0);
     }
 
-    // Only the event still at the mount scroll's offset is skipped; a coalesced user scroll elsewhere loads.
-    const isMountScrollEvent = root.scrollTop === mountScrollTopRef.current;
-    mountScrollTopRef.current = null;
+    // Only the event still at the programmatic scroll's offset is skipped; a coalesced user scroll elsewhere loads.
+    const isProgrammaticScrollEvent = root.scrollTop === programmaticScrollTopRef.current;
+    programmaticScrollTopRef.current = null;
 
     if (root.scrollTop > estimatedItemSize) {
       topReachedRef.current = false;
       return;
     }
 
-    if (!isMountScrollEvent) {
+    if (!isProgrammaticScrollEvent) {
       void maybeLoadMoreHistory();
     }
   }, [
@@ -324,6 +330,14 @@ export function useMessageListBehavior(parameters: {
     updateUnseenMessageCount,
   ]);
 
+  const pinToBottom = React.useCallback(() => {
+    const scrollTopBefore = rootRef.current?.scrollTop ?? 0;
+    scrollToBottom({ behavior: 'instant' });
+    // The scroll event this emits must not load history; none is emitted if the list did not move.
+    const scrollTop = rootRef.current?.scrollTop ?? 0;
+    programmaticScrollTopRef.current = scrollTop === scrollTopBefore ? null : scrollTop;
+  }, [scrollToBottom]);
+
   React.useLayoutEffect(() => {
     // Mount only. Runs before the first `updateIsAtBottom()` so the latch stays true and
     // `onReachBottom` doesn't fire; `instant` overrides CSS smooth scrolling so the scroll is synchronous.
@@ -332,13 +346,9 @@ export function useMessageListBehavior(parameters: {
     }
     hasMountedRef.current = true;
     if (autoScrollEnabled && itemIdsRef.current.length > 0) {
-      const scrollTopBefore = rootRef.current?.scrollTop ?? 0;
-      scrollToBottom({ behavior: 'instant' });
-      // The scroll event this emits must not load history; none is emitted if the list did not move.
-      const scrollTop = rootRef.current?.scrollTop ?? 0;
-      mountScrollTopRef.current = scrollTop === scrollTopBefore ? null : scrollTop;
+      pinToBottom();
     }
-  }, [autoScrollEnabled, scrollToBottom]);
+  }, [autoScrollEnabled, pinToBottom]);
 
   React.useLayoutEffect(() => {
     updateIsAtBottom();
@@ -383,6 +393,36 @@ export function useMessageListBehavior(parameters: {
     updateIsAtBottom,
     updateUnseenMessageCount,
   ]);
+
+  React.useEffect(() => {
+    const root = rootRef.current;
+
+    if (!root || typeof globalThis.ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    // A viewport resize (typing indicator, composer, window) fires no scroll event.
+    let height = root.clientHeight;
+    const observer = new globalThis.ResizeObserver(() => {
+      const nextHeight = root.clientHeight;
+      // Unchanged, or hidden by a `display: none` ancestor (compare against the last visible height).
+      if (nextHeight === height || nextHeight === 0) {
+        return;
+      }
+      const heightDelta = nextHeight - height;
+      height = nextHeight;
+      const anchor = anchorRef.current;
+      if (autoScrollEnabled && isAtBottomRef.current) {
+        pinToBottom();
+      } else if (anchor) {
+        // The viewport bottom moved. Shift the anchor instead of re-capturing it: a row-resize restore may be pending.
+        anchorRef.current = { ...anchor, offsetFromBottom: anchor.offsetFromBottom + heightDelta };
+      }
+    });
+    observer.observe(root);
+
+    return () => observer.disconnect();
+  }, [autoScrollEnabled, pinToBottom]);
 
   React.useEffect(() => {
     // Restore on (re)mount so the resize-driven auto-scroll keeps working after
