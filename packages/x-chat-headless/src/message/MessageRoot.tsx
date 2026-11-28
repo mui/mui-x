@@ -87,7 +87,7 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
   // an unknown DOM attribute). Pulling it out of `...other` is the whole point.
   void groupAuthorName;
   const message = useMessage(messageId);
-  const resolvedAuthor = useMessageAuthor(messageId);
+  const resolvedAuthor = useMessageAuthor(message);
   const variant = useChatVariant();
   const density = useChatDensity();
   const localeText = useChatLocaleText();

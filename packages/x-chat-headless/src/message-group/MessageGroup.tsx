@@ -5,13 +5,12 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatStore } from '../hooks/useChatStore';
 import { useMessage, useMessageIds } from '../hooks/useMessage';
-import { useMessageAuthor } from '../hooks/useMessageAuthor';
+import { selectActiveParticipants, useMessageAuthor } from '../hooks/useMessageAuthor';
 import { getMessageWithResolvedAuthor } from '../internals/messageAuthor';
 import type { ChatMessage } from '../types/chat-entities';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
 import { useChatDensity } from '../chat/internals/ChatDensityContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
-import { chatSelectors } from '../selectors';
 import { MessageAvatar } from '../message/MessageAvatar';
 import { MessageContent } from '../message/MessageContent';
 import { MessageMeta } from '../message/MessageMeta';
@@ -145,36 +144,35 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const defaultItems = useMessageIds();
   const items = itemsProp ?? defaultItems;
   const store = useChatStore();
-  const activeConversation = useStore(store, chatSelectors.activeConversation);
+  const participants = useStore(store, selectActiveParticipants);
   const messageIndex = resolveMessageIndex(messageId, index, items);
   const previousMessageId = messageIndex > 0 ? items[messageIndex - 1] : undefined;
   const nextMessageId =
     messageIndex >= 0 && messageIndex < items.length - 1 ? items[messageIndex + 1] : undefined;
   const message = useMessage(messageId);
-  const resolvedAuthor = useMessageAuthor(messageId);
+  const resolvedAuthor = useMessageAuthor(message);
   const previousMessage = useMessage(previousMessageId ?? '');
   const nextMessage = useMessage(nextMessageId ?? '');
   const variant = useChatVariant();
   const density = useChatDensity();
-  const resolveGroupKey = React.useCallback(
-    (candidate: ChatMessage | null) => {
-      if (!candidate) {
-        return null;
-      }
+  // Plain function on purpose: a memoized callback would retain `store.parameters` (and its
+  // controlled `messages`) from this group's last render.
+  const resolveGroupKey = (candidate: ChatMessage | null) => {
+    if (!candidate) {
+      return null;
+    }
 
-      const resolvedMessage = getMessageWithResolvedAuthor(candidate, {
-        currentUser: store.parameters.currentUser,
-        members: store.parameters.members,
-        activeConversation: activeConversation ?? undefined,
-        getMessageAuthorId: store.parameters.getMessageAuthorId,
-        getMessageAuthorDisplayName: store.parameters.getMessageAuthorDisplayName,
-        getMessageAuthorAvatarUrl: store.parameters.getMessageAuthorAvatarUrl,
-      });
+    const resolvedMessage = getMessageWithResolvedAuthor(candidate, {
+      currentUser: store.parameters.currentUser,
+      members: store.parameters.members,
+      activeConversation: { participants },
+      getMessageAuthorId: store.parameters.getMessageAuthorId,
+      getMessageAuthorDisplayName: store.parameters.getMessageAuthorDisplayName,
+      getMessageAuthorAvatarUrl: store.parameters.getMessageAuthorAvatarUrl,
+    });
 
-      return groupKey(resolvedMessage ?? candidate);
-    },
-    [activeConversation, groupKey, store.parameters],
-  );
+    return groupKey(resolvedMessage ?? candidate);
+  };
   const prevKey = resolveGroupKey(previousMessage);
   const currentKey = resolveGroupKey(message);
   const nextKey = resolveGroupKey(nextMessage);

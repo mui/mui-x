@@ -1,0 +1,263 @@
+import * as React from 'react';
+import { act, createRenderer } from '@mui/internal-test-utils';
+import { describe, expect, it } from 'vitest';
+import { ChatStore } from '../store';
+import type { ChatMessage } from '../types/chat-entities';
+import { ChatStoreContext } from '../internals/useChatStoreContext';
+import { ChatLocaleProvider } from '../chat/internals/ChatLocaleContext';
+import { MessageGroup } from '../message-group/MessageGroup';
+import { useMessage } from './useMessage';
+import { useMessageAuthor } from './useMessageAuthor';
+
+const messages: ChatMessage[] = [
+  { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] },
+  { id: 'm2', role: 'assistant', parts: [{ type: 'text', text: 'Hi there' }] },
+];
+
+describe('useMessageAuthor', () => {
+  const { render } = createRenderer();
+
+  it('does not re-render rows when an unrelated store field changes', () => {
+    const store = new ChatStore({ initialMessages: messages });
+    const renderCounts: Record<string, number> = {};
+
+    function Row({ messageId }: { messageId: string }) {
+      useMessageAuthor(useMessage(messageId));
+      renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
+      return null;
+    }
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+        <Row messageId="m2" />
+      </ChatStoreContext.Provider>,
+    );
+
+    const initialCounts = { ...renderCounts };
+
+    act(() => {
+      store.setComposerValue('a');
+    });
+    act(() => {
+      store.setComposerValue('ab');
+    });
+
+    expect(renderCounts).toEqual(initialCounts);
+  });
+
+  it('updates existing memoized rows when author parameters change', () => {
+    const store = new ChatStore({ initialMessages: messages });
+    const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
+
+    const Row = React.memo(function Row({ messageId }: { messageId: string }) {
+      authors[messageId] = useMessageAuthor(useMessage(messageId));
+      return null;
+    });
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+        <Row messageId="m2" />
+      </ChatStoreContext.Provider>,
+    );
+
+    expect(authors.m1?.displayName).not.toBe('Alice');
+
+    act(() => {
+      store.updateStateFromParameters({
+        ...store.parameters,
+        currentUser: { id: 'alice', displayName: 'Alice' },
+      });
+    });
+
+    expect(authors.m1?.displayName).toBe('Alice');
+
+    act(() => {
+      store.updateStateFromParameters({
+        ...store.parameters,
+        getMessageAuthorDisplayName: () => 'From getter',
+      });
+    });
+
+    expect(authors.m1?.displayName).toBe('From getter');
+    expect(authors.m2?.displayName).toBe('From getter');
+  });
+
+  it('updates existing memoized rows when an active conversation participant changes', () => {
+    const store = new ChatStore({
+      initialMessages: [
+        { id: 'm1', role: 'user', author: { id: 'bob' }, parts: [{ type: 'text', text: 'Hi' }] },
+      ],
+      initialConversations: [
+        { id: 'c1', title: 'Chat', participants: [{ id: 'bob', displayName: 'Bob' }] },
+      ],
+      initialActiveConversationId: 'c1',
+    });
+    const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
+
+    const Row = React.memo(function Row({ messageId }: { messageId: string }) {
+      authors[messageId] = useMessageAuthor(useMessage(messageId));
+      return null;
+    });
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+      </ChatStoreContext.Provider>,
+    );
+
+    expect(authors.m1?.displayName).toBe('Bob');
+
+    act(() => {
+      store.updateConversation('c1', { participants: [{ id: 'bob', displayName: 'Robert' }] });
+    });
+
+    expect(authors.m1?.displayName).toBe('Robert');
+  });
+
+  it('updates rows when author parameters change in the same batch as a state snapshot restore', () => {
+    const store = new ChatStore({ initialMessages: messages });
+    const snapshot = store.state;
+    const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
+
+    const Row = React.memo(function Row({ messageId }: { messageId: string }) {
+      authors[messageId] = useMessageAuthor(useMessage(messageId));
+      return null;
+    });
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+      </ChatStoreContext.Provider>,
+    );
+
+    act(() => {
+      store.updateStateFromParameters({
+        ...store.parameters,
+        currentUser: { id: 'alice', displayName: 'Alice' },
+      });
+    });
+
+    expect(authors.m1?.displayName).toBe('Alice');
+
+    act(() => {
+      store.setState(snapshot);
+      store.updateStateFromParameters({
+        ...store.parameters,
+        currentUser: { id: 'alice', displayName: 'Bob' },
+      });
+    });
+
+    expect(authors.m1?.displayName).toBe('Bob');
+  });
+
+  it('does not re-render rows when author parameters are recreated with equal values', () => {
+    const store = new ChatStore({
+      initialMessages: messages,
+      members: [{ id: 'alice', displayName: 'Alice' }],
+      currentUser: { id: 'alice', displayName: 'Alice' },
+      roleDisplayNames: { assistant: 'Bot' },
+    });
+    const renderCounts: Record<string, number> = {};
+
+    function Row({ messageId }: { messageId: string }) {
+      useMessageAuthor(useMessage(messageId));
+      renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
+      return null;
+    }
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+        <Row messageId="m2" />
+      </ChatStoreContext.Provider>,
+    );
+
+    const initialCounts = { ...renderCounts };
+    const initialVersion = store.state.authorParametersVersion;
+
+    act(() => {
+      store.updateStateFromParameters({
+        ...store.parameters,
+        members: [{ id: 'alice', displayName: 'Alice' }],
+        currentUser: { id: 'alice', displayName: 'Alice' },
+        roleDisplayNames: { assistant: 'Bot' },
+      });
+    });
+
+    expect(store.state.authorParametersVersion).toBe(initialVersion);
+    expect(renderCounts).toEqual(initialCounts);
+  });
+
+  it('does not bump the author version when members switches between omitted and empty', () => {
+    const store = new ChatStore({ initialMessages: messages });
+    const initialVersion = store.state.authorParametersVersion;
+
+    store.updateStateFromParameters({ ...store.parameters, members: [] });
+    store.updateStateFromParameters({ ...store.parameters, members: undefined });
+
+    expect(store.state.authorParametersVersion).toBe(initialVersion);
+  });
+
+  it('treats an undefined role display name override like a missing one', () => {
+    const store = new ChatStore({
+      initialMessages: messages,
+      roleDisplayNames: { assistant: undefined },
+    });
+    const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
+
+    function Row({ messageId }: { messageId: string }) {
+      authors[messageId] = useMessageAuthor(useMessage(messageId));
+      return null;
+    }
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <ChatLocaleProvider localeText={{ messageAuthorAssistantLabel: 'Asistente' }}>
+          <Row messageId="m2" />
+        </ChatLocaleProvider>
+      </ChatStoreContext.Provider>,
+    );
+
+    expect(authors.m2?.displayName).toBe('Asistente');
+  });
+
+  it('does not re-render message groups when the active conversation title changes', () => {
+    const store = new ChatStore({
+      initialMessages: messages,
+      initialConversations: [
+        { id: 'c1', title: 'First', participants: [{ id: 'alice', displayName: 'Alice' }] },
+      ],
+      initialActiveConversationId: 'c1',
+    });
+    let groupCount = 0;
+
+    function CountingGroup({
+      ownerState,
+      ...other
+    }: React.HTMLAttributes<HTMLDivElement> & { ownerState?: unknown }) {
+      groupCount += 1;
+      return <div {...other} />;
+    }
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <MessageGroup messageId="m1" slots={{ group: CountingGroup }}>
+          <span>m1</span>
+        </MessageGroup>
+        <MessageGroup messageId="m2" slots={{ group: CountingGroup }}>
+          <span>m2</span>
+        </MessageGroup>
+      </ChatStoreContext.Provider>,
+    );
+
+    const groupCountBeforePatch = groupCount;
+
+    act(() => {
+      store.updateConversation('c1', { title: 'Renamed', unreadCount: 3 });
+    });
+
+    expect(groupCount).toBe(groupCountBeforePatch);
+  });
+});

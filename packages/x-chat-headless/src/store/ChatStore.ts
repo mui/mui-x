@@ -1,3 +1,4 @@
+import { areArraysEqual } from '@base-ui/utils/areArraysEqual';
 import { Store } from '@base-ui/utils/store';
 import type {
   ChatConversation,
@@ -9,6 +10,45 @@ import type {
 } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type { ChatHistoryStatus, ChatInternalState } from '../types/chat-state';
+
+// Compares only the user fields the author resolver reads, so inline props don't bump the version.
+function isSameAuthorUser(a: ChatUser | undefined, b: ChatUser | undefined) {
+  return (
+    a === b ||
+    (a != null &&
+      b != null &&
+      a.id === b.id &&
+      a.displayName === b.displayName &&
+      a.avatarUrl === b.avatarUrl)
+  );
+}
+
+function haveAuthorParametersChanged<Cursor>(
+  prev: ChatStoreParameters<Cursor>,
+  next: ChatStoreParameters<Cursor>,
+) {
+  if (
+    prev.getMessageAuthorId !== next.getMessageAuthorId ||
+    prev.getMessageAuthorDisplayName !== next.getMessageAuthorDisplayName ||
+    prev.getMessageAuthorAvatarUrl !== next.getMessageAuthorAvatarUrl ||
+    !isSameAuthorUser(prev.currentUser, next.currentUser)
+  ) {
+    return true;
+  }
+  if (
+    prev.members !== next.members &&
+    !areArraysEqual(prev.members ?? [], next.members ?? [], isSameAuthorUser)
+  ) {
+    return true;
+  }
+  const prevNames = prev.roleDisplayNames;
+  const nextNames = next.roleDisplayNames;
+  return (
+    prevNames?.user !== nextNames?.user ||
+    prevNames?.assistant !== nextNames?.assistant ||
+    prevNames?.system !== nextNames?.system
+  );
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorGetterProps {
@@ -233,6 +273,9 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
 
   private dirtyControlledModels = new Set<ControlledModel>();
 
+  // Kept on the instance so the version only grows, even after a state snapshot is restored.
+  private authorParametersRevision = 0;
+
   /** Whether any controlled model has been internally mutated since the last parameter sync. */
   get hasDirtyControlledModels(): boolean {
     return this.dirtyControlledModels.size > 0;
@@ -270,6 +313,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       composerIsComposing: false,
       composerAttachments: [],
       error: null,
+      authorParametersVersion: 0,
     });
 
     this.parameters = parameters;
@@ -319,6 +363,11 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     ) {
       newState.composerValue = parameters.composerValue;
       this.dirtyControlledModels.delete('composerValue');
+    }
+
+    if (haveAuthorParametersChanged(this.parameters, parameters)) {
+      this.authorParametersRevision += 1;
+      newState.authorParametersVersion = this.authorParametersRevision;
     }
 
     this.parameters = parameters;
