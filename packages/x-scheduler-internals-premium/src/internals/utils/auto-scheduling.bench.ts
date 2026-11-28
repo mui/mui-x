@@ -1,5 +1,5 @@
 import { describe, test } from 'vitest';
-import { addDays, EventBuilder } from 'test/utils/scheduler';
+import { addDays, EventBuilder, toZoned } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade } from './auto-scheduling';
@@ -49,8 +49,8 @@ describe.each([
     updated: [
       {
         id: 0,
-        start: addDays(new Date(events[0].start.epochMilliseconds), 3),
-        end: addDays(new Date(events[0].end.epochMilliseconds), 3),
+        start: toZoned(addDays(new Date(events[0].start.epochMilliseconds), 3)),
+        end: toZoned(addDays(new Date(events[0].end.epochMilliseconds), 3)),
       },
     ],
   };

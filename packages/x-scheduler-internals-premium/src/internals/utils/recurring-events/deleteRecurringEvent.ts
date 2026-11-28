@@ -5,8 +5,10 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
-  createStartOfPlainDate,
   getOccurrencePlainDate,
+  getTimezoneId,
+  toEpochMs,
+  toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import { RecurringSeries } from './RecurringSeries';
@@ -54,13 +56,15 @@ export function applyRecurringDeleteOnlyThis(
   const excludedDays = [...previousExDates.map((exDate) => exDate.toPlainDate()), occurrenceDay];
   // The exceptions of an all-day series are dates, written as they are, even one the display
   // timezone skips; a timed series keeps the instants of its exceptions.
+  // Resolved once, since `"default"` reads the timezone of the system from `Intl`.
+  const timezoneId = getTimezoneId(timezone);
   const exDates = originalEvent.allDay
     ? excludedDays.map((day) => day.toString())
     : [
-        ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map(
-          (exDate) => new Date(resolveEventTimestamp(exDate, timezone)),
+        ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map((exDate) =>
+          toZonedDateTime(resolveEventTimestamp(exDate, timezone), timezoneId),
         ),
-        createStartOfPlainDate(occurrenceDay, timezone),
+        toZonedDateTime(toEpochMs(occurrenceDay, timezone), timezoneId),
       ];
 
   if (!RecurringSeries.fromEvent(originalEvent, excludedDays).hasOccurrence()) {

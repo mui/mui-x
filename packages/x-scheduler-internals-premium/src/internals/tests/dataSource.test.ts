@@ -6,6 +6,7 @@ import type {
 import {
   addDays,
   createDate,
+  createZonedDate,
   endOfDay,
   premiumStoreClasses,
   ResourceBuilder,
@@ -297,8 +298,8 @@ premiumStoreClasses.forEach((storeClass) => {
       store.updateEvent({
         id: '1',
         title: 'Event 1 Updated',
-        start: createDate('2025-07-01T11:00:00Z'),
-        end: createDate('2025-07-01T12:00:00Z'),
+        start: createZonedDate('2025-07-01T11:00:00Z'),
+        end: createZonedDate('2025-07-01T12:00:00Z'),
       });
 
       await vi.waitFor(() => expect(persistEventsSpy.mock.calls.length).to.equal(1));
@@ -585,8 +586,8 @@ premiumStoreClasses.forEach((storeClass) => {
       store.updateEvent({
         id: '1',
         title: 'Event 1 Updated',
-        start: createDate('2025-07-01T11:00:00Z'),
-        end: createDate('2025-07-01T12:00:00Z'),
+        start: createZonedDate('2025-07-01T11:00:00Z'),
+        end: createZonedDate('2025-07-01T12:00:00Z'),
       });
 
       await vi.waitFor(() => expect(persistEventsSpy.mock.calls.length).to.equal(2));

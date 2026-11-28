@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  createDate,
+  createZonedDate,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   ResourceBuilder,
@@ -128,8 +128,8 @@ describe('Features - EventTimelinePremiumStore', () => {
 
       store.updateEvent({
         id: 'a',
-        start: createDate('2025-07-03T11:00:00Z'),
-        end: createDate('2025-07-03T12:00:00Z'),
+        start: createZonedDate('2025-07-03T11:00:00Z'),
+        end: createZonedDate('2025-07-03T12:00:00Z'),
       });
 
       const emittedSuccessor = onEventsChange.mock.lastCall![0].find(

@@ -110,7 +110,7 @@ export function allDayBoundToEventString(epochMs: number, timezone: string): str
     throw new Error(
       `MUI X Scheduler: The date ${new Date(epochMs).toISOString()} of the all-day event is not the first instant of a day in the display timezone "${timezone}". ` +
         'The dates of an all-day event are whole days, so an instant inside a day cannot be written as one of them. ' +
-        'Pass a "YYYY-MM-DD" string, or the Date of 00:00 of the day in the display timezone (of the day after the last day for the end). ' +
+        'Pass a "YYYY-MM-DD" string, or the ZonedDateTime of 00:00 of the day in the display timezone (of the day after the last day for the end). ' +
         'See https://mui.com/x/react-scheduler/event-calendar/events/#all-day.',
     );
   }
