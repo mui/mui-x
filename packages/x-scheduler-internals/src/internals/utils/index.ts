@@ -25,6 +25,8 @@ export * from './extractStandaloneEvent';
 export * from './useInitializeApiRef';
 export * from './useEventCreation';
 export * from './useKeyboardEventCreation';
+export * from './useEventCreationContextMenu';
+export * from './GridContextMenuContext';
 export * from './getNavigationTarget';
 export * from './getDisplayedHourRange';
 export * from './getAgendaDayCount';

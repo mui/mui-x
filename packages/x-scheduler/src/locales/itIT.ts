@@ -26,6 +26,8 @@ const itITDialog: SchedulerDialogTranslations = {
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'Descrizione',
   endDateLabel: 'Data di fine',
   endTimeLabel: 'Ora di fine',

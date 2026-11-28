@@ -1,6 +1,7 @@
 export * from './event-drag-preview';
 export * from './event-editing';
 export * from './event-context-menu';
+export * from './grid-context-menu';
 export * from './event-dialog';
 export * from './scheduler-form';
 export * from './error-container';

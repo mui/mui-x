@@ -26,6 +26,8 @@ const ptBRDialog: SchedulerDialogTranslations = {
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'Descrição',
   endDateLabel: 'Data de término',
   endTimeLabel: 'Hora de término',

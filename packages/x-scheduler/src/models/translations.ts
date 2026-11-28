@@ -79,6 +79,9 @@ export interface EventEditingLocaleText extends SchedulerErrorLocaleText {
   // says so instead of promising an edit that can't happen.
   showEventDetails: string;
   eventContextMenuAriaLabel: string;
+  // GridContextMenu (shown on right-click of the grid outside any event)
+  gridContextMenuAriaLabel: string;
+  newEvent: string;
   descriptionLabel: string;
   endDateLabel: string;
   endTimeLabel: string;

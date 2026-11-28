@@ -17,7 +17,9 @@ import { FULL_DAY_MINUTES, getPlainDateTimelineAxis } from '../../internals/util
 import type { BaseTemporal } from '../../internals/utils/base-temporal';
 import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
+import type { GetCreationPlaceholderParams } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
+import { useEventCreationContextMenu } from '../../internals/utils/useEventCreationContextMenu';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
@@ -68,7 +70,11 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     ref: dropTargetRef,
   } = useTimeDropTarget({ axis, addPropertiesToDroppedEvent });
 
-  const eventCreationProps = useEventCreation(({ event, creationConfig, timezone }) => {
+  const getPointerPlaceholderFields = ({
+    event,
+    creationConfig,
+    timezone,
+  }: GetCreationPlaceholderParams) => {
     const offsetMs = getCursorPositionInElementMs({
       input: { clientY: event.clientY },
       elementRef: dropTargetRef,
@@ -84,7 +90,10 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       end: startTimestamp + creationConfig.duration * 60_000,
       resourceId: null,
     };
-  });
+  };
+
+  const eventCreationProps = useEventCreation(getPointerPlaceholderFields);
+  const contextMenuProps = useEventCreationContextMenu(getPointerPlaceholderFields);
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig, timezone }) => {
     const noon = toEpochMs(value.toPlainDateTime({ hour: 12 }), timezone);
@@ -161,6 +170,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       { role: 'gridcell', 'aria-colindex': index + 1 },
       keyboardProps,
       eventCreationProps,
+      contextMenuProps,
       elementProps,
     ],
   });

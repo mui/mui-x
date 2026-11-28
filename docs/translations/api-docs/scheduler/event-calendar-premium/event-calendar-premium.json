@@ -619,6 +619,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the armed-event toolbar edit button element"
     },
+    "gridContextMenu": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the grid context menu root element"
+    },
+    "gridContextMenuNewEventItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the grid context menu new event item element"
+    },
     "headerToolbar": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar element"

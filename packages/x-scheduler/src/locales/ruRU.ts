@@ -54,6 +54,8 @@ const ruRUDialog: SchedulerDialogTranslations = {
   editEvent: 'Редактировать событие',
   showEventDetails: 'Показать подробности',
   eventContextMenuAriaLabel: 'Действия с событием',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'Описание',
   endDateLabel: 'Дата окончания',
   endTimeLabel: 'Время окончания',

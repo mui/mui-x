@@ -7,9 +7,11 @@ import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-intern
 import {
   floorToWallClockMinutes,
   useEventCreation,
+  useEventCreationContextMenu,
   useKeyboardEventCreation,
   timelineAxisOffsetToTimestamp,
 } from '@mui/x-scheduler-internals/internals';
+import type { GetCreationPlaceholderParams } from '@mui/x-scheduler-internals/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-internals/constants';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
@@ -93,7 +95,11 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     addPropertiesToDroppedEvent,
   });
 
-  const eventCreationProps = useEventCreation(({ event, creationConfig, timezone }) => {
+  const getPointerPlaceholderFields = ({
+    event,
+    creationConfig,
+    timezone,
+  }: GetCreationPlaceholderParams) => {
     const offsetMs = getCursorPositionInElementMs({
       input: { clientX: event.clientX },
       elementRef: dropTargetRef,
@@ -114,7 +120,10 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       resourceId,
       lockSurfaceType: true,
     };
-  });
+  };
+
+  const eventCreationProps = useEventCreation(getPointerPlaceholderFields);
+  const contextMenuProps = useEventCreationContextMenu(getPointerPlaceholderFields);
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => {
     // Start at the first visible hour: with a trimmed window an event created at
@@ -186,6 +195,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       },
       keyboardProps,
       eventCreationProps,
+      contextMenuProps,
     ],
   });
 

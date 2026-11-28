@@ -139,11 +139,11 @@ The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) inte
 
 ### Menus and popovers
 
-|                          Keys | Description                                                                                                             |
-| ----------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
-| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, or delete confirmation dialog |
-|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                                       |
-|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below)               |
+|                          Keys | Description                                                                                                                                |
+| ----------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, grid context menu, or delete confirmation dialog |
+|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                                                          |
+|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below)                                  |
 
 ## Live region announcements
 
@@ -205,6 +205,18 @@ Right-clicking an event, or pressing <kbd class="key">Space</kbd> while it is fo
 
 The menu is suppressed on a coarse pointer (touch): activating an event there arms its toolbar instead of opening the dialog directly — which already exposes Edit and Delete — so right-click and <kbd class="key">Space</kbd> fall through to that same behavior rather than opening a redundant menu. This check is on pointer type alone; it doesn't depend on which view or layout is rendering the event.
 
+## Grid context menu
+
+Right-clicking the grid outside any event opens a context menu with a **New event** action.
+It's available in the day, week, and month views of the Event Calendar, and in the Event Timeline.
+
+- The menu exposes `role="menu"` (via MUI's `Menu`) with a localized `aria-label` (default: `"Grid actions"`).
+- **New event** starts the same creation flow as clicking (or double-clicking) the grid: the event starts at the right-clicked time in the day and week views, on the right-clicked day in the month view and the all-day row, and in the right-clicked resource row in the Event Timeline.
+- When event creation is disabled (`eventCreation={false}` or `readOnly`), the menu has no action, so it doesn't open and the browser's native context menu is shown instead.
+- Right-clicking an event still opens the [event context menu](#event-context-menu).
+- Like the event context menu, the menu is suppressed on a coarse pointer (touch).
+- The menu can't be opened from the keyboard yet.
+
 ## Localization of ARIA labels
 
 All user-facing accessible labels are provided through the `localeText` prop and can be customized.
@@ -227,6 +239,10 @@ The following keys are specifically relevant to accessibility:
   // Event context menu
   eventContextMenuAriaLabel: 'Event actions',
   showEventDetails: 'Show details',
+
+  // Grid context menu
+  gridContextMenuAriaLabel: 'Grid actions',
+  newEvent: 'New event',
 
   // Events
   eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,

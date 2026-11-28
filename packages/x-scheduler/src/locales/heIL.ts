@@ -84,6 +84,8 @@ const heILDialog: SchedulerDialogTranslations = {
   editEvent: 'עריכת האירוע',
   showEventDetails: 'הצגת פרטים',
   eventContextMenuAriaLabel: 'פעולות באירוע',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'תיאור',
   endDateLabel: 'תאריך סיום',
   endTimeLabel: 'שעת סיום',

@@ -26,6 +26,8 @@ const deDEDialog: SchedulerDialogTranslations = {
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
+  // gridContextMenuAriaLabel: 'Grid actions',
+  // newEvent: 'New event',
   descriptionLabel: 'Beschreibung',
   endDateLabel: 'Enddatum',
   endTimeLabel: 'Endzeit',

@@ -768,6 +768,18 @@
       "isGlobal": false
     },
     {
+      "key": "gridContextMenu",
+      "className": "MuiEventTimeline-gridContextMenu",
+      "description": "Styles applied to the grid context menu root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "gridContextMenuNewEventItem",
+      "className": "MuiEventTimeline-gridContextMenuNewEventItem",
+      "description": "Styles applied to the grid context menu new event item element.",
+      "isGlobal": false
+    },
+    {
       "key": "header",
       "className": "MuiEventTimeline-header",
       "description": "Styles applied to the generic header (wraps all level rows).",

@@ -9,10 +9,11 @@ import {
   EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { getEventElement } from './dependencyTestUtils';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { getEventElement, getEventRow, mockAllEventRowBounds } from './dependencyTestUtils';
 
 const engineering = ResourceBuilder.new().build();
+const design = ResourceBuilder.new().build();
 
 describe('EventTimelinePremium - Context menu', () => {
   const { renderSettled } = createSchedulerRenderer({
@@ -139,6 +140,72 @@ describe('EventTimelinePremium - Context menu', () => {
       await waitFor(() => {
         expect(document.activeElement).to.equal(row);
       });
+    });
+  });
+
+  describe('grid context menu', () => {
+    it('should start the creation in the right-clicked row when New event is clicked', async () => {
+      const onEventEditingStart = vi.fn();
+      await renderSettled(
+        <EventTimelinePremium
+          resources={[engineering, design]}
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          preset="dayAndMonth"
+          presets={['dayAndMonth']}
+          onEventEditingStart={onEventEditingStart}
+        />,
+      );
+
+      // jsdom has no layout: give the rows a width so the pointer resolves to a time.
+      mockAllEventRowBounds();
+      fireEvent.contextMenu(getEventRow(String(design.id)));
+      expect(screen.getByRole('menu', { name: 'Grid actions' })).not.to.equal(null);
+      fireEvent.click(screen.getByRole('menuitem', { name: 'New event' }));
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      const [occurrence, eventDetails] = onEventEditingStart.mock.calls[0];
+      expect(eventDetails.reason).to.equal('creation');
+      expect(occurrence.resource).to.equal(design.id);
+    });
+
+    it('should open the event context menu, not the grid one, on right-click of an event', async () => {
+      const event = EventBuilder.new()
+        .title('Team Standup')
+        .singleDay('2025-07-03T09:00:00Z', 60)
+        .resource(engineering)
+        .build();
+      await renderSettled(
+        <EventTimelinePremium
+          resources={[engineering]}
+          events={[event]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          preset="dayAndMonth"
+          presets={['dayAndMonth']}
+        />,
+      );
+
+      fireEvent.contextMenu(getEventElement('Team Standup'));
+
+      expect(screen.getByRole('menu', { name: 'Event actions' })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'New event' })).to.equal(null);
+    });
+
+    it('should not open an empty menu when `eventCreation` is `false`', async () => {
+      await renderSettled(
+        <EventTimelinePremium
+          resources={[engineering]}
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          preset="dayAndMonth"
+          presets={['dayAndMonth']}
+          eventCreation={false}
+        />,
+      );
+
+      fireEvent.contextMenu(getEventRow(String(engineering.id)));
+
+      expect(screen.queryByRole('menu')).to.equal(null);
     });
   });
 });
