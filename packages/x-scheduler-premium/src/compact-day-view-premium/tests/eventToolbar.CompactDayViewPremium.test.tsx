@@ -1,5 +1,6 @@
 import { toPlainDate } from '@mui/x-scheduler-internals/internals';
-import { screen, fireEvent, within } from '@mui/internal-test-utils';
+import * as React from 'react';
+import { screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
@@ -120,5 +121,39 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     expect(
       toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC'),
     ).toEqualPlainDate('2025-07-04');
+  });
+
+  it('should move focus to the column of the event once an edit with "Only this event" moves it out of the series', async () => {
+    const initialEvent = EventBuilder.new()
+      .id('event-1')
+      .title('Daily Standup')
+      .recurrent('DAILY')
+      .build();
+    function StatefulCompactDayView() {
+      const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
+      return (
+        <StandaloneCompactDayViewPremium
+          features={{ recurringEvents: recurringEventsFeature }}
+          events={events}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          onEventsChange={setEvents}
+        />
+      );
+    }
+    const { user } = render(<StatefulCompactDayView />);
+    const event = screen.getByRole('button', { name: /Daily Standup/i });
+    const column = event.closest('[role="gridcell"]');
+
+    await user.click(event);
+    await user.click(screen.getByRole('button', { name: 'Edit event' }));
+    await user.type(screen.getByRole('textbox', { name: /Event title/i }), ' (moved)');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('radio', { name: 'Only this event' }));
+    await user.click(screen.getByRole('button', { name: 'Confirm' }));
+
+    expect(event.isConnected).to.equal(false);
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(column);
+    });
   });
 });
