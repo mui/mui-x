@@ -274,7 +274,7 @@ Pass additional props to any slot without replacing the component:
 
 | Slot              | Default                        | Description              |
 | :---------------- | :----------------------------- | :----------------------- |
-| `typingIndicator` | `ChatTypingIndicator`          | Typing dots              |
+| `typingIndicator` | `ChatTypingIndicator`          | Who is typing            |
 | `scrollToBottom`  | `ChatScrollToBottomAffordance` | Floating scroll button   |
 | `suggestions`     | `ChatSuggestions`              | Prompt suggestion chips  |
 | `emptyState`      | _none_                         | Custom empty-thread view |

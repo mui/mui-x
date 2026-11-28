@@ -343,10 +343,13 @@ interface ChatBoxComposerSlotProps {
 /** Standalone widgets. */
 interface ChatBoxWidgetSlots {
   /**
-   * The animated typing indicator shown while the assistant responds.
-   * @default null
+   * The typing indicator rendered between the message list and the composer.
+   * The default renders nothing while no one is typing in the active conversation.
+   * A custom component controls its own visibility: return `null` when `useChatStatus().typingUserIds` is empty to match the default.
+   * Pass `null` to hide it.
+   * @default ChatTypingIndicator
    */
-  typingIndicator?: React.ElementType;
+  typingIndicator?: React.ElementType | null;
   /**
    * The floating scroll-to-bottom button.
    * @default ChatScrollToBottomAffordance
