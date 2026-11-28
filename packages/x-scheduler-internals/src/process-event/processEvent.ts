@@ -83,5 +83,6 @@ export function processEvent(
     draggable: model.draggable,
     resizable: model.resizable,
     className: model.className,
+    href: model.href,
   };
 }

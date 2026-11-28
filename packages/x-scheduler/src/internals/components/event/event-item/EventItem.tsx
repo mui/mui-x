@@ -14,11 +14,13 @@ import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models
 import {
   formatMonthShortAndDayOfMonth,
   getDayNumber,
+  getEventLinkProps,
   getOccurrenceFirstDayNumber,
   getOccurrenceLastDayNumber,
   plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
+import { useEventHref } from '../../../hooks/useEventHref';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
@@ -30,10 +32,17 @@ import { isOccurrenceMultiDay } from '../../../utils/event-utils';
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'EventItemCard',
-})<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
+})<{
+  'data-variant'?: 'compact' | 'filled' | 'regular';
+  palette?: PaletteName;
+  href?: string;
+}>(({ theme }) => ({
+  display: 'block',
   padding: 0,
   borderRadius: theme.shape.borderRadius,
   cursor: 'pointer',
+  color: 'inherit',
+  textDecoration: 'none',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
@@ -188,6 +197,7 @@ export const EventItem = React.forwardRef(function EventItem(
     isRecurring,
     localeText,
   });
+  const href = useEventHref(occurrence);
 
   // The bounds of the occurrence are read in the display timezone, like the day.
   const dayNumber = getDayNumber(date);
@@ -251,38 +261,56 @@ export const EventItem = React.forwardRef(function EventItem(
     }
   }, [variant, formatTime, occurrence, classes]);
 
+  const cardProps = {
+    'data-variant': variant,
+    'data-palette': color,
+    'data-editing': isEditing || undefined,
+    // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
+    'data-event-id': occurrence.id,
+    // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
+    'data-occurrence-timestamp': occurrence.start.epochMilliseconds,
+    'aria-label': accessibleName,
+    ...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {}),
+    ...(endsAfterDay ? { 'data-ending-after-edge': '' } : {}),
+    ...other,
+    className: clsx(className, classes.eventItemCard, occurrence.className),
+  };
+
+  const children = (
+    <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>
+      {content}
+      {isRecurring && (
+        <EventItemRecurringIcon
+          className={classes.eventItemRecurringIcon}
+          aria-hidden="true"
+          fontSize="small"
+        />
+      )}
+    </EventItemCardWrapper>
+  );
+
+  if (href != null) {
+    return (
+      <EventItemCard
+        as="a"
+        ref={forwardedRef}
+        // The agenda's delete-focus fallback finds the events by their `tabindex`.
+        {...getEventLinkProps(href, 0)}
+        data-link=""
+        {...cardProps}
+      >
+        {children}
+      </EventItemCard>
+    );
+  }
+
   return (
     <Button
       nativeButton={false}
       onClick={onClick}
-      render={
-        <EventItemCard
-          ref={forwardedRef}
-          data-variant={variant}
-          data-palette={color}
-          data-editing={isEditing || undefined}
-          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
-          data-event-id={occurrence.id}
-          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
-          data-occurrence-timestamp={occurrence.start.epochMilliseconds}
-          aria-label={accessibleName}
-          {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
-          {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
-          {...other}
-          className={clsx(className, classes.eventItemCard, occurrence.className)}
-        />
-      }
+      render={<EventItemCard ref={forwardedRef} {...cardProps} />}
     >
-      <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>
-        {content}
-        {isRecurring && (
-          <EventItemRecurringIcon
-            className={classes.eventItemRecurringIcon}
-            aria-hidden="true"
-            fontSize="small"
-          />
-        )}
-      </EventItemCardWrapper>
+      {children}
     </Button>
   );
 });

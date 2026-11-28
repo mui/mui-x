@@ -453,7 +453,7 @@ describe('CalendarGrid keyboard navigation', () => {
   });
 
   describe('event tabIndex follows cell focus', () => {
-    function GridWithEvents() {
+    function GridWithEvents(props: { href?: string }) {
       const day1 = createDate('2025-05-05T12:00:00');
       const day2 = addDays(day1, 1);
 
@@ -475,6 +475,7 @@ describe('CalendarGrid keyboard navigation', () => {
                   start={toZonedDateTime(day1.getTime(), 'default')}
                   end={toZonedDateTime(addHours(day1, 1).getTime(), 'default')}
                   renderDragPreview={() => null}
+                  href={props.href}
                   data-testid="event-1"
                 />
               </CalendarGrid.DayCell>
@@ -488,6 +489,7 @@ describe('CalendarGrid keyboard navigation', () => {
                   start={toZonedDateTime(day2.getTime(), 'default')}
                   end={toZonedDateTime(addHours(day2, 1).getTime(), 'default')}
                   renderDragPreview={() => null}
+                  href={props.href}
                   data-testid="event-2"
                 />
               </CalendarGrid.DayCell>
@@ -497,28 +499,34 @@ describe('CalendarGrid keyboard navigation', () => {
       );
     }
 
-    it('should make day events tabbable only when their parent cell is focused', async () => {
-      const { user } = render(<GridWithEvents />);
+    it.each([
+      ['buttons', undefined],
+      ['links', '#event'],
+    ])(
+      'should make day events tabbable only when their parent cell is focused (%s)',
+      async (_, href) => {
+        const { user } = render(<GridWithEvents href={href} />);
 
-      const event1 = screen.getByTestId('event-1');
-      const event2 = screen.getByTestId('event-2');
+        const event1 = screen.getByTestId('event-1');
+        const event2 = screen.getByTestId('event-2');
 
-      // Before any cell is focused, all events are not tabbable
-      expect(event1).to.have.attribute('tabindex', '-1');
-      expect(event2).to.have.attribute('tabindex', '-1');
+        // Before any cell is focused, all events are not tabbable
+        expect(event1).to.have.attribute('tabindex', '-1');
+        expect(event2).to.have.attribute('tabindex', '-1');
 
-      // Focus cell-0 → event-1 becomes tabbable
-      await user.click(screen.getByTestId('cell-0'));
-      expect(event1).to.have.attribute('tabindex', '0');
-      expect(event2).to.have.attribute('tabindex', '-1');
+        // Focus cell-0 → event-1 becomes tabbable
+        await user.click(screen.getByTestId('cell-0'));
+        expect(event1).to.have.attribute('tabindex', '0');
+        expect(event2).to.have.attribute('tabindex', '-1');
 
-      // Navigate to cell-1 → event-2 becomes tabbable, event-1 becomes not tabbable
-      await user.keyboard('{ArrowRight}');
-      expect(event1).to.have.attribute('tabindex', '-1');
-      expect(event2).to.have.attribute('tabindex', '0');
-    });
+        // Navigate to cell-1 → event-2 becomes tabbable, event-1 becomes not tabbable
+        await user.keyboard('{ArrowRight}');
+        expect(event1).to.have.attribute('tabindex', '-1');
+        expect(event2).to.have.attribute('tabindex', '0');
+      },
+    );
 
-    function GridWithTimeEvents() {
+    function GridWithTimeEvents(props: { href?: string }) {
       const day1 = createDate('2025-05-05T12:00:00');
       const day2 = addDays(day1, 1);
 
@@ -536,6 +544,7 @@ describe('CalendarGrid keyboard navigation', () => {
                   start={toZonedDateTime(addHours(day1, 9).getTime(), 'default')}
                   end={toZonedDateTime(addHours(day1, 10).getTime(), 'default')}
                   renderDragPreview={() => null}
+                  href={props.href}
                   data-testid="time-event-1"
                 />
               </CalendarGrid.TimeColumn>
@@ -549,6 +558,7 @@ describe('CalendarGrid keyboard navigation', () => {
                   start={toZonedDateTime(addHours(day2, 9).getTime(), 'default')}
                   end={toZonedDateTime(addHours(day2, 10).getTime(), 'default')}
                   renderDragPreview={() => null}
+                  href={props.href}
                   data-testid="time-event-2"
                 />
               </CalendarGrid.TimeColumn>
@@ -558,25 +568,31 @@ describe('CalendarGrid keyboard navigation', () => {
       );
     }
 
-    it('should make time events tabbable only when their parent column is focused', async () => {
-      const { user } = render(<GridWithTimeEvents />);
+    it.each([
+      ['buttons', undefined],
+      ['links', '#event'],
+    ])(
+      'should make time events tabbable only when their parent column is focused (%s)',
+      async (_, href) => {
+        const { user } = render(<GridWithTimeEvents href={href} />);
 
-      const timeEvent1 = screen.getByTestId('time-event-1');
-      const timeEvent2 = screen.getByTestId('time-event-2');
+        const timeEvent1 = screen.getByTestId('time-event-1');
+        const timeEvent2 = screen.getByTestId('time-event-2');
 
-      // Before any column is focused, all events are not tabbable
-      expect(timeEvent1).to.have.attribute('tabindex', '-1');
-      expect(timeEvent2).to.have.attribute('tabindex', '-1');
+        // Before any column is focused, all events are not tabbable
+        expect(timeEvent1).to.have.attribute('tabindex', '-1');
+        expect(timeEvent2).to.have.attribute('tabindex', '-1');
 
-      // Focus col-0 → time-event-1 becomes tabbable
-      await user.click(screen.getByTestId('col-0'));
-      expect(timeEvent1).to.have.attribute('tabindex', '0');
-      expect(timeEvent2).to.have.attribute('tabindex', '-1');
+        // Focus col-0 → time-event-1 becomes tabbable
+        await user.click(screen.getByTestId('col-0'));
+        expect(timeEvent1).to.have.attribute('tabindex', '0');
+        expect(timeEvent2).to.have.attribute('tabindex', '-1');
 
-      // Navigate to col-1 → time-event-2 becomes tabbable, time-event-1 becomes not tabbable
-      await user.keyboard('{ArrowRight}');
-      expect(timeEvent1).to.have.attribute('tabindex', '-1');
-      expect(timeEvent2).to.have.attribute('tabindex', '0');
-    });
+        // Navigate to col-1 → time-event-2 becomes tabbable, time-event-1 becomes not tabbable
+        await user.keyboard('{ArrowRight}');
+        expect(timeEvent1).to.have.attribute('tabindex', '-1');
+        expect(timeEvent2).to.have.attribute('tabindex', '0');
+      },
+    );
   });
 });

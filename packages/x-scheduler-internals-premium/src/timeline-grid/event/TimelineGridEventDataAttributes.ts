@@ -36,4 +36,8 @@ export enum TimelineGridEventDataAttributes {
    * visible timeline range, or inside the hours the preset config hides.
    */
   endingAfterEdge = 'data-ending-after-edge',
+  /**
+   * Present when the event renders as a link.
+   */
+  link = 'data-link',
 }

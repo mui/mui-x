@@ -71,6 +71,7 @@ Weekday column headers carry a `role="columnheader"` with an `aria-label` contai
 
 Each event element has `role="button"` and an `aria-label` that announces its title, when it happens, its day, its resource, and whether it recurs, for example `"Running, 7:30 AM to 8:30 AM, Monday, May 26, 2025, Resource: Sport, Recurring"`.
 The parts come from [locale text](#localization-of-aria-labels) keys, composed by `eventAriaLabel`.
+A read-only event with an `href` is a native link instead, with the same `aria-label` (see [Events—Link](/x/react-scheduler/event-calendar/events/#link)).
 On the Event Timeline, the announced resource is the one of the row the event is rendered in, and `getEventAriaLabel` can replace the name, for example to include details rendered through the `timelineEventContent` slot.
 
 The previews rendered while creating, dragging or resizing an event, and the placeholders of multi-day events, are hidden from assistive technologies.

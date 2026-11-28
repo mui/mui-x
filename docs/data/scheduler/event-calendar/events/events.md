@@ -132,6 +132,31 @@ const event = {
 
 When defined, it applies to the event root DOM element in all views (Week, Month, Day, and Agenda views).
 
+### Link
+
+Use the `href` property to render an event as a link, for example to the page of the order it represents:
+
+```ts
+const event = {
+  // ...other properties
+  href: '/orders/1042',
+  readOnly: true,
+};
+```
+
+{{"demo": "HrefProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The event must be [read-only](/x/react-scheduler/event-calendar/editing/#read-only), otherwise the `href` is ignored.
+A link event doesn't open the event dialog or the context menu, and has a `data-link` attribute to style it.
+
+To build the URL from other fields of your model, use the `eventModelStructure` prop:
+
+```ts
+const eventModelStructure = {
+  href: { getter: (event) => `/orders/${event.orderId}` },
+};
+```
+
 ### Drag interactions
 
 Use the `draggable` property on the event model to prevent an event from being dragged to a different time slot:

@@ -106,6 +106,30 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     expect(document.activeElement).to.equal(getEvent('evt-d3-h5'));
   });
 
+  it('should move between link events with Tab and Shift+Tab', async () => {
+    const linkEvents = [eventAt(3, 1), eventAt(3, 5)].map((event) => ({
+      ...event,
+      readOnly: true,
+      href: `#${event.title}`,
+    }));
+    const { user } = await renderTimeline({ events: linkEvents });
+
+    await waitFor(() => {
+      expect(getEvent('evt-d3-h1')).not.to.equal(null);
+      expect(getEvent('evt-d3-h5')).not.to.equal(null);
+    });
+    expect(getEvent('evt-d3-h1')!.tagName).to.equal('A');
+
+    act(() => {
+      getEvent('evt-d3-h1')!.focus();
+    });
+    await user.keyboard('{Tab}');
+    expect(document.activeElement).to.equal(getEvent('evt-d3-h5'));
+
+    await user.keyboard('{Shift>}{Tab}{/Shift}');
+    expect(document.activeElement).to.equal(getEvent('evt-d3-h1'));
+  });
+
   it('should reach the focusable content of an event before moving to the next event', async () => {
     function EventContentWithLink(props: TimelineEventContentProps) {
       return (

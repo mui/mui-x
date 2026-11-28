@@ -18,6 +18,7 @@ import {
   getArrowEdgeStyles,
   getPaletteVariants,
   useEventAccessibleName,
+  useEventHref,
   useSchedulerSlots,
 } from '@mui/x-scheduler/internals';
 import type {
@@ -41,6 +42,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-surface-subtle)',
   color: 'var(--event-on-surface-subtle-primary)',
+  textDecoration: 'none',
   padding: theme.spacing(0.5, 1),
   position: 'relative',
   // Keeps the resize handlers' z-index inside the event.
@@ -191,6 +193,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     resourceName: rowResource?.title ?? null,
     localeText,
   });
+  const href = useEventHref(occurrence);
   const accessibleName = getEventAriaLabel
     ? getEventAriaLabel({
         occurrence,
@@ -250,7 +253,8 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   return (
     <TimelineGrid.Event
-      render={<EventTimelinePremiumEventRoot />}
+      render={<EventTimelinePremiumEventRoot as={href != null ? 'a' : undefined} />}
+      href={href}
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}

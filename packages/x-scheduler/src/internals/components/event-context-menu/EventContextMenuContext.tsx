@@ -4,12 +4,15 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { isCoarsePointer, isEventOccurrence } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   captureFocusFallback,
   resolveFocusFallback,
   useMoveFocusOutOnUnmount,
 } from '../../utils/focus-utils';
 import { useEventEditingTriggerProps } from '../event-editing';
+import { useEventHref } from '../../hooks/useEventHref';
 import { EventContextMenu } from './EventContextMenu';
 import type {
   EventContextMenuAnchorPosition,
@@ -137,8 +140,36 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
  * (`editingModePolicy.ts`), and that toolbar already exposes Edit and Delete — so right-click and
  * Space fall through to their default behavior (arm/re-arm) here instead of also opening a
  * redundant menu whose own Edit item would otherwise just re-arm a no-op.
+ *
+ * A link event (a read-only event with an `href`) keeps the native link behavior: it only moves
+ * focus out when it unmounts.
  */
 export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
+  const href = useEventHref(props.occurrence);
+
+  // Two components, so the effects run again when the event becomes a link or stops being one.
+  return href != null ? <EventLinkTrigger {...props} /> : <EventButtonTrigger {...props} />;
+}
+
+function EventLinkTrigger(props: EventContextMenuTriggerProps) {
+  const { occurrence, getFocusFallback, children } = props;
+  const ref = React.useRef<HTMLElement | null>(null);
+  const store = useSchedulerStoreContext();
+
+  // A link has no dialog, so the editing of an event that becomes a link ends.
+  useIsoLayoutEffect(() => {
+    if (schedulerOtherSelectors.isEditedOccurrence(store.state, occurrence.key)) {
+      store.stopEditing();
+    }
+  }, [store, occurrence.key]);
+
+  // The "+N more" popover, which passes `getFocusFallback`, moves focus out of its own items.
+  useMoveFocusOutOnUnmount(ref, occurrence, getFocusFallback == null);
+
+  return React.cloneElement(children as React.ReactElement<any>, { ref });
+}
+
+function EventButtonTrigger(props: EventContextMenuTriggerProps) {
   const { occurrence, onClick, onEditingCanceled, stableAnchor, getFocusFallback, children } =
     props;
   const editing = useEventEditingTriggerProps(occurrence, { onEditingCanceled, stableAnchor });

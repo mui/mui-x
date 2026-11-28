@@ -155,6 +155,9 @@ Use the `readOnly` prop to disable all editing interactions (event creation, dra
 
 {{"demo": "ReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
 
+A read-only event with an `href` renders as a link instead of opening the event dialog.
+See [Events—Link](/x/react-scheduler/event-calendar/events/#link) for details.
+
 ### Only set on some events
 
 #### Per event

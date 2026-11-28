@@ -109,4 +109,44 @@ describe('<CalendarGrid.DayEvent />', () => {
     expect(event).not.to.have.attribute('aria-label');
     expect(event).not.to.have.attribute('aria-labelledby');
   });
+
+  it('should render a link instead of a button when an href is provided', () => {
+    renderEvent(
+      <CalendarGrid.DayEvent
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        start={eventStart}
+        end={eventEnd}
+        renderDragPreview={() => null}
+        href="/orders/1"
+        data-testid="event"
+      />,
+    );
+
+    const event = screen.getByTestId('event');
+    expect(event.tagName).to.equal('A');
+    expect(event).to.have.attribute('href', '/orders/1');
+    expect(event).to.have.attribute('data-link');
+    expect(event).not.to.have.attribute('role');
+    // An `<a href>` is focusable by default, so the roving `tabIndex` must be set explicitly.
+    expect(event).to.have.attribute('tabindex', '-1');
+  });
+
+  it('should render a button when the href is empty', () => {
+    renderEvent(
+      <CalendarGrid.DayEvent
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        start={eventStart}
+        end={eventEnd}
+        renderDragPreview={() => null}
+        href=""
+        data-testid="event"
+      />,
+    );
+
+    const event = screen.getByTestId('event');
+    expect(event.tagName).to.equal('DIV');
+    expect(event).to.have.attribute('role', 'button');
+  });
 });

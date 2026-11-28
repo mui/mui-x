@@ -131,6 +131,31 @@ const event = {
 
 When defined, it applies to the event root DOM element across all views.
 
+### Link
+
+Use the `href` property to render an event as a link, for example to the page of the order it represents:
+
+```ts
+const event = {
+  // ...other properties
+  href: '/orders/1042',
+  readOnly: true,
+};
+```
+
+{{"demo": "HrefProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The event must be [read-only](/x/react-scheduler/event-timeline/editing/#read-only), otherwise the `href` is ignored.
+A link event doesn't open the event dialog or the context menu, and has a `data-link` attribute to style it.
+
+To build the URL from other fields of your model, use the `eventModelStructure` prop:
+
+```ts
+const eventModelStructure = {
+  href: { getter: (event) => `/orders/${event.orderId}` },
+};
+```
+
 ### Drag interactions
 
 Use the `draggable` property on the event model to prevent an event from being dragged to a different time slot:
@@ -223,7 +248,7 @@ A property declared with a `getter` but no `setter` is read-only: the Event Time
 
 Use the `timelineEventContent` slot to replace the text rendered inside an event block.
 The slot receives the `occurrence`, the `resource` of the row it is rendered in and the `variant` of the block.
-It is placed inside the block, so the block keeps its geometry, its drag and resize handles, and its button semantics.
+It is placed inside the block, so the block keeps its geometry, its drag and resize handles, and its role: a button, or a link for a read-only event with an `href`.
 
 {{"demo": "EventContentSlot.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -232,7 +257,7 @@ The slot also renders in the placeholder that previews a drag, a resize or a cre
 The slot doesn't change the accessible name of the event, which is built from its title, dates, resource, and recurrence.
 To announce the details the slot adds, pass `getEventAriaLabel`: it receives the `occurrence`, the row `resource` and the `defaultAriaLabel`, and returns the name to use.
 The demo above appends the ticket code to the default name.
-The block is a button, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
+The block is a button or a link, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
 
 ### Typing custom slot props
 

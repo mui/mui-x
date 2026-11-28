@@ -1,0 +1,7 @@
+<EventTimelinePremium
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  defaultPreset="dayAndMonth"
+  readOnly
+/>

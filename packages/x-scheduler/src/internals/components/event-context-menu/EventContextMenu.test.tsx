@@ -410,9 +410,11 @@ describe('EventContextMenu', () => {
         .readOnly(true)
         .build();
 
-      render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+      const { setProps } = render(
+        <StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
+      );
 
-      return { onEventsChange };
+      return { onEventsChange, setProps, event };
     }
 
     it('should show "Show details" instead of Edit, and no Delete item', () => {
@@ -424,6 +426,19 @@ describe('EventContextMenu', () => {
       expect(screen.getByRole('menuitem', { name: /show details/i })).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: /^edit/i })).to.equal(null);
       expect(screen.queryByRole('menuitem', { name: /delete/i })).to.equal(null);
+    });
+
+    it('should close the menu when its event becomes a link', async () => {
+      const { setProps, event } = renderReadOnlyEvent();
+
+      fireEvent.contextMenu(getEvent(/Read-only event/i));
+      expect(screen.getByRole('menu')).not.to.equal(null);
+
+      setProps({ events: [{ ...event, href: '#details' }] });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
     });
 
     it('should open the read-only view, not the edit form, when "Show details" is clicked', () => {

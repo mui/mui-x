@@ -1,10 +1,16 @@
 import * as React from 'react';
-import { createDate, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import {
+  createDate,
+  createSchedulerRenderer,
+  EventBuilder,
+  getEventNamePattern,
+} from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { screen } from '@mui/internal-test-utils';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { describe, it, expect } from 'vitest';
 import { MonthView } from '../../../../month-view';
+import { AgendaView } from '../../../../agenda-view';
 import { EventCalendarProvider } from '../../EventCalendarProvider';
 import { EventDialogProvider } from '../../event-dialog';
 
@@ -89,5 +95,33 @@ describe('<EventItem />', () => {
         'pointer',
       );
     });
+  });
+
+  it('should render a read-only event with an href as a link that keeps the item attributes', () => {
+    const event = EventBuilder.new()
+      .title('Order 1042')
+      .singleDay('2025-05-06T09:00:00Z')
+      .readOnly()
+      .href('#order-1042')
+      .build();
+    render(
+      <EventCalendarProvider
+        events={[event]}
+        resources={[]}
+        visibleDate={createDate('2025-05-06T00:00:00Z')}
+      >
+        <EventDialogProvider>
+          <AgendaView />
+        </EventDialogProvider>
+      </EventCalendarProvider>,
+    );
+
+    const link = screen.getByRole('link', { name: getEventNamePattern('Order 1042') });
+    expect(link).to.have.attribute('href', '#order-1042');
+    expect(link).to.have.attribute('data-link');
+    // Read by the agenda's delete-focus fallback.
+    expect(link).to.have.attribute('tabindex', '0');
+    expect(link).to.have.attribute('data-event-id', String(event.id));
+    expect(link).to.have.attribute('data-occurrence-timestamp');
   });
 });

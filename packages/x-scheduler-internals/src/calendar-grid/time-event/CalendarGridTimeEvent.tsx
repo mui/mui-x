@@ -7,6 +7,7 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
+import { getEventLinkProps } from '../../internals/utils/event-link-props';
 import { computeElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import type { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
@@ -32,6 +33,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     elementPosition: elementPositionProp,
     nativeButton = false,
     interactive = true,
+    href,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -107,19 +109,24 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     position: elementPosition,
   });
 
+  // An empty `href` would link to the current page.
+  const isLink = interactive && !!href;
+  const tabIndex = columnHasFocus ? 0 : -1;
   const { getButtonProps, buttonRef } = useButton({
     disabled: false,
-    native: nativeButton,
-    tabIndex: columnHasFocus ? 0 : -1,
+    native: nativeButton && !isLink,
+    tabIndex,
   });
+
+  const mergedState = { ...state, link: isLink };
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
   );
 
-  const element = useRenderElement('div', componentProps, {
-    state,
+  const element = useRenderElement(isLink ? 'a' : 'div', componentProps, {
+    state: mergedState,
     ref: [forwardedRef, buttonRef, ref],
     props: [
       elementProps,
@@ -129,7 +136,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
           [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
         } as React.CSSProperties,
       },
-      ...(interactive ? [getButtonProps] : []),
+      // A link keeps the native link behavior, so it only needs the roving `tabIndex`.
+      ...(interactive ? [isLink ? getEventLinkProps(href, tabIndex) : getButtonProps] : []),
     ],
   });
 
@@ -142,7 +150,12 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
 });
 
 export namespace CalendarGridTimeEvent {
-  export interface State extends useDraggableEvent.State {}
+  export interface State extends useDraggableEvent.State {
+    /**
+     * Whether the event renders as a link.
+     */
+    link: boolean;
+  }
 
   export interface Props
     extends
@@ -150,12 +163,18 @@ export namespace CalendarGridTimeEvent {
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters {
     /**
-     * Whether the event behaves like a button: `role="button"` and a roving `tabIndex`.
+     * Whether the event behaves like a button, or like a link when `href` is set, with a roving `tabIndex`.
      * Set it to `false` for an inert preview (creation / resize placeholder) that
      * only hosts pointer interactions — it then renders a plain `div`, so it is never focusable.
      * @default true
      */
     interactive?: boolean;
+    /**
+     * The URL the event links to.
+     * When provided, the event renders as a link instead of a button, unless `interactive` is `false`.
+     * A custom `render` element must be an `<a>`.
+     */
+    href?: string;
     /**
      * The position of the event in its column, computed from `start` and `end` when not provided.
      */

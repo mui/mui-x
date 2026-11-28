@@ -1,0 +1,6 @@
+<EventCalendar
+  events={events}
+  defaultVisibleDate={defaultVisibleDate}
+  defaultPreferences={{ isSidePanelOpen: false }}
+  readOnly
+/>
