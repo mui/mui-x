@@ -6,24 +6,24 @@ import type { GridGetRowsParamsPro } from './models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
-export enum RequestStatus {
-  QUEUED,
-  PENDING,
-  SETTLED,
-  UNKNOWN,
-}
+// Two requests for the same row are the same request when they ask for the same range.
+const getRequestKey = (fetchParams: GridGetRowsParamsPro | undefined) =>
+  fetchParams?.start === undefined ? '' : `${fetchParams.start}-${fetchParams.end}`;
 
 /**
  * Fetches row children from the server with option to limit the number of concurrent requests
- * Determines the status of a request based on the enum `RequestStatus`
- * Uses `GridRowId` to uniquely identify a request
+ * Queues requests by `GridRowId`; `getGeneration()` tells the responses of aborted requests apart
  */
 export class NestedDataManager {
   private pendingRequests: Set<GridRowId> = new Set();
 
   private queuedRequests: Set<GridRowId> = new Set();
 
-  private settledRequests: Set<GridRowId> = new Set();
+  // The requests of each row that are queued or pending, by request key.
+  private activeRequestKeys: Map<GridRowId, Set<string>> = new Map();
+
+  // Bumped by `clear()`, so the responses of the aborted requests can be told apart.
+  private generation = 0;
 
   private fetchParams: Map<GridRowId, GridGetRowsParamsPro> = new Map();
 
@@ -67,14 +67,26 @@ export class NestedDataManager {
   ) => {
     const loadingIds: Record<GridRowId, boolean> = {};
     ids.forEach((id, index) => {
+      if (showChildrenLoading) {
+        loadingIds[id] = true;
+      }
+      const requestKey = getRequestKey(fetchParams?.[index]);
+      const activeKeys = this.activeRequestKeys.get(id) ?? new Set();
+      // The same request is already on its way, its response serves this one too.
+      if (activeKeys.has(requestKey)) {
+        return;
+      }
+      if (this.queuedRequests.has(id)) {
+        // Only the latest params of a queued row are sent.
+        activeKeys.delete(getRequestKey(this.fetchParams.get(id)));
+      }
+      activeKeys.add(requestKey);
+      this.activeRequestKeys.set(id, activeKeys);
       this.queuedRequests.add(id);
       if (fetchParams?.[index]) {
         this.fetchParams.set(id, fetchParams[index]);
       } else {
         this.fetchParams.delete(id);
-      }
-      if (showChildrenLoading) {
-        loadingIds[id] = true;
       }
     });
     if (showChildrenLoading) {
@@ -92,35 +104,30 @@ export class NestedDataManager {
     this.processQueue();
   };
 
-  public setRequestSettled = (id: GridRowId) => {
-    this.pendingRequests.delete(id);
-    this.settledRequests.add(id);
+  public setRequestSettled = (id: GridRowId, fetchParams?: GridGetRowsParamsPro) => {
+    const activeKeys = this.activeRequestKeys.get(id);
+    activeKeys?.delete(getRequestKey(fetchParams));
+    // Another range of the same row can still be pending.
+    if (!activeKeys || activeKeys.size === 0) {
+      this.activeRequestKeys.delete(id);
+      this.pendingRequests.delete(id);
+    }
     this.processQueue();
   };
 
   public clear = () => {
+    this.generation += 1;
     this.queuedRequests.clear();
+    this.activeRequestKeys.clear();
     Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
   };
 
-  public clearPendingRequest = (id: GridRowId) => {
+  public clearPendingRequest = (id: GridRowId, fetchParams?: GridGetRowsParamsPro) => {
     this.api.dataSource.setChildrenLoading(id, false);
-    this.pendingRequests.delete(id);
-    this.processQueue();
+    this.setRequestSettled(id, fetchParams);
   };
 
-  public getRequestStatus = (id: GridRowId) => {
-    if (this.pendingRequests.has(id)) {
-      return RequestStatus.PENDING;
-    }
-    if (this.queuedRequests.has(id)) {
-      return RequestStatus.QUEUED;
-    }
-    if (this.settledRequests.has(id)) {
-      return RequestStatus.SETTLED;
-    }
-    return RequestStatus.UNKNOWN;
-  };
+  public getGeneration = () => this.generation;
 
   public getActiveRequestsCount = () => this.pendingRequests.size + this.queuedRequests.size;
 }

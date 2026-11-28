@@ -17,6 +17,10 @@ import type {
 } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import { TestCache } from '@mui/x-data-grid/internals';
+import {
+  gridDataSourceErrorSelector,
+  gridDataSourceLoadingIdSelector,
+} from '@mui/x-data-grid-pro/internals';
 import { describe, it, expect, vi, onTestFinished, beforeEach } from 'vitest';
 
 // Needs layout
@@ -219,6 +223,75 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         ]);
       },
     );
+
+    it('should run a queued nested viewport fetch when the Activity is hidden', async () => {
+      const rows = Array.from({ length: 30 }, (_, i) => ({
+        id: i,
+        name: `Row ${i}`,
+        childrenCount: 0,
+      }));
+      const getRows = vi.fn(async (params: GridGetRowsParams) => ({
+        rows: rows.slice(params.start as number, (params.end as number) + 1),
+        rowCount: rows.length,
+      }));
+      const dataSource: GridDataSource = {
+        getRows,
+        getGroupKey: (row) => row.name,
+        getChildrenCount: (row) => row.childrenCount,
+      };
+
+      function Test({ mode = 'visible' }: { mode?: 'visible' | 'hidden' }) {
+        apiRef = useGridApiRef();
+        return (
+          <React.Activity mode={mode}>
+            <div style={{ width: 300, height: gridHeight }}>
+              <DataGridPro
+                apiRef={apiRef}
+                columns={[{ field: 'name' }]}
+                dataSource={dataSource}
+                dataSourceCache={null}
+                lazyLoading
+                lazyLoadingRequestThrottleMs={0}
+                treeData
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+                }}
+              />
+            </div>
+          </React.Activity>
+        );
+      }
+
+      const { setProps } = render(<Test />);
+      await waitFor(() => expect(apiRef.current!.getRow(0)).not.to.equal(null));
+      const callCountBeforeScroll = getRows.mock.calls.length;
+
+      vi.useFakeTimers();
+      onTestFinished(() => {
+        vi.useRealTimers();
+      });
+      // Queue the debounced fetch of the next chunk, then hide the grid before it runs.
+      act(() => {
+        apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 12,
+          lastRowIndex: 18,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+        vi.advanceTimersByTime(0);
+      });
+      expect(getRows.mock.calls.length).to.equal(callCountBeforeScroll);
+      act(() => {
+        setProps({ mode: 'hidden' });
+      });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(50);
+      });
+
+      expect(
+        getRows.mock.calls.slice(callCountBeforeScroll).map(([params]) => params.start),
+      ).to.include(10);
+    });
   }
 
   it('should load the first page initially', async () => {
@@ -1306,6 +1379,86 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       vi.useRealTimers();
     });
 
+    it('should not apply a queued root revalidation over the sort response', async () => {
+      const names = Array.from({ length: 30 }, (_, index) => `R${String(index).padStart(2, '0')}`);
+      const getRows = vi.fn(async (params: GridGetRowsParams) => {
+        const sorted = params.sortModel?.[0]?.sort === 'desc' ? [...names].reverse() : names;
+        const rows = sorted.map((name) => ({ id: name, name, childrenCount: 0 }));
+        return {
+          rows: rows.slice(params.start as number, (params.end as number) + 1),
+          rowCount: rows.length,
+        };
+      });
+      const dataSource: GridDataSource = {
+        getRows,
+        getGroupKey: (row) => row.name,
+        getChildrenCount: (row) => row.childrenCount,
+      };
+
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: gridHeight }}>
+            <DataGridPro
+              apiRef={apiRef}
+              columns={[{ field: 'name' }]}
+              dataSource={dataSource}
+              lazyLoading
+              lazyLoadingRequestThrottleMs={0}
+              treeData
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+            />
+          </div>
+        );
+      }
+
+      render(<Test />);
+      await waitFor(() => expect(apiRef.current!.getRow('R00')).not.to.equal(null));
+      act(() => {
+        apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 12,
+          lastRowIndex: 18,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+      });
+      await waitFor(() => expect(apiRef.current!.getRow('R19')).not.to.equal(null));
+
+      vi.useFakeTimers();
+      onTestFinished(() => {
+        vi.useRealTimers();
+      });
+      // Queue a root revalidation of the loaded rows, then sort before it runs
+      act(() => {
+        apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 10,
+          lastRowIndex: 16,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+        vi.advanceTimersByTime(0);
+      });
+      act(() => {
+        apiRef.current!.sortColumn('name', 'desc');
+      });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(50);
+      });
+      vi.useRealTimers();
+      await act(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 100);
+        });
+      });
+
+      const rootChildren = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+        .children;
+      const loadedRows = rootChildren.filter((id) => typeof id === 'string' && id.startsWith('R'));
+      expect(loadedRows).to.deep.equal([...loadedRows].sort().reverse());
+    });
+
     it('should not send a queued root revalidation after unmount', async () => {
       const getRows = vi.fn<GridDataSource['getRows']>(() =>
         Promise.resolve({
@@ -1654,6 +1807,665 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(localFetchRowsSpy.mock.calls.length).to.equal(0);
 
       vi.useRealTimers();
+    });
+
+    // https://github.com/mui/mui-x/issues/22715
+    describe('concurrent root and children requests', () => {
+      type DeferredRequest = {
+        params: GridGetRowsParams;
+        resolve: () => void;
+        reject: (error: Error) => void;
+      };
+      let deferredRequests: DeferredRequest[] = [];
+
+      beforeEach(() => {
+        deferredRequests = [];
+      });
+
+      const isRootRequest = (params: GridGetRowsParams) => (params.groupKeys ?? []).length === 0;
+
+      const resolveDeferredRequests = (
+        predicate: (params: GridGetRowsParams) => boolean = () => true,
+      ) => {
+        const requestsToResolve = deferredRequests.filter((request) => predicate(request.params));
+        deferredRequests = deferredRequests.filter((request) => !predicate(request.params));
+        requestsToResolve.forEach((request) => request.resolve());
+      };
+
+      const waitForPendingChildrenRequests = async (groupKeys: string[]) =>
+        waitFor(() => {
+          const pendingGroupKeys = deferredRequests.map((request) =>
+            JSON.stringify(request.params.groupKeys),
+          );
+          groupKeys.forEach((key) => expect(pendingGroupKeys).to.include(key));
+        });
+
+      const concurrentTreeRows: Record<string, Omit<TreeRow, 'value'>[]> = {
+        '[]': [
+          { id: 'P1', name: 'P1', childrenCount: 2 },
+          { id: 'P2', name: 'P2', childrenCount: 2 },
+          { id: 'R1', name: 'R1', childrenCount: 0 },
+        ],
+        '["P1"]': [
+          { id: 'P1-0', name: 'P1-0', childrenCount: 0 },
+          { id: 'P1-1', name: 'P1-1', childrenCount: 0 },
+        ],
+        '["P2"]': [
+          { id: 'P2-0', name: 'P2-0', childrenCount: 0 },
+          { id: 'P2-1', name: 'P2-1', childrenCount: 0 },
+        ],
+      };
+
+      function TestConcurrentRequests(
+        props: Partial<DataGridProProps> & {
+          onFetchRows?: (params: GridGetRowsParams) => void;
+          deferRequest?: (params: GridGetRowsParams) => boolean;
+          treeRows?: typeof concurrentTreeRows;
+        },
+      ) {
+        const {
+          onFetchRows,
+          deferRequest = (params: GridGetRowsParams) => !isRootRequest(params),
+          treeRows = concurrentTreeRows,
+          ...other
+        } = props;
+        const requestCountRef = React.useRef(0);
+        apiRef = useGridApiRef();
+
+        const dataSource: GridDataSource = React.useMemo(
+          () => ({
+            getRows: async (params: GridGetRowsParams) => {
+              requestCountRef.current += 1;
+              onFetchRows?.(params);
+
+              const groupKeys = params.groupKeys ?? [];
+              const allRows = (treeRows[JSON.stringify(groupKeys)] ?? []).map((row) => ({
+                ...row,
+                value: requestCountRef.current,
+              }));
+              const start = typeof params.start === 'number' ? params.start : 0;
+              const end = typeof params.end === 'number' ? params.end : allRows.length - 1;
+              const response = {
+                rows: allRows.slice(start, end + 1),
+                rowCount: allRows.length,
+              };
+
+              if (deferRequest(params)) {
+                await new Promise<void>((resolve, reject) => {
+                  deferredRequests.push({ params, resolve, reject });
+                });
+              }
+
+              return response;
+            },
+            getGroupKey: (row) => row.name,
+            getChildrenCount: (row) => row.childrenCount,
+          }),
+          [onFetchRows, deferRequest, treeRows],
+        );
+
+        return (
+          <div style={{ width: 300, height: 10 * rowHeight + columnHeaderHeight + 2 }}>
+            <DataGridPro
+              apiRef={apiRef}
+              columns={[
+                { field: 'name', width: 160 },
+                { field: 'value', width: 120 },
+              ]}
+              dataSource={dataSource}
+              dataSourceCache={null}
+              lazyLoading
+              treeData
+              defaultGroupingExpansionDepth={-1}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+              rowHeight={rowHeight}
+              columnHeaderHeight={columnHeaderHeight}
+              disableVirtualization={false}
+              {...other}
+            />
+          </div>
+        );
+      }
+
+      it('should apply the children responses that are in flight when the root rows are revalidated', async () => {
+        const localFetchRowsSpy = vi.fn();
+        render(
+          <TestConcurrentRequests dataSourceRevalidateMs={50} onFetchRows={localFetchRowsSpy} />,
+        );
+
+        await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+
+        const countRootRequests = () =>
+          localFetchRowsSpy.mock.calls.filter(([params]) =>
+            isRootRequest(params as GridGetRowsParams),
+          ).length;
+        const countRequestsFor = (groupKeys: string) =>
+          localFetchRowsSpy.mock.calls.filter(
+            ([params]) => JSON.stringify((params as GridGetRowsParams).groupKeys) === groupKeys,
+          ).length;
+        const rootRequestsBeforeRevalidation = countRootRequests();
+        const inFlightChildrenRequests = deferredRequests.filter(
+          (request) => !isRootRequest(request.params),
+        );
+
+        await waitFor(() => {
+          expect(countRootRequests()).to.be.greaterThan(rootRequestsBeforeRevalidation);
+        });
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 150);
+          });
+        });
+
+        // Nothing re-requests an aborted request, so these are the only ones
+        expect(countRequestsFor('["P1"]')).to.equal(1);
+        expect(countRequestsFor('["P2"]')).to.equal(1);
+
+        inFlightChildrenRequests.forEach((request) => request.resolve());
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow('P1-0')).not.to.equal(null);
+          expect(apiRef.current!.getRow('P1-1')).not.to.equal(null);
+          expect(apiRef.current!.getRow('P2-0')).not.to.equal(null);
+          expect(apiRef.current!.getRow('P2-1')).not.to.equal(null);
+        });
+      });
+
+      const threePagesTreeRows = {
+        ...concurrentTreeRows,
+        '[]': [
+          ...concurrentTreeRows['[]'],
+          ...Array.from({ length: 27 }, (_, index) => ({
+            id: `R${index + 2}`,
+            name: `R${index + 2}`,
+            childrenCount: 0,
+          })),
+        ],
+      };
+
+      it('should apply the children responses that are in flight when the next root rows are loaded', async () => {
+        const localFetchRowsSpy = vi.fn();
+        render(
+          <TestConcurrentRequests
+            treeRows={threePagesTreeRows}
+            onFetchRows={localFetchRowsSpy}
+            lazyLoadingRequestThrottleMs={0}
+          />,
+        );
+
+        await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+        const inFlightChildrenRequests = deferredRequests.splice(0);
+
+        // Rows 14+ are the root skeletons past the first page
+        act(() => {
+          apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+            firstRowIndex: 12,
+            lastRowIndex: 18,
+            firstColumnIndex: 0,
+            lastColumnIndex: 0,
+          });
+        });
+        await waitFor(() => {
+          expect(apiRef.current!.getRow('R10')).not.to.equal(null);
+        });
+
+        inFlightChildrenRequests.forEach((request) => request.resolve());
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow('P1-0')).not.to.equal(null);
+          expect(apiRef.current!.getRow('P2-0')).not.to.equal(null);
+        });
+        expect(
+          localFetchRowsSpy.mock.calls.filter(
+            ([params]) => JSON.stringify((params as GridGetRowsParams).groupKeys) === '["P1"]',
+          ).length,
+        ).to.equal(1);
+      });
+
+      [
+        {
+          label: 'sort',
+          updateModel: () => apiRef.current!.sortColumn('name', 'desc'),
+          deferRequest: (params: GridGetRowsParams) =>
+            !isRootRequest(params) || (params.sortModel ?? []).length > 0,
+        },
+        {
+          label: 'filter',
+          updateModel: () =>
+            apiRef.current!.setFilterModel({
+              items: [{ field: 'name', operator: 'contains', value: 'P' }],
+            }),
+          deferRequest: (params: GridGetRowsParams) =>
+            !isRootRequest(params) || (params.filterModel?.items ?? []).length > 0,
+        },
+      ].forEach(({ label, updateModel, deferRequest }) => {
+        it(`should drop the children responses computed for the previous ${label} model`, async () => {
+          render(<TestConcurrentRequests deferRequest={deferRequest} />);
+
+          await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+          const staleRequests = deferredRequests.splice(0);
+
+          // Held back so the stale children responses resolve before the tree is rebuilt
+          await act(async () => updateModel());
+          await waitFor(() => {
+            expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(
+              true,
+            );
+          });
+
+          staleRequests.forEach((request) => request.resolve());
+          await act(async () => {
+            await new Promise((resolve) => {
+              setTimeout(resolve, 0);
+            });
+          });
+          expect(apiRef.current!.getRow('P1-0')).to.equal(null);
+          expect(apiRef.current!.getRow('P2-0')).to.equal(null);
+
+          resolveDeferredRequests((params) => isRootRequest(params));
+          await waitFor(() => {
+            resolveDeferredRequests();
+            expect(apiRef.current!.getRow('P1-0')).not.to.equal(null);
+            expect(apiRef.current!.getRow('P2-0')).not.to.equal(null);
+          });
+        });
+      });
+
+      const deferChildrenAndSortedRootRequests = (params: GridGetRowsParams) =>
+        !isRootRequest(params) || (params.sortModel ?? []).length > 0;
+
+      it('should drop the children response of a group aborted more than once', async () => {
+        render(<TestConcurrentRequests deferRequest={deferChildrenAndSortedRootRequests} />);
+
+        await waitForPendingChildrenRequests(['["P1"]']);
+        resolveDeferredRequests();
+        await waitFor(() => expect(apiRef.current!.getRow('P1-0')).not.to.equal(null));
+
+        await act(async () => apiRef.current!.sortColumn('name', 'desc'));
+        await waitFor(() => {
+          expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(true);
+        });
+        // The rebuilt tree requests the children again
+        resolveDeferredRequests((params) => isRootRequest(params));
+        await waitForPendingChildrenRequests(['["P1"]']);
+        const twiceAbortedRequests = deferredRequests.splice(0);
+
+        await act(async () => apiRef.current!.sortColumn('name', 'asc'));
+        await waitFor(() => {
+          expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(true);
+        });
+
+        twiceAbortedRequests.forEach((request) => request.resolve());
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+          });
+        });
+
+        expect(apiRef.current!.getRow('P1-0')).to.equal(null);
+      });
+
+      describe('children re-requested by the rebuilt tree', () => {
+        const rebuildWhileChildrenLoad = async (
+          props: Pick<DataGridProProps, 'onDataSourceError'> = {},
+        ) => {
+          render(
+            <TestConcurrentRequests deferRequest={deferChildrenAndSortedRootRequests} {...props} />,
+          );
+          await waitForPendingChildrenRequests(['["P1"]']);
+          const staleRequests = deferredRequests.splice(0);
+
+          await act(async () => apiRef.current!.sortColumn('name', 'desc'));
+          await waitFor(() => {
+            expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(
+              true,
+            );
+          });
+          resolveDeferredRequests((params) => isRootRequest(params));
+          await waitForPendingChildrenRequests(['["P1"]']);
+          return staleRequests;
+        };
+
+        it('should drop a stale children response that lands while the new request is pending', async () => {
+          const staleRequests = await rebuildWhileChildrenLoad();
+
+          staleRequests.forEach((request) => request.resolve());
+          await act(async () => {
+            await new Promise((resolve) => {
+              setTimeout(resolve, 0);
+            });
+          });
+
+          expect(apiRef.current!.getRow('P1-0')).to.equal(null);
+          expect(gridDataSourceLoadingIdSelector(apiRef, 'P1')).to.equal(true);
+        });
+
+        it('should ignore a stale children request that fails while the new request is pending', async () => {
+          const onDataSourceError = vi.fn();
+          const staleRequests = await rebuildWhileChildrenLoad({ onDataSourceError });
+
+          staleRequests.forEach((request) => request.reject(new Error('Network error')));
+          await act(async () => {
+            await new Promise((resolve) => {
+              setTimeout(resolve, 0);
+            });
+          });
+
+          expect(onDataSourceError.mock.calls.length).to.equal(0);
+          expect(gridDataSourceErrorSelector(apiRef, 'P1')).to.equal(undefined);
+          expect(gridDataSourceLoadingIdSelector(apiRef, 'P1')).to.equal(true);
+        });
+
+        it('should drop a stale children response that lands after the new one', async () => {
+          const staleRequests = await rebuildWhileChildrenLoad();
+          resolveDeferredRequests();
+          await waitFor(() => expect(apiRef.current!.getRow('P1-0')).not.to.equal(null));
+          const { value } = apiRef.current!.getRow('P1-0');
+
+          staleRequests.forEach((request) => request.resolve());
+          await act(async () => {
+            await new Promise((resolve) => {
+              setTimeout(resolve, 0);
+            });
+          });
+
+          expect(apiRef.current!.getRow('P1-0').value).to.equal(value);
+        });
+      });
+
+      it('should not fetch root skeleton rows while the tree is being rebuilt', async () => {
+        const localFetchRowsSpy = vi.fn();
+        const { user } = render(
+          <TestConcurrentRequests
+            treeRows={threePagesTreeRows}
+            deferRequest={(params) =>
+              !isRootRequest(params) ||
+              (params.sortModel ?? []).length > 0 ||
+              (params.start as number) > 0
+            }
+            onFetchRows={localFetchRowsSpy}
+            defaultGroupingExpansionDepth={0}
+          />,
+        );
+        // The root skeleton rows past the first page stay, their response is held back
+        await waitFor(() => {
+          expect(
+            deferredRequests.some(
+              (request) => isRootRequest(request.params) && request.params.start === 10,
+            ),
+          ).to.equal(true);
+        });
+
+        await act(async () => apiRef.current!.sortColumn('name', 'desc'));
+        await waitFor(() => {
+          expect(
+            deferredRequests.some(
+              (request) =>
+                isRootRequest(request.params) && (request.params.sortModel ?? []).length > 0,
+            ),
+          ).to.equal(true);
+        });
+
+        const requestsBeforeExpansion = localFetchRowsSpy.mock.calls.length;
+        await user.click(within(getCell(0, 0)).getByRole('button'));
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+          });
+        });
+
+        const requestsAfterExpansion = localFetchRowsSpy.mock.calls
+          .slice(requestsBeforeExpansion)
+          .map(([params]) => params as GridGetRowsParams);
+        expect(requestsAfterExpansion.filter(isRootRequest)).to.have.length(0);
+      });
+
+      it('should fetch the children of a group expanded after a failed sort request', async () => {
+        const onDataSourceError = vi.fn();
+        const localFetchRowsSpy = vi.fn();
+        localFetchRowsSpy.mockImplementation((params: GridGetRowsParams) => {
+          if (isRootRequest(params) && (params.sortModel ?? []).length > 0) {
+            throw new Error('Network error');
+          }
+        });
+        const { user } = render(
+          <TestConcurrentRequests
+            deferRequest={() => false}
+            onFetchRows={localFetchRowsSpy}
+            onDataSourceError={onDataSourceError}
+            defaultGroupingExpansionDepth={0}
+          />,
+        );
+        await waitFor(() => expect(apiRef.current!.getRow('P1')).not.to.equal(null));
+
+        await act(async () => apiRef.current!.sortColumn('name', 'desc'));
+        await waitFor(() => expect(onDataSourceError.mock.calls.length).to.equal(1));
+
+        await user.click(within(getCell(0, 0)).getByRole('button'));
+        await waitFor(() => {
+          expect(
+            localFetchRowsSpy.mock.calls.some(
+              ([params]) => JSON.stringify(params.groupKeys) === '["P1"]',
+            ),
+          ).to.equal(true);
+        });
+      });
+
+      it('should ignore the children response of a group that a root refresh turned into a leaf', async () => {
+        const treeRows = { ...concurrentTreeRows };
+        const onDataSourceError = vi.fn();
+        render(
+          <TestConcurrentRequests
+            treeRows={treeRows}
+            dataSourceRevalidateMs={50}
+            onDataSourceError={onDataSourceError}
+          />,
+        );
+        await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+        const inFlightChildrenRequests = deferredRequests.splice(0);
+
+        treeRows['[]'] = [
+          { id: 'X', name: 'X', childrenCount: 0 },
+          { id: 'P1', name: 'P1', childrenCount: 0 },
+          { id: 'P2', name: 'P2', childrenCount: 2 },
+          { id: 'R1', name: 'R1', childrenCount: 0 },
+        ];
+        await waitFor(() => expect(apiRef.current!.getRow('X')).not.to.equal(null));
+
+        inFlightChildrenRequests.forEach((request) => request.resolve());
+        await waitFor(() => expect(apiRef.current!.getRow('P2-0')).not.to.equal(null));
+
+        expect(onDataSourceError.mock.calls.length).to.equal(0);
+        expect(apiRef.current!.getRow('P1-0')).to.equal(null);
+      });
+
+      [
+        { label: '`dataSource.fetchRows()`', failRefresh: false },
+        { label: 'a `dataSource.fetchRows()` that fails', failRefresh: true },
+      ].forEach(({ label, failRefresh }) => {
+        it(`should request again the children aborted by ${label}`, async () => {
+          const onDataSourceError = vi.fn();
+          let rootRequestCount = 0;
+          const onFetchRows = vi.fn();
+          onFetchRows.mockImplementation((params: GridGetRowsParams) => {
+            if (!isRootRequest(params)) {
+              return;
+            }
+            rootRequestCount += 1;
+            if (failRefresh && rootRequestCount > 1) {
+              throw new Error('Network error');
+            }
+          });
+          render(
+            <TestConcurrentRequests
+              onFetchRows={onFetchRows}
+              onDataSourceError={onDataSourceError}
+            />,
+          );
+
+          await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+          const abortedRequests = deferredRequests.splice(0);
+
+          await act(async () => apiRef.current!.dataSource.fetchRows());
+          expect(rootRequestCount).to.equal(2);
+          expect(onDataSourceError.mock.calls.length).to.equal(failRefresh ? 1 : 0);
+
+          abortedRequests.forEach((request) => request.resolve());
+          await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+          resolveDeferredRequests();
+
+          await waitFor(() => {
+            expect(apiRef.current!.getRow('P1-0')).not.to.equal(null);
+            expect(apiRef.current!.getRow('P2-0')).not.to.equal(null);
+          });
+        });
+      });
+
+      describe('children requests in flight', () => {
+        const getRequestedRanges = (fetchRowsMock: ReturnType<typeof vi.fn>, groupKeys: string) =>
+          fetchRowsMock.mock.calls
+            .map(([params]) => params as GridGetRowsParams)
+            .filter((params) => JSON.stringify(params.groupKeys) === groupKeys)
+            .map((params) => `${params.start}-${params.end}`);
+
+        it('should not request again a group whose children request is in flight', async () => {
+          const onFetchRows = vi.fn();
+          render(<TestConcurrentRequests onFetchRows={onFetchRows} />);
+
+          await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
+          resolveDeferredRequests((params) => JSON.stringify(params.groupKeys) === '["P1"]');
+          await waitFor(() => expect(apiRef.current!.getRow('P1-0')).not.to.equal(null));
+
+          // Collapsing a sibling scans the viewport, where the skeleton rows of P2 still are
+          await act(async () => apiRef.current!.setRowChildrenExpansion('P1', false));
+
+          expect(getRequestedRanges(onFetchRows, '["P2"]')).to.deep.equal(['0-9']);
+
+          resolveDeferredRequests();
+          await waitFor(() => expect(apiRef.current!.getRow('P2-0')).not.to.equal(null));
+        });
+
+        it('should still request another range of a group whose children request is in flight', async () => {
+          const onFetchRows = vi.fn();
+          const treeRows = {
+            '[]': [{ id: 'P1', name: 'P1', childrenCount: 30 }],
+            '["P1"]': Array.from({ length: 30 }, (_, index) => ({
+              id: `P1-${index}`,
+              name: `P1-${index}`,
+              childrenCount: 0,
+            })),
+          };
+          render(
+            <TestConcurrentRequests
+              treeRows={treeRows}
+              onFetchRows={onFetchRows}
+              lazyLoadingRequestThrottleMs={0}
+            />,
+          );
+
+          await waitForPendingChildrenRequests(['["P1"]']);
+          expect(getRequestedRanges(onFetchRows, '["P1"]')).not.to.include('20-29');
+
+          // Rows 22+ are the children 21+ of P1
+          act(() => {
+            apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+              firstRowIndex: 22,
+              lastRowIndex: 26,
+              firstColumnIndex: 0,
+              lastColumnIndex: 0,
+            });
+          });
+
+          await waitFor(() => {
+            expect(getRequestedRanges(onFetchRows, '["P1"]')).to.include('20-29');
+          });
+          resolveDeferredRequests();
+          await waitFor(() => expect(apiRef.current!.getRow('P1-25')).not.to.equal(null));
+        });
+      });
+
+      describe('concurrent root requests', () => {
+        // Loaded rows in the range are revalidated, like a polling tick does. Skeleton rows are requested.
+        const revalidateRootRows = (lastRowIndex: number, firstRowIndex = 0) => {
+          act(() => {
+            apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+              firstRowIndex,
+              lastRowIndex,
+              firstColumnIndex: 0,
+              lastColumnIndex: 0,
+            });
+            // Runs the throttled handler, then the debounced fetch it queues
+            vi.advanceTimersByTime(1);
+          });
+        };
+
+        const settleRequests = async (requests: DeferredRequest[]) => {
+          await act(async () => {
+            requests.forEach((request) => request.resolve());
+            await vi.advanceTimersByTimeAsync(0);
+          });
+        };
+
+        it('should apply a root page response that lands after a cached revalidation of another page', async () => {
+          render(
+            <TestConcurrentRequests
+              treeRows={threePagesTreeRows}
+              deferRequest={(params) => isRootRequest(params) && (params.start as number) > 0}
+              dataSourceCache={undefined}
+              defaultGroupingExpansionDepth={0}
+              lazyLoadingRequestThrottleMs={0}
+            />,
+          );
+          // The first page is loaded and cached, the next one is held back
+          await waitFor(() => {
+            expect(deferredRequests.some((request) => request.params.start === 10)).to.equal(true);
+          });
+          expect(apiRef.current!.getRow('R9')).to.equal(null);
+
+          vi.useFakeTimers();
+          onTestFinished(() => {
+            vi.useRealTimers();
+          });
+          revalidateRootRows(5);
+
+          await settleRequests(deferredRequests.splice(0));
+
+          expect(apiRef.current!.getRow('R9')).not.to.equal(null);
+        });
+
+        it('should not request again a root page whose request is in flight', async () => {
+          const onFetchRows = vi.fn();
+          render(
+            <TestConcurrentRequests
+              treeRows={threePagesTreeRows}
+              deferRequest={(params) => isRootRequest(params) && (params.start as number) > 0}
+              onFetchRows={onFetchRows}
+              defaultGroupingExpansionDepth={0}
+              lazyLoadingRequestThrottleMs={0}
+            />,
+          );
+          const countSecondPageRequests = () =>
+            onFetchRows.mock.calls.filter(([params]) => params.start === 10).length;
+          await waitFor(() => expect(countSecondPageRequests()).to.equal(1));
+
+          vi.useFakeTimers();
+          onTestFinished(() => {
+            vi.useRealTimers();
+          });
+          // The rendered rows now end in the skeleton rows of the page that is loading
+          revalidateRootRows(15);
+          expect(countSecondPageRequests()).to.equal(1);
+
+          await settleRequests(deferredRequests.splice(0));
+          expect(apiRef.current!.getRow('R9')).not.to.equal(null);
+
+          // The page can be requested again once its request has settled
+          revalidateRootRows(16, 12);
+          expect(countSecondPageRequests()).to.equal(2);
+        });
+      });
     });
   });
 

@@ -7,7 +7,11 @@ import debounce from '@mui/utils/debounce';
 import { errorOnce, warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID, getReplaceRow, isReplaceUpdate } from '../rows/gridRowsUtils';
-import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
+import type {
+  GridGetRowsResponse,
+  GridDataSourceCache,
+  GridGetRowsParams,
+} from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -26,7 +30,12 @@ import { GridDataSourceCacheDefault } from './cache';
 import type { GridDataSourceCacheDefaultConfig } from './cache';
 import { GridGetRowsError, GridUpdateRowError } from './gridDataSourceError';
 
-import type { GridDataSourceApi, GridDataSourceApiBase, GridDataSourceBaseOptions } from './models';
+import type {
+  GridDataSourceApi,
+  GridDataSourceApiBase,
+  GridDataSourceBaseOptions,
+  GridDataSourceFetchRowsParams,
+} from './models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridStrategyProcessor } from '../../core/strategyProcessing';
@@ -85,6 +94,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
+  // The row ranges that an incremental root request is loading. Those requests load or
+  // revalidate one range each, so they only make another request for the same range redundant.
+  const inFlightIncrementalRanges = React.useRef(new Set<string>());
   // `false` while a request is in flight, and for any request that errors or is discarded as
   // stale. Lets the mount effect tell "rows are already displayed" from "the fetch never landed".
   const rowsAreUpToDate = React.useRef(false);
@@ -109,8 +121,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     getCache(props.dataSourceCache, options.cacheOptions),
   );
 
-  const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
-    async (parentId, params) => {
+  const fetchRowsInternal = React.useCallback(
+    async (
+      parentId: GridRowId | undefined,
+      params: GridDataSourceFetchRowsParams<GridGetRowsParams> | undefined,
+      invalidate: boolean,
+    ) => {
       const getRows = props.dataSource?.getRows;
       if (!getRows) {
         return;
@@ -136,19 +152,31 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
 
-      options.clearDataSourceState?.();
+      // Registering the request before the cache lookup makes a cache hit replace the requests
+      // still in flight, so they don't override the cached data we're about to apply.
+      const rangeKey = `${fetchParams.start}-${fetchParams.end}`;
+      if (invalidate) {
+        options.clearDataSourceState?.();
+        // Replaces every root request in flight.
+        lastRequestId.current += 1;
+        inFlightIncrementalRanges.current.clear();
+      } else if (inFlightIncrementalRanges.current.has(rangeKey)) {
+        // The response in flight brings these rows.
+        return;
+      }
+      // An incremental request replaces nothing. A cached revalidation of the rows on screen
+      // must not discard the page that is loading further down.
+      const requestId = lastRequestId.current;
+      const isLatestRequest = () => lastRequestId.current === requestId;
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
       if (!skipCache && responses.every((response) => response !== undefined)) {
-        // Bump the request id so any cache-miss request still in flight is treated as
-        // stale and won't override the cached data we're about to apply.
-        lastRequestId.current += 1;
         apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
-          options: { skipCache, keepChildrenExpanded },
+          options: { skipCache, keepChildrenExpanded, invalidate },
         });
         rowsAreUpToDate.current = true;
         if (standardRowsUpdateStrategyActive) {
@@ -162,10 +190,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         apiRef.current.setLoading(true);
       }
 
-      const requestId = lastRequestId.current + 1;
-      lastRequestId.current = requestId;
       rowsAreUpToDate.current = false;
       pendingRequestCount.current += 1;
+      if (!invalidate) {
+        inFlightIncrementalRanges.current.add(rangeKey);
+      }
 
       try {
         const getRowsResponse = await getRows(fetchParams);
@@ -173,20 +202,20 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
         cacheResponses.forEach((response, key) => cache.set(key, response));
 
-        if (lastRequestId.current === requestId) {
+        if (isLatestRequest()) {
           apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             response: getRowsResponse,
             fetchParams,
-            options: { skipCache, keepChildrenExpanded },
+            options: { skipCache, keepChildrenExpanded, invalidate },
           });
           rowsAreUpToDate.current = true;
         }
       } catch (originalError) {
-        if (lastRequestId.current === requestId) {
+        if (isLatestRequest()) {
           apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             error: originalError as Error,
             fetchParams,
-            options: { skipCache, keepChildrenExpanded },
+            options: { skipCache, keepChildrenExpanded, invalidate },
           });
           if (typeof onDataSourceErrorProp === 'function') {
             onDataSourceErrorProp(
@@ -208,7 +237,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         }
       } finally {
         pendingRequestCount.current -= 1;
-        if (standardRowsUpdateStrategyActive && lastRequestId.current === requestId) {
+        // A replaced request leaves the ranges alone, they belong to the requests sent after it.
+        if (!invalidate && isLatestRequest()) {
+          inFlightIncrementalRanges.current.delete(rangeKey);
+        }
+        if (standardRowsUpdateStrategyActive && isLatestRequest()) {
           apiRef.current.setLoading(false);
         }
       }
@@ -223,6 +256,18 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       options,
       props.signature,
     ],
+  );
+
+  const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
+    (parentId, params) => fetchRowsInternal(parentId, params, true),
+    [fetchRowsInternal],
+  );
+
+  // Leaves the in-flight child requests running.
+  const fetchRootRowsIncremental = React.useCallback(
+    (params?: GridDataSourceFetchRowsParams<GridGetRowsParams>) =>
+      fetchRowsInternal(GRID_ROOT_GROUP_ID, params, false),
+    [fetchRowsInternal],
   );
 
   const handleStrategyActivityChange = React.useCallback<
@@ -467,6 +512,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     const ignoreInFlightRequest = () => {
       if (!rootElement?.isConnected) {
         lastRequestId.current += 1;
+        inFlightIncrementalRanges.current.clear();
       }
     };
 
@@ -539,6 +585,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   return {
     api: { public: dataSourceApi },
     debouncedFetchRows,
+    fetchRootRowsIncremental,
     strategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.Default,
       group: 'dataSourceRootRowsUpdate' as const,
