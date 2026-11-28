@@ -16,6 +16,7 @@ import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { GridMultiSelectMeasurer } from '../components/cell/GridMultiSelectMeasurer';
+import { GridKeyboardReorderDescriptions } from '../components/GridKeyboardReorderDescriptions';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import type { DataGridProProcessedProps, DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -26,6 +27,10 @@ import {
   useIsColumnKeyboardReorderTarget,
   useIsRowKeyboardReorderTarget,
 } from '../hooks/features/keyboardReorder/useGridKeyboardReorderTarget';
+import {
+  useKeyboardReorderCellDescription,
+  useKeyboardReorderColumnHeaderDescribedBy,
+} from '../hooks/features/keyboardReorder/useGridKeyboardReorderDescription';
 import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
@@ -43,6 +48,8 @@ const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedPr
     useColumnHeaderAdornment: () => null,
     useIsRowKeyboardReorderTarget,
     useIsColumnKeyboardReorderTarget,
+    useKeyboardReorderCellDescription,
+    useKeyboardReorderColumnHeaderDescribedBy,
   },
 };
 const packageInfo = {
@@ -84,6 +91,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
       >
         {watermark}
         <GridMultiSelectMeasurer />
+        <GridKeyboardReorderDescriptions />
       </GridRoot>
     </GridContextProvider>
   );

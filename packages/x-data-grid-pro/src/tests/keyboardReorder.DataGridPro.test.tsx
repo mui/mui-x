@@ -19,7 +19,8 @@ import {
   getRowsFieldContent,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi, describe, it, expect } from 'vitest';
+import { mockPlatform } from 'test/utils/mockPlatform';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { getRowMoveTarget } from '../hooks/features/rowReorder/rowReorderDragUtils';
 
@@ -1014,6 +1015,392 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       await user.keyboard('{ArrowDown}');
       expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']);
       expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+  });
+
+  describe('screen reader hints', () => {
+    const rowHint = 'Press Alt+Up Arrow or Alt+Down Arrow to move the row.';
+    const columnHint = 'Press Alt+Left Arrow or Alt+Right Arrow to move the column.';
+
+    const getHeader = (field: string) =>
+      document.querySelector(`[role="columnheader"][data-field="${field}"]`)!;
+    const getCellOf = (id: number, field: string) =>
+      document.querySelector(`[role="row"][data-id="${id}"] [data-field="${field}"]`)!;
+    // The texts of the nodes that describe the element
+    const getHints = (element: Element) =>
+      (element.getAttribute('aria-describedby') ?? '')
+        .split(' ')
+        .filter(Boolean)
+        .map((id) => document.getElementById(id)?.textContent);
+    const getDescribedCells = () =>
+      Array.from(document.querySelectorAll('[role="gridcell"][aria-describedby]'));
+    const focusCell = (id: number, field: string) =>
+      act(() => apiRef.current!.setCellFocus(id, field));
+
+    const twoColumns: GridColDef[] = [{ field: 'name' }, { field: 'other' }];
+
+    // The texts name the keys of the OS
+    beforeEach(() => mockPlatform('Win32'));
+
+    it('should describe the column keys on a reorderable header without a key press', () => {
+      render(<ColumnTest />);
+      expect(getHints(getHeader('a'))).to.deep.equal([columnHint]);
+      const node = document.getElementById(getHeader('a').getAttribute('aria-describedby')!)!;
+      expect(node).to.have.attribute('hidden');
+      expect(getHeader('d').getAttribute('aria-describedby')).to.equal(
+        getHeader('a').getAttribute('aria-describedby'),
+      );
+    });
+
+    it('should not describe a header whose column cannot move', () => {
+      render(
+        <ColumnTest
+          checkboxSelection
+          columns={reorderColumns.map((column) =>
+            column.field === 'b' ? { ...column, disableReorder: true } : column,
+          )}
+          initialState={{ pinnedColumns: { left: ['c'] } }}
+        />,
+      );
+      expect(getHints(getHeader('a'))).to.deep.equal([columnHint]);
+      expect(getHeader('b')).not.to.have.attribute('aria-describedby');
+      expect(getHeader('c')).not.to.have.attribute('aria-describedby');
+      expect(getHeader(GRID_CHECKBOX_SELECTION_FIELD)).not.to.have.attribute('aria-describedby');
+    });
+
+    it('should not describe the headers when column reordering is off', () => {
+      render(<ColumnTest disableColumnReorder />);
+      expect(getHeader('a')).not.to.have.attribute('aria-describedby');
+      expect(document.querySelector('[id$="-reorder-description"]')).to.equal(null);
+    });
+
+    it('should not describe the headers while a row is edited', async () => {
+      render(<Test columns={[{ field: 'name', editable: true }]} />);
+      expect(getHints(getHeader('name'))).to.deep.equal([columnHint]);
+      expect(getHeader('__reorder__')).not.to.have.attribute('aria-describedby');
+
+      await act(async () => apiRef.current!.startCellEditMode({ id: 1, field: 'name' }));
+      expect(getHeader('name')).not.to.have.attribute('aria-describedby');
+    });
+
+    it('should describe the row and the column keys on the focused cell only', () => {
+      render(<Test columns={twoColumns} />);
+      expect(getDescribedCells()).to.have.length(0);
+
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint, columnHint]);
+      expect(getDescribedCells()).to.deep.equal([getCellOf(1, 'name')]);
+    });
+
+    it('should describe the keys on the cell with the tab stop before the focus lands', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <Test columns={twoColumns} />
+          <button type="button">after</button>
+        </React.Fragment>,
+      );
+      focusCell(1, 'name');
+      await user.keyboard('{ArrowRight}');
+      expect(getDescribedCells()).to.have.length(0);
+
+      // Leave the grid, the cell keeps the tab stop
+      act(() => screen.getByRole('button', { name: 'after' }).focus());
+      await waitFor(() =>
+        expect(getHints(getCellOf(1, 'other'))).to.deep.equal([rowHint, columnHint]),
+      );
+      expect(document.activeElement).not.to.equal(getCellOf(1, 'other'));
+    });
+
+    it('should only describe the column keys without row reordering', () => {
+      render(<Test columns={twoColumns} rowReordering={false} />);
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([columnHint]);
+    });
+
+    it('should only describe the row keys on a cell of a column that cannot move', () => {
+      render(<Test columns={[{ field: 'name', disableReorder: true }, { field: 'other' }]} />);
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint]);
+    });
+
+    it('should only describe the row keys on the row reorder cell', () => {
+      render(<Test />);
+      focusCell(1, '__reorder__');
+      expect(getHints(getCellOf(1, '__reorder__'))).to.deep.equal([rowHint]);
+    });
+
+    it('should not describe the row keys on a row that isRowReorderable rejects', () => {
+      render(<Test columns={twoColumns} isRowReorderable={({ row }) => row.id !== 2} />);
+      focusCell(2, 'name');
+      expect(getHints(getCellOf(2, 'name'))).to.deep.equal([columnHint]);
+    });
+
+    it('should not describe the row keys when the grid is sorted', () => {
+      render(
+        <Test
+          columns={twoColumns}
+          initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
+        />,
+      );
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([columnHint]);
+    });
+
+    it('should not describe the row keys while the rows are loading', () => {
+      render(<Test columns={twoColumns} loading />);
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([columnHint]);
+    });
+
+    it('should not describe anything while a cell is edited', async () => {
+      render(<Test columns={[{ field: 'name', editable: true }, { field: 'other' }]} />);
+      focusCell(1, 'other');
+      expect(getHints(getCellOf(1, 'other'))).to.deep.equal([rowHint, columnHint]);
+
+      await act(async () => apiRef.current!.startCellEditMode({ id: 2, field: 'name' }));
+      expect(getCellOf(1, 'other')).not.to.have.attribute('aria-describedby');
+    });
+
+    it('should not describe the row keys in tree data', () => {
+      render(
+        <Test
+          treeData
+          getTreeDataPath={(row) => row.path}
+          rows={[
+            { id: 0, path: ['A'], name: 'A' },
+            { id: 1, path: ['A', 'B'], name: 'B' },
+          ]}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      focusCell(0, 'name');
+      expect(getHints(getCellOf(0, 'name'))).to.deep.equal([columnHint]);
+    });
+
+    it('should describe the keys once per visit to the grid', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <Test columns={twoColumns} />
+          <button type="button">after</button>
+        </React.Fragment>,
+      );
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint, columnHint]);
+
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).to.equal(getCellOf(2, 'name'));
+      expect(getDescribedCells()).to.have.length(0);
+
+      // The headers keep their description
+      await user.keyboard('{ArrowUp}{ArrowUp}{ArrowUp}');
+      expect(getHints(getHeader('name'))).to.deep.equal([columnHint]);
+      await user.keyboard('{ArrowDown}');
+      expect(getDescribedCells()).to.have.length(0);
+
+      act(() => screen.getByRole('button', { name: 'after' }).focus());
+      await waitFor(() => expect(getDescribedCells()).to.have.length(1));
+      focusCell(3, 'other');
+      expect(getHints(getCellOf(3, 'other'))).to.deep.equal([rowHint, columnHint]);
+    });
+
+    it('should describe the first focused cell without the tab stop', () => {
+      render(<Test columns={twoColumns} />);
+      // Like VoiceOver, which moves the focus without key presses that reach the page
+      act(() => (getCellOf(3, 'other') as HTMLElement).focus());
+      expect(getHints(getCellOf(3, 'other'))).to.deep.equal([rowHint, columnHint]);
+    });
+
+    it('should not describe the keys again after a move', async () => {
+      render(<Test columns={twoColumns} />);
+      focusCell(1, 'name');
+      pressAlt(getCellOf(1, 'name'), 'ArrowDown');
+      await waitFor(() =>
+        expect(getRowsFieldContent('name')).to.deep.equal(['A', 'C', 'B', 'D', 'E']),
+      );
+      // The focus leaves the moved cell until React restores it
+      await act(
+        () =>
+          new Promise((resolve) => {
+            setTimeout(resolve);
+          }),
+      );
+      expect(getDescribedCells()).to.have.length(0);
+    });
+
+    it('should keep the row keys for the cells after a column move from a header', async () => {
+      const { user } = render(<Test columns={twoColumns} />);
+      focusHeader('name');
+      pressAlt(getHeader('name'), 'ArrowRight');
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).to.equal(getCellOf(0, 'name'));
+      expect(getHints(getCellOf(0, 'name'))).to.deep.equal([rowHint]);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getDescribedCells()).to.have.length(0);
+    });
+
+    it('should describe the row keys on the next cell when the first one cannot move', async () => {
+      const { user } = render(
+        <Test columns={twoColumns} isRowReorderable={({ row }) => row.id !== 0} />,
+      );
+      focusCell(0, 'name');
+      expect(getHints(getCellOf(0, 'name'))).to.deep.equal([columnHint]);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint]);
+      expect(getDescribedCells()).to.deep.equal([getCellOf(1, 'name')]);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getDescribedCells()).to.have.length(0);
+    });
+
+    it('should not describe the keys again after a popup of the grid closes', async () => {
+      const { user } = render(<Test columns={twoColumns} />);
+      focusCell(1, 'name');
+      await user.keyboard('{ArrowDown}{ArrowUp}{ArrowUp}{ArrowUp}');
+      expect(document.activeElement).to.equal(getHeader('name'));
+
+      await user.keyboard('{Control>}{Enter}{/Control}');
+      await waitFor(() => expect(screen.getByRole('menu')).toHaveFocus());
+      // The focus leaves the root
+      await act(
+        () =>
+          new Promise((resolve) => {
+            setTimeout(resolve);
+          }),
+      );
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(getHeader('name')).toHaveFocus());
+      expect(getDescribedCells()).to.have.length(0);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getDescribedCells()).to.have.length(0);
+    });
+
+    it('should only reference rendered descriptions when reordering turns off', () => {
+      const { setProps } = render(<Test columns={twoColumns} />);
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint, columnHint]);
+
+      const expectNoDanglingIds = () =>
+        document.querySelectorAll('[aria-describedby]').forEach((element) => {
+          element
+            .getAttribute('aria-describedby')!
+            .split(' ')
+            .forEach((id) => expect(document.getElementById(id)).not.to.equal(null));
+        });
+
+      setProps({ disableColumnReorder: true });
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint]);
+      expect(getHeader('name')).not.to.have.attribute('aria-describedby');
+      expectNoDanglingIds();
+
+      setProps({ disableColumnReorder: true, rowReordering: false });
+      expect(getCellOf(1, 'name')).not.to.have.attribute('aria-describedby');
+      expectNoDanglingIds();
+    });
+
+    it('should describe the keys when reordering turns on after mount', () => {
+      const { setProps } = render(
+        <Test columns={twoColumns} rowReordering={false} disableColumnReorder />,
+      );
+      setProps({ rowReordering: true, disableColumnReorder: false });
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([rowHint, columnHint]);
+    });
+
+    it('should describe the row keys once when isRowReorderable is removed after mount', async () => {
+      const { setProps, user } = render(
+        <Test columns={twoColumns} isRowReorderable={() => false} />,
+      );
+      setProps({ isRowReorderable: undefined });
+      focusCell(0, 'name');
+      expect(getHints(getCellOf(0, 'name'))).to.deep.equal([rowHint, columnHint]);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getDescribedCells()).to.have.length(0);
+    });
+
+    it('should name the Option key on Apple platforms', () => {
+      mockPlatform('MacIntel');
+      render(<Test columns={twoColumns} />);
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal([
+        'Press Option+Up Arrow or Option+Down Arrow to move the row.',
+        'Press Option+Left Arrow or Option+Right Arrow to move the column.',
+      ]);
+    });
+
+    it('should pass the modifier key to the locale texts', () => {
+      mockPlatform('MacIntel');
+      render(
+        <Test
+          columns={twoColumns}
+          localeText={{
+            rowReorderingKeyboardDescription: ({ modifierKey }) => `Row ${modifierKey}`,
+            columnReorderingKeyboardDescription: ({ modifierKey }) => `Column ${modifierKey}`,
+          }}
+        />,
+      );
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal(['Row Option', 'Column Option']);
+    });
+
+    it('should use the locale texts, and remove the hints when they are empty', () => {
+      const { setProps } = render(
+        <Test
+          columns={twoColumns}
+          localeText={{
+            rowReorderingKeyboardDescription: () => 'Row keys',
+            columnReorderingKeyboardDescription: () => 'Column keys',
+          }}
+        />,
+      );
+      focusCell(1, 'name');
+      expect(getHints(getCellOf(1, 'name'))).to.deep.equal(['Row keys', 'Column keys']);
+      expect(getHints(getHeader('name'))).to.deep.equal(['Column keys']);
+
+      setProps({
+        localeText: {
+          rowReorderingKeyboardDescription: () => '',
+          columnReorderingKeyboardDescription: () => '',
+        },
+      });
+      expect(getCellOf(1, 'name')).not.to.have.attribute('aria-describedby');
+      expect(getHeader('name')).not.to.have.attribute('aria-describedby');
+      expect(document.querySelector('[id$="-reorder-description"]')).to.equal(null);
+    });
+
+    it('should keep the aria-describedby of slotProps.cell', () => {
+      render(<Test columns={twoColumns} slotProps={{ cell: { 'aria-describedby': 'custom' } }} />);
+      expect(getCellOf(2, 'name').getAttribute('aria-describedby')).to.equal('custom');
+
+      focusCell(1, 'name');
+      const [custom, ...hints] = getCellOf(1, 'name').getAttribute('aria-describedby')!.split(' ');
+      expect(custom).to.equal('custom');
+      expect(hints.map((id) => document.getElementById(id)?.textContent)).to.deep.equal([
+        rowHint,
+        columnHint,
+      ]);
+    });
+
+    it('should use different ids in two grids', () => {
+      render(
+        <React.Fragment>
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro rows={rows} columns={columns} />
+          </div>
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro rows={rows} columns={columns} />
+          </div>
+        </React.Fragment>,
+      );
+      const ids = Array.from(
+        document.querySelectorAll('[role="columnheader"][data-field="name"]'),
+      ).map((header) => header.getAttribute('aria-describedby'));
+      expect(ids).to.have.length(2);
+      expect(ids[0]).not.to.equal(ids[1]);
+      ids.forEach((id) => expect(document.getElementById(id!)).not.to.equal(null));
     });
   });
 

@@ -199,6 +199,14 @@ describe('<DataGrid /> - Columns', () => {
     });
   });
 
+  it('should warn and render one column when several columns use the same field', () => {
+    expect(() => {
+      render(<TestDataGrid columns={[{ field: 'id' }, { field: 'idBis' }, { field: 'id' }]} />);
+    }).toWarnDev('MUI X Data Grid: More than one column uses the field "id".');
+
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+  });
+
   describe('resize cleanup', () => {
     // Regression test for https://github.com/mui/mui-x/pull/23431
     it('should not crash when unmounting while the document has no body', async () => {

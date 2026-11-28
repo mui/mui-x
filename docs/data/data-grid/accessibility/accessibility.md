@@ -219,6 +219,8 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 | <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> / <kbd><kbd class="key">Alt</kbd>+<kbd class="key">End</kbd></kbd> on a column header | Move the column as far as allowed toward the start or the end                                        |
 
 The Data Grid announces each move to screen readers through a live region, as well as the reason when a row or column can't move.
+To make the keys discoverable, the column headers have a description of the keys, which screen readers read on focus. So does the first focused cell that can move each time the focus enters the Data Grid.
+On macOS and iOS, the description names the <kbd class="key">⌥ Option</kbd> key.
 
 ### Group and pivot
 

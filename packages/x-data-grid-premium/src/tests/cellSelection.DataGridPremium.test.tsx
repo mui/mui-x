@@ -337,7 +337,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const { user } = render(<TestDataGridSelection />);
       expect(document.querySelector('.Mui-selected')).to.equal(null);
       const cell = getCell(0, 0);
-      cell.focus();
+      act(() => cell.focus());
       await user.click(cell);
       await user.keyboard('{Shift>}');
       await user.click(getCell(2, 1));
@@ -350,7 +350,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
 
       const cell = getCell(0, 0);
-      cell.focus();
+      act(() => cell.focus());
       await user.click(cell);
       await user.keyboard('{Shift>}');
       await user.click(getCell(2, 1));
@@ -365,7 +365,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
     it('should add classes to the cells that are at the corners of a range', async () => {
       const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
-      cell.focus();
+      act(() => cell.focus());
       await user.click(cell);
       await user.keyboard('{Shift>}');
       await user.click(getCell(2, 2));
@@ -390,7 +390,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
     it('should keep the focus on first clicked cell', async () => {
       const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
-      cell.focus();
+      act(() => cell.focus());
       expect(cell).toHaveFocus();
       await user.click(cell);
       await user.keyboard('{Shift>}');
@@ -458,7 +458,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const { user } = render(<TestDataGridSelection />);
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(0, 0);
-      cell.focus();
+      act(() => cell.focus());
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
       expect(spiedSelectCellsBetweenRange.mock.lastCall?.[0]).to.deep.equal({ id: 0, field: 'id' });
@@ -482,7 +482,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const { user } = render(<TestDataGridSelection />);
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(0, 1);
-      cell.focus();
+      act(() => cell.focus());
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowLeft}{/Shift}');
       expect(spiedSelectCellsBetweenRange.mock.lastCall?.[0]).to.deep.equal({
@@ -496,7 +496,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const { user } = render(<TestDataGridSelection />);
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(0, 0);
-      cell.focus();
+      act(() => cell.focus());
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
       expect(spiedSelectCellsBetweenRange.mock.lastCall?.[0]).to.deep.equal({ id: 0, field: 'id' });
@@ -509,7 +509,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
     it('should keep the focus on first clicked cell', async () => {
       const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
-      cell.focus();
+      act(() => cell.focus());
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
       expect(cell).toHaveFocus();
@@ -540,7 +540,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
 
       const startCell = getCell(0, 1);
-      startCell.focus();
+      act(() => startCell.focus());
       await user.click(startCell);
       await user.keyboard('{Shift>}');
       await user.click(getCell(1, 2));
@@ -580,7 +580,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
 
       const startCell = getCell(0, 1);
-      startCell.focus();
+      act(() => startCell.focus());
       await user.click(startCell);
       await user.keyboard('{Shift>}');
       await user.click(getCell(1, 1));

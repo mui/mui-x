@@ -54,6 +54,26 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
   return activeEl;
 };
 
+/**
+ * Calls `callback` when a `focusout` event moves the focus out of the root for good.
+ * Moving the focused row or column blurs it until React restores the focus, so the check waits.
+ * @param {Element} root The element that the focus leaves.
+ * @param {FocusEvent} event The `focusout` event.
+ * @param {() => void} callback Called when the focus is still outside of the root.
+ */
+export function onFocusLeave(root: Element, event: FocusEvent, callback: () => void) {
+  if (root.contains(event.relatedTarget as Node | null)) {
+    return;
+  }
+  setTimeout(() => {
+    // An unmounted root has nothing left to update.
+    // Inside a shadow root, `document.activeElement` is the shadow host.
+    if (root.isConnected && !root.contains(getActiveElement(root.ownerDocument))) {
+      callback();
+    }
+  });
+}
+
 export function isEventTargetInPortal(event: React.SyntheticEvent) {
   if (
     // The target is not an element when triggered by a Select inside the cell

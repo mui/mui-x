@@ -139,6 +139,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const editable = rootProps.editMode === GridEditModes.Row;
   const hasFocusCell = focusedColumnIndex !== undefined;
   const isKeyboardReorderTarget = configuration.hooks.useIsRowKeyboardReorderTarget(rowId);
+  const keyboardReorderDescription = configuration.hooks.useKeyboardReorderCellDescription(rowId);
   const hasVirtualFocusCellLeft =
     hasFocusCell &&
     focusedColumnIndex >= pinnedColumns.left.length &&
@@ -388,6 +389,14 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       isRowDragActive
     );
 
+    // Only one cell of the row describes the reorder keys
+    const cellDescribedBy =
+      keyboardReorderDescription?.field === column.field
+        ? [slotProps?.cell?.['aria-describedby'], keyboardReorderDescription.describedBy]
+            .filter(Boolean)
+            .join(' ')
+        : slotProps?.cell?.['aria-describedby'];
+
     const showLeftBorder = shouldCellShowLeftBorder(
       pinnedPosition,
       indexInSection,
@@ -421,6 +430,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
         row={row}
         rowNode={rowNode}
         {...slotProps?.cell}
+        aria-describedby={cellDescribedBy}
       />
     );
   };

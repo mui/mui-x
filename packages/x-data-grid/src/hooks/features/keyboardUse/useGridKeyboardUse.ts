@@ -4,7 +4,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
-import { getActiveElement } from '../../../utils/domUtils';
+import { onFocusLeave } from '../../../utils/domUtils';
 
 export const keyboardUseStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -64,15 +64,9 @@ export const useGridKeyboardUse = (apiRef: RefObject<GridPrivateApiCommunity>): 
   };
   const handleFocusOut = (event: FocusEvent) => {
     const root = getRootElement();
-    if (!root || root.contains(event.relatedTarget as Node | null)) {
-      return;
+    if (root) {
+      onFocusLeave(root, event, () => setActive(false));
     }
-    // Moving the focused row or column blurs it until React restores the focus
-    setTimeout(() => {
-      if (!isInMain(getActiveElement(root.ownerDocument))) {
-        setActive(false);
-      }
-    });
   };
 
   // Native listeners in the capture phase, so a key that a feature handles still counts
