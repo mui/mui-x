@@ -5,6 +5,7 @@ import {
   DataGrid,
   GridCellEditStartReasons,
   GridEditInputCell,
+  GridRowEditStartReasons,
   gridFocusCellSelector,
   useGridApiRef,
 } from '@mui/x-data-grid';
@@ -16,7 +17,7 @@ import type {
   GridRenderCellParams,
   GridRowModesModel,
 } from '@mui/x-data-grid';
-import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, microtasks } from 'test/utils/helperFn';
 import { describe, it, expect, vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -51,6 +52,18 @@ function TestCase(props: Partial<DataGridProps>) {
       />
     </div>
   );
+}
+
+// Inserts text as the browser does, with an `input` event of type `insertText`. Without a
+// composition, the text comes from the emoji picker, dictation, or an IME that commits a character
+// directly. Edit mode starts after a microtask, see `GridEditInputCell`.
+async function insertText(
+  input: HTMLInputElement,
+  text: string,
+  init: { isComposing?: boolean; inputType?: string } = {},
+) {
+  fireEvent.input(input, { target: { value: text }, inputType: 'insertText', ...init });
+  await microtasks();
 }
 
 // Returns a function that restores `matchMedia`. jsdom has no `matchMedia` to spy on.
@@ -1032,9 +1045,11 @@ describe('<DataGrid /> - IME fast edit', () => {
     });
 
     it('does not start edit mode when `onCellEditStart` prevents the `compositionStart` reason', async () => {
+      const reasons: string[] = [];
       const { user } = render(
         <TestCase
           onCellEditStart={(params, event) => {
+            reasons.push(params.reason!);
             if (params.reason === GridCellEditStartReasons.compositionStart) {
               event.defaultMuiPrevented = true;
             }
@@ -1044,9 +1059,357 @@ describe('<DataGrid /> - IME fast edit', () => {
       const cell = await focusCell(user, 0, 1);
       const input = getInput(cell)!;
       fireEvent.compositionStart(input);
-      fireEvent.change(input, { target: { value: '한' } });
+      // The browser marks the input events of a composition with `isComposing`.
+      await insertText(input, '한', { isComposing: true });
+      // The input event of the composition does not start edit mode either.
+      expect(reasons).to.deep.equal(['compositionStart']);
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell.textContent).to.contain('Seoul');
+      expect(input.value).to.equal('');
+    });
+
+    describe('text inserted without a composition', () => {
+      const insertions = [
+        { name: 'emoji picker or dictation', keyDown: null, text: '😀' },
+        { name: 'IME keydown with key "Process"', keyDown: 'Process', text: '，' },
+        { name: 'IME keydown with the inserted key', keyDown: '，', text: '，' },
+      ];
+
+      it.each(insertions)(
+        'starts cell edit mode with the text ($name)',
+        async ({ keyDown, text }) => {
+          const reasons: string[] = [];
+          const { user } = render(
+            <TestCase onCellEditStart={(params) => reasons.push(params.reason!)} />,
+          );
+          const cell = await focusCell(user, 0, 1);
+          const input = getInput(cell)!;
+          if (keyDown !== null) {
+            fireEvent.keyDown(input, { key: keyDown, keyCode: 229 });
+          }
+          expect(reasons).to.deep.equal([]);
+
+          await insertText(input, text);
+
+          expect(reasons).to.deep.equal(['printableKeyDown']);
+          expect(cell).to.have.class('MuiDataGrid-cell--editing');
+          expect(getInput(cell)).to.equal(input);
+          expect(document.activeElement).to.equal(input);
+          expect(input.value).to.equal(text);
+
+          await user.keyboard('{Enter}');
+          await waitFor(() => {
+            expect(getCell(0, 1).textContent).to.equal(text);
+          });
+        },
+      );
+
+      it.each(insertions)(
+        'starts row edit mode with the text ($name)',
+        async ({ keyDown, text }) => {
+          const reasons: string[] = [];
+          const { user } = render(
+            <TestCase editMode="row" onRowEditStart={(params) => reasons.push(params.reason!)} />,
+          );
+          const cell = await focusCell(user, 0, 1);
+          const input = getInput(cell)!;
+          if (keyDown !== null) {
+            fireEvent.keyDown(input, { key: keyDown, keyCode: 229 });
+          }
+          expect(reasons).to.deep.equal([]);
+
+          await insertText(input, text);
+
+          expect(reasons).to.deep.equal(['printableKeyDown']);
+          expect(getCell(0, 0)).to.have.class('MuiDataGrid-cell--editing');
+          expect(getInput(cell)).to.equal(input);
+          expect(document.activeElement).to.equal(input);
+          expect(input.value).to.equal(text);
+          // The other cells of the row keep their values.
+          expect(getInput(getCell(0, 0))!.value).to.equal('Nike');
+
+          await user.keyboard('{Enter}');
+          await waitFor(() => {
+            expect(getCell(0, 1).textContent).to.equal(text);
+          });
+          expect(getCell(0, 0).textContent).to.equal('Nike');
+        },
+      );
+
+      it('gives a change event to `onCellEditStart`', async () => {
+        const events: any[] = [];
+        const { user } = render(<TestCase onCellEditStart={(_, event) => events.push(event)} />);
+        const input = getInput(await focusCell(user, 0, 1))!;
+        await insertText(input, '😀');
+        expect(events).to.have.length(1);
+        expect(events[0].target).to.equal(input);
+        expect(events[0].key).to.equal(undefined);
+      });
+
+      it.each(['cell', 'row'] as const)(
+        'applies `valueParser` and `preProcessEditCellProps` once to the inserted text (editMode: %s)',
+        async (editMode) => {
+          const processed: string[] = [];
+          const { user } = render(
+            <TestCase
+              editMode={editMode}
+              columns={[
+                {
+                  field: 'city',
+                  editable: true,
+                  // Not idempotent, so that a second parse of the same text shows.
+                  valueParser: (value) => `${value}!`,
+                  preProcessEditCellProps: (params) => {
+                    processed.push(params.props.value);
+                    return { ...params.props, error: params.props.value.length > 3 };
+                  },
+                },
+              ]}
+            />,
+          );
+          const cell = await focusCell(user, 0, 0);
+          const input = getInput(cell)!;
+          await insertText(input, 'busan');
+          expect(input.value).to.equal('busan!');
+          await user.keyboard('{Enter}');
+          await waitFor(() => {
+            expect(processed).to.include('busan!');
+          });
+          expect(processed).not.to.include('busan!!');
+          // The value is invalid, so Enter does not commit it.
+          expect(cell).to.have.class('MuiDataGrid-cell--editing');
+          expect(cell.querySelector('.Mui-error')).not.to.equal(null);
+        },
+      );
+
+      it('keeps the composition path unchanged', async () => {
+        const reasons: string[] = [];
+        const { user } = render(
+          <TestCase onCellEditStart={(params) => reasons.push(params.reason!)} />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        const input = getInput(cell)!;
+        fireEvent.keyDown(input, { key: 'Process', keyCode: 229 });
+        fireEvent.compositionStart(input);
+        expect(reasons).to.deep.equal(['compositionStart']);
+        await insertText(input, '한', { isComposing: true });
+        fireEvent.compositionEnd(input);
+        await insertText(input, '한글');
+        expect(reasons).to.deep.equal(['compositionStart']);
+        expect(getInput(cell)).to.equal(input);
+        expect(input.value).to.equal('한글');
+        await user.keyboard('{Enter}');
+        await waitFor(() => {
+          expect(getCell(0, 1).textContent).to.equal('한글');
+        });
+      });
+
+      it('does not start edit mode and empties the input when the cell is not editable', async () => {
+        const reasons: string[] = [];
+        const { user, setProps } = render(
+          <TestCase onCellEditStart={(params) => reasons.push(params.reason!)} />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        const input = getInput(cell)!;
+        setProps({ isCellEditable: () => false });
+        expect(document.activeElement).to.equal(input);
+
+        await insertText(input, '😀');
+
+        expect(reasons).to.deep.equal([]);
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(cell.textContent).to.contain('Seoul');
+        expect(input.value).to.equal('');
+      });
+
+      it('does not start row edit mode when the cell is not editable', async () => {
+        const reasons: string[] = [];
+        const { user, setProps } = render(
+          <TestCase editMode="row" onRowEditStart={(params) => reasons.push(params.reason!)} />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        const input = getInput(cell)!;
+        setProps({ isCellEditable: () => false });
+
+        await insertText(input, '😀');
+
+        expect(reasons).to.deep.equal([]);
+        expect(getCell(0, 0)).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(input.value).to.equal('');
+      });
+
+      it('empties the input when `onCellEditStart` prevents the `printableKeyDown` reason', async () => {
+        const { user } = render(
+          <TestCase
+            onCellEditStart={(params, event) => {
+              if (params.reason === GridCellEditStartReasons.printableKeyDown) {
+                event.defaultMuiPrevented = true;
+              }
+            }}
+          />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        const input = getInput(cell)!;
+        await insertText(input, '😀');
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(cell.textContent).to.contain('Seoul');
+        expect(input.value).to.equal('');
+
+        // The dropped text does not come back when edit mode starts later.
+        await user.keyboard('{Enter}');
+        expect(cell).to.have.class('MuiDataGrid-cell--editing');
+        expect(input.value).to.equal('Seoul');
+      });
+
+      it('empties the input when `onRowEditStart` prevents the `printableKeyDown` reason', async () => {
+        const reasons: string[] = [];
+        const { user } = render(
+          <TestCase
+            editMode="row"
+            onRowEditStart={(params, event) => {
+              reasons.push(params.reason!);
+              if (params.reason === GridRowEditStartReasons.printableKeyDown) {
+                event.defaultMuiPrevented = true;
+              }
+            }}
+          />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        const input = getInput(cell)!;
+        await insertText(input, '😀');
+        expect(reasons).to.deep.equal(['printableKeyDown']);
+        expect(getCell(0, 0)).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(cell.textContent).to.contain('Seoul');
+        expect(input.value).to.equal('');
+
+        // The dropped text does not come back when edit mode starts later.
+        await user.keyboard('{Enter}');
+        expect(cell).to.have.class('MuiDataGrid-cell--editing');
+        expect(input.value).to.equal('Seoul');
+      });
+
+      // Shift+Insert, the Edit > Paste menu, a drop, or an undo insert text without a keydown that
+      // starts edit mode. Only the paste shortcut starts it, see `isPasteShortcut`. The text is dropped.
+      it.each(['insertFromPaste', 'insertFromDrop', 'historyUndo', 'insertCompositionText'])(
+        'does not start edit mode with an input event of type %s',
+        async (inputType) => {
+          const reasons: string[] = [];
+          const { user } = render(
+            <TestCase onCellEditStart={(params) => reasons.push(params.reason!)} />,
+          );
+          const cell = await focusCell(user, 0, 1);
+          const input = getInput(cell)!;
+          await insertText(input, 'Busan', { inputType });
+          expect(reasons).to.deep.equal([]);
+          expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+          expect(cell.textContent).to.contain('Seoul');
+          expect(input.value).to.equal('');
+        },
+      );
+    });
+
+    // The hidden editor receives the keydown. Without a veto, the browser then inserts the key into
+    // the editor, which is in edit mode by then. A veto must also stop the insertion.
+    describe.each(['cell', 'row'] as const)('keydown vetoes (editMode: %s)', (editMode) => {
+      type StartHandler = (
+        params: { reason?: string; key?: string },
+        event: { defaultMuiPrevented?: boolean },
+      ) => void;
+
+      function VetoTestCase(props: Partial<DataGridProps> & { onEditStart?: StartHandler }) {
+        const { onEditStart, ...other } = props;
+        const startProps =
+          editMode === 'row' ? { onRowEditStart: onEditStart } : { onCellEditStart: onEditStart };
+        return <TestCase editMode={editMode} {...startProps} {...other} />;
+      }
+
+      it.each([
+        { name: 'a printable key', key: 'x' },
+        { name: 'Space', key: ' ' },
+      ])('does not start edit mode when `onCellKeyDown` prevents $name', async ({ key }) => {
+        const { user } = render(
+          <VetoTestCase
+            onCellKeyDown={(_, event) => {
+              event.defaultMuiPrevented = true;
+            }}
+          />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        const input = getInput(cell)!;
+        await user.keyboard(key);
+        await microtasks();
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(getCell(0, 0)).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(input.value).to.equal('');
+        expect(cell.textContent).to.contain('Seoul');
+      });
+
+      // Windows reports AltGr as Ctrl+Alt. `user.keyboard` inserts nothing with these modifiers,
+      // so check that the keydown is prevented, which stops the insertion in a browser.
+      it('prevents an AltGr character when `onCellKeyDown` prevents it', async () => {
+        const { user } = render(
+          <VetoTestCase
+            onCellKeyDown={(_, event) => {
+              event.defaultMuiPrevented = true;
+            }}
+          />,
+        );
+        const input = getInput(await focusCell(user, 0, 1))!;
+        const unprevented = fireEvent.keyDown(input, { key: '€', ctrlKey: true, altKey: true });
+        expect(unprevented).to.equal(false);
+      });
+
+      it('calls the edit start callback once for a keystroke that it prevents', async () => {
+        const calls: { reason?: string; key?: string }[] = [];
+        const { user } = render(
+          <VetoTestCase
+            onEditStart={(params, event) => {
+              calls.push({ reason: params.reason, key: params.key });
+              if (params.reason === GridCellEditStartReasons.printableKeyDown) {
+                event.defaultMuiPrevented = true;
+              }
+            }}
+          />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        const input = getInput(cell)!;
+        await user.keyboard('x');
+        await microtasks();
+        expect(calls).to.deep.equal([
+          { reason: 'printableKeyDown', key: editMode === 'cell' ? 'x' : undefined },
+        ]);
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(input.value).to.equal('');
+        expect(cell.textContent).to.contain('Seoul');
+      });
+
+      it.skipIf(editMode === 'row')(
+        'does not start edit mode when `onCellEditStart` prevents a specific key',
+        async () => {
+          const { user } = render(
+            <VetoTestCase
+              onEditStart={(params, event) => {
+                if (params.key === 'x') {
+                  event.defaultMuiPrevented = true;
+                }
+              }}
+            />,
+          );
+          const cell = await focusCell(user, 0, 1);
+          const input = getInput(cell)!;
+          await user.keyboard('x');
+          await microtasks();
+          expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+          expect(input.value).to.equal('');
+          expect(cell.textContent).to.contain('Seoul');
+
+          // Another key starts edit mode.
+          await user.keyboard('y');
+          expect(cell).to.have.class('MuiDataGrid-cell--editing');
+          expect(input.value).to.equal('y');
+        },
+      );
     });
 
     it('gives the hidden input as `event.target` to `onCellKeyDown`', async () => {
@@ -1108,6 +1471,17 @@ describe('<DataGrid /> - IME fast edit', () => {
         expect(cell).to.have.class('MuiDataGrid-cell--editing');
         expect(getInput(cell)).to.equal(input);
         expect(input.value).to.equal('');
+      });
+
+      // The model change is applied in the same event, so the text is kept, see `GridEditInputCell`.
+      it('starts edit mode with inserted text', async () => {
+        const { user } = render(<ControlledTest />);
+        const cell = await focusCell(user, 0, 1);
+        const input = getInput(cell)!;
+        await insertText(input, '😀');
+        expect(cell).to.have.class('MuiDataGrid-cell--editing');
+        expect(getInput(cell)).to.equal(input);
+        expect(input.value).to.equal('😀');
       });
     });
   });

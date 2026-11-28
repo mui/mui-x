@@ -88,15 +88,34 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
 
   const handleChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
-      // Pre-mounted editor (`imeFastEdit`): keep the input empty until edit mode starts.
+      const newValue = event.target.value;
+      let valueDebounceMs: number | undefined = debounceMs;
+
       if (
         isEventFromPreMountedEditor(event) &&
         apiRef.current.getCellMode(id, field) === GridCellModes.View
       ) {
-        return;
+        // Pre-mounted editor (`imeFastEdit`): the composition starts edit mode, see `cellCompositionStart`.
+        // Only typed text starts it here, for example from the emoji picker or dictation. Other
+        // insertions are dropped: a paste without the paste shortcut, a drop, an undo. React empties the input.
+        const { isComposing, inputType } = event.nativeEvent as InputEvent;
+        if (isComposing || inputType !== 'insertText' || newValue === '') {
+          return;
+        }
+        apiRef.current.publishEvent('cellInput', apiRef.current.getCellParams(id, field), event);
+        // The editing hooks start edit mode with a state update that React applies after this handler.
+        await Promise.resolve();
+        if (apiRef.current.getCellMode(id, field) === GridCellModes.View) {
+          // Edit mode did not start: the edit start callback prevented it, the cell is not editable,
+          // or a controlled `cellModesModel` or `rowModesModel` applies the change later.
+          // React empties the input.
+          return;
+        }
+        // Edit mode started with the default value and may still process it with `preProcessEditCellProps`.
+        // Set the text now, without the debounce, so that the editing state holds it when the
+        // processing of the default value finishes.
+        valueDebounceMs = undefined;
       }
-
-      const newValue = event.target.value;
 
       const column = apiRef.current.getColumn(field);
 
@@ -107,7 +126,13 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
 
       setValueState(parsedValue);
       apiRef.current.setEditCellValue(
-        { id, field, value: parsedValue, debounceMs, unstable_skipValueParser: true },
+        {
+          id,
+          field,
+          value: parsedValue,
+          debounceMs: valueDebounceMs,
+          unstable_skipValueParser: true,
+        },
         event,
       );
 
