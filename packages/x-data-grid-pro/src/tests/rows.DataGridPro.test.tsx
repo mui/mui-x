@@ -1184,4 +1184,112 @@ describe('<DataGridPro /> - Rows', () => {
     expect(() => apiRef.current!.getCellParams(1, 'does-not-exist')).not.to.throw();
     expect(apiRef.current!.getCellParams(1, 'does-not-exist').value).to.equal(undefined);
   });
+
+  describe('apiRef: updateRows with throttleRowsMs', () => {
+    // Two updates of the same row in one throttle wait must be merged into one action.
+    let apiRef: RefObject<GridApi | null>;
+
+    function TestCase(props: Partial<DataGridProProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 0, brand: 'Nike' },
+              { id: 1, brand: 'Adidas' },
+              { id: 2, brand: 'Puma' },
+            ]}
+            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            apiRef={apiRef}
+            {...props}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    const treeDataProps: Partial<DataGridProProps> = {
+      rows: [
+        { id: 0, path: ['Nike'], brand: 'Nike' },
+        { id: 1, path: ['Adidas'], brand: 'Adidas' },
+        { id: 2, path: ['Puma'], brand: 'Puma' },
+      ],
+      treeData: true,
+      getTreeDataPath: (row) => row.path,
+      columns: [{ field: 'brand' }],
+      throttleRowsMs: 100,
+    };
+
+    // The first update is applied at once and starts the wait, the next ones land in it.
+    const updateInOneWait = async (...updates: GridRowModel[][]) => {
+      await act(async () => apiRef.current?.updateRows([{ id: 0, brand: 'Nike changed' }]));
+      await act(async () => {
+        updates.forEach((update) => apiRef.current?.updateRows(update));
+      });
+      // Run out the wait that holds the updates and the next one it starts.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(200);
+      });
+    };
+
+    it('should delete a row changed earlier in the wait', async () => {
+      render(<TestCase {...treeDataProps} />);
+
+      await updateInOneWait(
+        [{ id: 1, path: ['Adidas'], brand: 'Adidas changed' }],
+        [{ id: 1, _action: 'delete' }],
+      );
+
+      expect(apiRef.current?.getRowsCount()).to.equal(2);
+      expect(apiRef.current?.getRow(1)).to.equal(null);
+      // Later updates are still applied.
+      await act(async () => apiRef.current?.updateRows([{ id: 2, brand: 'Puma changed' }]));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(100);
+      });
+      expect(apiRef.current?.getRow(2).brand).to.equal('Puma changed');
+    });
+
+    it('should drop a row inserted and deleted in the wait', async () => {
+      render(<TestCase {...treeDataProps} />);
+
+      await updateInOneWait(
+        [{ id: 3, path: ['Asics'], brand: 'Asics' }],
+        [{ id: 3, _action: 'delete' }],
+      );
+
+      expect(apiRef.current?.getRow(0).brand).to.equal('Nike changed');
+      expect(apiRef.current?.getRowsCount()).to.equal(3);
+      expect(apiRef.current?.getRow(3)).to.equal(null);
+    });
+
+    it('should keep a row deleted and added again with the same id in the wait', async () => {
+      render(<TestCase {...treeDataProps} />);
+
+      await updateInOneWait(
+        [{ id: 1, _action: 'delete' }],
+        [{ id: 1, path: ['Fila'], brand: 'Fila' }],
+      );
+
+      expect(apiRef.current?.getRow(1)?.brand).to.equal('Fila');
+      expect(apiRef.current?.getRowsCount()).to.equal(3);
+    });
+
+    it('should keep a row deleted and added again with the same id in the wait without tree data', async () => {
+      render(<TestCase throttleRowsMs={100} />);
+
+      await updateInOneWait([{ id: 1, _action: 'delete' }], [{ id: 1, brand: 'Fila' }]);
+
+      expect(getColumnValues(0)).to.deep.equal(['Nike changed', 'Fila', 'Puma']);
+    });
+  });
 });
