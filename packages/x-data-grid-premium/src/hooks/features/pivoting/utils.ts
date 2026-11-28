@@ -51,6 +51,30 @@ export const defaultGetPivotDerivedColumns: NonNullable<
   return undefined;
 };
 
+/**
+ * Merges a column definition passed to `updateColumns` with the stored definition of the column.
+ * Like outside of pivot mode, only the defined properties are updated, and the column restarts
+ * from the defaults of its type only when a different `type` is passed.
+ */
+export const mergeColumnDefinition = (
+  previousColumn: GridColDef | undefined,
+  column: GridColDef,
+): GridColDef => {
+  if (!previousColumn || (column.type !== undefined && column.type !== previousColumn.type)) {
+    return column;
+  }
+
+  const mergedColumn: GridColDef = { ...previousColumn };
+  let key: keyof GridColDef;
+  for (key in column) {
+    if (column[key] !== undefined) {
+      (mergedColumn as any)[key] = column[key];
+    }
+  }
+
+  return mergedColumn;
+};
+
 export const getInitialColumns = (
   originalColumns: DataGridPremiumProcessedProps['columns'],
   getPivotDerivedColumns: DataGridPremiumProcessedProps['getPivotDerivedColumns'],
