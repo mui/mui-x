@@ -1,6 +1,7 @@
 'use client';
 import type { TickItem } from '../hooks/useTicks';
-import type { ChartsXAxisProps, ComputedXAxis } from '../models/axis';
+import type { GroupedTickItemType } from '../hooks/useTicksGrouped';
+import type { AxisGroup, ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
 import type { ChartsTextStyle } from '../internals/getWordsByLines';
 import { batchMeasureStrings } from '../internals/domUtils';
@@ -52,7 +53,7 @@ export function getVisibleLabels<T extends TickItem>(
 
       if (
         labelIndex > 0 &&
-        direction * textPosition < direction * (previousTextLimit + tickLabelMinGap)
+        direction * textPosition < direction * previousTextLimit + tickLabelMinGap
       ) {
         return false;
       }
@@ -66,7 +67,7 @@ export function getVisibleLabels<T extends TickItem>(
       const currentTextLimit = textPosition - (direction * distance) / 2;
       if (
         labelIndex > 0 &&
-        direction * currentTextLimit < direction * (previousTextLimit + tickLabelMinGap)
+        direction * currentTextLimit < direction * previousTextLimit + tickLabelMinGap
       ) {
         // Except for the first label, we skip all label that overlap with the last accepted.
         // Notice that the early return prevents `previousTextLimit` from being updated.
@@ -77,6 +78,80 @@ export function getVisibleLabels<T extends TickItem>(
       return true;
     }),
   );
+}
+
+/**
+ * Returns the visible tick labels of a grouped axis. Overlap is resolved per group level.
+ * With `'auto'`, a level that has a parent level shows all its labels, or the middle label of each
+ * parent group, or none, whichever is the first to fit. The outermost level hides overlapping labels.
+ */
+export function getVisibleGroupedLabels(
+  ticks: GroupedTickItemType[],
+  groups: AxisGroup[],
+  { tickLabelStyle, tickLabelInterval, ...options }: Parameters<typeof getVisibleLabels>[1],
+): Set<GroupedTickItemType> {
+  const visibleLabels = new Set<GroupedTickItemType>();
+  const getLevelTicks = (groupIndex: number) =>
+    ticks.filter((tick) => tick.groupIndex === groupIndex && tick.formattedValue !== undefined);
+
+  groups.forEach((group, groupIndex) => {
+    const levelTicks = getLevelTicks(groupIndex);
+    const parentTicks = getLevelTicks(groupIndex + 1);
+    const levelOptions = {
+      ...options,
+      tickLabelInterval,
+      tickLabelStyle: { ...tickLabelStyle, ...group.tickLabelStyle },
+    };
+
+    if (typeof tickLabelInterval === 'function' || parentTicks.length === 0) {
+      getVisibleLabels(levelTicks, levelOptions).forEach((tick) => visibleLabels.add(tick));
+      return;
+    }
+
+    const onScreenTicks = levelTicks.filter((tick) =>
+      options.isXInside(tick.offset + tick.labelOffset),
+    );
+    const candidates = [levelTicks, getMiddleTicks(onScreenTicks, parentTicks)];
+    for (const candidate of candidates) {
+      const visible = getVisibleLabels(candidate, levelOptions);
+      const fits = candidate.every(
+        (tick) =>
+          visible.has(tick) ||
+          tick.formattedValue === '' ||
+          !options.isXInside(tick.offset + tick.labelOffset),
+      );
+
+      if (fits) {
+        visible.forEach((tick) => visibleLabels.add(tick));
+        return;
+      }
+    }
+  });
+
+  return visibleLabels;
+}
+
+/* Returns the middle tick of each parent group. Both lists are sorted by `dataIndex`. */
+function getMiddleTicks(levelTicks: GroupedTickItemType[], parentTicks: GroupedTickItemType[]) {
+  const middleTicks: GroupedTickItemType[] = [];
+  let childIndex = 0;
+
+  parentTicks.forEach((parent, parentIndex) => {
+    const end = parentTicks[parentIndex + 1]?.dataIndex ?? Infinity;
+    const firstChildIndex = childIndex;
+
+    while (childIndex < levelTicks.length && (levelTicks[childIndex].dataIndex ?? 0) < end) {
+      childIndex += 1;
+    }
+
+    if (childIndex > firstChildIndex) {
+      middleTicks.push(
+        levelTicks[firstChildIndex + Math.floor((childIndex - firstChildIndex - 1) / 2)],
+      );
+    }
+  });
+
+  return middleTicks;
 }
 
 function getTickLabelSize<T extends TickItem>(
