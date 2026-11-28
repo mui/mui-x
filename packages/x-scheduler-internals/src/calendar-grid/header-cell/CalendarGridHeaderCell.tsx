@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { activeElement, contains } from '@base-ui/utils/shadowDom';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
@@ -56,8 +57,9 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
 
   // Apply DOM focus when this cell becomes the focused cell
   React.useEffect(() => {
-    if (hasFocus && cellRef.current && !cellRef.current.contains(document.activeElement)) {
-      cellRef.current.focus({ preventScroll: true });
+    const cell = cellRef.current;
+    if (hasFocus && cell && !contains(cell, activeElement(cell.ownerDocument))) {
+      cell.focus({ preventScroll: true });
     }
   }, [hasFocus]);
 

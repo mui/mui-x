@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { act, screen, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
@@ -81,7 +81,7 @@ describe('EventContextMenu', () => {
   it('should open the menu on Space without also opening Edit', () => {
     renderEvent();
     const event = getEvent();
-    event.focus();
+    act(() => event.focus());
 
     fireEvent.keyDown(event, { key: ' ' });
     fireEvent.keyUp(event, { key: ' ' });
@@ -95,7 +95,7 @@ describe('EventContextMenu', () => {
   it('should still open Edit directly on Enter (unaffected by the Space interception)', () => {
     renderEvent();
     const event = getEvent();
-    event.focus();
+    act(() => event.focus());
 
     fireEvent.keyDown(event, { key: 'Enter' });
 
@@ -285,7 +285,7 @@ describe('EventContextMenu', () => {
     const eventElement = getEvent();
     // `fireEvent.contextMenu` alone doesn't focus the target the way a real keyboard/pointer
     // interaction would; focusing it first reflects what MUI's dialog actually captures on open.
-    eventElement.focus();
+    act(() => eventElement.focus());
 
     fireEvent.contextMenu(eventElement);
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
@@ -305,7 +305,7 @@ describe('EventContextMenu', () => {
     const { setProps } = renderEvent();
     const event = getEvent();
     const column = event.closest<HTMLElement>('[role="gridcell"]')!;
-    event.focus();
+    act(() => event.focus());
 
     fireEvent.keyDown(event, { key: ' ' });
     fireEvent.keyUp(event, { key: ' ' });
@@ -325,7 +325,7 @@ describe('EventContextMenu', () => {
     const { setProps } = renderEvent();
     const event = getEvent();
     const column = event.closest<HTMLElement>('[role="gridcell"]')!;
-    event.focus();
+    act(() => event.focus());
 
     fireEvent.contextMenu(event);
     expect(screen.getByRole('menu')).not.to.equal(null);
@@ -439,7 +439,7 @@ describe('EventContextMenu', () => {
     it('should not offer Delete on Space either (regression guard: the menu still gates on read-only when opened via keyboard)', () => {
       renderReadOnlyEvent();
       const event = getEvent(/Read-only event/i);
-      event.focus();
+      act(() => event.focus());
 
       fireEvent.keyDown(event, { key: ' ' });
       fireEvent.keyUp(event, { key: ' ' });
@@ -469,7 +469,7 @@ describe('EventContextMenu', () => {
     it('should arm the toolbar on Space instead of opening the menu', () => {
       renderEvent();
       const event = getEvent();
-      event.focus();
+      act(() => event.focus());
 
       fireEvent.keyDown(event, { key: ' ' });
       fireEvent.keyUp(event, { key: ' ' });

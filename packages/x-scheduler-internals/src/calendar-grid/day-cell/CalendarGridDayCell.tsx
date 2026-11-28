@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { activeElement, contains } from '@base-ui/utils/shadowDom';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
@@ -68,8 +69,9 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   // Apply DOM focus when this cell becomes the focused cell
   React.useEffect(() => {
-    if (hasFocus && cellRef.current && !cellRef.current.contains(document.activeElement)) {
-      cellRef.current.focus({ preventScroll: true });
+    const cell = cellRef.current;
+    if (hasFocus && cell && !contains(cell, activeElement(cell.ownerDocument))) {
+      cell.focus({ preventScroll: true });
     }
   }, [hasFocus]);
 
@@ -93,7 +95,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
+    if (event.currentTarget.contains(event.target)) {
       setFocusedCell({ rowType: 'day-grid', rowIndex, columnIndex: index });
     }
   };

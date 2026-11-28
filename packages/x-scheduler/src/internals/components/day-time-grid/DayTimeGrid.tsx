@@ -19,7 +19,6 @@ import {
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  createStartOfPlainDate,
   formatDayOfMonth,
   formatTime,
   formatWeekdayMonthAndDayOfMonth,
@@ -38,6 +37,7 @@ import { DayGridCell, EVENT_HEIGHT } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
+import { openDayAndFocus } from '../../utils/focus-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
@@ -508,9 +508,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               <DayTimeGridHeaderButton
                 className={classes.dayTimeGridHeaderButton}
                 type="button"
-                onClick={(event) =>
-                  store.switchToDay(createStartOfPlainDate(day, displayTimezone), event)
-                }
+                onClick={(event) => openDayAndFocus(store, day, event)}
                 tabIndex={-1}
               >
                 {renderHeaderContent(day)}

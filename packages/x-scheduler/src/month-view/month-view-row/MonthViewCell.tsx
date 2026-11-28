@@ -5,7 +5,6 @@ import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
-  createStartOfPlainDate,
   formatDayOfMonth,
   formatMonthShortAndDayOfMonth,
   getDayNumber,
@@ -27,6 +26,7 @@ import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-in
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
+import { openDayAndFocus } from '../../internals/utils/focus-utils';
 import { useEventEditingContext } from '../../internals/components/event-editing';
 import { EventContextMenuTrigger } from '../../internals/components/event-context-menu';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
@@ -250,15 +250,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         <MonthViewCellNumberButton
           type="button"
           className={classes.monthViewCellNumberButton}
-          onClick={(event) =>
-            store.switchToDay(
-              createStartOfPlainDate(
-                day.plainDate,
-                schedulerOtherSelectors.displayTimezone(store.state),
-              ),
-              event,
-            )
-          }
+          onClick={(event) => openDayAndFocus(store, day.plainDate, event)}
           tabIndex={-1}
         >
           {cellNumberContent}

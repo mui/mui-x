@@ -7,7 +7,10 @@ import type {
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
-import { isEventOccurrence } from '@mui/x-scheduler-internals/internals';
+import { createStartOfPlainDate, isEventOccurrence } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import type { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 
 // Both helpers pierce shadow roots, where `document.activeElement` stops at the host.
@@ -25,6 +28,35 @@ export function isFocusOnDocument(ownerDocument: Document): boolean {
 export function isFocusLostWith(container: HTMLElement): boolean {
   const ownerDocument = container.ownerDocument;
   return isFocusOnDocument(ownerDocument) || contains(container, activeElement(ownerDocument));
+}
+
+export function openDayAndFocus<TEvent extends object, TResource extends object>(
+  store: EventCalendarStore<TEvent, TResource>,
+  day: BaseTemporal.PlainDate,
+  event: React.MouseEvent<HTMLElement>,
+) {
+  const content = event.currentTarget.closest(`.${eventCalendarClasses.content}`);
+  const openingDay = store.state.view !== 'day';
+  store.switchToDay(createStartOfPlainDate(day, store.state.displayTimezone), event);
+
+  if (openingDay && content) {
+    // Wait for the date button to unmount and for a controlled calendar to apply its view.
+    queueMicrotask(() => {
+      if (
+        !content.isConnected ||
+        content.getAttribute('data-view') !== 'day' ||
+        !day.equals(schedulerOtherSelectors.visiblePlainDate(store.state)) ||
+        !isFocusOnDocument(content.ownerDocument)
+      ) {
+        return;
+      }
+      const firstEvent = content.querySelector<HTMLElement>(
+        `.${eventCalendarClasses.dayGridEvent}, .${eventCalendarClasses.timeGridEvent}`,
+      );
+      const target = firstEvent ?? content.querySelector<HTMLElement>('[role="gridcell"]');
+      target?.focus({ preventScroll: true });
+    });
+  }
 }
 
 const VIEW_SELECTOR = `[role="grid"], [role="treegrid"], .${eventCalendarClasses.agendaView}`;
