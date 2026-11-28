@@ -2,7 +2,7 @@ import type * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { ChatAdapter } from '../../adapters';
 import { processStream } from '../../stream';
-import type { ProcessStreamResult } from '../../stream';
+import type { ProcessStreamResult, ProcessStreamRun } from '../../stream';
 import type { ChatStore } from '../../store';
 import type {
   ChatMessage,
@@ -34,15 +34,40 @@ export interface SendMessageActionsRuntimeRef<Cursor = string> {
   onError?: ChatOnError;
 }
 
+/** The run being streamed; the controller decides whether a conversation switch keeps it. */
+export interface InFlightRun extends ProcessStreamRun {
+  /** Whether each conversation the run has seen appeared during the reply; the first sighting wins. */
+  isAddedById: Map<string, boolean>;
+}
+
+/** Records, for an unscoped run in flight, how it first saw each conversation. */
+export function markConversationsSeen(run: InFlightRun | null, ids: string[], isAdded: boolean) {
+  if (!run || run.conversationId != null) {
+    return;
+  }
+  ids.forEach((id) => {
+    if (!run.isAddedById.has(id)) {
+      run.isAddedById.set(id, isAdded);
+    }
+  });
+}
+
 export function createSendMessageActions<Cursor = string>(params: {
   store: ChatStore<Cursor>;
   storeUnknown: ChatStore<unknown>;
   runtimeRef: React.MutableRefObject<SendMessageActionsRuntimeRef<Cursor>>;
   setRuntimeError: (error: ChatError | null) => void;
   assistantMessageIdByUserMessageIdRef: React.MutableRefObject<Map<string, string>>;
+  inFlightRunRef: React.MutableRefObject<InFlightRun | null>;
 }) {
-  const { store, storeUnknown, runtimeRef, setRuntimeError, assistantMessageIdByUserMessageIdRef } =
-    params;
+  const {
+    store,
+    storeUnknown,
+    runtimeRef,
+    setRuntimeError,
+    assistantMessageIdByUserMessageIdRef,
+    inFlightRunRef,
+  } = params;
 
   // Synchronous flag to guard against double-invocation in React 18 Strict Mode.
   // `store.state.isStreaming` is updated synchronously, but React 18 may re-trigger
@@ -65,16 +90,35 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
   }
 
+  function startRun(conversationId: string | undefined): InFlightRun {
+    // Only an unscoped run can be kept on a switch, so only it needs the snapshot.
+    const run: InFlightRun = {
+      conversationId,
+      isAddedById: new Map(
+        conversationId == null ? store.state.conversationIds.map((id) => [id, false]) : [],
+      ),
+    };
+    inFlightRunRef.current = run;
+    return run;
+  }
+
+  function endRun(run: InFlightRun) {
+    if (inFlightRunRef.current === run) {
+      inFlightRunRef.current = null;
+    }
+  }
+
   async function processStreamWithReconnect(
     stream: Awaited<ReturnType<ChatAdapter<Cursor>['sendMessage']>>,
-    conversationId: string | undefined,
+    run: InFlightRun,
     abortController: AbortController,
     fallbackMessageId: string,
   ): Promise<ProcessStreamResult> {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
+    run.canReconnect = shouldDeferFinish;
     const processOptions = {
-      conversationId,
+      run,
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
@@ -88,12 +132,18 @@ export function createSendMessageActions<Cursor = string>(params: {
       messageId: fallbackMessageId,
     };
     const emitDeferredFinish = async (result: ProcessStreamResult) => {
+      run.isFinished = true;
       if (!shouldDeferFinish || !runtimeRef.current.onFinish) {
         return;
       }
 
       await runtimeRef.current.onFinish({
-        message: getFinishMessage(storeUnknown, result.messageId, conversationId, result.status),
+        message: getFinishMessage(
+          storeUnknown,
+          result.messageId,
+          run.conversationId,
+          result.status,
+        ),
         messages: getMessages(storeUnknown),
         isAbort: result.isAbort,
         isDisconnect: result.isDisconnect,
@@ -114,15 +164,19 @@ export function createSendMessageActions<Cursor = string>(params: {
       return result;
     }
 
+    run.canReconnect = false;
     try {
-      store.setStreaming(true, conversationId);
+      // failStream cleared streamingConversationId; the run keeps a scope the controller assigned.
+      store.setStreaming(true, run.conversationId);
       const reconnectStream = await adapter.reconnectToStream({
-        conversationId,
+        conversationId: run.conversationId ?? run.reportedConversationId,
         messageId: result.messageId,
         signal: abortController.signal,
       });
 
       if (!reconnectStream || abortController.signal.aborted) {
+        // Before the store write: a subscriber that switches conversations must not keep this run.
+        run.isFinished = true;
         store.setStreaming(false);
         await emitDeferredFinish(result);
         return result;
@@ -136,6 +190,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         seenEventIds: result.seenEventIds,
       });
     } catch (error) {
+      run.isFinished = true;
       store.setStreaming(false);
 
       if (abortController.signal.aborted) {
@@ -159,7 +214,7 @@ export function createSendMessageActions<Cursor = string>(params: {
           true,
           {
             messageId: result.messageId,
-            conversationId,
+            conversationId: run.conversationId,
           },
         ),
       );
@@ -206,6 +261,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
+    const run = startRun(conversationId);
 
     // Unique fallback id for this run; used only when the adapter's `start`
     // chunk carries no `messageId` of its own.
@@ -222,7 +278,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       const result = await processStreamWithReconnect(
         stream,
-        conversationId,
+        run,
         abortController,
         fallbackMessageId,
       );
@@ -250,6 +306,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         runtimeRef.current.onError?.(store.state.error);
       }
     } catch (error) {
+      run.isFinished = true;
       store.updateMessage(nextMessage.id, {
         status: abortController.signal.aborted ? 'cancelled' : 'error',
       });
@@ -274,7 +331,7 @@ export function createSendMessageActions<Cursor = string>(params: {
             true,
             {
               messageId: nextMessage.id,
-              conversationId,
+              conversationId: run.conversationId,
             },
           );
 
@@ -288,6 +345,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       if (store.state.activeStreamAbortController === abortController) {
         store.setActiveStreamAbortController(null);
       }
+      endRun(run);
     }
   }
 
@@ -422,6 +480,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
+    const run = startRun(conversationId);
 
     // Fresh fallback id: the prior assistant run was just removed above, so a
     // regenerated reply with no adapter-supplied id targets a new message.
@@ -438,7 +497,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       const result = await processStreamWithReconnect(
         stream,
-        conversationId,
+        run,
         abortController,
         fallbackMessageId,
       );
@@ -454,6 +513,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         runtimeRef.current.onError?.(store.state.error);
       }
     } catch (error) {
+      run.isFinished = true;
       if (abortController.signal.aborted) {
         store.setStreaming(false);
         return;
@@ -479,7 +539,13 @@ export function createSendMessageActions<Cursor = string>(params: {
         const removedMessage = removedById.get(id);
         if (removedMessage) {
           const group = restoredAfter.get(previousLiveId) ?? [];
-          group.push(currentById.get(id) ?? removedMessage);
+          const message = currentById.get(id) ?? removedMessage;
+          // A kept run moved the user message to its new conversation; keep the reply beside it.
+          group.push(
+            message.conversationId == null && run.conversationId !== conversationId
+              ? { ...message, conversationId: run.conversationId }
+              : message,
+          );
           restoredAfter.set(previousLiveId, group);
         } else if (liveIds.has(id)) {
           previousLiveId = id;
@@ -493,10 +559,10 @@ export function createSendMessageActions<Cursor = string>(params: {
           message,
           ...(restoredAfter.get(message.id) ?? []),
         ]);
-        const currentIds = store.state.messageIds;
+        // By identity, so a restored reply that only changed its conversation is still written.
         if (
-          nextMessages.length !== currentIds.length ||
-          nextMessages.some((message, index) => message.id !== currentIds[index])
+          nextMessages.length !== currentMessages.length ||
+          nextMessages.some((message, index) => message !== currentMessages[index])
         ) {
           store.setMessages(nextMessages);
         }
@@ -512,7 +578,7 @@ export function createSendMessageActions<Cursor = string>(params: {
           true,
           {
             messageId,
-            conversationId,
+            conversationId: run.conversationId,
           },
         ),
       );
@@ -521,6 +587,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       if (store.state.activeStreamAbortController === abortController) {
         store.setActiveStreamAbortController(null);
       }
+      endRun(run);
     }
   }
 

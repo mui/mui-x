@@ -1,13 +1,17 @@
 import type * as React from 'react';
 import type { ChatStore } from '../../store';
 import type { ChatRealtimeEvent } from '../../types/chat-realtime';
+import { markConversationsSeen } from './sendMessageActions';
+import type { InFlightRun } from './sendMessageActions';
 import { applyPresenceUpdate, applyReadUpdate } from './useChatControllerHelpers';
 
 export function createRealtimeActions(params: {
   store: ChatStore<unknown>;
+  stopStreaming: () => void;
+  inFlightRunRef: React.MutableRefObject<InFlightRun | null>;
   conversationNavigationRequestIdRef: React.MutableRefObject<number>;
 }) {
-  const { store, conversationNavigationRequestIdRef } = params;
+  const { store, stopStreaming, inFlightRunRef, conversationNavigationRequestIdRef } = params;
 
   function handleRealtimeEvent(event: ChatRealtimeEvent): void {
     switch (event.type) {
@@ -28,9 +32,11 @@ export function createRealtimeActions(params: {
         store.addConversation(event.conversation);
         return;
       case 'conversation-updated':
-        if (store.state.conversationsById[event.conversation.id]) {
+        if (store.state.conversationIds.includes(event.conversation.id)) {
           store.updateConversation(event.conversation.id, event.conversation);
         } else {
+          // An update names an existing conversation, so a stream in flight cannot belong to it.
+          markConversationsSeen(inFlightRunRef.current, [event.conversation.id], false);
           store.addConversation(event.conversation);
         }
         return;
@@ -39,6 +45,9 @@ export function createRealtimeActions(params: {
 
         if (store.state.activeConversationId === event.conversationId) {
           conversationNavigationRequestIdRef.current += 1;
+          if (store.state.isStreaming) {
+            stopStreaming();
+          }
           store.setActiveConversation(undefined);
           store.resetMessages();
         }

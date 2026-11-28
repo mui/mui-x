@@ -23,13 +23,14 @@ The following demo visualizes the streaming lifecycle:
 
 These chunks mark the boundaries of a response:
 
-| Chunk type | Fields                       | Description                    |
-| :--------- | :--------------------------- | :----------------------------- |
-| `start`    | `messageId`                  | Begin a new assistant message  |
-| `finish`   | `messageId`, `finishReason?` | Complete the assistant message |
-| `abort`    | `messageId`                  | Cancel the assistant message   |
+| Chunk type | Fields                         | Description                    |
+| :--------- | :----------------------------- | :----------------------------- |
+| `start`    | `messageId`, `conversationId?` | Begin a new assistant message  |
+| `finish`   | `messageId`, `finishReason?`   | Complete the assistant message |
+| `abort`    | `messageId`                    | Cancel the assistant message   |
 
 Every stream must begin with `start` and end with either `finish` or `abort`.
+Set `conversationId` on `start` when the server creates the conversation for a message sent from a new chat; see [Switching conversations while a reply streams](/x/react-chat/behavior/streaming/#switching-conversations-while-a-reply-streams).
 
 ### Text chunks
 

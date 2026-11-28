@@ -13,6 +13,7 @@ export function createConversationActions<Cursor = string>(params: {
   runtimeRef: React.MutableRefObject<ConversationActionsRuntimeRef<Cursor>>;
   setRuntimeError: (error: ChatError | null) => void;
   stopStreaming: () => void;
+  keepStreamOnSwitch: (conversationId: string | undefined) => boolean;
   conversationNavigationRequestIdRef: React.MutableRefObject<number>;
   conversationLoadRequestIdRef: React.MutableRefObject<number>;
   historyLoadRequestIdRef: React.MutableRefObject<number>;
@@ -22,6 +23,7 @@ export function createConversationActions<Cursor = string>(params: {
     runtimeRef,
     setRuntimeError,
     stopStreaming,
+    keepStreamOnSwitch,
     conversationNavigationRequestIdRef,
     conversationLoadRequestIdRef,
     historyLoadRequestIdRef,
@@ -183,10 +185,16 @@ export function createConversationActions<Cursor = string>(params: {
       return;
     }
 
-    stopStreaming();
+    // A kept stream is the new conversation's reply, so its messages are not reloaded.
+    const keepsStream = keepStreamOnSwitch(id);
+    if (!keepsStream) {
+      stopStreaming();
+    }
     conversationNavigationRequestIdRef.current += 1;
     store.setActiveConversation(id);
-    await loadConversationMessages(id);
+    if (!keepsStream) {
+      await loadConversationMessages(id);
+    }
   }
 
   return { loadConversationMessages, loadMoreHistory, setActiveConversation };

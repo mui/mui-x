@@ -28,8 +28,21 @@ import {
 } from './streamHelpers';
 import { createTextDeltaBuffer } from './streamTextDeltaBuffer';
 
+/** A streamed reply whose conversation the controller can assign while it streams. */
+export interface ProcessStreamRun {
+  conversationId: string | undefined;
+  /** The conversation the stream reported on its `start` chunk. */
+  reportedConversationId?: string;
+  /** Whether a disconnect is followed by a reconnect rather than ending the run. */
+  canReconnect?: boolean;
+  /** Set before the end of the reply is published, so a later switch does not keep the run. */
+  isFinished?: boolean;
+}
+
 export interface ProcessStreamOptions {
   conversationId?: string;
+  /** Replaces `conversationId` with the run's current one. */
+  run?: ProcessStreamRun;
   messageId?: string;
   signal?: AbortSignal;
   flushInterval?: number;
@@ -101,6 +114,12 @@ export async function processStream<Cursor = string>(
   options: ProcessStreamOptions = {},
 ): Promise<ProcessStreamResult> {
   const storeUnknown = asCursorAgnosticChatStore(store);
+  const getConversationId = () => (options.run ?? options).conversationId;
+  const endRun = () => {
+    if (options.run) {
+      options.run.isFinished = true;
+    }
+  };
   let targetMessageId = options.messageId;
   let finishReason: string | undefined;
   let didReceiveTerminalChunk = false;
@@ -137,7 +156,7 @@ export async function processStream<Cursor = string>(
         message: getFinishMessage(
           storeUnknown,
           targetMessageId,
-          options.conversationId,
+          getConversationId(),
           resultWithProgress.status,
         ),
         messages: store.state.messageIds.map((id) => store.state.messagesById[id]).filter(Boolean),
@@ -195,13 +214,14 @@ export async function processStream<Cursor = string>(
     const message = getOrCreateMessage(
       storeUnknown,
       targetMessageId,
-      options.conversationId,
+      getConversationId(),
       startAuthor,
     );
 
     if (!didStartMessage) {
       didStartMessage = true;
-      store.setStreaming(true, options.conversationId);
+      // Read again: `onMessagesChange` may have switched to the run's new conversation.
+      store.setStreaming(true, getConversationId());
       store.setError(null);
 
       if (targetMessageId) {
@@ -301,10 +321,14 @@ export async function processStream<Cursor = string>(
         // let two ids-less responses merge into one assistant message.
         targetMessageId = chunk.messageId ?? targetMessageId;
         startAuthor = chunk.author;
+        if (chunk.conversationId != null && options.run) {
+          options.run.reportedConversationId = chunk.conversationId;
+        }
         ensureAssistantMessage();
         return;
 
       case 'finish':
+        endRun();
         targetMessageId ??= chunk.messageId;
         ensureAssistantMessage();
         finishReason = chunk.finishReason;
@@ -318,6 +342,7 @@ export async function processStream<Cursor = string>(
         return;
 
       case 'abort':
+        endRun();
         targetMessageId ??= chunk.messageId;
         ensureAssistantMessage();
         didReceiveTerminalChunk = true;
@@ -654,6 +679,9 @@ export async function processStream<Cursor = string>(
     expectedSequence += 1;
 
     while (bufferedChunksBySequence.has(expectedSequence)) {
+      if (aborted) {
+        return;
+      }
       const nextChunk = bufferedChunksBySequence.get(expectedSequence)!;
       bufferedChunksBySequence.delete(expectedSequence);
       // eslint-disable-next-line no-await-in-loop
@@ -667,6 +695,9 @@ export async function processStream<Cursor = string>(
     void reader.cancel().catch((error) => {
       abortCancelError = error;
     });
+    // Flush now so a later flush cannot re-add the message after a reset. With controlled messages
+    // already swapped out, the re-added message is dropped by the controlled-model resync.
+    flushPendingTextLikeDelta();
   };
 
   options.signal?.addEventListener('abort', abortListener, { once: true });
@@ -717,6 +748,9 @@ export async function processStream<Cursor = string>(
 
     if (didReceiveAnyChunk) {
       flushPendingTextLikeDelta();
+      if (!options.run?.canReconnect) {
+        endRun();
+      }
       failStream('Stream closed before a terminal chunk was received.');
 
       return finish({
@@ -728,6 +762,7 @@ export async function processStream<Cursor = string>(
       });
     }
 
+    endRun();
     store.setStreaming(false);
     return finish({
       messageId: targetMessageId,
@@ -748,6 +783,7 @@ export async function processStream<Cursor = string>(
     }
 
     flushPendingTextLikeDelta();
+    endRun();
 
     // ChatStreamError means failStream() already updated the store — avoid double-handling.
     if (!(error instanceof ChatStreamError)) {

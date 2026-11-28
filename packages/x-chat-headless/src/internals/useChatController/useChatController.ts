@@ -22,7 +22,8 @@ import {
 } from './useChatControllerHelpers';
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
-import { createSendMessageActions } from './sendMessageActions';
+import { createSendMessageActions, markConversationsSeen } from './sendMessageActions';
+import type { InFlightRun } from './sendMessageActions';
 import { createTypingActions } from './typingActions';
 import type { ChatFeatures } from '../../ChatProvider';
 
@@ -76,6 +77,7 @@ export function useChatController<Cursor = string>({
     features,
   });
   const assistantMessageIdByUserMessageIdRef = React.useRef(new Map<string, string>());
+  const inFlightRunRef = React.useRef<InFlightRun | null>(null);
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
   const historyLoadRequestIdRef = React.useRef(0);
@@ -113,6 +115,73 @@ export function useChatController<Cursor = string>({
     runtimeRef.current.adapter.stop?.();
   }, [store]);
 
+  // Keeps an unscoped stream when the active conversation becomes the one it belongs to: the id its
+  // `start` chunk reported or, without one, a conversation added while it streams. Returns whether kept.
+  const keepStreamOnSwitch = React.useCallback(
+    (nextConversationId: string | undefined) => {
+      const run = inFlightRunRef.current;
+      const { activeStreamAbortController: controller, conversationIds } = store.state;
+      // A run that finished or was stopped is never kept; one waiting to reconnect still is.
+      if (
+        !run ||
+        run.isFinished ||
+        run.conversationId != null ||
+        !controller ||
+        controller.signal.aborted ||
+        nextConversationId == null
+      ) {
+        return false;
+      }
+
+      // `conversationIds` rather than `conversationsById`, so ids like `__proto__` are matched exactly.
+      const belongsToRun =
+        run.reportedConversationId != null
+          ? run.reportedConversationId === nextConversationId
+          : conversationIds.includes(nextConversationId) &&
+            run.isAddedById.get(nextConversationId) !== false;
+      if (!belongsToRun) {
+        return false;
+      }
+
+      run.conversationId = nextConversationId;
+      // While reconnecting, the reconnect sets the streaming scope from the run.
+      if (store.state.isStreaming) {
+        store.setStreaming(true, nextConversationId);
+      }
+      // Deferred because controlled messages may be syncing from props now, which drops writes.
+      queueMicrotask(() => {
+        // Skip when the user has moved on, so another conversation's messages are not relabelled.
+        if (
+          inFlightRunRef.current !== run ||
+          store.state.activeConversationId !== nextConversationId
+        ) {
+          return;
+        }
+        const messages = getMessages(storeUnknown);
+        if (messages.some((message) => message.conversationId == null)) {
+          store.setMessages(
+            messages.map((message) =>
+              message.conversationId == null
+                ? { ...message, conversationId: nextConversationId }
+                : message,
+            ),
+          );
+        }
+      });
+      return true;
+    },
+    [store, storeUnknown],
+  );
+
+  // Conversations that appear while an unscoped run streams may be its new one.
+  useStoreEffect(
+    store,
+    (state) => state.conversationIds,
+    (_, conversationIds) => {
+      markConversationsSeen(inFlightRunRef.current, conversationIds, true);
+    },
+  );
+
   const { loadConversationMessages, loadMoreHistory, setActiveConversation } = React.useMemo(
     () =>
       createConversationActions({
@@ -120,12 +189,13 @@ export function useChatController<Cursor = string>({
         runtimeRef,
         setRuntimeError,
         stopStreaming,
+        keepStreamOnSwitch,
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef,
       }),
 
-    [setRuntimeError, stopStreaming, store],
+    [setRuntimeError, stopStreaming, keepStreamOnSwitch, store],
   );
 
   const { sendMessage, sendMessageIfIdle, retry, regenerate, pruneAttachmentsByMessageIds } =
@@ -137,6 +207,7 @@ export function useChatController<Cursor = string>({
           runtimeRef,
           setRuntimeError,
           assistantMessageIdByUserMessageIdRef,
+          inFlightRunRef,
         }),
 
       [setRuntimeError, store, storeUnknown],
@@ -230,9 +301,11 @@ export function useChatController<Cursor = string>({
     () =>
       createRealtimeActions({
         store: storeUnknown,
+        stopStreaming,
+        inFlightRunRef,
         conversationNavigationRequestIdRef,
       }),
-    [storeUnknown, conversationNavigationRequestIdRef],
+    [storeUnknown, stopStreaming, conversationNavigationRequestIdRef],
   );
 
   const {
@@ -256,6 +329,12 @@ export function useChatController<Cursor = string>({
           return;
         }
 
+        // Loaded conversations already existed, so a stream in flight cannot belong to them.
+        markConversationsSeen(
+          inFlightRunRef.current,
+          result.conversations.map(({ id }) => id),
+          false,
+        );
         store.setConversations(result.conversations);
       })
       .catch((error) => {
@@ -337,6 +416,14 @@ export function useChatController<Cursor = string>({
         return;
       }
 
+      const { isStreaming, streamingConversationId } = store.state;
+      if (isStreaming && streamingConversationId !== nextActiveConversationId) {
+        // A kept stream is the new conversation's reply, so its messages are not reloaded.
+        if (keepStreamOnSwitch(nextActiveConversationId)) {
+          return;
+        }
+        stopStreaming();
+      }
       void loadConversationMessages(nextActiveConversationId);
     },
   );

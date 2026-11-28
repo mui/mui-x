@@ -12,6 +12,12 @@ export interface ChatStartMessageChunk {
   type: 'start';
   messageId: string;
   author?: ChatUser;
+  /**
+   * The conversation this reply belongs to.
+   * Send it when the server creates the conversation for a message sent without one: switching
+   * the active conversation to this id while the reply streams then keeps the stream running.
+   */
+  conversationId?: string;
 }
 
 export interface ChatFinishMessageChunk {
