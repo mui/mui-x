@@ -8,6 +8,7 @@ import {
   openLongTextEditPopup,
   openLongTextViewPopup,
 } from 'test/utils/helperFn';
+import { useGridPrivateApiContext } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 
@@ -180,6 +181,18 @@ describe('<DataGrid /> - Accessibility', () => {
     );
   });
 
+  it('should not describe the keyboard reorder keys, which need Pro', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} />
+      </div>,
+    );
+    act(() => getCell(0, 0).focus());
+
+    expect(getColumnHeaderCell(0)).not.to.have.attribute('aria-describedby');
+    expect(getCell(0, 0)).not.to.have.attribute('aria-describedby');
+  });
+
   describe('popups', () => {
     it('should not use role="tooltip" on the column menu popper', async () => {
       const { user } = render(<DataGrid {...baselineProps} />);
@@ -302,6 +315,57 @@ describe('<DataGrid /> - Accessibility', () => {
       ) as HTMLButtonElement;
       expect(expandButton).to.have.attribute('aria-expanded', 'true');
       expect(expandButton).to.have.attribute('aria-controls');
+    });
+  });
+
+  describe('live region', () => {
+    let privateApi: ReturnType<typeof useGridPrivateApiContext>;
+
+    function Footer() {
+      privateApi = useGridPrivateApiContext();
+      return null;
+    }
+
+    const getLiveRegions = () => screen.queryAllByRole('status');
+
+    it('should render one empty live region per grid', () => {
+      render(<DataGrid {...baselineProps} />);
+      const regions = getLiveRegions();
+      expect(regions).to.have.length(1);
+      expect(regions[0]).to.have.attribute('aria-live', 'polite');
+      expect(regions[0]).to.have.attribute('aria-atomic', 'true');
+      expect(regions[0]).to.have.text('');
+    });
+
+    it('should render one live region for each grid', () => {
+      render(
+        <div>
+          <DataGrid {...baselineProps} />
+          <DataGrid {...baselineProps} />
+        </div>,
+      );
+      expect(getLiveRegions()).to.have.length(2);
+    });
+
+    it('should render the live region outside of the virtual scroller', () => {
+      render(<DataGrid {...baselineProps} />);
+      const scroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      expect(scroller.contains(getLiveRegions()[0])).to.equal(false);
+    });
+
+    it('should show the announced message', () => {
+      render(<DataGrid {...baselineProps} slots={{ footer: Footer }} />);
+      act(() => privateApi.current.announce('Row moved.'));
+      expect(getLiveRegions()[0]).to.have.text('Row moved.');
+    });
+
+    it('should replace the message node when the same message is announced again', () => {
+      render(<DataGrid {...baselineProps} slots={{ footer: Footer }} />);
+      act(() => privateApi.current.announce('Row moved.'));
+      const firstNode = getLiveRegions()[0].firstChild;
+      act(() => privateApi.current.announce('Row moved.'));
+      expect(getLiveRegions()[0]).to.have.text('Row moved.');
+      expect(getLiveRegions()[0].firstChild).not.to.equal(firstNode);
     });
   });
 });

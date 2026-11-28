@@ -51,6 +51,7 @@ interface GridColumnHeaderItemProps {
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
+  isReorderTarget: boolean;
   showRightBorder: boolean;
   showLeftBorder: boolean;
   classes?: DataGridProcessedProps['classes'];
@@ -62,6 +63,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     colDef,
     classes,
     isDragging,
+    isReorderTarget,
     sortDirection,
     showRightBorder,
     showLeftBorder,
@@ -82,6 +84,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       colDef.headerAlign && `columnHeader--align${capitalize(colDef.headerAlign)}`,
       isColumnSortable && 'columnHeader--sortable',
       isDragging && 'columnHeader--moving',
+      isReorderTarget && 'columnHeader--reorderTarget',
       isColumnSorted && 'columnHeader--sorted',
       isColumnFiltered && 'columnHeader--filtered',
       isColumnNumeric && 'columnHeader--numeric',
@@ -127,6 +130,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const rootProps = useGridRootProps();
   const isRtl = useRtl();
   const adornment = configuration.hooks.useColumnHeaderAdornment(colDef.field);
+  const isReorderTarget = configuration.hooks.useIsColumnKeyboardReorderTarget(colDef.field);
+  const keyboardReorderDescribedBy = configuration.hooks.useKeyboardReorderColumnHeaderDescribedBy(
+    colDef.field,
+  );
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId = useId();
   const columnMenuButtonId = useId();
@@ -176,6 +183,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const ownerState = {
     ...props,
+    isReorderTarget,
     classes: rootProps.classes,
     showRightBorder,
     showLeftBorder,
@@ -366,6 +374,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       draggableContainerProps={draggableEventHandlers}
       columnHeaderSeparatorProps={columnHeaderSeparatorProps}
       style={style}
+      aria-describedby={keyboardReorderDescribedBy}
       {...mouseEventsHandlers}
     />
   );

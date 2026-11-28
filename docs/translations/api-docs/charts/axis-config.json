@@ -4,11 +4,19 @@
     "id": {
       "description": "ID used to identify the axis.<br /><br />The ID must be unique across all axes in this chart."
     },
-    "scaleType": { "description": "" },
     "axis": { "description": "The direction of the axis." },
+    "barGapRatio": {
+      "description": "The ratio between the width of a bar, and the gap between two bars.<br />0 means no gap, and 1 no bar.<br /><br />Only applies to <code>scaleType: &#39;band&#39;</code>."
+    },
+    "categoryGapRatio": {
+      "description": "The ratio between the space allocated for padding between two categories and the category width.<br />0 means no gap, and 1 no data.<br /><br />Only applies to <code>scaleType: &#39;band&#39;</code>."
+    },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "className": { "description": "A CSS class name applied to the root element." },
     "colorMap": { "description": "" },
+    "constant": {
+      "description": "The constant used to define the zero point of the symlog scale.<br /><br />Only applies to <code>scaleType: &#39;symlog&#39;</code>."
+    },
     "data": {
       "description": "The data used by <code>&#39;band&#39;</code> and <code>&#39;point&#39;</code> scales."
     },
@@ -21,8 +29,11 @@
       "description": "Defines the axis scale domain based on the min/max values of series linked to it.<br />- &#39;nice&#39;: Rounds the domain at human friendly values.<br />- &#39;strict&#39;: Set the domain to the min/max value provided. No extra space is added.<br />- function: Receives the calculated extremums as parameters, and should return the axis domain."
     },
     "domainSeries": { "description": "Defines the series used to compute the axis domain." },
+    "groups": {
+      "description": "Each group will have a label that is the stringified value of the group.<br /><br />Only applies to <code>scaleType: &#39;band&#39; | &#39;point&#39;</code>."
+    },
     "height": {
-      "description": "The height of the axis.<br />Set to <code>&#39;auto&#39;</code> to automatically calculate the height based on tick label measurements."
+      "description": "The height of the axis.<br />Set to <code>&#39;auto&#39;</code> to automatically calculate the height based on tick label measurements.<br /><br />Only applies to <code>axis: &#39;x&#39;</code>."
     },
     "hideTooltip": { "description": "If <code>true</code>, hide this value in the tooltip" },
     "ignoreTooltip": {
@@ -30,13 +41,23 @@
     },
     "label": { "description": "The label of the axis." },
     "labelStyle": { "description": "The style applied to the axis label." },
+    "max": {
+      "description": "The maximal value of the domain.<br />If not provided, it gets computed to display the entire chart data.<br /><br />Only applies to <code>scaleType: &#39;linear&#39; | &#39;log&#39; | &#39;pow&#39; | &#39;sqrt&#39; | &#39;symlog&#39; | &#39;time&#39; | &#39;utc&#39;</code>."
+    },
+    "min": {
+      "description": "The minimal value of the domain.<br />If not provided, it gets computed to display the entire chart data.<br /><br />Only applies to <code>scaleType: &#39;linear&#39; | &#39;log&#39; | &#39;pow&#39; | &#39;sqrt&#39; | &#39;symlog&#39; | &#39;time&#39; | &#39;utc&#39;</code>."
+    },
     "offset": {
       "description": "The offset of the axis in pixels. It can be used to move the axis from its default position.<br />X-axis: A top axis will move up, and a bottom axis will move down.<br />Y-axis: A left axis will move left, and a right axis will move right."
+    },
+    "ordinalTimeTicks": {
+      "description": "Definition of the tick placements with date data.<br /><br />Only applies to <code>scaleType: &#39;band&#39; | &#39;point&#39;</code>."
     },
     "position": {
       "description": "Position of the axis.<br /><br />When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.<br /><br />Set to &#39;none&#39; to hide the axis.<br /><br />The first axis in the list will always have a default position."
     },
     "reverse": { "description": "If <code>true</code>, Reverse the axis scaleBand." },
+    "scaleType": { "description": "" },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": {
@@ -47,6 +68,9 @@
     },
     "tickLabelInterval": {
       "description": "Defines which ticks get its label displayed. Its value can be:<br />- &#39;auto&#39; In such case, labels are displayed if they do not overlap with the previous one.<br />- a filtering function of the form (value, index) =&gt; boolean. Warning: the index is tick index, not data ones."
+    },
+    "tickLabelMinGap": {
+      "description": "The minimum gap in pixels between two tick labels.<br />If two tick labels are closer than this minimum gap, one of them will be hidden.<br /><br />Only applies to <code>axis: &#39;x&#39;</code>."
     },
     "tickLabelPlacement": {
       "description": "The placement of ticks label. Can be the middle of the band, or the tick position.<br />Only used if scale is &#39;band&#39;."
@@ -73,7 +97,7 @@
       "description": "A function to extract and transform the value from the <code>dataset</code> item.<br />It receives the full dataset item and should return the axis value.<br />Can be used as an alternative to <code>dataKey</code>."
     },
     "width": {
-      "description": "The width of the axis.<br />Set to <code>&#39;auto&#39;</code> to automatically calculate the width based on tick label measurements."
+      "description": "The width of the axis.<br />Set to <code>&#39;auto&#39;</code> to automatically calculate the width based on tick label measurements.<br /><br />Only applies to <code>axis: &#39;y&#39;</code>."
     },
     "zoom": { "description": "" }
   }

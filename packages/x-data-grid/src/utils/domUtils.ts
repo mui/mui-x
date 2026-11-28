@@ -54,6 +54,26 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
   return activeEl;
 };
 
+/**
+ * Calls `callback` when a `focusout` event moves the focus out of the root for good.
+ * Moving the focused row or column blurs it until React restores the focus, so the check waits.
+ * @param {Element} root The element that the focus leaves.
+ * @param {FocusEvent} event The `focusout` event.
+ * @param {() => void} callback Called when the focus is still outside of the root.
+ */
+export function onFocusLeave(root: Element, event: FocusEvent, callback: () => void) {
+  if (root.contains(event.relatedTarget as Node | null)) {
+    return;
+  }
+  setTimeout(() => {
+    // An unmounted root has nothing left to update.
+    // Inside a shadow root, `document.activeElement` is the shadow host.
+    if (root.isConnected && !root.contains(getActiveElement(root.ownerDocument))) {
+      callback();
+    }
+  });
+}
+
 export function isEventTargetInPortal(event: React.SyntheticEvent) {
   if (
     // The target is not an element when triggered by a Select inside the cell
@@ -97,6 +117,21 @@ export function isEventTargetTextEntryElement(event: React.SyntheticEvent | Even
     return !(target as HTMLTextAreaElement).readOnly;
   }
   return target.isContentEditable === true;
+}
+
+/**
+ * Checks if a key press in a cell or a header belongs to its content instead of to a grid shortcut:
+ * a key that the content already handled, like `Alt+ArrowDown` opening a Select,
+ * a text field, a native select, or an element rendered in a portal, like a menu.
+ * Call it from the cell or header `keydown` handler, so `currentTarget` is the cell or the header.
+ */
+export function isEventForCellContent(event: React.SyntheticEvent) {
+  return (
+    (event.defaultPrevented && event.target !== event.currentTarget) ||
+    isEventTargetInPortal(event) ||
+    isEventTargetTextEntryElement(event) ||
+    (event.target as HTMLElement).tagName === 'SELECT'
+  );
 }
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {

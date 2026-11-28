@@ -95,6 +95,11 @@ export type {
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {
+  useGridKeyboardUse,
+  keyboardUseStateInitializer,
+} from '../hooks/features/keyboardUse/useGridKeyboardUse';
+export { gridKeyboardUseActiveSelector } from '../hooks/features/keyboardUse/gridKeyboardUseSelector';
+export {
   useGridPagination,
   paginationStateInitializer,
 } from '../hooks/features/pagination/useGridPagination';
@@ -126,6 +131,7 @@ export type {
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
+export { RowsMeta } from '@mui/x-virtualizer';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export {
   getRowIdFromRowModel,
@@ -140,6 +146,7 @@ export {
   gridAdditionalRowGroupsSelector,
   gridPinnedRowsSelector,
   gridRowSelector,
+  gridRowsStateSelector,
 } from '../hooks/features/rows/gridRowsSelector';
 export {
   headerFilteringStateInitializer,
@@ -187,6 +194,7 @@ export {
   getRowIndexRelativeToAllRows,
 } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
+export { objectShallowCompare } from '../hooks/utils/useGridSelector';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
 export { usePointerDrag, getElementAtPoint } from '../hooks/utils/usePointerDrag';
@@ -237,8 +245,10 @@ export {
   getActiveElement,
   getGridCellElement,
   getGridRowElement,
+  isEventForCellContent,
   isEventTargetInPortal,
   isEventTargetTextEntryElement,
+  onFocusLeave,
 } from '../utils/domUtils';
 export {
   isNavigationKey,
@@ -274,6 +284,7 @@ export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadi
 
 export type { GridConfiguration } from '../models/configuration/gridConfiguration';
 export type { CellEditableConditionFn } from '../models/configuration/gridCellEditableConfiguration';
+export type { GridKeyboardReorderCellDescription } from '../models/configuration/gridKeyboardReorderConfiguration';
 
 export * from '../hooks/features/pivoting';
 

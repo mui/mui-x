@@ -1,6 +1,7 @@
 import type * as React from 'react';
 import type { GridColDef } from '../colDef';
 import type { GridSortDirection } from '../gridSortModel';
+import type { GridRowId } from '../gridRows';
 
 /**
  * Set the types of the texts in the grid.
@@ -270,6 +271,29 @@ export interface GridLocaleText {
 
   // Row reordering text
   rowReorderingHeaderName: string;
+  rowReorderingAnnouncementMoved: (params: {
+    position: number;
+    total: number;
+    rowId: GridRowId;
+  }) => string;
+  rowReorderingAnnouncementEdge: (params: { direction: 'up' | 'down' }) => string;
+  rowReorderingAnnouncementSorted: () => string;
+  rowReorderingAnnouncementInvalid: () => string;
+  rowReorderingAnnouncementDisabled: () => string;
+  rowReorderingKeyboardDescription: (params: { modifierKey: 'Alt' | 'Option' }) => string;
+
+  // Column reordering text
+  columnReorderingAnnouncementMoved: (params: {
+    columnName: string;
+    position: number;
+    total: number;
+  }) => string;
+  columnReorderingAnnouncementEdge: (params: {
+    columnName: string;
+    direction: 'left' | 'right';
+  }) => string;
+  columnReorderingAnnouncementDisabled: (params: { columnName: string }) => string;
+  columnReorderingKeyboardDescription: (params: { modifierKey: 'Alt' | 'Option' }) => string;
 
   // Aggregation
   aggregationMenuItemHeader: string;

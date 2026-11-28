@@ -2,6 +2,7 @@ export * from '@mui/x-data-grid/internals';
 
 export { GridColumnHeaders } from '../components/GridColumnHeaders';
 export { GridMultiSelectMeasurer } from '../components/cell/GridMultiSelectMeasurer';
+export { GridKeyboardReorderDescriptions } from '../components/GridKeyboardReorderDescriptions';
 export { registerMultiSelectColumnType } from '../colDef/registerMultiSelectColumnType';
 export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
@@ -42,7 +43,20 @@ export {
 export { useGridRowsOverridableMethods as useGridRowsOverridableMethodsPro } from '../hooks/features/rows/useGridRowsOverridableMethods';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 export { useGridRowReorderPointer } from '../hooks/features/rowReorder/useGridRowReorderPointer';
+export {
+  useGridKeyboardReorder,
+  keyboardReorderStateInitializer,
+} from '../hooks/features/keyboardReorder/useGridKeyboardReorder';
+export {
+  useIsColumnKeyboardReorderTarget,
+  useIsRowKeyboardReorderTarget,
+} from '../hooks/features/keyboardReorder/useGridKeyboardReorderTarget';
+export {
+  useKeyboardReorderCellDescription,
+  useKeyboardReorderColumnHeaderDescribedBy,
+} from '../hooks/features/keyboardReorder/useGridKeyboardReorderDescription';
 export type { GridRowReorderPrivateApi } from '../models/gridRowReorderApi';
+export type { GridKeyboardReorderPrivateApi } from '../models/gridKeyboardReorderApi';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 export {

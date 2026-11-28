@@ -5,9 +5,10 @@ Render benchmarks, run with the `benchmark` CLI from [`@mui/internal-benchmark`]
 ## Run locally
 
 ```bash
-pnpm test:benchmark                                    # everything, as CI runs it, against the parent commit
-pnpm test:benchmark --baseline master                  # against another revision
-pnpm test:benchmark -t "LineChart"                     # only benchmarks whose name matches
+pnpm test:benchmark smoke/                             # what CI runs, against the parent commit
+pnpm test:benchmark smoke/ --baseline master           # against another revision
+pnpm test:benchmark smoke/ -t "LineChart"              # only benchmarks whose name matches
+pnpm test:benchmark scheduler/                         # the benchmark files of another folder
 ```
 
 The run builds the packages itself (`pnpm release:build`), writes `.benchmark/results/report.json` and prints a table per benchmark. While it runs, it pins the packed builds in the repository's `pnpm-workspace.yaml` and puts it back at the end, so don't commit or build in the same checkout meanwhile.
@@ -18,6 +19,7 @@ The run builds the packages itself (`pnpm release:build`), writes `.benchmark/re
 
 - `src/smoke/x.bench.tsx` holds the benchmarks of all of MUI X, in one page: the runner loads a file's page once per round, so they run warm, and settle in far fewer rounds than in a page each. They are there to catch big regressions: 30 rounds each, alarming once a change is past 10% with 99% confidence.
 - `src/<product>/scenarios.tsx`, and `src/charts/<Chart>/scenarios.tsx` for a chart, named after the folder its source lives in, define the cases with `defineScenario()`, which takes `reactBenchmark()`'s arguments. A scenario module registers nothing itself; the smoke file registers each case with `smokeBenchmark()`.
+- `src/scheduler/interactions.bench.tsx` registers the Scheduler scenarios with an interaction, a drag and a scroll. They are too long for the smoke file, so CI doesn't run them.
 - `package.json` also lists dependencies no file imports: `@mui/material` and `@emotion/styled` are peer dependencies of the packages, and `@playwright/test` of `@mui/internal-benchmark`.
 
 ## In CI

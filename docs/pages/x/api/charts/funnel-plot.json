@@ -1,6 +1,5 @@
 {
   "props": {
-    "className": { "type": { "name": "string" } },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {

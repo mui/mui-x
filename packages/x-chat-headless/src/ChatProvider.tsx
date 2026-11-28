@@ -5,6 +5,8 @@ import { useChatController } from './internals/useChatController';
 import { useChatInstance } from './internals/useChatInstance';
 import { ChatRuntimeContext } from './internals/useChatRuntimeContext';
 import type { ChatRuntimeContextValue } from './internals/useChatRuntimeContext';
+import { ChatLocaleProvider } from './chat/internals/ChatLocaleContext';
+import type { ChatLocaleText } from './chat/internals/chatLocaleText';
 import type { ChatPartRendererMap } from './renderers';
 import { defaultPartRenderers } from './renderers/defaultPartRenderers';
 import type { ChatStoreConstructor, ChatStoreParameters } from './store';
@@ -91,6 +93,11 @@ export interface ChatProviderProps<Cursor = string> extends Omit<
    * Runtime feature flags for the chat controller (e.g. outbound typing signals).
    */
   features?: ChatFeatures;
+  /**
+   * Overrides for the user-facing strings of every chat component rendered below the provider.
+   * Omitted keys fall back to the locale of the closest parent provider, then to the built-in English defaults.
+   */
+  localeText?: Partial<ChatLocaleText>;
 }
 
 export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) {
@@ -109,6 +116,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     partRenderers,
     storeClass,
     features,
+    localeText,
     members,
     currentUser,
     roleDisplayNames,
@@ -177,7 +185,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     ],
   );
   const store = useChatInstance(parameters, storeClass);
-  const actions = useChatController({
+  const { actions, sendMessageIfIdle } = useChatController({
     store,
     adapter,
     onToolCall,
@@ -204,14 +212,24 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       onError,
       partRenderers: mergedPartRenderers,
       actions,
+      sendMessageIfIdle,
     }),
-    [actions, adapter, mergedPartRenderers, onToolCall, onFinish, onData, onError],
+    [
+      actions,
+      sendMessageIfIdle,
+      adapter,
+      mergedPartRenderers,
+      onToolCall,
+      onFinish,
+      onData,
+      onError,
+    ],
   );
 
   return (
     <ChatStoreContext.Provider value={store}>
       <ChatRuntimeContext.Provider value={runtimeContextValue}>
-        {children}
+        <ChatLocaleProvider localeText={localeText}>{children}</ChatLocaleProvider>
       </ChatRuntimeContext.Provider>
     </ChatStoreContext.Provider>
   );
