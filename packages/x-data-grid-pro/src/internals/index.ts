@@ -13,9 +13,12 @@ export { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGrid
 export { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
 export {
   useGridPointerDragRouting,
+  useGridRootNativeEventListener,
   isElementInGrid,
   isPointerDownOnHandleControl,
+  isPointerDragType,
 } from '../hooks/utils/useGridPointerDragRouting';
+export { autoScrollGridOnPointerDrag } from '../hooks/utils/gridPointerDragAutoScroll';
 export { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export {

@@ -81,6 +81,7 @@ To let the users copy the values using dragging, similar to the spreadsheet appl
 
 When passed, a small handle appears at the bottom-right corner of the selected [`editable`](/x/react-data-grid/editing/#making-a-column-editable) cell.
 Drag it up or down to fill rows, or left and right to fill adjacent columns.
+On touch screens, tap a cell, then press and hold its handle to start dragging it.
 
 {{"demo": "CellSelectionFillHandle.js", "bg": "inline"}}
 

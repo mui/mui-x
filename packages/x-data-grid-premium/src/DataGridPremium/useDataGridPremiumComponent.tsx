@@ -115,6 +115,7 @@ import {
   cellSelectionStateInitializer,
   useGridCellSelection,
 } from '../hooks/features/cellSelection/useGridCellSelection';
+import { useGridFillHandlePointer } from '../hooks/features/cellSelection/useGridFillHandlePointer';
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
 import {
   pivotingStateInitializer,
@@ -284,6 +285,7 @@ export const useDataGridPremiumComponent = (
   // Before `useGridRowSelection`: the select-all shortcut of the cell selection feature
   // must run first and block the row selection listener with `defaultMuiPrevented`.
   useGridCellSelection(apiRef, props);
+  useGridFillHandlePointer(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);

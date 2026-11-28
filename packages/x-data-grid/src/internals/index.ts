@@ -22,6 +22,7 @@ export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColum
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 export * from '../constants/signature';
 export { vars } from '../constants/cssVariables';
+export { FILL_HANDLE_IMMEDIATE_TOUCH_DRAG } from '../constants/fillHandle';
 
 export { useGridVirtualizer } from '../hooks/core/useGridVirtualizer';
 export { propsStateInitializer } from '../hooks/core/useGridProps';
@@ -202,10 +203,10 @@ export {
   createDragPreview,
   getEdgeScrollDelta,
   getVisibleViewportBounds,
-  hasReachedAutoScrollDistance,
 } from '../hooks/utils/pointerDragUtils';
 export type { DragPreview, VisibleViewportBounds } from '../hooks/utils/pointerDragUtils';
 export type {
+  PointerDragFrame,
   PointerDragPosition,
   UsePointerDragOptions,
   UsePointerDragReturnValue,

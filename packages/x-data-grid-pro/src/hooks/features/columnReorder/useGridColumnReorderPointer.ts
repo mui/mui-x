@@ -1,20 +1,15 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import ownerWindow from '@mui/utils/ownerWindow';
 import { useRtl } from '@mui/system/RtlProvider';
 import { gridClasses, useGridLogger } from '@mui/x-data-grid';
 import type { CursorCoordinates } from '@mui/x-data-grid';
-import {
-  createDragPreview,
-  getEdgeScrollDelta,
-  getElementAtPoint,
-  getVisibleViewportBounds,
-  gridDimensionsSelector,
-  hasReachedAutoScrollDistance,
-  usePointerDrag,
+import { createDragPreview, getElementAtPoint, usePointerDrag } from '@mui/x-data-grid/internals';
+import type {
+  DragPreview,
+  PointerDragFrame,
+  PointerDragPosition,
 } from '@mui/x-data-grid/internals';
-import type { DragPreview, PointerDragPosition } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
@@ -22,6 +17,10 @@ import {
   isPointerDownOnHandleControl,
   useGridPointerDragRouting,
 } from '../../utils/useGridPointerDragRouting';
+import {
+  autoScrollGridOnPointerDrag,
+  getGridScrollableCellsBounds,
+} from '../../utils/gridPointerDragAutoScroll';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { useUtilityClasses } from './useGridColumnReorder';
 import {
@@ -43,16 +42,11 @@ interface ColumnDragSession {
   field: string;
   originIndex: number;
   forbiddenIndexes: ColumnReorderForbiddenIndexes;
-  startClientX: number;
-  startClientY: number;
   clientX: number;
   clientY: number;
-  // Off until the pointer moves away from where the drag started
-  canAutoScroll: boolean;
   // The pointer position of the last column evaluation, like `cursorPosition` in `useGridColumnReorder`
   previousPosition: CursorCoordinates;
   preview: DragPreview;
-  frame: number | undefined;
 }
 
 // The scroll areas of HTML drag and drop show while a column is dragged.
@@ -108,7 +102,6 @@ export const useGridColumnReorderPointer = (
 
   // Removes what the session added to the DOM. The reorder state is handled by the caller.
   const stopSession = (session: ColumnDragSession) => {
-    cancelAnimationFrame(session.frame!);
     session.preview.remove();
     apiRef.current.rootElementRef?.current?.classList.remove(
       gridClasses['root--disableUserSelection'],
@@ -170,89 +163,35 @@ export const useGridColumnReorderPointer = (
     session.previousPosition = position;
   };
 
-  // The edges of the scrollable columns, between the pinned columns, in client coordinates.
-  // In RTL, the left pinned columns are on the right side and the vertical scrollbar on the left.
-  const getScrollableColumnsBounds = (scrollerRect: DOMRect) => {
-    const dimensions = gridDimensionsSelector(apiRef);
-    const scrollbarSize = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
-    const startInset = isRtl
-      ? dimensions.rightPinnedWidth + scrollbarSize
-      : dimensions.leftPinnedWidth;
-    const endInset = isRtl
-      ? dimensions.leftPinnedWidth
-      : dimensions.rightPinnedWidth + scrollbarSize;
-    return { left: scrollerRect.left + startInset, right: scrollerRect.right - endInset };
-  };
-
-  // Returns the scroll delta that was applied, `0` when nothing scrolled
-  const autoScroll = (
-    session: ColumnDragSession,
-    root: HTMLElement,
-    scroller: HTMLElement,
-  ): number => {
-    const rect = scroller.getBoundingClientRect();
-    if (session.clientY < rect.top || session.clientY > rect.bottom) {
-      return 0;
-    }
-
-    const { left: columnsLeft, right: columnsRight } = getScrollableColumnsBounds(rect);
-    // The page doesn't scroll during a touch drag, so a zone off-screen couldn't be reached
-    const win = ownerWindow(root);
-    const viewport = getVisibleViewportBounds(win);
-    const delta = getEdgeScrollDelta(
-      session.clientX,
-      Math.max(columnsLeft, viewport.left),
-      Math.min(columnsRight, viewport.right),
-    );
-    if (delta === 0) {
-      return 0;
-    }
-
-    const { left } = apiRef.current.getScrollPosition();
-    // `scroll` takes the distance from the start edge and flips it in RTL, where `scrollLeft` is negative
-    apiRef.current.scroll({ left: (isRtl ? -1 : 1) * (left + delta) });
-    if (apiRef.current.getScrollPosition().left !== left) {
-      return delta;
-    }
-    // The grid can't scroll further: scroll the page when the pointer is at the edge of the screen
-    const isAtScreenEdge = delta < 0 ? viewport.left > columnsLeft : viewport.right < columnsRight;
-    if (isAtScreenEdge) {
-      win.scrollBy(delta, 0);
-      return delta;
-    }
-    return 0;
-  };
-
   // Runs on every frame of the drag, so the auto-scroll goes on while the pointer holds still
-  const onDragFrame = () => {
+  const onDragFrame = (frame: PointerDragFrame<DragData>) => {
     const session = sessionRef.current;
-    if (!session) {
-      return;
-    }
     const root = apiRef.current.rootElementRef?.current;
     const scroller = apiRef.current.virtualScrollerRef?.current;
-    // A re-render can null the refs for a frame. Keep the loop alive so auto-scroll resumes.
-    if (session.canAutoScroll && root && scroller) {
-      const delta = autoScroll(session, root, scroller);
-      if (delta !== 0) {
-        // The root moves with the page scroll, and the preview is positioned in it
-        session.preview.move(session.clientX, session.clientY);
-        // The columns moved under the still pointer: evaluate them as if it had moved toward the edge
-        session.previousPosition = { x: session.clientX - Math.sign(delta), y: session.clientY };
-        // Past the edge, there's no target under the pointer: evaluate the column at the edge instead,
-        // so the dragged column keeps following the scroll up to the pinned columns
-        const bounds = getScrollableColumnsBounds(scroller.getBoundingClientRect());
-        const hitX = Math.min(
-          Math.max(session.clientX, bounds.left + EDGE_HIT_TEST_INSET),
-          bounds.right - EDGE_HIT_TEST_INSET,
-        );
-        updateTarget(
-          session,
-          getElementAtPoint(root, hitX, session.clientY, HIT_TEST_IGNORE_SELECTOR),
-        );
-      }
+    // A re-render can null the refs for a frame. The next frames still run.
+    if (!session || !frame.canAutoScroll || !root || !scroller) {
+      return;
     }
-    session.frame = requestAnimationFrame(onDragFrame);
+    const { deltaX } = autoScrollGridOnPointerDrag(apiRef, scroller, {
+      clientX: session.clientX,
+      clientY: session.clientY,
+      axis: 'x',
+    });
+    if (deltaX === 0) {
+      return;
+    }
+    // The root moves with the page scroll, and the preview is positioned in it
+    session.preview.move(session.clientX, session.clientY);
+    // The columns moved under the still pointer: evaluate them as if it had moved toward the edge
+    session.previousPosition = { x: session.clientX - Math.sign(deltaX), y: session.clientY };
+    // Past the edge, there's no target under the pointer: evaluate the column at the edge instead,
+    // so the dragged column keeps following the scroll up to the pinned columns
+    const bounds = getGridScrollableCellsBounds(apiRef, scroller.getBoundingClientRect());
+    const hitX = Math.min(
+      Math.max(session.clientX, bounds.left + EDGE_HIT_TEST_INSET),
+      bounds.right - EDGE_HIT_TEST_INSET,
+    );
+    updateTarget(session, getElementAtPoint(root, hitX, session.clientY, HIT_TEST_IGNORE_SELECTOR));
   };
 
   const startDrag = (position: PointerDragPosition<DragData>) => {
@@ -278,17 +217,12 @@ export const useGridColumnReorderPointer = (
       field,
       originIndex,
       forbiddenIndexes,
-      startClientX: position.clientX,
-      startClientY: position.clientY,
       clientX: position.clientX,
       clientY: position.clientY,
-      canAutoScroll: false,
       previousPosition: { x: position.clientX, y: position.clientY },
       preview,
-      frame: undefined,
     };
     sessionRef.current = session;
-    session.frame = requestAnimationFrame(onDragFrame);
     return true;
   };
 
@@ -299,17 +233,6 @@ export const useGridColumnReorderPointer = (
     }
     session.clientX = position.clientX;
     session.clientY = position.clientY;
-    if (
-      !session.canAutoScroll &&
-      hasReachedAutoScrollDistance(
-        session.startClientX,
-        session.startClientY,
-        session.clientX,
-        session.clientY,
-      )
-    ) {
-      session.canAutoScroll = true;
-    }
     session.preview.move(session.clientX, session.clientY);
     updateTarget(session, position.elementAtPoint);
   };
@@ -346,6 +269,7 @@ export const useGridColumnReorderPointer = (
     onDragMove: moveDrag,
     onDragEnd: endDrag,
     onDragCancel: cancelDrag,
+    onDragFrame,
     hitTestIgnoreSelector: HIT_TEST_IGNORE_SELECTOR,
   });
 
@@ -370,7 +294,6 @@ export const useGridColumnReorderPointer = (
       // The root goes with it, so its selection class doesn't need to be removed.
       const session = sessionRef.current;
       if (session) {
-        cancelAnimationFrame(session.frame!);
         session.preview.remove();
         sessionRef.current = null;
       }
