@@ -82,6 +82,49 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiChartsRadialDataProvider: {
+      defaultProps: {
+        // @ts-expect-error invalid MuiChartsRadialDataProvider prop
+        someRandomProp: true,
+      },
+    },
+    MuiChartsLayerContainer: {
+      defaultProps: {
+        title: 'title',
+        // @ts-expect-error invalid MuiChartsLayerContainer prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiChartsLayerContainer class key
+        constent: { color: 'red' },
+      },
+    },
+    MuiChartsSvgLayer: {
+      defaultProps: {
+        opacity: 0.5,
+        // @ts-expect-error invalid MuiChartsSvgLayer prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiChartsSvgLayer class key
+        constent: { color: 'red' },
+      },
+    },
+    MuiChartsRadialGrid: {
+      defaultProps: {
+        rotation: true,
+        // @ts-expect-error invalid MuiChartsRadialGrid prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        radiusLine: { stroke: 'red' },
+        // @ts-expect-error invalid MuiChartsRadialGrid class key
+        constent: { color: 'red' },
+      },
+    },
 
     // BarChart components
     MuiBarChart: {
@@ -89,6 +132,18 @@ createTheme({
         title: 'toto',
         // @ts-expect-error invalid MuiBarChart prop
         someRandomProp: true,
+      },
+    },
+    MuiBarLabel: {
+      defaultProps: {
+        dataIndex: 0,
+        // @ts-expect-error invalid MuiBarLabel prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiBarLabel class key
+        constent: { color: 'red' },
       },
     },
     MuiBarPlot: {
@@ -130,6 +185,13 @@ createTheme({
     },
 
     // PieChart components
+    MuiPieChart: {
+      defaultProps: {
+        title: 'toto',
+        // @ts-expect-error invalid MuiPieChart prop
+        someRandomProp: true,
+      },
+    },
     MuiPieArcPlot: {
       styleOverrides: {
         root: { backgroundColor: 'red' },
@@ -155,6 +217,14 @@ createTheme({
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiScatterChart class key
         constent: { color: 'red' },
+      },
+    },
+    // RadarChart components
+    MuiRadarChart: {
+      defaultProps: {
+        shape: 'circular',
+        // @ts-expect-error invalid MuiRadarChart prop
+        someRandomProp: true,
       },
     },
   },

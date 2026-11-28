@@ -121,15 +121,17 @@ To benefit from [CSS overrides](/material-ui/customization/theme-components/#the
 These types use module augmentation to extend the default theme structure.
 
 ```tsx
-// Pro users: add `-pro` suffix to package name
+// Pro and Premium users: add `-pro` or `-premium` suffix to package name
 import type {} from '@mui/x-charts/themeAugmentation';
 
 const theme = createTheme({
   components: {
     MuiChartsAxis: {
       styleOverrides: {
-        tick: {
-          stroke: '#006BD6',
+        root: {
+          '& .MuiChartsAxis-tick': {
+            stroke: '#006BD6',
+          },
         },
       },
     },

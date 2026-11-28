@@ -23,6 +23,20 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiPieChartPro: {
+      defaultProps: {
+        title: 'toto',
+        // @ts-expect-error invalid MuiPieChartPro prop
+        someRandomProp: true,
+      },
+    },
+    MuiRadarChartPro: {
+      defaultProps: {
+        title: 'toto',
+        // @ts-expect-error invalid MuiRadarChartPro prop
+        someRandomProp: true,
+      },
+    },
     MuiHeatmap: {
       defaultProps: {
         title: 'toto',
@@ -64,7 +78,7 @@ createTheme({
 
     MuiFunnelSectionLabel: {
       defaultProps: {
-        variant: 'outlined',
+        label: { x: 0, y: 0, value: 'label' },
         // @ts-expect-error invalid MuiFunnelSectionLabel prop
         someRandomProp: true,
       },
