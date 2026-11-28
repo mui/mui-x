@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, within } from '@mui/internal-test-utils';
+import { reactMajor, screen, within } from '@mui/internal-test-utils';
 import {
   createDate,
   createSchedulerRenderer,
@@ -214,14 +214,21 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
     it.each(['same-day', null])(
       'should fall back to `shorter-than-one-day` when `timeGridEvents` is %s',
       (timeGridEvents) => {
-        render(
-          <EventCalendar
-            events={[nightShift, longShift]}
-            visibleDate={visibleDate}
-            view="week"
-            viewConfig={{ week: { timeGridEvents: timeGridEvents as any } }}
-          />,
-        );
+        expect(() =>
+          render(
+            <EventCalendar
+              events={[nightShift, longShift]}
+              visibleDate={visibleDate}
+              view="week"
+              viewConfig={{ week: { timeGridEvents: timeGridEvents as any } }}
+            />,
+          ),
+        ).toErrorDev([
+          // React 19 no longer checks propTypes.
+          reactMajor < 19 &&
+            timeGridEvents === 'same-day' &&
+            'Failed prop type: Invalid prop `viewConfig.week.timeGridEvents` of value `same-day`',
+        ]);
 
         expect(getDayGridEvents(/Night shift/)).to.have.length(0);
         expect(screen.getAllByRole('button', { name: /Night shift/ })).to.have.length(2);

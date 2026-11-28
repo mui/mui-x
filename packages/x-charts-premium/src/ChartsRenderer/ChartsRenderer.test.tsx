@@ -29,7 +29,8 @@ describe('<ChartsRenderer />', () => {
   });
 
   it('should pass the rendering to the onRender callback', () => {
-    const onRenderSpy = vi.fn();
+    // Returns `null`: React 17 throws when a component renders `undefined`.
+    const onRenderSpy = vi.fn().mockReturnValue(null);
     render(
       <div data-testid="container">
         <ChartsRenderer
@@ -46,7 +47,7 @@ describe('<ChartsRenderer />', () => {
   });
 
   it('should compute props for the chart', () => {
-    const onRenderSpy = vi.fn();
+    const onRenderSpy = vi.fn().mockReturnValue(null);
     render(
       <div data-testid="container">
         <ChartsRenderer
@@ -64,7 +65,7 @@ describe('<ChartsRenderer />', () => {
   });
 
   it('should override the props if the configuration has an updated value', () => {
-    const onRenderSpy = vi.fn();
+    const onRenderSpy = vi.fn().mockReturnValue(null);
     render(
       <div data-testid="container">
         <ChartsRenderer
@@ -84,7 +85,7 @@ describe('<ChartsRenderer />', () => {
   });
 
   it('should place dimensions and values to the correct place in the props', () => {
-    const onRenderSpy = vi.fn();
+    const onRenderSpy = vi.fn().mockReturnValue(null);
     render(
       <div data-testid="container">
         <ChartsRenderer
@@ -111,7 +112,7 @@ describe('<ChartsRenderer />', () => {
     const getPieSeries = (
       props: Partial<React.ComponentProps<typeof ChartsRenderer>>,
     ): Record<string, any>[] => {
-      const onRenderSpy = vi.fn();
+      const onRenderSpy = vi.fn().mockReturnValue(null);
       render(
         <ChartsRenderer
           dimensions={nestedDimensions}

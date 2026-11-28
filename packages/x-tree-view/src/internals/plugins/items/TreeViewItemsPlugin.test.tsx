@@ -26,8 +26,8 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
             'Alternatively, you can use the `getItemId` prop to specify a custom id for each item',
           // `ForwardRef(TreeItem)` on newer `@vitejs/plugin-react`, `ForwardRef(TreeItem2)` on older ones.
           reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem`,
-          // `ForwardRef(TreeItem)` on newer `@vitejs/plugin-react`, `ForwardRef(TreeItem2)` on older ones.
-          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem`,
+          // React 18 logs it twice, React 17 once.
+          reactMajor === 18 && `The above error occurred in the <ForwardRef(TreeItem`,
         ]);
       } else {
         // eslint-disable-next-line vitest/no-conditional-expect

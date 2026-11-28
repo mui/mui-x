@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
 import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
 import { vi, describe, it, expect } from 'vitest';
@@ -122,7 +122,7 @@ describe('<DatePicker />', () => {
     const hiddenInput = screen.getByRole('textbox', { hidden: true }) as HTMLInputElement;
     expect(hiddenInput.value).to.contain('12');
 
-    React.act(() => {
+    act(() => {
       fieldRef.current.clearValue();
     });
 

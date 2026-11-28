@@ -394,3 +394,31 @@ workflows:
           <<: *default-context
           name: test_e2e_react_18
           react-version: ^18
+  # Manually-triggered counterpart of `nightly-cron`.
+  react-17:
+    when:
+      equal: [react-17, << pipeline.parameters.workflow >>]
+    jobs: &react-17-jobs
+      - test_unit:
+          <<: *default-context
+          name: test_unit_react_17
+          react-version: ^17.0.0
+      - test_browser:
+          <<: *default-context
+          name: test_browser_react_17
+          react-version: ^17.0.0
+      - test_e2e:
+          <<: *default-context
+          name: test_e2e_react_17
+          react-version: ^17.0.0
+  # Runs the React 17 jobs every night. The weekly `claude-flake-fix.yml` triage reports failures.
+  nightly-cron:
+    triggers:
+      - schedule:
+          cron: '0 0 * * *'
+          filters:
+            branches:
+              only:
+                # #target-branch-reference
+                - master
+    jobs: *react-17-jobs

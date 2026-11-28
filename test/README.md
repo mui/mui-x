@@ -159,6 +159,9 @@ To execute additional jobs for custom versions of React/Material UI, you can us
 | `string`       | `with-react-version` | `<VERSION_OF_REACT>` |
 | `boolean`      | `with-material-ui-6` | `true` or `false`    |
 
+The `nightly-cron` workflow runs the unit, browser, and e2e tests against React 17 every night on `master`.
+To run the same jobs on a PR, set the `workflow` parameter to `react-17`.
+
 1. Go to https://app.circleci.com/pipelines/github/mui/mui-x?branch=pull/PR_NUMBER and replace `PR_NUMBER` with the PR number you want to test.
 2. Click `Trigger Pipeline` button.
 3. Go to the `Parameters` section and update the `workflow` parameter in combination with the version parameter(s).
