@@ -356,6 +356,44 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock this f
     apiRef.current.publishEvent('rowExpansionChange', tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
   }, [apiRef]);
 
+  const setRowsExpansion = React.useCallback<GridRowProApi['setRowsExpansion']>(
+    (shouldExpand) => {
+      const currentTree = gridRowTreeSelector(apiRef);
+      const tree = { ...currentTree };
+      let hasChanged = false;
+
+      const traverse = (nodeId: GridRowId) => {
+        const node = currentTree[nodeId];
+        if (node?.type !== 'group') {
+          return;
+        }
+
+        // The root group is not a row, so its expansion is not configurable.
+        if (nodeId !== GRID_ROOT_GROUP_ID) {
+          const isExpanded = !!node.childrenExpanded;
+          const shouldBeExpanded = shouldExpand(node, isExpanded);
+          if (shouldBeExpanded !== isExpanded) {
+            tree[nodeId] = { ...node, childrenExpanded: shouldBeExpanded };
+            hasChanged = true;
+          }
+        }
+        node.children.forEach(traverse);
+      };
+      traverse(GRID_ROOT_GROUP_ID);
+
+      if (!hasChanged) {
+        return;
+      }
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: { ...state.rows, tree },
+      }));
+      apiRef.current.publishEvent('rowExpansionChange', tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
+    },
+    [apiRef],
+  );
+
   const getRowNode = React.useCallback<GridRowApi['getRowNode']>(
     (id) => (gridRowNodeSelector(apiRef, id) as any) ?? null,
     [apiRef],
@@ -510,6 +548,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock this f
     getRowGroupChildren,
     expandAllRows,
     collapseAllRows,
+    setRowsExpansion,
   };
 
   const rowProPrivateApi: GridRowProPrivateApi = {

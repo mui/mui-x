@@ -228,6 +228,9 @@
     "setRowSelectionModel": {
       "description": "Sets the new row selection model.<br /><br />⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically.<br />Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation."
     },
+    "setRowsExpansion": {
+      "description": "Sets the expansion of all the group rows in a single update. Works for the client side data only."
+    },
     "setSortModel": { "description": "Updates the sort model and triggers the sorting of rows." },
     "showColumnMenu": {
       "description": "Display the column menu under the <code>field</code> column."
