@@ -113,6 +113,28 @@ describe('<BarChartPro /> - Sampling', () => {
     });
   });
 
+  it('keeps sampled buckets between the baseline and the values', () => {
+    const { container } = render(
+      <BarChartPro
+        series={[{ data: range(256).map((i) => (i % 2 ? 10 : 2)), baseline: 5 }]}
+        xAxis={[{ data: range(256).map(String), zoom: true, position: 'none' }]}
+        yAxis={[{ min: 0, max: 10, position: 'none' }]}
+        width={200}
+        height={200}
+        margin={0}
+        sampling="minmax"
+        skipAnimation
+      />,
+    );
+
+    const bars = Array.from(container.querySelectorAll(`.${barClasses.element}`), (bar) => ({
+      y: Number(bar.getAttribute('y')),
+      height: Number(bar.getAttribute('height')),
+    }));
+    expect(bars.length).to.be.lessThan(128);
+    bars.forEach((bar) => expect(bar).to.deep.equal({ y: 0, height: 160 }));
+  });
+
   it('renders every bar when sampling is disabled (default)', () => {
     const dataLength = 256;
     const { container } = render(

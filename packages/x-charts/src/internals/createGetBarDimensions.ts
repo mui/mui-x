@@ -1,4 +1,6 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
+import type { BarSeriesType } from '../models/seriesType/bar';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
@@ -13,6 +15,63 @@ function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number,
   const invertStartCoordinate = isVerticalAndPositive || isHorizontalAndNegative;
 
   return reverse ? !invertStartCoordinate : invertStartCoordinate;
+}
+
+/**
+ * Resolves a bar series `baseline` to a value-axis value.
+ * Without `domain`, `'min'` and `'max'` resolve to `-Infinity` and `Infinity`.
+ */
+export function getBarBaselineValue(
+  baseline: BarSeriesType['baseline'],
+  domain?: readonly unknown[],
+): number {
+  if (baseline === 'min') {
+    return domain ? Number(domain[0]) : -Infinity;
+  }
+  if (baseline === 'max') {
+    return domain ? Number(domain[1]) : Infinity;
+  }
+  return baseline ?? 0;
+}
+
+/**
+ * The `[start, end]` values of a bar. Bars at the stack origin (0) start at `baselineValue`.
+ * In a stack, that start is clamped between 0 and the bar end so stacked bars never overlap.
+ * @param {number | null | undefined} value The series value, `null` or `undefined` when missing or hidden.
+ */
+export function getBarExtent(
+  stacked: readonly [number, number],
+  value: number | null | undefined,
+  baselineValue: number,
+  isStacked: boolean,
+): [number, number] {
+  const low = Math.min(stacked[0], stacked[1]);
+  const high = Math.max(stacked[0], stacked[1]);
+  const start = value != null && value < 0 ? high : low;
+  const end = start === low ? high : low;
+
+  if (start !== 0) {
+    return [start, end];
+  }
+  // The diverging stack offset puts zero values at [0, 0] anywhere in the stack.
+  if (value == null || (isStacked && end === 0)) {
+    return [baselineValue, baselineValue];
+  }
+  if (!isStacked || !Number.isFinite(baselineValue)) {
+    return [baselineValue, end];
+  }
+
+  const clamped = Math.min(Math.max(baselineValue, Math.min(0, end)), Math.max(0, end));
+  if (process.env.NODE_ENV !== 'production' && clamped !== baselineValue) {
+    warnOnce(
+      [
+        'MUI X Charts: A stacked bar series has a `baseline` outside the range between 0 and the value of a bar at the bottom of the stack.',
+        'The bar start is clamped to that range so stacked bars do not overlap.',
+        'Use a baseline between 0 and the values at the bottom of the stack, or remove the `stack` property.',
+      ].join('\n'),
+    );
+  }
+  return [clamped, end];
 }
 
 export function createGetBarDimensions(params: {
@@ -35,6 +94,8 @@ export function createGetBarDimensions(params: {
 
   const xScale = xAxisConfig.scale;
   const yScale = yAxisConfig.scale;
+  const valueScale = verticalLayout ? yScale : xScale;
+  const baselineValue = getBarBaselineValue(series.baseline, valueScale.domain());
 
   return function getBarDimensions(dataIndex: number, groupIndex: number) {
     const barOffset = groupIndex * (barWidth + offset);
@@ -45,19 +106,33 @@ export function createGetBarDimensions(params: {
       return null;
     }
 
-    const values = series.visibleStackedData[dataIndex];
-    const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
+    const [start, end] = getBarExtent(
+      series.visibleStackedData[dataIndex],
+      series.hidden ? null : seriesValue,
+      baselineValue,
+      series.stack !== undefined,
+    );
+    const valueCoordinates = [valueScale(start) ?? NaN, valueScale(end) ?? NaN];
+
+    // For example a value of 0 on a log scale.
+    if (!valueCoordinates.every(Number.isFinite)) {
+      return null;
+    }
 
     const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
 
     let barSize = 0;
-    if (seriesValue !== 0) {
+    if (start !== end) {
       if (!series.hidden) {
         barSize = Math.max(series.minBarSize, maxValueCoord - minValueCoord);
       }
     }
 
-    const shouldInvert = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse);
+    const shouldInvert = shouldInvertStartCoordinate(
+      verticalLayout,
+      end - start || seriesValue,
+      reverse,
+    );
 
     let startCoordinate = 0;
 

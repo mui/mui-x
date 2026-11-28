@@ -15,6 +15,7 @@
       "type": { "description": "'center' | 'outside'" },
       "default": "'center'"
     },
+    "baseline": { "type": { "description": "number | 'min' | 'max'" }, "default": "0" },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }

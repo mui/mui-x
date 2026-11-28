@@ -10,6 +10,8 @@ import type { ComputedAxisConfig } from '../internals/plugins/featurePlugins/use
 import {
   createGetBarDimensions,
   createGetBucketBarDimensions,
+  getBarBaselineValue,
+  getBarExtent,
 } from '../internals/createGetBarDimensions';
 import type { ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
@@ -131,14 +133,26 @@ export function processBarDataForPlot(
         xAxes,
         yAxisId,
         yAxes,
+        { baseline: series[seriesId].baseline },
       );
 
       const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
-      const xOrigin = Math.round(xScale(0) ?? 0);
-      const yOrigin = Math.round(yScale(0) ?? 0);
+      const valueScale = verticalLayout ? yScale : xScale;
+      const baselineValue = getBarBaselineValue(series[seriesId].baseline, valueScale.domain());
+      const xOrigin = Math.round(xScale(verticalLayout ? 0 : baselineValue) ?? 0);
+      const yOrigin = Math.round(yScale(verticalLayout ? baselineValue : 0) ?? 0);
+      const stacked = series[seriesId].visibleStackedData;
+      const isStacked = series[seriesId].stack !== undefined;
+      const getExtent = (dataIndex: number) =>
+        getBarExtent(
+          stacked[dataIndex],
+          series[seriesId].hidden ? null : series[seriesId].data[dataIndex],
+          baselineValue,
+          isStacked,
+        );
 
       const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
       const stackId = series[seriesId].stack;
@@ -158,7 +172,8 @@ export function processBarDataForPlot(
 
         const lastNegative = lastNegativePerIndex.get(dataIndex);
         const lastPositive = lastPositivePerIndex.get(dataIndex);
-        const sign = (reverse ? -1 : 1) * Math.sign(result.value ?? 0);
+        const [start, end] = getExtent(dataIndex);
+        const sign = (reverse ? -1 : 1) * Math.sign(end - start || (result.value ?? 0));
         if (sign > 0) {
           if (lastPositive) {
             delete lastPositive.borderRadiusSide;
@@ -175,30 +190,32 @@ export function processBarDataForPlot(
           lastNegativePerIndex.set(dataIndex, result);
         }
 
-        if (!masks[result.maskId]) {
-          masks[result.maskId] = {
+        let mask = masks[result.maskId];
+        if (mask) {
+          const x = Math.min(mask.x, result.x);
+          const y = Math.min(mask.y, result.y);
+          mask.width = Math.max(mask.x + mask.width, result.x + result.width) - x;
+          mask.height = Math.max(mask.y + mask.height, result.y + result.height) - y;
+          mask.x = x;
+          mask.y = y;
+        } else {
+          mask = {
             id: result.maskId,
-            width: 0,
-            height: 0,
+            x: result.x,
+            y: result.y,
+            width: result.width,
+            height: result.height,
             hasNegative: false,
             hasPositive: false,
             layout,
             xOrigin,
             yOrigin,
-            x: 0,
-            y: 0,
           };
+          masks[result.maskId] = mask;
         }
 
-        const mask = masks[result.maskId];
-        mask.width = layout === 'vertical' ? result.width : mask.width + result.width;
-        mask.height = layout === 'vertical' ? mask.height + result.height : result.height;
-        mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
-        mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
-
-        const value = result.value ?? 0;
-        mask.hasNegative = mask.hasNegative || (reverse ? value > 0 : value < 0);
-        mask.hasPositive = mask.hasPositive || (reverse ? value < 0 : value > 0);
+        mask.hasNegative = mask.hasNegative || sign < 0;
+        mask.hasPositive = mask.hasPositive || sign > 0;
 
         seriesDataPoints.push(result);
       };
@@ -236,16 +253,21 @@ export function processBarDataForPlot(
           series: series[seriesId],
           numberOfGroups: stackingGroups.length,
         });
-        const stacked = series[seriesId].visibleStackedData;
 
         for (const { startIndex, endIndex, indices } of sampledBuckets) {
           let low = Infinity;
           let high = -Infinity;
           for (let k = 0; k < indices.length; k += 1) {
-            const point = stacked[indices[k]];
+            const [start, end] = getExtent(indices[k]);
+            if (!Number.isFinite(valueScale(start)) || !Number.isFinite(valueScale(end))) {
+              continue;
+            }
             // Both coords, so diverging/negative bars (`[0, -5]`, base > top) keep their full extent.
-            low = Math.min(low, point[0], point[1]);
-            high = Math.max(high, point[0], point[1]);
+            low = Math.min(low, start, end);
+            high = Math.max(high, start, end);
+          }
+          if (low > high) {
+            continue;
           }
           const dimensions = getBucketBarDimensions(startIndex, endIndex, low, high, groupIndex);
           registerResult(makeResult(startIndex, dimensions), startIndex);
@@ -303,8 +325,20 @@ export function processBarDataForPlot(
     });
   });
 
+  const masksData = Object.values(masks);
+  // The clip path grows from the origin. A clamped stack baseline can differ from the stack base.
+  for (const mask of masksData) {
+    if (mask.hasPositive !== mask.hasNegative) {
+      if (mask.layout === 'vertical') {
+        mask.yOrigin = mask.hasPositive ? mask.y + mask.height : mask.y;
+      } else {
+        mask.xOrigin = mask.hasPositive ? mask.x : mask.x + mask.width;
+      }
+    }
+  }
+
   return {
     completedData: data,
-    masksData: Object.values(masks),
+    masksData,
   };
 }

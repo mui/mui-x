@@ -1,7 +1,8 @@
-import { errorOnce } from '@mui/x-internals/warning';
+import { errorOnce, warnOnce } from '@mui/x-internals/warning';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import type { AxisId, ComputedXAxis, ComputedYAxis } from '../models/axis';
 import type { SeriesId } from '../models/seriesType/common';
+import type { BarSeriesType } from '../models/seriesType/bar';
 
 const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
   const axisName = `${axisDirection}-axis`;
@@ -20,6 +21,10 @@ export function checkBarChartScaleErrors(
   xAxis: { [axisId: AxisId]: Pick<ComputedXAxis, 'scaleType' | 'data'> },
   yAxisId: AxisId,
   yAxis: { [axisId: AxisId]: Pick<ComputedYAxis, 'scaleType' | 'data'> },
+  /**
+   * If provided, checks that the bars can start from `baseline` on the value axis.
+   */
+  options?: { baseline: BarSeriesType['baseline'] },
 ): void {
   const xAxisConfig = xAxis[xAxisId];
   const yAxisConfig = yAxis[yAxisId];
@@ -60,6 +65,22 @@ export function checkBarChartScaleErrors(
         [
           `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${seriesDataLength} values).`,
           'The axis data should have at least the same length than the series using it.',
+        ].join('\n'),
+      );
+    }
+
+    const baseline = options?.baseline ?? 0;
+    if (
+      options &&
+      continuousAxisConfig.scaleType === 'log' &&
+      typeof baseline === 'number' &&
+      baseline <= 0
+    ) {
+      warnOnce(
+        [
+          `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} uses a log scale, but the bar series of id "${seriesId}" starts its bars from ${baseline}.`,
+          'The logarithm of a value lower than or equal to 0 is undefined, so these bars are not rendered.',
+          "Set `baseline: 'min'` on the series to start the bars from the axis minimum.",
         ].join('\n'),
       );
     }

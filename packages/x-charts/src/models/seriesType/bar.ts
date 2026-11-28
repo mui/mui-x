@@ -72,6 +72,18 @@ export interface BarSeriesType
    */
   barLabelPlacement?: 'center' | 'outside';
   /**
+   * The value the bars start from.
+   * In a stack, only the bars at the bottom use it, and their start stays between 0 and their value so bars never overlap.
+   * Series of the same stack share one baseline. It is ignored unless the stack uses the `'diverging'` stack offset.
+   *
+   * - `'min'` bars start from the axis minimum. Useful with a log scale.
+   * - `'max'` bars start from the axis maximum.
+   * - `number` bars start from this value.
+   *
+   * @default 0
+   */
+  baseline?: number | 'min' | 'max';
+  /**
    * Defines how stacked series handle negative values.
    * @default 'diverging'
    */
