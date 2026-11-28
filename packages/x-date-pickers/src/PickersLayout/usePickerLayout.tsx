@@ -2,7 +2,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useRtl } from '@mui/system/RtlProvider';
 import { PickersActionBar } from '../PickersActionBar';
 import type {
   PickerLayoutOwnerState,
@@ -17,6 +16,7 @@ import type { BaseToolbarProps } from '../internals/models/props/toolbar';
 import type { PickerValidValue } from '../internals/models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { usePickerContext } from '../hooks';
+import { usePickerLayoutOwnerState } from './usePickerLayoutOwnerState';
 
 function toolbarHasView(toolbarProps: BaseToolbarProps | any): toolbarProps is BaseToolbarProps {
   return toolbarProps.view !== null;
@@ -47,27 +47,46 @@ interface UsePickerLayoutResponse<TValue extends PickerValidValue> extends SubCo
 const usePickerLayout = <TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickerOwnerState, defaultActionBarActions } = usePickerPrivateContext();
+  const { defaultActionBarActions } = usePickerPrivateContext();
   const { view } = usePickerContext();
-  const isRtl = useRtl();
+  const baseOwnerState = usePickerLayoutOwnerState();
 
   const { children, slots, slotProps, classes: classesProp } = props;
+  const classes = useUtilityClasses(classesProp, baseOwnerState);
+
+  // Toolbar
+  const Toolbar = slots?.toolbar;
+  const toolbarProps = useSlotProps({
+    elementType: Toolbar!,
+    externalSlotProps: slotProps?.toolbar,
+    className: classes.toolbar,
+    ownerState: baseOwnerState,
+  });
+  const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
+  const hasToolbar = toolbar !== null && !(toolbarProps as BaseToolbarProps).hidden;
+
+  // Shortcuts
+  const Shortcuts = slots?.shortcuts ?? PickersShortcuts;
+  const shortcutsProps = useSlotProps({
+    elementType: Shortcuts!,
+    externalSlotProps: slotProps?.shortcuts,
+    className: classes.shortcuts,
+    ownerState: baseOwnerState,
+  }) as PickersShortcutsProps<TValue>;
+  const hasShortcuts = Array.isArray(shortcutsProps?.items) && shortcutsProps.items.length > 0;
 
   const ownerState = React.useMemo<PickerLayoutOwnerState>(
-    () => ({
-      ...pickerOwnerState,
-      layoutDirection: isRtl ? 'rtl' : 'ltr',
-      hasShortcuts: false,
-      hasToolbar: false,
-    }),
-    [pickerOwnerState, isRtl],
+    () => ({ ...baseOwnerState, hasShortcuts, hasToolbar }),
+    [baseOwnerState, hasShortcuts, hasToolbar],
   );
-  const classes = useUtilityClasses(classesProp, ownerState);
+
+  const shortcutsPropsWithOwnerState = { ...shortcutsProps, ownerState };
+  const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsPropsWithOwnerState} /> : null;
 
   // Action bar
   const ActionBar = slots?.actionBar ?? PickersActionBar;
   const {
-    // PickersActionBar does not use it and providing it breaks memoization
+    // A prop breaks the memoization. PickersActionBar reads `PickerLayoutOwnerStateContext` instead.
     ownerState: destructuredOwnerState,
     ...actionBarProps
   } = useSlotProps({
@@ -81,17 +100,6 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   });
   const actionBar = <ActionBar {...actionBarProps} />;
 
-  // Toolbar
-  const Toolbar = slots?.toolbar;
-  const toolbarProps = useSlotProps({
-    elementType: Toolbar!,
-    externalSlotProps: slotProps?.toolbar,
-    className: classes.toolbar,
-    ownerState,
-  });
-  const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
-  const hasToolbar = toolbar !== null && !(toolbarProps as BaseToolbarProps).hidden;
-
   // Content
   const content = children;
 
@@ -99,26 +107,13 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   const Tabs = slots?.tabs;
   const tabs = view && Tabs ? <Tabs className={classes.tabs} {...slotProps?.tabs} /> : null;
 
-  // Shortcuts
-  const Shortcuts = slots?.shortcuts ?? PickersShortcuts;
-  const shortcutsProps = useSlotProps({
-    elementType: Shortcuts!,
-    externalSlotProps: slotProps?.shortcuts,
-    className: classes.shortcuts,
-    ownerState,
-  }) as PickersShortcutsProps<TValue>;
-
-  const hasShortcuts = Array.isArray(shortcutsProps?.items) && shortcutsProps.items.length > 0;
-
-  const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsProps} /> : null;
-
   return {
     toolbar,
     content,
     tabs,
     actionBar,
     shortcuts,
-    ownerState: { ...ownerState, hasShortcuts, hasToolbar },
+    ownerState,
   };
 };
 

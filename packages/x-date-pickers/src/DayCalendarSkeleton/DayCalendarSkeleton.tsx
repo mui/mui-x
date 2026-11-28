@@ -48,7 +48,7 @@ const DayCalendarSkeletonRoot = styled('div', {
 const DayCalendarSkeletonWeek = styled('div', {
   name: 'MuiDayCalendarSkeleton',
   slot: 'Week',
-})({
+})<{ ownerState: DayCalendarSkeletonProps }>({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
   justifyContent: 'center',
@@ -57,7 +57,7 @@ const DayCalendarSkeletonWeek = styled('div', {
 const DayCalendarSkeletonDay = styled(Skeleton, {
   name: 'MuiDayCalendarSkeleton',
   slot: 'DaySkeleton',
-})({
+})<{ ownerState: DayCalendarSkeletonProps }>({
   margin: `0 ${DAY_MARGIN}px`,
   '&[data-day-in-month="0"]': {
     visibility: 'hidden',
@@ -98,7 +98,7 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
       {...other}
     >
       {monthMap.map((week, index) => (
-        <DayCalendarSkeletonWeek key={index} className={classes.week}>
+        <DayCalendarSkeletonWeek key={index} className={classes.week} ownerState={props}>
           {week.map((dayInMonth, index2) => (
             <DayCalendarSkeletonDay
               key={index2}
@@ -107,6 +107,7 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
               height={DAY_SIZE}
               className={classes.daySkeleton}
               data-day-in-month={dayInMonth}
+              ownerState={props}
             />
           ))}
         </DayCalendarSkeletonWeek>

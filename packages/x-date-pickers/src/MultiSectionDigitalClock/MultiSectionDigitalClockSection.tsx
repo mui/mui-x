@@ -6,6 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
+import useSlotProps from '@mui/utils/useSlotProps';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { MultiSectionDigitalClockSectionClasses } from './multiSectionDigitalClockSectionClasses';
@@ -96,7 +97,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Item',
-})(({ theme }) => ({
+})<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => ({
   padding: 8,
   margin: '2px 4px',
   width: MULTI_SECTION_CLOCK_SECTION_WIDTH,
@@ -173,6 +174,12 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
     const classes = useUtilityClasses(classesProp);
     const DigitalClockSectionItem =
       slots?.digitalClockSectionItem ?? MultiSectionDigitalClockSectionItem;
+    const sectionItemProps = useSlotProps({
+      elementType: DigitalClockSectionItem,
+      externalSlotProps: slotProps?.digitalClockSectionItem,
+      ownerState,
+      className: classes.item,
+    });
 
     useEnhancedEffect(() => {
       if (containerRef.current === null) {
@@ -328,8 +335,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
               tabIndex={tabIndex}
-              className={classes.item}
-              {...slotProps?.digitalClockSectionItem}
+              {...sectionItemProps}
             >
               {option.label}
             </DigitalClockSectionItem>

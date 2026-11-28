@@ -87,14 +87,14 @@ const DateTimeRangePickerTabsRoot = styled('div', {
 const DateTimeRangePickerTab = styled(Button, {
   name: 'MuiDateTimeRangePickerTabs',
   slot: 'TabButton',
-})({
+})<{ ownerState: PickerOwnerState }>({
   textTransform: 'none',
 });
 
 const DateTimeRangePickerTabFiller = styled('div', {
   name: 'MuiDateTimeRangePickerTabs',
   slot: 'Filler',
-})({ width: 40 });
+})<{ ownerState: PickerOwnerState }>({ width: 40 });
 
 const tabOptions: TabValue[] = ['start-date', 'start-time', 'end-date', 'end-time'];
 
@@ -194,10 +194,15 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
           <ArrowLeftIcon />
         </IconButton>
       ) : (
-        <DateTimeRangePickerTabFiller className={classes.filler} />
+        <DateTimeRangePickerTabFiller className={classes.filler} ownerState={ownerState} />
       )}
 
-      <DateTimeRangePickerTab startIcon={startIcon} className={classes.tabButton} size="large">
+      <DateTimeRangePickerTab
+        startIcon={startIcon}
+        className={classes.tabButton}
+        size="large"
+        ownerState={ownerState}
+      >
         {tabLabel}
       </DateTimeRangePickerTab>
       {!isNextHidden ? (
@@ -209,7 +214,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
           <ArrowRightIcon />
         </IconButton>
       ) : (
-        <DateTimeRangePickerTabFiller className={classes.filler} />
+        <DateTimeRangePickerTabFiller className={classes.filler} ownerState={ownerState} />
       )}
     </DateTimeRangePickerTabsRoot>
   );

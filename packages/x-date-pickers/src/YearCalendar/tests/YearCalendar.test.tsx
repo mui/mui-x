@@ -1,4 +1,5 @@
 import { act, screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -7,6 +8,28 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<YearCalendar />', () => {
   const { render } = createPickerRenderer();
+
+  it('should pass the owner state to every slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiYearCalendar: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              opacity: ownerState.isPickerDisabled ? 0.5 : 1,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <YearCalendar />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('radiogroup')).toBeVisible();
+  });
 
   it('allows to pick year standalone by click, `Enter` and `Space`', async () => {
     const onChange = vi.fn();

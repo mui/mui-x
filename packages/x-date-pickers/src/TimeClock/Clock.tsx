@@ -84,7 +84,7 @@ const useUtilityClasses = (
 const ClockRoot = styled('div', {
   name: 'MuiClock',
   slot: 'Root',
-})(({ theme }) => ({
+})<{ ownerState: ClockOwnerState }>(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -94,7 +94,7 @@ const ClockRoot = styled('div', {
 const ClockClock = styled('div', {
   name: 'MuiClock',
   slot: 'Clock',
-})({
+})<{ ownerState: ClockOwnerState }>({
   backgroundColor: 'rgba(0,0,0,.07)',
   borderRadius: '50%',
   height: 220,
@@ -107,7 +107,7 @@ const ClockClock = styled('div', {
 const ClockWrapper = styled('div', {
   name: 'MuiClock',
   slot: 'Wrapper',
-})({
+})<{ ownerState: ClockOwnerState }>({
   '&:focus': {
     outline: 'none',
   },
@@ -144,7 +144,7 @@ const ClockSquareMask = styled('div', {
 const ClockPin = styled('div', {
   name: 'MuiClock',
   slot: 'Pin',
-})(({ theme }) => ({
+})<{ ownerState: ClockOwnerState }>(({ theme }) => ({
   width: 6,
   height: 6,
   borderRadius: '50%',
@@ -201,7 +201,7 @@ const ClockPmButton = styled(IconButton, {
 const ClockMeridiemText = styled(Typography, {
   name: 'MuiClock',
   slot: 'MeridiemText',
-})({
+})<{ ownerState: ClockOwnerState }>({
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
@@ -415,8 +415,8 @@ export function Clock(inProps: ClockProps) {
   };
 
   return (
-    <ClockRoot className={clsx(classes.root, className)}>
-      <ClockClock className={classes.clock}>
+    <ClockRoot className={clsx(classes.root, className)} ownerState={ownerState}>
+      <ClockClock className={classes.clock} ownerState={ownerState}>
         <ClockSquareMask
           data-testid="clock"
           ref={squareMaskRef}
@@ -426,7 +426,7 @@ export function Clock(inProps: ClockProps) {
         />
         {!isSelectedTimeDisabled && (
           <React.Fragment>
-            <ClockPin className={classes.pin} />
+            <ClockPin className={classes.pin} ownerState={ownerState} />
             {value != null && (
               <ClockPointer
                 type={type}
@@ -448,6 +448,7 @@ export function Clock(inProps: ClockProps) {
           onKeyDown={handleKeyDown}
           tabIndex={0}
           className={classes.wrapper}
+          ownerState={ownerState}
         >
           {children}
         </ClockWrapper>
@@ -462,7 +463,11 @@ export function Clock(inProps: ClockProps) {
             className={classes.amButton}
             title={formatMeridiem(adapter, 'am')}
           >
-            <ClockMeridiemText variant="caption" className={classes.meridiemText}>
+            <ClockMeridiemText
+              variant="caption"
+              className={classes.meridiemText}
+              ownerState={ownerState}
+            >
               {formatMeridiem(adapter, 'am')}
             </ClockMeridiemText>
           </ClockAmButton>
@@ -474,7 +479,11 @@ export function Clock(inProps: ClockProps) {
             className={classes.pmButton}
             title={formatMeridiem(adapter, 'pm')}
           >
-            <ClockMeridiemText variant="caption" className={classes.meridiemText}>
+            <ClockMeridiemText
+              variant="caption"
+              className={classes.meridiemText}
+              ownerState={ownerState}
+            >
               {formatMeridiem(adapter, 'pm')}
             </ClockMeridiemText>
           </ClockPmButton>

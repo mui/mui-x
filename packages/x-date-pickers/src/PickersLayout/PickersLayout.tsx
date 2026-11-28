@@ -8,6 +8,7 @@ import type { PickerLayoutOwnerState, PickersLayoutProps } from './PickersLayout
 import type { PickersLayoutClasses } from './pickersLayoutClasses';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
+import { PickerLayoutOwnerStateContext } from './usePickerLayoutOwnerState';
 import type { PickerValidValue } from '../internals/models';
 import { usePickerContext } from '../hooks/usePickerContext';
 
@@ -152,7 +153,9 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
           </React.Fragment>
         )}
       </PickersLayoutContentWrapper>
-      {actionBar}
+      <PickerLayoutOwnerStateContext.Provider value={ownerState}>
+        {actionBar}
+      </PickerLayoutOwnerStateContext.Provider>
     </PickersLayoutRoot>
   );
 }) as PickersLayoutComponent;

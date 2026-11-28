@@ -1,4 +1,5 @@
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -11,6 +12,28 @@ import { vi, describe, it, expect } from 'vitest';
 
 describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();
+
+  it('should pass the owner state to every slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiDigitalClock: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              scrollBehavior: ownerState.hasDigitalClockAlreadyBeenRendered ? 'smooth' : 'auto',
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <DigitalClock />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('listbox')).toBeVisible();
+  });
 
   describe('Reference date', () => {
     it('should use `referenceDate` when no value defined', async () => {

@@ -70,7 +70,7 @@ const TimePickerToolbarRoot = styled(PickersToolbar, {
 const TimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiTimePickerToolbar',
   slot: 'Separator',
-})({
+})<{ ownerState: PickerToolbarOwnerState }>({
   outline: 0,
   margin: '0 4px 0 2px',
   cursor: 'default',
@@ -181,6 +181,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
       variant="h3"
       selected={false}
       className={classes.separator}
+      ownerState={ownerState}
     />
   );
 
@@ -188,9 +189,9 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     <TimePickerToolbarRoot
       landscapeDirection="row"
       toolbarTitle={translations.timePickerToolbarTitle}
-      ownerState={ownerState}
       className={clsx(classes.root, className)}
       {...other}
+      ownerState={ownerState}
     >
       <TimePickerToolbarHourMinuteLabel className={classes.hourMinuteLabel} ownerState={ownerState}>
         {arrayIncludes(views, 'hours') && (

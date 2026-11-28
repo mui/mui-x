@@ -8,6 +8,8 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon } from '@mui/x-date-pickers/icons';
 import type { ExportedBaseTabsProps } from '@mui/x-date-pickers/internals';
+import { usePickerPrivateContext } from '@mui/x-date-pickers/internals';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import type { TimeRangePickerTabsClasses } from './timeRangePickerTabsClasses';
 import { getTimeRangePickerTabsUtilityClass } from './timeRangePickerTabsClasses';
@@ -45,7 +47,7 @@ const useUtilityClasses = (classes: Partial<TimeRangePickerTabsClasses> | undefi
 const TimeRangePickerTabsRoot = styled(Tabs, {
   name: 'MuiTimeRangePickerTabs',
   slot: 'Root',
-})(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   '&:last-child': {
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
@@ -59,7 +61,7 @@ const TimeRangePickerTabsRoot = styled(Tabs, {
 const TimeRangePickerTab = styled(Tab, {
   name: 'MuiTimeRangePickerTabs',
   slot: 'Tab',
-})(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   minHeight: '48px',
   gap: theme.spacing(1),
 }));
@@ -86,6 +88,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
   } = props;
 
   const translations = usePickerTranslations();
+  const { ownerState } = usePickerPrivateContext();
   const { view, setView } = usePickerContext();
   const { rangePosition, setRangePosition } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp);
@@ -111,6 +114,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
       onChange={handleChange}
       className={clsx(className, classes.root)}
       sx={sx}
+      ownerState={ownerState}
     >
       <TimeRangePickerTab
         value="start"
@@ -118,6 +122,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
         icon={timeIcon}
         label={translations.start}
         className={classes.tab}
+        ownerState={ownerState}
       />
       <TimeRangePickerTab
         value="end"
@@ -125,6 +130,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
         label={translations.end}
         icon={timeIcon}
         className={classes.tab}
+        ownerState={ownerState}
       />
     </TimeRangePickerTabsRoot>
   );

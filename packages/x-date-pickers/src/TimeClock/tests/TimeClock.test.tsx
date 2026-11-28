@@ -1,4 +1,5 @@
 import { fireEvent, screen, within } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import {
   createPickerRenderer,
@@ -10,6 +11,28 @@ import { vi, describe, it, expect } from 'vitest';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();
+
+  it('should pass the owner state to every clock slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiClock: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              opacity: ownerState.clockMeridiemMode === 'am' ? 1 : 0.5,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <TimeClock ampmInClock />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('listbox')).toBeVisible();
+  });
 
   it('renders a listbox with a name', () => {
     render(<TimeClock value={null} onChange={() => {}} />);

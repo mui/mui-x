@@ -1,4 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import {
   adapterToUse,
@@ -11,6 +12,31 @@ import { vi, describe, it, expect } from 'vitest';
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer();
+
+  it('should pass the layout owner state to every layout slot', () => {
+    const layoutFlags: string[] = [];
+    const theme = createTheme({
+      components: {
+        MuiPickersLayout: {
+          styleOverrides: {
+            root: ({ ownerState }) => {
+              layoutFlags.push(`toolbar: ${ownerState.hasToolbar}`);
+              return {};
+            },
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <DesktopDateTimePicker open slotProps={{ toolbar: { hidden: false } }} />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('button', { name: 'OK' })).toBeVisible();
+    expect(Array.from(new Set(layoutFlags))).to.deep.equal(['toolbar: true']);
+  });
 
   describe('picker state', () => {
     it('should open when clicking "Choose date"', async () => {
