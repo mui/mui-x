@@ -1080,6 +1080,7 @@ const ChatFilePartRoot = styled('div', {
   name: 'MuiChatMessage',
   slot: 'FileRoot',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   display: 'inline-flex',
   alignItems: 'center',
   gap: 4,

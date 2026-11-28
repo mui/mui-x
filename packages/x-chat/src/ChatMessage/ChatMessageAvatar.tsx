@@ -21,6 +21,7 @@ const ChatMessageAvatarStyled = styled('div', {
   slot: 'Avatar',
   overridesResolver: (_, styles) => styles.avatar,
 })<{ ownerState?: { variant?: string } }>(({ theme, ownerState }) => ({
+  boxSizing: 'border-box',
   gridArea: 'avatar',
   width: 'var(--MuiChatMessage-avatarSize, 36px)',
   height: 'var(--MuiChatMessage-avatarSize, 36px)',

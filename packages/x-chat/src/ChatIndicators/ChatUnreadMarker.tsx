@@ -50,6 +50,7 @@ const ChatUnreadMarkerLabelStyled = styled('span', {
   slot: 'Label',
   overridesResolver: (_, styles) => styles.label,
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   display: 'inline-flex',
   alignItems: 'center',
   minHeight: 24,
