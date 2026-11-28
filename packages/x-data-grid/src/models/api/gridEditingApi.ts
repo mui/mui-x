@@ -61,8 +61,16 @@ export interface GridEditingSharedPrivateApi {
    * Immediately updates the value of the cell, without waiting for the debounce.
    * @param {GridRowId} id The row id.
    * @param {string} field The field to update. If not passed, updates all fields in the given row id.
+   * @returns {Promise<boolean> | null} A promise that resolves when the updates that ran immediately end, or `null` if no update is in progress.
+   * It resolves with `false` if a new edit of the cell or row started before the updates ended.
    */
-  runPendingEditCellValueMutation: (id: GridRowId, field?: string) => void;
+  runPendingEditCellValueMutation: (id: GridRowId, field?: string) => Promise<boolean> | null;
+  /**
+   * Detaches the updates that ran immediately from the edit, so that a stop of the next edit does not wait for them.
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field. If not passed, applies to all fields in the given row id.
+   */
+  detachEditCellValueMutations: (id: GridRowId, field?: string) => void;
 }
 
 /**
@@ -196,6 +204,12 @@ export interface GridCellEditingPrivateApi extends GridEditingSharedPrivateApi {
    */
   setCellEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
   /**
+   * Cancels a stop of the cell that waits for the validation of an earlier value.
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field.
+   */
+  cancelCellEditingStop: (id: GridRowId, field: string) => void;
+  /**
    * Returns the row with the new value that was set by editing the cell.
    * @param {GridRowId} id The row id being edited.
    * @param {string} field The field being edited.
@@ -235,6 +249,11 @@ export interface GridRowEditingPrivateApi extends GridEditingSharedPrivateApi {
    * @returns {Promise<boolean>} Resolves with `true` when all values in the row are valid.
    */
   setRowEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
+  /**
+   * Cancels a stop of the row that waits for the validation of an earlier value.
+   * @param {GridRowId} id The row id.
+   */
+  cancelRowEditingStop: (id: GridRowId) => void;
   /**
    * Returns the row with the values that were set by editing all cells.
    * @param {GridRowId} id The row id being edited.

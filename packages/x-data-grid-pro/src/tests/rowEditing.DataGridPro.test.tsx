@@ -176,6 +176,37 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(renderEditCell1.mock.lastCall?.[0].value).to.equal('usdgbp');
       });
 
+      it('should resolve with false if a new edit starts while it validates a removed column', async () => {
+        let endValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => {
+            endValidation = () => resolve(props);
+          });
+        const columns = [
+          { field: 'id' },
+          { field: 'currencyPair', editable: true },
+          { field: 'price1M', editable: true, preProcessEditCellProps },
+        ];
+        const { setProps } = render(<TestCase columns={columns} />);
+        act(() => apiRef.current?.startRowEditMode({ id: 0 }));
+        let isValid: Promise<boolean> | void;
+        act(() => {
+          isValid = apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+          });
+        });
+        act(() => apiRef.current?.stopRowEditMode({ id: 0, ignoreModifications: true }));
+        setProps({ columns: columns.slice(0, 2) });
+        act(() => apiRef.current?.startRowEditMode({ id: 0 }));
+        await act(async () => {
+          endValidation();
+        });
+        // The value belongs to the cancelled edit, so an editor must not stop the new edit.
+        expect(await isValid!).to.equal(false);
+      });
+
       it('should pass to renderEditCell the row with the values updated', async () => {
         const valueSetter: GridValueSetter = (value, row) => ({
           ...row,
@@ -1332,6 +1363,451 @@ describe('<DataGridPro /> - Row editing', () => {
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
         expect(spiedStopRowEditMode.mock.calls.length).to.equal(1);
         expect(spiedStopRowEditMode.mock.lastCall?.[0].ignoreModifications).to.equal(false);
+      });
+
+      it('should commit a debounced value after its validation ends', async () => {
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
+        render(<TestCase column1Props={{ preProcessEditCellProps }} />);
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        let isValid: Promise<boolean> | void;
+        act(() => {
+          isValid = apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        // The stop validates the debounced value, and renders before the validation ends.
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        });
+        expect(apiRef.current?.getRow(0).currencyPair).to.equal('USD GBP');
+        expect(await isValid!).to.equal(true);
+      });
+
+      it('should commit the debounced values of two fields after their validation ends', async () => {
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column2Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+          apiRef.current?.setEditCellValue({ id: 0, field: 'price1M', value: 42, debounceMs: 100 });
+        });
+        // The currency change validates the old price again. That must not restore the old price.
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(processRowUpdate.mock.lastCall?.[0]).to.include({
+          currencyPair: 'USD GBP',
+          price1M: 42,
+        });
+      });
+
+      it('should commit a debounced value after its validation ends if the controlled model asks for view mode', async () => {
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
+        const { setProps } = render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            rowModesModel={{ 0: { mode: GridRowModes.Edit } }}
+          />,
+        );
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        setProps({ rowModesModel: { 0: { mode: GridRowModes.View } } });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.View);
+        });
+        expect(apiRef.current?.getRow(0).currencyPair).to.equal('USD GBP');
+      });
+
+      it('should keep the error of a new value if an older validation of the field ends later', async () => {
+        let endOldValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props, hasChanged }: GridPreProcessEditCellProps) =>
+          hasChanged
+            ? { ...props, error: true }
+            : new Promise((resolve) => {
+                endOldValidation = () => resolve({ ...props, error: false });
+              });
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column2Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'price1M',
+            value: -42,
+            debounceMs: 100,
+          });
+        });
+        // The currency change validates the old price again, and that validation ends last.
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await act(async () => {
+          endOldValidation();
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.Edit);
+      });
+
+      it('should not commit a newer value before its own validation ends', async () => {
+        const endValidation: Record<string, (error: boolean) => void> = {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => {
+            endValidation[props.value] = (error) => resolve({ ...props, error });
+          });
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'INVALID' });
+        });
+        // The validation of the old value ends first. It must not let the stop commit the new value.
+        await act(async () => {
+          endValidation['USD GBP'](false);
+        });
+        await act(async () => {
+          endValidation.INVALID(true);
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(apiRef.current?.getRowMode(0)).to.equal(GridRowModes.Edit);
+      });
+
+      it('should save once if Enter is pressed again during the validation of a debounced value', async () => {
+        let endValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => {
+            endValidation = () => resolve(props);
+          });
+        // The save does not end, so the row stays in edit mode.
+        const processRowUpdate = vi.fn(() => new Promise<never>(() => {}));
+        render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await act(async () => {
+          endValidation();
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        // A model update during the save must not start the stop again.
+        act(() => apiRef.current?.startRowEditMode({ id: 1 }));
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+      });
+
+      it('should not wait for the validation of a cancelled edit to save the next edit', async () => {
+        let endOldValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          props.value === 'USD GBP'
+            ? new Promise((resolve) => {
+                endOldValidation = () => resolve(props);
+              })
+            : props;
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
+        const priceCell = getCell(0, 2);
+        fireUserEvent.mousePress(priceCell);
+        fireEvent.doubleClick(priceCell);
+        act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'price1M', value: 42, debounceMs: 100 });
+        });
+        fireEvent.keyDown(priceCell.querySelector('input')!, { key: 'Enter' });
+        await waitFor(() => {
+          expect(processRowUpdate.mock.calls.length).to.equal(1);
+        });
+        await act(async () => {
+          endOldValidation();
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(processRowUpdate.mock.lastCall?.[0].price1M).to.equal(42);
+      });
+
+      it.each(['before', 'after'])(
+        'should not let a stop of a cancelled edit save the next edit if the newer value validates %s the next edit',
+        async (order) => {
+          const endValidation: Record<string, () => void> = {};
+          const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+            new Promise((resolve) => {
+              endValidation[props.value] = () => resolve(props);
+            });
+          const processRowUpdate = vi.fn((row) => row);
+          render(
+            <TestCase
+              column1Props={{ preProcessEditCellProps }}
+              processRowUpdate={processRowUpdate}
+            />,
+          );
+          const cell = getCell(0, 1);
+          fireUserEvent.mousePress(cell);
+          fireEvent.doubleClick(cell);
+          act(() => {
+            apiRef.current?.setEditCellValue({
+              id: 0,
+              field: 'currencyPair',
+              value: 'USD GBP',
+              debounceMs: 100,
+            });
+          });
+          fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+          // Escape runs a newer debounced value, which replaces the update that the stop waits for.
+          act(() => {
+            apiRef.current?.setEditCellValue({
+              id: 0,
+              field: 'currencyPair',
+              value: 'USD EUR',
+              debounceMs: 100,
+            });
+          });
+          fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
+          if (order === 'before') {
+            await act(async () => {
+              endValidation['USD EUR']();
+            });
+          }
+          fireUserEvent.mousePress(cell);
+          fireEvent.doubleClick(cell);
+          act(() => {
+            apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD JPY' });
+          });
+          fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+          await act(async () => {
+            endValidation['USD JPY']();
+          });
+          await act(async () => {
+            endValidation['USD GBP']();
+          });
+          if (order === 'after') {
+            await act(async () => {
+              endValidation['USD EUR']();
+            });
+          }
+          expect(processRowUpdate.mock.calls.length).to.equal(0);
+        },
+      );
+
+      it('should not wait for the validation of an earlier value to save the current value', async () => {
+        let endOldValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          props.value === 'USD GBP'
+            ? new Promise((resolve) => {
+                endOldValidation = () => resolve({ ...props, error: true });
+              })
+            : props;
+        const processRowUpdate = vi.fn((row) => row);
+        render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        let isValid: Promise<boolean> | void;
+        act(() => {
+          isValid = apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD EUR',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        await act(async () => {
+          expect(await isValid!).to.equal(true);
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(processRowUpdate.mock.lastCall?.[0].currencyPair).to.equal('USD EUR');
+        await act(async () => {
+          endOldValidation();
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(1);
+      });
+
+      it.each(['before', 'after'])(
+        'should not save a value that is set after the stop if its debounce ends %s the validation of the earlier value',
+        async (order) => {
+          let endOldValidation: () => void = () => {};
+          let resolveNewValidation: () => void = () => {};
+          const newValidation = new Promise<void>((resolve) => {
+            resolveNewValidation = resolve;
+          });
+          const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => {
+            if (props.value === 'USD EUR') {
+              resolveNewValidation();
+            }
+            return props.value === 'USD GBP'
+              ? new Promise((resolve) => {
+                  endOldValidation = () => resolve({ ...props, error: true });
+                })
+              : { ...props, error: false };
+          };
+          const processRowUpdate = vi.fn((row) => row);
+          render(
+            <TestCase
+              column1Props={{ preProcessEditCellProps }}
+              processRowUpdate={processRowUpdate}
+            />,
+          );
+          const cell = getCell(0, 1);
+          fireUserEvent.mousePress(cell);
+          fireEvent.doubleClick(cell);
+          act(() => {
+            apiRef.current?.setEditCellValue({
+              id: 0,
+              field: 'currencyPair',
+              value: 'USD GBP',
+              debounceMs: 100,
+            });
+          });
+          fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+          act(() => {
+            apiRef.current?.setEditCellValue({
+              id: 0,
+              field: 'currencyPair',
+              value: 'USD EUR',
+              debounceMs: 100,
+            });
+          });
+          if (order === 'before') {
+            await act(() => newValidation);
+          }
+          await act(async () => {
+            endOldValidation();
+          });
+          await act(() => newValidation);
+          expect(processRowUpdate.mock.calls.length).to.equal(0);
+          expect(apiRef.current?.getRowMode(0)).to.equal('edit');
+          fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+          await waitFor(() => expect(processRowUpdate.mock.calls.length).to.equal(1));
+          expect(processRowUpdate.mock.lastCall?.[0].currencyPair).to.equal('USD EUR');
+        },
+      );
+
+      it('should not save a row that is removed during the validation of a debounced value', async () => {
+        let endValidation: () => void = () => {};
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => {
+            endValidation = () => resolve(props);
+          });
+        const processRowUpdate = vi.fn((row) => row);
+        const { setProps } = render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps }}
+            processRowUpdate={processRowUpdate}
+          />,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.doubleClick(cell);
+        act(() => {
+          apiRef.current?.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+            debounceMs: 100,
+          });
+        });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        setProps({ rows: defaultData.rows.slice(1) });
+        await act(async () => {
+          endValidation();
+        });
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
+        expect(apiRef.current?.getRowMode(0)).to.equal('view');
       });
     });
 

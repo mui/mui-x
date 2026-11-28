@@ -497,6 +497,8 @@ export const useGridRowEditing = (
         return acc;
       }, {});
 
+      // A stop of the new edit must not wait for the updates of an earlier edit.
+      apiRef.current.detachEditCellValueMutations(id);
       prevRowValuesLookup.current[id] = row;
       updateOrDeleteRowState(id, newProps);
 
@@ -553,7 +555,7 @@ export const useGridRowEditing = (
     async (params) => {
       const { id, ignoreModifications, field: focusedField, cellToFocusAfter = 'none' } = params;
 
-      apiRef.current.runPendingEditCellValueMutation(id);
+      const flushedMutation = apiRef.current.runPendingEditCellValueMutation(id);
 
       const finishRowEditMode = () => {
         if (cellToFocusAfter !== 'none' && focusedField) {
@@ -582,6 +584,28 @@ export const useGridRowEditing = (
 
       if (isSomeFieldProcessingProps) {
         prevRowModesModel.current[id].mode = GridRowModes.Edit;
+        // The validation of the debounced values that the stop ran ends later.
+        // Finish the stop then, if the model still asks for it.
+        if (flushedMutation) {
+          flushedMutation.then((isSameEdit) => {
+            const modelParams = rowModesModelRef.current[id];
+            const prevParams = prevRowModesModel.current[id];
+            if (
+              isSameEdit &&
+              modelParams?.mode === GridRowModes.View &&
+              prevParams?.mode === GridRowModes.Edit &&
+              apiRef.current.getRowMode(id) === GridRowModes.Edit
+            ) {
+              // Mark the stop as done, as the effect does, so that a later stop does not save again.
+              prevRowModesModel.current[id].mode = GridRowModes.View;
+              // If the row was removed during the validation, only clear its edit.
+              const stopParams: GridStopRowEditModeParams = apiRef.current.getRow(id)
+                ? { id, ...modelParams }
+                : { id, ignoreModifications: true };
+              updateStateToStopRowEditMode(stopParams);
+            }
+          });
+        }
         return;
       }
 
@@ -717,6 +741,13 @@ export const useGridRowEditing = (
             }
 
             editingState = gridEditRowsStateSelector(apiRef);
+            // A newer value replaced this one during the processing. Its own validation sets the result.
+            const currentProps = editingState[id][field];
+            if (!currentProps || !Object.is(currentProps.value, parsedValue)) {
+              resolve(false);
+              return;
+            }
+
             processedProps = { ...processedProps, isProcessingProps: false };
             // We don't reuse the value from the props pre-processing because when the
             // promise resolves it may be already outdated. The only exception to this rule
@@ -762,6 +793,13 @@ export const useGridRowEditing = (
               return;
             }
 
+            editingState = gridEditRowsStateSelector(apiRef);
+            // The field changed or left the row during the processing, so the result is outdated.
+            const currentProps = editingState[id][thisField];
+            if (!currentProps || !Object.is(currentProps.value, fieldProps.value)) {
+              return;
+            }
+
             processedProps = { ...processedProps, isProcessingProps: false };
             updateOrDeleteFieldState(id, thisField, processedProps);
           });
@@ -772,7 +810,11 @@ export const useGridRowEditing = (
         Promise.all(promises).then(() => {
           if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
             editingState = gridEditRowsStateSelector(apiRef);
-            resolve(!editingState[id][field].error);
+            // A newer value or a new edit replaced this value during the processing.
+            const currentProps = editingState[id][field];
+            resolve(
+              !!currentProps && Object.is(currentProps.value, parsedValue) && !currentProps.error,
+            );
           } else {
             resolve(false);
           }
@@ -780,6 +822,20 @@ export const useGridRowEditing = (
       });
     },
     [apiRef, throwIfNotEditable, updateOrDeleteFieldState],
+  );
+
+  const cancelRowEditingStop = React.useCallback<GridRowEditingPrivateApi['cancelRowEditingStop']>(
+    (id) => {
+      if (
+        rowModesModelRef.current[id]?.mode === GridRowModes.View &&
+        prevRowModesModel.current[id]?.mode === GridRowModes.Edit &&
+        apiRef.current.getRowMode(id) === GridRowModes.Edit
+      ) {
+        // Revert the mode in the rowModesModel prop back to "edit"
+        updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
+      }
+    },
+    [apiRef, updateRowInRowModesModel],
   );
 
   const getRowWithUpdatedValuesFromRowEditing = React.useCallback<
@@ -819,6 +875,7 @@ export const useGridRowEditing = (
 
   const editingPrivateApi: Omit<GridRowEditingPrivateApi, keyof GridEditingSharedPrivateApi> = {
     setRowEditingEditCellValue,
+    cancelRowEditingStop,
     getRowWithUpdatedValuesFromRowEditing,
   };
 

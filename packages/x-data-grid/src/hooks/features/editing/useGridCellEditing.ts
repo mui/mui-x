@@ -392,6 +392,9 @@ export const useGridCellEditing = (
 
       const shouldProcessEditCellProps = !!column.preProcessEditCellProps && deleteValue;
 
+      // A stop of the new edit must not wait for the updates of an earlier edit.
+      apiRef.current.detachEditCellValueMutations(id, field);
+
       let newProps: GridEditCellProps = {
         value: newValue,
         error: false,
@@ -441,7 +444,7 @@ export const useGridCellEditing = (
 
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
-      apiRef.current.runPendingEditCellValueMutation(id, field);
+      const flushedMutation = apiRef.current.runPendingEditCellValueMutation(id, field);
 
       const finishCellEditMode = () => {
         updateOrDeleteFieldState(id, field, null);
@@ -464,6 +467,30 @@ export const useGridCellEditing = (
         // Attempt to change cell mode to "view" was not successful
         // Update previous mode to allow another attempt
         prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
+        // The validation of a debounced value that the stop ran ends later.
+        // Finish the stop then, if the model still asks for it.
+        if (isProcessingProps && flushedMutation) {
+          flushedMutation.then((isSameEdit) => {
+            const modelParams = cellModesModelRef.current[id]?.[field];
+            const prevParams = prevCellModesModel.current[id]?.[field];
+            if (
+              isSameEdit &&
+              modelParams?.mode === GridCellModes.View &&
+              prevParams?.mode === GridCellModes.Edit &&
+              apiRef.current.getCellMode(id, field) === GridCellModes.Edit
+            ) {
+              // Mark the stop as done, as the effect does, so that a later stop does not save again.
+              prevCellModesModel.current[id][field].mode = GridCellModes.View;
+              // If the row was removed during the validation, only clear its edit.
+              updateStateToStopCellEditMode(
+                apiRef.current.getRow(id)
+                  ? { id, field, ...modelParams }
+                  : { id, field, ignoreModifications: true },
+              );
+            }
+          });
+          return;
+        }
         // Revert the mode in the cellModesModel prop back to "edit"
         updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
         return;
@@ -581,6 +608,14 @@ export const useGridCellEditing = (
       }
 
       editingState = gridEditRowsStateSelector(apiRef);
+      // A newer value replaced this one during the processing. Its own validation sets the result.
+      if (
+        column.preProcessEditCellProps &&
+        !Object.is(editingState[id][field].value, parsedValue)
+      ) {
+        return false;
+      }
+
       newProps = { ...newProps, isProcessingProps: false };
       // We don't update the value with the one coming from the props pre-processing
       // because when the promise resolves it may be already outdated. The only
@@ -592,6 +627,22 @@ export const useGridCellEditing = (
       return !editingState[id]?.[field]?.error;
     },
     [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
+  );
+
+  const cancelCellEditingStop = React.useCallback<
+    GridCellEditingPrivateApi['cancelCellEditingStop']
+  >(
+    (id, field) => {
+      if (
+        cellModesModelRef.current[id]?.[field]?.mode === GridCellModes.View &&
+        prevCellModesModel.current[id]?.[field]?.mode === GridCellModes.Edit &&
+        apiRef.current.getCellMode(id, field) === GridCellModes.Edit
+      ) {
+        // Revert the mode in the cellModesModel prop back to "edit"
+        updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+      }
+    },
+    [apiRef, updateFieldInCellModesModel],
   );
 
   const getRowWithUpdatedValuesFromCellEditing = React.useCallback<
@@ -622,6 +673,7 @@ export const useGridCellEditing = (
 
   const editingPrivateApi: Omit<GridCellEditingPrivateApi, keyof GridEditingSharedPrivateApi> = {
     setCellEditingEditCellValue,
+    cancelCellEditingStop,
     getRowWithUpdatedValuesFromCellEditing,
   };
 

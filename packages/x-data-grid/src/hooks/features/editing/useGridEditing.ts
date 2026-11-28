@@ -35,7 +35,15 @@ export const useGridEditing = (
   useGridRowEditing(apiRef, props);
 
   const debounceMap = React.useRef<
-    Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => void]>>
+    Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => Promise<void>]>>
+  >({});
+  // The updates of each field that ran immediately, so that a stop can wait for the latest one.
+  // The entry of a field stays until all its updates end, so that a detach reaches all of them.
+  const flushedMutations = React.useRef<
+    Record<
+      GridRowId,
+      Record<string, { pending: number; latest: Promise<void> | null; isDetached: boolean }>
+    >
   >({});
 
   const { isCellEditable: isCellEditableProp } = props;
@@ -87,8 +95,9 @@ export const useGridEditing = (
     const runImmediately = () => {
       const [timeout] = debounceMap.current[id][field];
       clearTimeout(timeout);
-      callback();
+      const mutation = callback();
       delete debounceMap.current[id][field];
+      return mutation;
     };
 
     const timeout = setTimeout(() => {
@@ -116,23 +125,82 @@ export const useGridEditing = (
   const runPendingEditCellValueMutation = React.useCallback<
     GridEditingPrivateApi['runPendingEditCellValueMutation']
   >((id, field) => {
-    if (!debounceMap.current[id]) {
-      return;
-    }
-    if (!field) {
-      Object.keys(debounceMap.current[id]).forEach((debouncedField) => {
-        const [, runCallback] = debounceMap.current[id][debouncedField];
-        runCallback();
+    const debounces = debounceMap.current[id] ?? {};
+    const fields = field ? [field] : Object.keys(debounces);
+    fields.forEach((debouncedField) => {
+      if (!debounces[debouncedField]) {
+        return;
+      }
+      const [, runCallback] = debounces[debouncedField];
+      if (!flushedMutations.current[id]) {
+        flushedMutations.current[id] = {};
+      }
+      if (!flushedMutations.current[id][debouncedField]) {
+        flushedMutations.current[id][debouncedField] = {
+          pending: 0,
+          latest: null,
+          isDetached: false,
+        };
+      }
+      const fieldMutations = flushedMutations.current[id][debouncedField];
+      const mutation = runCallback();
+      fieldMutations.pending += 1;
+      fieldMutations.latest = mutation;
+      // `finally()` keeps a rejection of the mutation unhandled, as before.
+      mutation.finally(() => {
+        fieldMutations.pending -= 1;
+        if (fieldMutations.latest === mutation) {
+          fieldMutations.latest = null;
+        }
+        if (
+          fieldMutations.pending === 0 &&
+          flushedMutations.current[id]?.[debouncedField] === fieldMutations
+        ) {
+          delete flushedMutations.current[id][debouncedField];
+        }
       });
-    } else if (debounceMap.current[id][field]) {
-      const [, runCallback] = debounceMap.current[id][field];
-      runCallback();
+    });
+
+    // The result of an earlier value is outdated, so the stop waits only for the latest update.
+    const inProgress = flushedMutations.current[id] ?? {};
+    const fieldsMutations = Object.keys(inProgress)
+      .filter(
+        (mutatedField) => (!field || mutatedField === field) && inProgress[mutatedField].latest,
+      )
+      .map((mutatedField) => inProgress[mutatedField]);
+    if (fieldsMutations.length === 0) {
+      return null;
     }
+    return Promise.all(fieldsMutations.map((fieldMutations) => fieldMutations.latest))
+      .then(
+        () => {},
+        () => {},
+      )
+      .then(() => fieldsMutations.every((fieldMutations) => !fieldMutations.isDetached));
+  }, []);
+
+  const detachEditCellValueMutations = React.useCallback<
+    GridEditingPrivateApi['detachEditCellValueMutations']
+  >((id, field) => {
+    const inProgress = flushedMutations.current[id] ?? {};
+    Object.keys(inProgress)
+      .filter((mutatedField) => !field || mutatedField === field)
+      .forEach((mutatedField) => {
+        inProgress[mutatedField].isDetached = true;
+        delete inProgress[mutatedField];
+      });
   }, []);
 
   const setEditCellValue = React.useCallback<GridEditingApi['setEditCellValue']>(
     (params) => {
       const { id, field, debounceMs } = params;
+
+      // A stop must not save a value that is set after it.
+      if (props.editMode === GridEditModes.Row) {
+        apiRef.current.cancelRowEditingStop(id);
+      } else {
+        apiRef.current.cancelCellEditingStop(id, field);
+      }
 
       return new Promise((resolve) => {
         maybeDebounce(id, field, debounceMs, async () => {
@@ -181,6 +249,7 @@ export const useGridEditing = (
 
   const editingSharedPrivateApi: GridEditingSharedPrivateApi = {
     runPendingEditCellValueMutation,
+    detachEditCellValueMutations,
   };
 
   useGridApiMethod(apiRef, editingSharedApi, 'public');
