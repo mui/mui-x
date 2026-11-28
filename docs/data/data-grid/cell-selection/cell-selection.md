@@ -72,7 +72,8 @@ When multiple selected cells form a continuous range of any size, the following 
 When a single cell is selected, all classes above are applied to that element.
 :::
 
-You can use these classes to create CSS selectors targeting specific corners of each range—for example, the demo below adds a border around the outside of the range.
+By default, the Data Grid draws a border around the outside of each range.
+You can use these classes to create CSS selectors targeting specific corners of each range—for example, the demo below replaces the default border with its own lighter one.
 
 {{"demo": "CellSelectionRangeStyling.js", "bg": "inline"}}
 

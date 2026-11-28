@@ -387,6 +387,103 @@ describe('<DataGridPremium /> - Cell selection', () => {
       expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeBottom']);
     });
 
+    describe.skipIf(isJSDOM)('range border', () => {
+      const getShadows = (cell: HTMLElement) =>
+        getComputedStyle(cell)
+          .boxShadow.split(/,(?![^(]*\))/)
+          .map((shadow) => shadow.trim());
+
+      const getDrawnSides = (cell: HTMLElement) => {
+        const shadows = getShadows(cell);
+        expect(shadows).to.have.length(4);
+        return shadows
+          .filter((shadow) => shadow.endsWith('inset'))
+          .map((shadow) => {
+            const [x, y] = shadow
+              .match(/(-?\d+)px (-?\d+)px/)!
+              .slice(1)
+              .map(Number);
+            if (x > 0) {
+              return 'left';
+            }
+            if (x < 0) {
+              return 'right';
+            }
+            return y > 0 ? 'top' : 'bottom';
+          })
+          .sort();
+      };
+
+      async function selectRange(user: ReturnType<typeof render>['user']) {
+        const cell = getCell(0, 0);
+        cell.focus();
+        await user.click(cell);
+        await user.keyboard('{Shift>}');
+        await user.click(getCell(1, 1));
+        await user.keyboard('{/Shift}');
+      }
+
+      it('should draw the outer edges of the range', async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await selectRange(user);
+
+        expect(getDrawnSides(getCell(0, 0))).to.deep.equal(['left', 'top']);
+        expect(getDrawnSides(getCell(0, 1))).to.deep.equal(['right', 'top']);
+        expect(getDrawnSides(getCell(1, 0))).to.deep.equal(['bottom', 'left']);
+        expect(getDrawnSides(getCell(1, 1))).to.deep.equal(['bottom', 'right']);
+      });
+
+      it('should draw the outer edges of the range in RTL', async () => {
+        const { user } = renderRtl(<TestDataGridSelection />);
+        await selectRange(user);
+
+        expect(getDrawnSides(getCell(0, 0))).to.deep.equal(['right', 'top']);
+        expect(getDrawnSides(getCell(0, 1))).to.deep.equal(['left', 'top']);
+        expect(getDrawnSides(getCell(1, 0))).to.deep.equal(['bottom', 'right']);
+        expect(getDrawnSides(getCell(1, 1))).to.deep.equal(['bottom', 'left']);
+      });
+
+      it('should apply theme style overrides of the range edges', async () => {
+        const theme = createTheme({
+          components: {
+            MuiDataGrid: {
+              styleOverrides: {
+                'cell--rangeTop': { '--range-top': 'inset 0 2px 0 0 rgb(255, 0, 0)' },
+              },
+            },
+          },
+        });
+        const { user } = render(
+          <ThemeProvider theme={theme}>
+            <TestDataGridSelection />
+          </ThemeProvider>,
+        );
+        await selectRange(user);
+
+        expect(getShadows(getCell(0, 0))[0]).to.equal('rgb(255, 0, 0) 0px 2px 0px 0px inset');
+      });
+
+      it('should keep the range border when the theme sets a box shadow on cells', async () => {
+        const theme = createTheme({
+          components: {
+            MuiDataGrid: {
+              styleOverrides: {
+                cell: { boxShadow: 'inset 0 -1px 0 0 rgb(0, 0, 255)' },
+              },
+            },
+          },
+        });
+        const { user } = render(
+          <ThemeProvider theme={theme}>
+            <TestDataGridSelection />
+          </ThemeProvider>,
+        );
+        await selectRange(user);
+
+        expect(getDrawnSides(getCell(0, 0))).to.deep.equal(['left', 'top']);
+      });
+    });
+
     it('should keep the focus on first clicked cell', async () => {
       const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);

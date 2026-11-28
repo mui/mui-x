@@ -1,6 +1,7 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type { CSSInterpolation } from '@mui/system';
 import { styled, css } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c, gridClassesOverrides } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';
@@ -15,6 +16,7 @@ const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
 const focusOutlineWidth = 1;
+const rangeBorderWidth = 2;
 
 const separatorIconDragStyles = {
   width: 3,
@@ -62,6 +64,8 @@ export const GridRootStyles = styled('div', {
     apiRef,
     shouldShowBorderTopRightRadiusSelector,
   );
+  const isRtl = useRtl();
+  const rangeInlineStartOffset = isRtl ? -rangeBorderWidth : rangeBorderWidth;
 
   const fillPreviewTint = `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`;
   const baseBackground = vars.colors.background.base;
@@ -615,11 +619,13 @@ export const GridRootStyles = styled('div', {
       '&.Mui-selected': selectedStyles,
     },
     /* Default range border styles using box-shadow to avoid layout shift */
-    [`& .${c.cell}.Mui-selected`]: {
+    [`& :where(.${c.cell}.Mui-selected)`]: {
       '--range-top': '0 0 0 0 transparent',
       '--range-bottom': '0 0 0 0 transparent',
       '--range-left': '0 0 0 0 transparent',
       '--range-right': '0 0 0 0 transparent',
+    },
+    [`& .${c.cell}.Mui-selected`]: {
       boxShadow: 'var(--range-top), var(--range-bottom), var(--range-left), var(--range-right)',
     },
     [`& .${c['cell--rangeTop']}`]: {
@@ -629,10 +635,10 @@ export const GridRootStyles = styled('div', {
       '--range-bottom': `inset 0 -2px 0 0 ${vars.colors.interactive.focus}`,
     },
     [`& .${c['cell--rangeLeft']}`]: {
-      '--range-left': `inset 2px 0 0 0 ${vars.colors.interactive.focus}`,
+      '--range-left': `inset ${rangeInlineStartOffset}px 0 0 0 ${vars.colors.interactive.focus}`,
     },
     [`& .${c['cell--rangeRight']}`]: {
-      '--range-right': `inset -2px 0 0 0 ${vars.colors.interactive.focus}`,
+      '--range-right': `inset ${-rangeInlineStartOffset}px 0 0 0 ${vars.colors.interactive.focus}`,
     },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
