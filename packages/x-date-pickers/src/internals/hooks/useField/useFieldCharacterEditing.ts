@@ -274,6 +274,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
           'digit',
           'month',
           'MM',
+          localizedDigits,
         );
 
         const response = getNewSectionValue({

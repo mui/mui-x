@@ -1,5 +1,6 @@
 import type { DateTime } from 'luxon';
 import { Settings } from 'luxon';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import type { AdapterFormats } from '@mui/x-date-pickers/models';
@@ -11,7 +12,7 @@ import {
   TEST_DATE_ISO_STRING,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<AdapterLuxon />', () => {
   describeGregorianAdapter(AdapterLuxon, {
@@ -118,6 +119,44 @@ describe('<AdapterLuxon />', () => {
           expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
+    });
+  });
+
+  describe('Localized digits', () => {
+    // `ar-EG` formats numbers with Arabic-Indic digits in every ICU version.
+    // `createPickerRenderer` truncates the locale to two letters, so the locale is set here.
+    class AdapterLuxonArEG extends AdapterLuxon {
+      constructor() {
+        super({ locale: 'ar-EG' });
+      }
+    }
+    const { render, adapter } = createPickerRenderer({ Adapter: AdapterLuxonArEG });
+    const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
+
+    it('parse: should parse the localized digits it formats', () => {
+      const value = adapter.parse('٢٠١٨ ٠٥ ١٥', 'yyyy MM dd') as DateTime;
+      expect(value.toISODate()).to.equal('2018-05-15');
+    });
+
+    it('parse: should still parse Latin digits', () => {
+      const value = adapter.parse('2018 05 15', 'yyyy MM dd') as DateTime;
+      expect(value.toISODate()).to.equal('2018-05-15');
+    });
+
+    it('should increment the day of the month with localized digits', async () => {
+      const onChange = vi.fn();
+      const view = renderWithProps({
+        defaultValue: adapter.date('2018-05-15'),
+        format: 'yyyy MM dd',
+        onChange,
+      });
+
+      expectFieldValue(view.getSectionsContainer(), '٢٠١٨ ٠٥ ١٥');
+      await view.selectSection('day');
+
+      await view.user.keyboard('{ArrowUp}');
+      expectFieldValue(view.getSectionsContainer(), '٢٠١٨ ٠٥ ١٦');
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 4, 16));
     });
   });
 
