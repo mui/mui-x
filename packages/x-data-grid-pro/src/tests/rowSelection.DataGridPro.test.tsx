@@ -1424,4 +1424,48 @@ describe('<DataGridPro /> - Row selection', () => {
       });
     });
   });
+
+  // Regression tests for https://github.com/mui/mui-x/issues/18443
+  describe('lazy loading: onRowSelectionModelChange reason', () => {
+    function TestLazyLoadingSelection(props: Partial<DataGridProProps>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            rows={[
+              { id: 1, name: 'Alice' },
+              { id: 2, name: 'Bob' },
+              { id: 3, name: 'Charlie' },
+            ]}
+            columns={[{ field: 'id' }, { field: 'name' }]}
+            rowCount={3}
+            rowsLoadingMode="server"
+            paginationMode="server"
+            sortingMode="server"
+            filterMode="server"
+            checkboxSelection
+            disableVirtualization
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    it('should pass reason="singleRowSelection" when a row checkbox is clicked', async () => {
+      const onRowSelectionModelChange = vi.fn();
+      const { user } = render(
+        <TestLazyLoadingSelection onRowSelectionModelChange={onRowSelectionModelChange} />,
+      );
+      await user.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
+      expect(onRowSelectionModelChange.mock.lastCall?.[1].reason).to.equal('singleRowSelection');
+    });
+
+    it('should pass reason="multipleRowsSelection" when the "Select all" header checkbox is clicked', async () => {
+      const onRowSelectionModelChange = vi.fn();
+      const { user } = render(
+        <TestLazyLoadingSelection onRowSelectionModelChange={onRowSelectionModelChange} />,
+      );
+      await user.click(screen.getByRole('checkbox', { name: 'Select all rows' }));
+      expect(onRowSelectionModelChange.mock.lastCall?.[1].reason).to.equal('multipleRowsSelection');
+    });
+  });
 });
