@@ -2,6 +2,8 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { RowsMeta } from '@mui/x-virtualizer';
+import type { RowsMetaState } from '@mui/x-virtualizer/models';
+import type { GridRowsMetaState } from './gridRowsMetaState';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -12,6 +14,21 @@ import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridRowCountSelector, gridRowTreeSelector } from './gridRowsSelector';
 import { gridRowHeightSelector } from '../dimensions/gridDimensionsSelectors';
+
+/**
+ * Adds the deprecated names to the virtualizer rows meta.
+ */
+export function toGridRowsMeta(rowsMeta: RowsMetaState): GridRowsMetaState {
+  // Copies the property descriptors: a spread would read the lazy `positions` of uniform rows,
+  // which builds them.
+  const gridRowsMeta = Object.defineProperties(
+    {},
+    Object.getOwnPropertyDescriptors(rowsMeta),
+  ) as GridRowsMetaState;
+  gridRowsMeta.pinnedTopRowsTotalHeight = rowsMeta.topPinnedHeight;
+  gridRowsMeta.pinnedBottomRowsTotalHeight = rowsMeta.bottomPinnedHeight;
+  return gridRowsMeta;
+}
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state, props, apiRef) => {
   // FIXME: This should be handled in the virtualizer eventually, but there are interdependencies
@@ -27,14 +44,16 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
 
   return {
     ...state,
-    rowsMeta: RowsMeta.create({
-      rowCount,
-      hasUniformRowHeight: true,
-      positions: null,
-      currentPageTotalHeight: rowCount * baseRowHeight,
-      pinnedTopRowsTotalHeight: 0,
-      pinnedBottomRowsTotalHeight: 0,
-    }),
+    rowsMeta: toGridRowsMeta(
+      RowsMeta.create({
+        rowCount,
+        hasUniformRowHeight: true,
+        positions: null,
+        currentPageTotalHeight: rowCount * baseRowHeight,
+        topPinnedHeight: 0,
+        bottomPinnedHeight: 0,
+      }),
+    ),
   };
 };
 

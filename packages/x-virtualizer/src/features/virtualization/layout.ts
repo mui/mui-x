@@ -5,7 +5,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { platform } from '@base-ui/utils/platform';
 import type { Store } from '@base-ui/utils/store';
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type { ColumnWithWidth } from '../../models';
 import { RowsMeta } from '../../models';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization } from './virtualization';
@@ -84,12 +83,11 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       api.updateDimensions,
     );
 
-    store.state.virtualization.context = {
-      scrollerRef,
-      containerRef,
-      scrollbarVerticalRef,
-      scrollbarHorizontalRef,
-    };
+    // A stable context keeps the props selectors that depend on it memoized.
+    store.state.virtualization.context = React.useMemo(
+      () => ({ scrollerRef, containerRef, scrollbarVerticalRef, scrollbarHorizontalRef }),
+      [scrollerRef, containerRef, scrollbarVerticalRef, scrollbarHorizontalRef],
+    );
   }
 
   static selectors = {
@@ -130,7 +128,6 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
             topContainerHeight,
             bottomContainerHeight,
             minimalContentHeight,
-            columnsTotalWidth,
             viewportOuterSize,
           } = dimensions;
 
@@ -141,7 +138,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
             contentSize.height === 0 ? minimalContentHeight : contentSize.height;
 
           const width = needsHorizontalScrollbar
-            ? verticalScrollbarSize + columnsTotalWidth
+            ? verticalScrollbarSize + contentSize.width
             : 'auto';
 
           const height = cssAdd(
@@ -260,9 +257,8 @@ export class LayoutList extends Layout<ListElements> {
 
     const mergedRef = useForkRef(scrollerRef, containerRef);
 
-    store.state.virtualization.context = {
-      mergedRef,
-    };
+    // A stable context keeps the props selectors that depend on it memoized.
+    store.state.virtualization.context = React.useMemo(() => ({ mergedRef }), [mergedRef]);
   }
 
   static selectors = {
@@ -383,9 +379,8 @@ export class LayoutListSticky extends Layout<ListElements> {
 
     const mergedRef = useForkRef(scrollerRef, containerRef);
 
-    store.state.virtualization.context = {
-      mergedRef,
-    };
+    // A stable context keeps the props selectors that depend on it memoized.
+    store.state.virtualization.context = React.useMemo(() => ({ mergedRef }), [mergedRef]);
   }
 
   static selectors = {
@@ -551,14 +546,20 @@ export class LayoutListSticky extends Layout<ListElements> {
 const horizontalGeometry = createSelectorMemoized(
   Virtualization.selectors.renderContext,
   Dimensions.selectors.dimensions,
-  Dimensions.selectors.columnPositions,
-  (renderContext, dimensions, columnPositions, _columns: ColumnWithWidth[]) => {
-    const { leftPinnedWidth, rightPinnedWidth, columnsTotalWidth, viewportInnerSize } = dimensions;
+  Dimensions.selectors.columnsMeta,
+  (renderContext, dimensions, columnsMeta) => {
+    const {
+      positions: columnPositions,
+      totalWidth,
+      leftPinnedWidth,
+      rightPinnedWidth,
+    } = columnsMeta;
+    const { viewportInnerSize } = dimensions;
     const firstPosition = columnPositions[renderContext.firstColumnIndex] ?? 0;
     // `lastColumnIndex` is exclusive: past the last column, the window extends to the
     // pinned-right section (or the content end when there is none).
     const lastPosition =
-      columnPositions[renderContext.lastColumnIndex] ?? columnsTotalWidth - rightPinnedWidth;
+      columnPositions[renderContext.lastColumnIndex] ?? totalWidth - rightPinnedWidth;
     // Pinned cells are in the row flow, so they count toward the rendered width and
     // the offset starts at the pinned-left cells.
     const renderedWidth = leftPinnedWidth + (lastPosition - firstPosition) + rightPinnedWidth;
@@ -659,12 +660,11 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
       api.updateDimensions,
     );
 
-    store.state.virtualization.context = {
-      scrollerRef,
-      containerRef,
-      scrollbarVerticalRef,
-      scrollbarHorizontalRef,
-    };
+    // A stable context keeps the props selectors that depend on it memoized.
+    store.state.virtualization.context = React.useMemo(
+      () => ({ scrollerRef, containerRef, scrollbarVerticalRef, scrollbarHorizontalRef }),
+      [scrollerRef, containerRef, scrollbarVerticalRef, scrollbarHorizontalRef],
+    );
   }
 
   static selectors = {
@@ -712,9 +712,9 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
         // The full columns width: the flex children (spacers + inner boxes) don't
         // stretch their containing blocks, so the content sets the scrollable width.
         // Floored at the inner viewport width.
-        width: Math.max(dimensions.columnsTotalWidth, dimensions.viewportInnerSize.width),
+        width: Math.max(dimensions.contentSize.width, dimensions.viewportInnerSize.width),
         // Before the viewport is measured `viewportInnerSize` is empty, so the floor in
-        // `width` above is zero and it collapses to `columnsTotalWidth`. When the columns
+        // `width` above is zero and it collapses to the columns width. When the columns
         // are narrower than the scroller that leaves white space beside the rows on the
         // first paint. Floor the content at the scroller width until measured; once
         // `isReady`, `width` already floors at `viewportInnerSize.width`, and a lingering
@@ -780,30 +780,24 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
 
     // Horizontal offset spacer: gives the sticky sibling leftward slack to clamp into
     // (the horizontal analog of `spacerTop`).
-    spacerLeftProps: createSelectorMemoized(
-      horizontalGeometry,
-      (geometry, _columns: ColumnWithWidth[]) => ({
-        style: {
-          flex: `0 0 ${geometry.offsetLeft}px`,
-        } as React.CSSProperties,
-        role: 'presentation',
-      }),
-    ),
+    spacerLeftProps: createSelectorMemoized(horizontalGeometry, (geometry) => ({
+      style: {
+        flex: `0 0 ${geometry.offsetLeft}px`,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
 
     // Horizontally-sticky inner box of the top/bottom containers, holding the header
     // and pinned rows (the container's analog of `innerWindow`).
-    innerContainerProps: createSelectorMemoized(
-      horizontalGeometry,
-      (geometry, _columns: ColumnWithWidth[]) => ({
-        style: {
-          flex: `0 0 ${geometry.renderedWidth}px`,
-          position: 'sticky',
-          left: geometry.stickyLeft,
-          right: geometry.stickyRight,
-        } as React.CSSProperties,
-        role: 'presentation',
-      }),
-    ),
+    innerContainerProps: createSelectorMemoized(horizontalGeometry, (geometry) => ({
+      style: {
+        flex: `0 0 ${geometry.renderedWidth}px`,
+        position: 'sticky',
+        left: geometry.stickyLeft,
+        right: geometry.stickyRight,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
 
     spacerTopProps: createSelectorMemoized(verticalGeometry, (geometry) => ({
       style: {
@@ -844,7 +838,7 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
     innerWindowProps: createSelectorMemoized(
       horizontalGeometry,
       verticalGeometry,
-      (horizontal, vertical, _columns: ColumnWithWidth[]) => ({
+      (horizontal, vertical) => ({
         style: {
           flex: `0 0 ${horizontal.renderedWidth}px`,
           position: 'sticky',
