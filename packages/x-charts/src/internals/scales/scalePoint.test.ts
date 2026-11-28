@@ -28,6 +28,13 @@ describe('scalePoint', () => {
     expect(p.step()).to.equal(b.step());
   });
 
+  it('point.domain(values) keeps duplicated values', () => {
+    const s = scalePoint(['a', 'b', 'a'], [0, 100]);
+    expect(s.domain()).to.deep.equal(['a', 'b', 'a']);
+    expect(s.step()).to.equal(50);
+    expect(s('a')).to.equal(0);
+  });
+
   it('point.padding(p) sets the band outer padding to p', () => {
     const p = scalePoint().domain(['foo', 'bar']).range([0, 960]).padding(0.5);
     const b = scaleBand().domain(['foo', 'bar']).range([0, 960]).paddingInner(1).paddingOuter(0.5);

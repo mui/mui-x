@@ -3,7 +3,11 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
-import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
+import {
+  getOrdinalBandStartMapper,
+  selectorChartsHighlightStateCallback,
+  useStore,
+} from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks';
 import { HeatmapItem } from './HeatmapItem';
 import type { HeatmapRendererPlotProps } from './Heatmap.types';
@@ -26,8 +30,8 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
 
   const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
-  const xDomain = xScale.domain();
-  const yDomain = yScale.domain();
+  const getXBandStart = getOrdinalBandStartMapper(xScale, xScale.domain());
+  const getYBandStart = getOrdinalBandStartMapper(yScale, yScale.domain());
 
   if (!series || series.seriesOrder.length === 0) {
     return null;
@@ -37,8 +41,8 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   return (
     <HeatmapPlotRoot className={clsx(heatmapClasses.root, props.className)}>
       {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
-        const x = xScale(xDomain[xIndex]);
-        const y = yScale(yDomain[yIndex]);
+        const x = getXBandStart(xIndex);
+        const y = getYBandStart(yIndex);
         const color = colorScale?.(value);
 
         if (x === undefined || y === undefined || !color) {

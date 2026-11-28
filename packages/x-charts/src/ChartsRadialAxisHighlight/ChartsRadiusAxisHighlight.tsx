@@ -6,7 +6,7 @@ import {
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
   selectorChartsInteractionRadius,
-  selectorChartsInteractionRadiusAxisValue,
+  selectorChartsInteractionRadiusAxisIndex,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import type { UseChartPolarAxisSignature } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import type { ChartsRadialAxisHighlightRadiusType } from './ChartsRadialAxisHighlight.types';
@@ -17,6 +17,7 @@ import {
 } from './ChartsRadialAxisHighlightPath';
 import { getRingPath } from '../internals/getRingPath';
 import { isOrdinalScale } from '../internals/scaleGuards';
+import { getOrdinalBandStartMapper } from '../internals/getOrdinalBandStartMapper';
 
 function polarToSvg(cx: number, cy: number, radius: number, angle: number) {
   return [cx + radius * Math.sin(angle), cy - radius * Math.cos(angle)] as const;
@@ -39,7 +40,7 @@ export default function ChartsRadiusAxisHighlight(props: {
   const { axis: radiusAxes, axisIds: radiusAxisIds } = store.use(selectorChartRadiusAxis);
   const { axis: rotationAxes, axisIds: rotationAxisIds } = store.use(selectorChartRotationAxis);
   const pointerRadius = store.use(selectorChartsInteractionRadius);
-  const radiusValue = store.use(selectorChartsInteractionRadiusAxisValue);
+  const radiusIndex = store.use(selectorChartsInteractionRadiusAxisIndex);
   const radiusAxisId = radiusAxisIds[0];
 
   if (type === 'none' || radiusAxisId === undefined || pointerRadius === null) {
@@ -92,7 +93,13 @@ export default function ChartsRadiusAxisHighlight(props: {
   if (!isOrdinalScale(radiusAxis.scale)) {
     return null;
   }
-  const radius = radiusAxis.scale(radiusValue)!;
+  const radius = getOrdinalBandStartMapper(
+    radiusAxis.scale,
+    radiusAxis.data ?? [],
+  )(radiusIndex ?? -1);
+  if (radius === undefined) {
+    return null;
+  }
   const step = radiusAxis.scale.step();
   const bandwidth = radiusAxis.scale.bandwidth();
 

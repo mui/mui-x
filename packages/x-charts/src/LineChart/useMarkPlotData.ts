@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useChartId } from '../hooks/useChartId';
-import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
+import { useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { cleanId } from '../internals/cleanId';
+import { getIndexToPositionMapper } from '../internals/getOrdinalBandStartMapper';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import type { SeriesId } from '../models/seriesType/common';
 import type {
@@ -81,9 +82,9 @@ export function useMarkPlotData(
           continue;
         }
 
-        const xScale = getValueToPositionMapper(xAxes[xAxisId].scale);
         const yScale = yAxes[yAxisId].scale;
         const xData = xAxes[xAxisId].data;
+        const getXPosition = getIndexToPositionMapper(xAxes[xAxisId].scale, xData ?? []);
 
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
@@ -118,7 +119,7 @@ export function useMarkPlotData(
             // The line fade animation move all the values to the series baseline.
             // So we need to do the same with mark in order for it to look nice.
             const y = yScale(hidden ? visibleStackedData[index][0] : value)!;
-            const xPos = xScale(x);
+            const xPos = getXPosition(index);
 
             if (!instance.isPointInside(xPos, y)) {
               continue;

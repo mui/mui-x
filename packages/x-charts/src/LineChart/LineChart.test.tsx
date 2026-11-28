@@ -720,4 +720,51 @@ describe('<LineChart />', () => {
       },
     );
   });
+
+  describe('duplicated x values', () => {
+    const getPathXs = (selector: string) => {
+      const d = document.querySelector(selector)?.getAttribute('d') ?? '';
+      return Array.from(d.matchAll(/(-?[\d.]+),-?[\d.]+/g), (match) => Number(match[1]));
+    };
+    const isSorted = (xs: number[]) => xs.every((x, i) => i === 0 || x >= xs[i - 1]);
+
+    it('renders a point per data index on a point axis', () => {
+      render(
+        <LineChart
+          {...config}
+          xAxis={[{ scaleType: 'point', data: ['A', 'A', 'B', 'A'], position: 'none' }]}
+          series={[{ data: [1, 2, 3, 4], curve: 'linear', showMark: true, area: true }]}
+          skipAnimation
+        />,
+      );
+
+      const markXs = Array.from(document.querySelectorAll(`.${lineClasses.mark}`), (mark) =>
+        Number(mark.getAttribute('cx')),
+      );
+      expect(markXs).to.have.length(4);
+      expect(new Set(markXs).size).to.equal(4);
+      expect(isSorted(markXs)).to.equal(true);
+
+      expect(getPathXs(`.${lineClasses.line}`).map(Math.round)).to.deep.equal(
+        markXs.map(Math.round),
+      );
+      expect(isSorted(getPathXs(`.${lineClasses.area}`).slice(0, 4))).to.equal(true);
+    });
+
+    it('renders a step curve per data index on a band axis', () => {
+      render(
+        <LineChart
+          {...config}
+          xAxis={[{ scaleType: 'band', data: ['A', 'A', 'B', 'A'], position: 'none' }]}
+          series={[{ data: [1, 2, 3, 4], curve: 'step', area: true }]}
+          skipAnimation
+        />,
+      );
+
+      const lineXs = getPathXs(`.${lineClasses.line}`);
+      expect(isSorted(lineXs)).to.equal(true);
+      expect(lineXs[0]).to.equal(0);
+      expect(lineXs[lineXs.length - 1]).to.equal(400);
+    });
+  });
 });

@@ -3,11 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
+  getIndexToPositionMapper,
   selectorChartsInteractionRotationAxisIndex,
   useChartsContext,
 } from '@mui/x-charts/internals';
 import type { UseChartPolarAxisSignature } from '@mui/x-charts/internals';
-import { getValueToPositionMapper, useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
+import { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
 import { useRadialLineSeriesContext } from '../hooks/useRadialLineSeries';
 import { RadialLineHighlightElement } from './RadialLineHighlightElement';
 import type { RadialLineHighlightElementProps } from './RadialLineHighlightElement';
@@ -91,7 +92,6 @@ function RadialLineHighlightPlot(props: RadialLineHighlightPlotProps) {
           }
 
           const radiusScale = radiusAxis[radiusAxisId].scale;
-          const rotationPosition = getValueToPositionMapper(rotationAxis[rotationAxisId].scale);
           const rotationData = rotationAxis[rotationAxisId].data;
 
           if (rotationData === undefined) {
@@ -100,7 +100,10 @@ function RadialLineHighlightPlot(props: RadialLineHighlightPlotProps) {
 
           const value = stackedData[highlightedIndex]?.[1] ?? data[highlightedIndex];
           const radius = radiusScale(value as number)!;
-          const angle = rotationPosition(rotationData[highlightedIndex])!;
+          const angle = getIndexToPositionMapper(
+            rotationAxis[rotationAxisId].scale,
+            rotationData,
+          )(highlightedIndex);
 
           const [x, y] = instance.polar2svg(radius, angle);
 

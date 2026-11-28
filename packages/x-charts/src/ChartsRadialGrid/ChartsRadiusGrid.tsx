@@ -39,14 +39,8 @@ export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
   if (isFullCircle) {
     return (
       <React.Fragment>
-        {ticks.map(({ offset: radius }) => (
-          <GridCircle
-            key={`radius-${radius}`}
-            cx={cx}
-            cy={cy}
-            r={radius}
-            className={classes.radiusLine}
-          />
+        {ticks.map(({ offset: radius }, index) => (
+          <GridCircle key={index} cx={cx} cy={cy} r={radius} className={classes.radiusLine} />
         ))}
       </React.Fragment>
     );
@@ -60,10 +54,10 @@ export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
   const isLargeArc = Math.abs(endAngle - startAngle) >= Math.PI;
   return (
     <React.Fragment>
-      {ticks.map(({ offset: radius }) => {
+      {ticks.map(({ offset: radius }, index) => {
         return (
           <GridPath
-            key={`radius-${radius}`}
+            key={index}
             d={`M${cx + startDx * radius},${cy + startDy * radius} A ${radius} ${radius} 0 ${isLargeArc ? 1 : 0} 1 ${cx + endDx * radius},${cy + endDy * radius}`}
             className={classes.radiusLine}
           />

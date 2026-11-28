@@ -1,4 +1,5 @@
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
+import { getIndexToPositionMapper } from '../internals/getOrdinalBandStartMapper';
 import { useDrawingArea } from '../hooks';
 import { useStore } from '../internals/store/useStore';
 import {
@@ -63,7 +64,7 @@ export function useAxisHighlightValue(
     return EMPTY_ARRAY;
   }
 
-  type AxisHighlightItem = { axisId: AxisId; value: number | Date | string };
+  type AxisHighlightItem = { axisId: AxisId; value: number | Date | string; dataIndex?: number };
   let items: AxisHighlightItem[];
 
   if (value !== undefined && value !== null) {
@@ -74,19 +75,22 @@ export function useAxisHighlightValue(
       .filter(
         (item) => (axisId === undefined || item.axisId === axisId) && item.value !== undefined,
       )
-      .map((item) => ({ axisId: item.axisId, value: item.value }));
+      .map((item) => ({ axisId: item.axisId, value: item.value, dataIndex: item.dataIndex }));
   }
 
   const result: AxisHighlightValueItem[] = [];
 
-  for (const { axisId: itemAxisId, value: itemValue } of items) {
+  for (const { axisId: itemAxisId, value: itemValue, dataIndex } of items) {
     const axis = axes.axis[itemAxisId];
     if (!axis) {
       continue;
     }
 
     const scale = axis.scale;
-    const position = getValueToPositionMapper(scale)(itemValue);
+    const position =
+      dataIndex !== undefined && axis.data
+        ? getIndexToPositionMapper(scale, axis.data)(dataIndex)
+        : getValueToPositionMapper(scale)(itemValue);
 
     if (!Number.isFinite(position)) {
       continue;
@@ -98,7 +102,7 @@ export function useAxisHighlightValue(
     if (axisDirection === 'x') {
       if (labelPosition === 'start' || labelPosition === 'both') {
         result.push({
-          key: `${itemAxisId}-${String(itemValue)}-start`,
+          key: `${itemAxisId}-${dataIndex ?? String(itemValue)}-start`,
           x: position,
           y: top,
           formattedValue,
@@ -110,7 +114,7 @@ export function useAxisHighlightValue(
       }
       if (labelPosition === 'end' || labelPosition === 'both') {
         result.push({
-          key: `${itemAxisId}-${String(itemValue)}-end`,
+          key: `${itemAxisId}-${dataIndex ?? String(itemValue)}-end`,
           x: position,
           y: top + height,
           formattedValue,
@@ -123,7 +127,7 @@ export function useAxisHighlightValue(
     } else {
       if (labelPosition === 'start' || labelPosition === 'both') {
         result.push({
-          key: `${itemAxisId}-${String(itemValue)}-start`,
+          key: `${itemAxisId}-${dataIndex ?? String(itemValue)}-start`,
           x: left,
           y: position,
           formattedValue,
@@ -135,7 +139,7 @@ export function useAxisHighlightValue(
       }
       if (labelPosition === 'end' || labelPosition === 'both') {
         result.push({
-          key: `${itemAxisId}-${String(itemValue)}-end`,
+          key: `${itemAxisId}-${dataIndex ?? String(itemValue)}-end`,
           x: left + width,
           y: position,
           formattedValue,
