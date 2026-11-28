@@ -59,6 +59,19 @@ export function isSelectAllShortcut(event: React.KeyboardEvent): boolean {
   );
 }
 
+// Checks if the keyboard event corresponds to the shortcut that clears the row and cell selection (Escape).
+// While composing, Escape cancels the composition.
+export function isClearSelectionShortcut(event: React.KeyboardEvent): boolean {
+  return (
+    event.key === 'Escape' &&
+    !event.shiftKey &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    !event.altKey &&
+    !isImeKeyDown(event)
+  );
+}
+
 export function isUndoShortcut(event: React.KeyboardEvent): boolean {
   return (
     (event.ctrlKey || event.metaKey) &&

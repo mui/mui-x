@@ -1256,6 +1256,11 @@
       "nodeName": "the cell element",
       "conditions": "it is at the bottom edge of a cell selection range"
     },
+    "cell--rangeEnd": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the cell element at the corner of a cell selection range that moves",
+      "conditions": "the range is extended"
+    },
     "cell--rangeLeft": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",

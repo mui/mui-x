@@ -246,15 +246,18 @@ export {
   getGridCellElement,
   getGridRowElement,
   isEventForCellContent,
+  isEventTargetCellContent,
   isEventTargetInPortal,
   isEventTargetTextEntryElement,
   onFocusLeave,
 } from '../utils/domUtils';
+export { isEventFromPreMountedEditor } from '../utils/cellEditor';
 export {
   isNavigationKey,
   isPasteShortcut,
   isCopyShortcut,
   isSelectAllShortcut,
+  isClearSelectionShortcut,
   isUndoShortcut,
   isRedoShortcut,
   isFillDownShortcut,

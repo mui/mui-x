@@ -342,6 +342,25 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       expect(onRowOrderChange).not.toHaveBeenCalled();
       expect(getAnnouncement()).to.equal('');
     });
+
+    it('should restart the Shift + arrow keys row selection after moving the focused row', async () => {
+      const { user } = render(<Test />);
+      await user.click(getNameCell(1));
+      await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+      expect(apiRef.current!.getSelectedRows()).to.have.keys([1, 2]);
+
+      // `C` moves below `D`, the selection and the focus stay on it
+      await user.keyboard('{Alt>}[ArrowDown]{/Alt}');
+      await waitFor(() =>
+        expect(getRowsFieldContent('name')).to.deep.equal(['A', 'B', 'D', 'C', 'E']),
+      );
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: 2, field: 'name' });
+      expect(apiRef.current!.getSelectedRows()).to.have.keys([1, 2]);
+
+      // The range restarts from `C`, so `D`, which the user never went over, stays unselected
+      await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
+      expect(apiRef.current!.getSelectedRows()).to.have.keys([1, 2, 4]);
+    });
   });
 
   describe('columns', () => {

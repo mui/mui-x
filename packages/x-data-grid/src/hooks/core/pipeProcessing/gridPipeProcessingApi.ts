@@ -58,7 +58,10 @@ export interface GridPipeProcessingLookup {
     context: GridRowId;
   };
   cellClassName: { value: string[]; context: GridCellCoordinates };
-  isCellSelected: { value: boolean; context: GridCellCoordinates };
+  /**
+   * `undefined` when the cell cannot be selected.
+   */
+  isCellSelected: { value: boolean | undefined; context: GridCellCoordinates };
   canUpdateFocus: {
     value: boolean;
     context: { event: MouseEvent | React.KeyboardEvent; cell: GridCellParams | null };

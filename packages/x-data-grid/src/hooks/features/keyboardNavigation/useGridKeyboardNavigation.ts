@@ -716,7 +716,8 @@ export const useGridKeyboardNavigation = (
         case 'ArrowUp': {
           if (rowIndexBefore > firstRowIndexInPage) {
             goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore - 1));
-          } else {
+          } else if (!event.shiftKey) {
+            // Shift is used to extend the selection, which should not move the focus to the header
             previousAreaNavigationFn(colIndexBefore, event);
           }
           break;
@@ -817,7 +818,7 @@ export const useGridKeyboardNavigation = (
           const nextRowIndex = Math.max(rowIndexBefore - viewportPageSize, firstRowIndexInPage);
           if (nextRowIndex !== rowIndexBefore && nextRowIndex >= firstRowIndexInPage) {
             goToCell(colIndexBefore, getRowIdFromIndex(nextRowIndex));
-          } else {
+          } else if (!event.shiftKey) {
             goToHeader(colIndexBefore, event);
           }
           break;

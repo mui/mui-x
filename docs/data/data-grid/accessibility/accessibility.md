@@ -172,32 +172,61 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 
 :::
 
-|                                                               Keys | Description                                                 |
-| -----------------------------------------------------------------: | :---------------------------------------------------------- |
-|                                  <kbd class="key">Arrow Left</kbd> | Navigate between cell elements                              |
-|                                  <kbd class="key">Arrow Down</kbd> | Navigate between cell elements                              |
-|                                 <kbd class="key">Arrow Right</kbd> | Navigate between cell elements                              |
-|                                    <kbd class="key">Arrow Up</kbd> | Navigate between cell elements                              |
-|                                        <kbd class="key">Home</kbd> | Navigate to the first cell of the current row               |
-|                                         <kbd class="key">End</kbd> | Navigate to the last cell of the current row                |
-| <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Home</kbd></kbd> | Navigate to the first cell of the first row                 |
-|  <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">End</kbd></kbd> | Navigate to the last cell of the last row                   |
-|                                       <kbd class="key">Space</kbd> | Navigate to the next scrollable page                        |
-|                                     <kbd class="key">Page Up</kbd> | Navigate to the previous scrollable page                    |
-|                                   <kbd class="key">Page Down</kbd> | Navigate to the next scrollable page                        |
-|                                       <kbd class="key">Space</kbd> | Toggle row children expansion when grouping cell is focused |
+|                                                               Keys | Description                                                                                                                           |
+| -----------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------ |
+|                                  <kbd class="key">Arrow Left</kbd> | Navigate between cell elements                                                                                                        |
+|                                  <kbd class="key">Arrow Down</kbd> | Navigate between cell elements                                                                                                        |
+|                                 <kbd class="key">Arrow Right</kbd> | Navigate between cell elements                                                                                                        |
+|                                    <kbd class="key">Arrow Up</kbd> | Navigate between cell elements                                                                                                        |
+|                                        <kbd class="key">Home</kbd> | Navigate to the first cell of the current row                                                                                         |
+|                                         <kbd class="key">End</kbd> | Navigate to the last cell of the current row                                                                                          |
+| <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Home</kbd></kbd> | Navigate to the first cell of the first row                                                                                           |
+|  <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">End</kbd></kbd> | Navigate to the last cell of the last row                                                                                             |
+|                                       <kbd class="key">Space</kbd> | Navigate to the next scrollable page, or select the focused cell when [cell selection](/x/react-data-grid/cell-selection/) is enabled |
+|                                     <kbd class="key">Page Up</kbd> | Navigate to the previous scrollable page                                                                                              |
+|                                   <kbd class="key">Page Down</kbd> | Navigate to the next scrollable page                                                                                                  |
+|                                       <kbd class="key">Space</kbd> | Toggle row children expansion when grouping cell is focused                                                                           |
 
 ### Selection
 
-|                                                                         Keys | Description                                                          |
-| ---------------------------------------------------------------------------: | :------------------------------------------------------------------- |
-|         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select/Deselect the current row                                      |
-| <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Select the current row and the row above or below                    |
-|                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
-|              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows, or all cells if `cellSelection` is enabled          |
-|              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows                                     |
-|                                   <kbd class="key">Ctrl</kbd>+ Click on cell | Enable multi-selection                                               |
-|                         <kbd class="key">Ctrl</kbd>+ Click on a selected row | Deselect the row                                                     |
+#### Row selection
+
+|                                                                             Keys | Description                                                          |
+| -------------------------------------------------------------------------------: | :------------------------------------------------------------------- |
+|             <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select/Deselect the current row                                      |
+|     <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Extend the selection to the row above or below                       |
+| <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Page Up/Page Down</kbd></kbd> | Extend the selection to the previous or next scrollable page         |
+|          <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Home/End</kbd></kbd> | Extend the selection to the first or last row                        |
+|                                      <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
+|                  <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |
+|                  <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows                                     |
+|                                       <kbd class="key">Ctrl</kbd>+ Click on cell | Enable multi-selection                                               |
+|                                                       <kbd class="key">Esc</kbd> | Deselect all rows                                                    |
+|                             <kbd class="key">Ctrl</kbd>+ Click on a selected row | Deselect the row                                                     |
+
+The keyboard extends the selection from the last row selected with <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd>, a click, or the arrow keys, and keeps the other selected rows.
+Pressing the arrow keys back towards that row reduces the selection.
+When the rows of the range move, for example with [keyboard reordering](#reordering), sorting, or filtering, the next <kbd class="key">Shift</kbd> shortcut starts a new range from the focused row.
+
+#### Cell selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+When [cell selection](/x/react-data-grid/cell-selection/) is enabled, the <kbd class="key">Shift</kbd> shortcuts select cells.
+Add <kbd class="key">Ctrl</kbd> to act on whole rows instead: they select rows when row selection is enabled, or all the cells of the rows otherwise.
+
+|                                                                                                         Keys | Description                                                                                                                    |
+| -----------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------- |
+|                                                                                 <kbd class="key">Space</kbd> | Select the focused cell                                                                                                        |
+|                                         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select the focused cell and select/deselect the current row, or select all the cells of the row when row selection is disabled |
+|                                    <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow keys</kbd></kbd> | Extend the selection to the adjacent cell, or to the row above or below when whole rows are selected                           |
+|                                      <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Home/End</kbd></kbd> | Extend the selection to the first or last cell of the row                                                                      |
+|                             <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Page Up/Page Down</kbd></kbd> | Extend the selection to the previous or next scrollable page                                                                   |
+|             <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select/Deselect the current row, or select all the cells of the row when row selection is disabled                             |
+|     <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Extend the selected rows to the row above or below                                                                             |
+| <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Page Up/Page Down</kbd></kbd> | Extend the selected rows to the previous or next scrollable page                                                               |
+|          <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Home/End</kbd></kbd> | Extend the selected rows to the first or last row                                                                              |
+|                                              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all cells                                                                                                               |
+|                                              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the selected cells                                                                                                        |
+|                                                                                   <kbd class="key">Esc</kbd> | Deselect all cells and rows                                                                                                    |
 
 ### Sorting
 
