@@ -220,6 +220,7 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
   );
 
   const handleRowGroupingModelChange = React.useCallback(() => {
+    apiRef.current.clearRowSelectionRetention();
     // Clear the rows on every grouping model change to match the pre-fix behavior on
     // non-standard strategies (e.g. lazy loading) where `setRows([])` is required to
     // reset the existing grouping state. `dataSourceKeepPreviousData` is intentionally

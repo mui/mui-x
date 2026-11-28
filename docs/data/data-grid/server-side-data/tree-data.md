@@ -114,6 +114,11 @@ The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all level
 
 {{"demo": "ServerSideTreeDataGroupExpansion.js", "bg": "inline"}}
 
+## Row selection
+
+Server-side tree data uses the same selection behavior as [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/#row-selection).
+Enable `keepNonExistentRowsSelected` to preserve descendant selection and partially selected checkboxes when collapsing a group.
+
 ## Custom cache
 
 The Data Source uses its own built-in cache by default to store fetched data.
