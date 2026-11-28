@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
+import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
@@ -87,6 +88,10 @@ const GridToolbarExportContainer = forwardRef<
         >
           {React.Children.map(children, (child) => {
             if (!React.isValidElement(child)) {
+              return child;
+            }
+            // `hideMenu` is meant for the grid's own export items, a menu item would spread it onto the DOM.
+            if (child.type === MenuItem || child.type === rootProps.slots.baseMenuItem) {
               return child;
             }
             return React.cloneElement<any>(child, { hideMenu: handleMenuClose });
