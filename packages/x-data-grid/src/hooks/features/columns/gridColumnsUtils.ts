@@ -374,6 +374,7 @@ export const createColumnsState = ({
         [
           `MUI X Data Grid: More than one column uses the field "${field}".`,
           'The field is the column identifier, so these columns share their state and only one of them is rendered.',
+          'This behavior is unsupported and could change in a future version.',
           'Give each column a unique `field`, and use `valueGetter()` to display the same row property in several columns.',
           'See https://mui.com/x/react-data-grid/column-definition/.',
         ].join('\n'),
