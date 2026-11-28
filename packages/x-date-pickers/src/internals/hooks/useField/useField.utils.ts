@@ -515,16 +515,19 @@ const transferDateSectionValue = (
     }
 
     case 'weekDay': {
-      let dayInWeekStrOfActiveDate = adapter.formatByString(dateToTransferFrom, section.format);
+      let dayInWeekStrOfActiveDate = adapter.formatByString(dateToTransferTo, section.format);
+      let formattedDaysInWeek = getDaysInWeekStr(adapter, section.format);
       if (section.hasLeadingZerosInInput) {
         dayInWeekStrOfActiveDate = cleanLeadingZeros(dayInWeekStrOfActiveDate, section.maxLength!);
+        formattedDaysInWeek = formattedDaysInWeek.map((dayInWeekStr) =>
+          cleanLeadingZeros(dayInWeekStr, section.maxLength!),
+        );
       }
 
-      const formattedDaysInWeek = getDaysInWeekStr(adapter, section.format);
       const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
       const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
       const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
-      return adapter.addDays(dateToTransferFrom, diff);
+      return adapter.addDays(dateToTransferTo, diff);
     }
 
     case 'day': {
