@@ -140,6 +140,64 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.isItemSelected('1.1')).to.equal(true);
       });
 
+      it('should not propagate selection to disabled descendants when they mount after parent is selected (descendants propagation enabled)', () => {
+        const onSelectedItemsChange = vi.fn();
+
+        const view = render({
+          multiSelect: true,
+          selectionPropagation: { descendants: true },
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2', disabled: true }] }],
+          defaultSelectedItems: ['1'],
+          onSelectedItemsChange,
+        });
+
+        fireEvent.click(view.getItemIconContainer('1'));
+
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['1', '1.1']);
+      });
+
+      it('should not call the onSelectedItemsChange callback when the descendants that mount are already selected (descendants propagation enabled)', () => {
+        const onSelectedItemsChange = vi.fn();
+
+        render({
+          multiSelect: true,
+          selectionPropagation: { descendants: true },
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+          defaultSelectedItems: ['1', '1.1', '1.2'],
+          defaultExpandedItems: ['1'],
+          onSelectedItemsChange,
+        });
+
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(0);
+      });
+
+      // Only the Simple Tree View registers the children order from the JSX.
+      it.skipIf(treeViewComponentName !== 'SimpleTreeView')(
+        'should not re-select a deselected child when a child is added to a selected parent (descendants propagation enabled)',
+        () => {
+          const view = render({
+            multiSelect: true,
+            selectionPropagation: { descendants: true },
+            items: [{ id: 'p', children: [{ id: 'a' }, { id: 'b' }] }],
+            defaultExpandedItems: ['p'],
+            defaultSelectedItems: ['p'],
+          });
+
+          act(() => {
+            view.apiRef.current.setItemSelection({
+              event: {} as any,
+              itemId: 'a',
+              shouldBeSelected: false,
+              keepExistingSelection: true,
+            });
+          });
+
+          view.setItems([{ id: 'p', children: [{ id: 'a' }, { id: 'b' }, { id: 'c' }] }]);
+
+          expect(view.getSelectedTreeItems()).to.deep.equal(['p', 'b', 'c']);
+        },
+      );
+
       it('should call the onSelectedItemsChange callback only once when selecting a collapsed parent item in single-select mode with selectionPropagation.descendants', () => {
         const onSelectedItemsChange = vi.fn();
 
