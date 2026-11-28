@@ -25,7 +25,7 @@
  */
 
 import { persistentAuthStrategy } from '@mui/internal-code-infra/github';
-import { execa } from 'execa';
+import { $, execa } from 'execa';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
 import yargs from 'yargs';
@@ -33,7 +33,8 @@ import { hideBin } from 'yargs/helpers';
 import fs from 'fs/promises';
 import path from 'path';
 import { input, select, confirm } from '@inquirer/prompts';
-import { getChangelogUtils } from './changelogUtils.mjs';
+import { fetchChangelogData } from '@mui/internal-code-infra/changelog';
+import { getReleaseDate, renderChangelog } from './changelog.mts';
 import pck from '../package.json' with { type: 'json' };
 
 const packageVersion = pck.version;
@@ -598,14 +599,31 @@ async function updatePackageJson(newVersion) {
 }
 
 /**
+ * Fetches and returns the latest tagged version for a given major version, as seen from the release base.
+ * @param {string | undefined} majorVersion
+ * @param {string} releaseBase The ref the release is created from (e.g. `upstream/master` or `upstream/v8.x`).
+ */
+async function findLatestTaggedVersionForMajor(majorVersion, releaseBase) {
+  // Fetch all tags from all remotes to ensure we have the latest tags.
+  await $`git fetch --tags --all`;
+
+  const match = `v${majorVersion || ''}*`; // only include "version-tags"
+  // Describe from the release base rather than guessing from which branches exist: tags for an
+  // older major live on its `vN.x` branch and aren't ancestors of master, while a `vN.x` branch of
+  // the current major can exist and lag behind master, where that major is still being released.
+  const { stdout } = await $`git describe --tags --abbrev=0 --match ${match} ${releaseBase}`;
+
+  return stdout.trim();
+}
+
+/**
  * Generate the changelog
- * @param {function} generator - The changelog generator function
  * @param {string} newVersion - The new version
  * @param {string} lastVersion - The last version to compare against
  * @param {string} [releaseBranch='master'] - The branch to compare against (default is 'master')
  * @returns {Promise<string>} The changelog content
  */
-async function generateChangelog(generator, newVersion, lastVersion, releaseBranch = 'master') {
+async function generateChangelog(newVersion, lastVersion, releaseBranch = 'master') {
   try {
     console.log('Generating changelog...');
 
@@ -613,13 +631,15 @@ async function generateChangelog(generator, newVersion, lastVersion, releaseBran
     console.log(`New version: ${newVersion}`);
     console.log(`Last version: ${lastVersion}`);
 
-    return await generator({
+    const data = await fetchChangelogData({
       octokit,
-      nextVersion: newVersion,
+      repo: REPO,
       lastRelease: `v${lastVersion}`,
       release: releaseBranch,
-      returnEntry: true,
+      date: getReleaseDate(),
     });
+
+    return renderChangelog(data, newVersion);
   } catch (error) {
     console.error('Error generating changelog:', error);
     process.exit(1);
@@ -796,9 +816,6 @@ async function main() {
       authStrategy: persistentAuthStrategy,
     });
 
-    const { findLatestTaggedVersionForMajor, generateChangelog: generator } =
-      getChangelogUtils(octokit);
-
     // Find the upstream remote
     const upstreamRemote = await findMuiXRemote();
     console.log(`Found upstream remote: ${upstreamRemote}`);
@@ -932,7 +949,6 @@ async function main() {
 
     // Generate the changelog
     const changelogContent = await generateChangelog(
-      generator,
       newVersion,
       previousVersion,
       shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master',
