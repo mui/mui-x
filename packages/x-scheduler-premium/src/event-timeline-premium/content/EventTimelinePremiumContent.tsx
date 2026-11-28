@@ -70,6 +70,7 @@ const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
   slot: 'Content',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   borderRadius: theme.shape.borderRadius,
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
   flexGrow: 1,
@@ -123,6 +124,7 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   name: 'MuiEventTimeline',
   slot: 'TitleHeaderCell',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   flex: '0 0 auto',
   width: 'var(--title-column-width)',
   fontWeight: theme.typography.fontWeightMedium,
@@ -148,6 +150,7 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   // HeaderRow's content bottom).
   '&::after': {
     content: '""',
+    boxSizing: 'border-box',
     position: 'absolute',
     insetInline: 0,
     bottom: -4,
@@ -368,6 +371,7 @@ const TitleScrollbarFiller = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'TitleScrollbarFiller',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   position: 'absolute',
   bottom: 0,
   insetInlineStart: 0,
@@ -396,6 +400,7 @@ const EventTimelinePremiumFillerRow = styled('div', {
   width: 'var(--row-width)',
   position: 'relative',
   '& > div': {
+    boxSizing: 'border-box',
     width: 'var(--title-column-width)',
     borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
     position: 'absolute',

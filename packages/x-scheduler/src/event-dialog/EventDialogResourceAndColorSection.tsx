@@ -56,6 +56,7 @@ const ResourceMenuColorDot = styled('span', {
   name: 'MuiEventDialog',
   slot: 'ResourceMenuColorDot',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   width: 14,
   height: 14,
   borderRadius: '2px',

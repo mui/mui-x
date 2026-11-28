@@ -55,6 +55,7 @@ const TOUCH_RESIZE_HANDLE_EDGE_INSET_PX = 4;
  * (start up, end down) so the two handles don't overlap until the event is shorter than the dot.
  */
 const getTouchResizeHandleStyles = (): CSSObject => ({
+  boxSizing: 'border-box',
   position: 'absolute',
   width: TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX,
   height: TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX,
@@ -130,6 +131,7 @@ function shortEventFontStyles(fontSize: string): CSSObject {
 }
 
 const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
+  boxSizing: 'border-box',
   '--time-grid-event-column-gap': '12px',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-surface-subtle)',
@@ -314,6 +316,7 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventRecurringIcon',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   position: 'absolute',
   insetInlineEnd: 3,
   bottom: 3,

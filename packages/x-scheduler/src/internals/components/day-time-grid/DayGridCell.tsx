@@ -24,6 +24,7 @@ const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridAllDayEventsCell',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   flexGrow: 1,
   flexShrink: 0,
   flexBasis: 0,

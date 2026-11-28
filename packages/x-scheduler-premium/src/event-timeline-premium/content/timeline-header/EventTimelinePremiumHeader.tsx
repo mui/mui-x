@@ -18,6 +18,7 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
     },
   },
   [`& .${classes.headerCell}`]: {
+    boxSizing: 'border-box',
     width: 'calc(var(--unit-width) * var(--span))',
     flexShrink: 0,
     padding: theme.spacing(1),

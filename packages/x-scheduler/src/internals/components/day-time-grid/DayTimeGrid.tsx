@@ -51,6 +51,7 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridContainer',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   '--fixed-cell-width': 'var(--EventCalendar-size-fixedCellWidth)',
   '--hour-height': `${HOUR_HEIGHT}px`,
   // Number of all-day event rows displayed before the all-day area starts to scroll.

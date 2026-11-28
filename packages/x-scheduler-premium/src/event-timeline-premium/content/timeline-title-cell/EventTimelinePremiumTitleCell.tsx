@@ -33,6 +33,7 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   name: 'MuiEventTimeline',
   slot: 'TitleCell',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   flex: '0 0 auto',
   width: 'var(--title-column-width)',
   borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,

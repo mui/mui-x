@@ -44,6 +44,7 @@ const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'AgendaView',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   width: '100%',
   maxHeight: '100%',
   border: `1px solid ${(theme.vars || theme).palette.divider}`,

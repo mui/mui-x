@@ -58,6 +58,7 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
   name: 'MuiEventTimeline',
   slot: 'EventDependencyTerminal',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   position: 'absolute',
   width: DEPENDENCY_TERMINAL_SIZE,
   height: DEPENDENCY_TERMINAL_SIZE,

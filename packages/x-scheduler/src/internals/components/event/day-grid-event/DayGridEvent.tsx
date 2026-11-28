@@ -25,6 +25,7 @@ import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarCl
 import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 
 const DayGridEventBaseStyles = (theme: any) => ({
+  boxSizing: 'border-box',
   containerType: 'inline-size',
   borderRadius: theme.shape.borderRadius * 0.75,
   minWidth: 18,

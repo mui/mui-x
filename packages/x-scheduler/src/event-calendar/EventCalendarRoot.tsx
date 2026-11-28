@@ -46,9 +46,6 @@ const EventCalendarRootStyled = styled('div', {
 })(({ theme }) => ({
   // Layout
   boxSizing: 'border-box',
-  '*, *::before, *::after': {
-    boxSizing: 'inherit',
-  },
   position: 'relative',
   width: '100%',
   display: 'flex',
@@ -83,6 +80,7 @@ const EventCalendarSidePanel = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'SidePanel',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   minWidth: 250,
   width: 'fit-content',
   display: 'flex',
