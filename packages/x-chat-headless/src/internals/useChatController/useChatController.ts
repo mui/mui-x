@@ -22,6 +22,8 @@ import {
 } from './useChatControllerHelpers';
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
+import { createRealtimeMessageBuffer } from './realtimeMessageBuffer';
+import type { AdapterRealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { createSendMessageActions } from './sendMessageActions';
 import { createTypingActions } from './typingActions';
 import type { ChatFeatures } from '../../ChatProvider';
@@ -79,6 +81,7 @@ export function useChatController<Cursor = string>({
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
   const historyLoadRequestIdRef = React.useRef(0);
+  const realtimeMessageBufferRef = React.useRef<AdapterRealtimeMessageBuffer | null>(null);
   const storeUnknown = asCursorAgnosticChatStore(store);
 
   runtimeRef.current = {
@@ -123,6 +126,7 @@ export function useChatController<Cursor = string>({
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef,
+        realtimeMessageBufferRef,
       }),
 
     [setRuntimeError, stopStreaming, store],
@@ -226,15 +230,6 @@ export function useChatController<Cursor = string>({
     [setRuntimeError, store, storeUnknown],
   );
 
-  const { handleRealtimeEvent } = React.useMemo(
-    () =>
-      createRealtimeActions({
-        store: storeUnknown,
-        conversationNavigationRequestIdRef,
-      }),
-    [storeUnknown, conversationNavigationRequestIdRef],
-  );
-
   const {
     handleComposerValueChange,
     handleActiveConversationChange,
@@ -283,9 +278,21 @@ export function useChatController<Cursor = string>({
     let isDisposed = false;
     let cleanup: (() => void) | undefined;
 
+    // Kept across reconnects to the same adapter (e.g. `<Activity>`), replaced when it changes.
+    if (realtimeMessageBufferRef.current?.adapter !== adapter) {
+      realtimeMessageBufferRef.current = { adapter, buffer: createRealtimeMessageBuffer() };
+    }
+    const realtimeMessageBuffer = realtimeMessageBufferRef.current.buffer;
+
     if (!adapter.subscribe) {
       return undefined;
     }
+
+    const { handleRealtimeEvent } = createRealtimeActions({
+      store: storeUnknown,
+      conversationNavigationRequestIdRef,
+      realtimeMessageBuffer,
+    });
 
     void Promise.resolve(adapter.subscribe({ onEvent: handleRealtimeEvent }))
       .then((resolvedCleanup) => {
@@ -316,7 +323,7 @@ export function useChatController<Cursor = string>({
       isDisposed = true;
       cleanup?.();
     };
-  }, [adapter, handleRealtimeEvent, setRuntimeError]);
+  }, [adapter, setRuntimeError, storeUnknown]);
 
   useStoreEffect(
     store,

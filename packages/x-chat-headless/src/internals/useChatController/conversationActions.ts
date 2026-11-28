@@ -1,7 +1,9 @@
 import type * as React from 'react';
 import type { ChatAdapter, ChatListMessagesResult } from '../../adapters';
 import type { ChatStore } from '../../store';
+import type { ChatMessage } from '../../types/chat-entities';
 import type { ChatError } from '../../types/chat-error';
+import type { AdapterRealtimeMessageBuffer } from './realtimeMessageBuffer';
 import { createRuntimeError, getErrorMessage } from './useChatControllerHelpers';
 
 export interface ConversationActionsRuntimeRef<Cursor = string> {
@@ -16,6 +18,7 @@ export function createConversationActions<Cursor = string>(params: {
   conversationNavigationRequestIdRef: React.MutableRefObject<number>;
   conversationLoadRequestIdRef: React.MutableRefObject<number>;
   historyLoadRequestIdRef: React.MutableRefObject<number>;
+  realtimeMessageBufferRef: React.RefObject<AdapterRealtimeMessageBuffer | null>;
 }) {
   const {
     store,
@@ -25,6 +28,7 @@ export function createConversationActions<Cursor = string>(params: {
     conversationNavigationRequestIdRef,
     conversationLoadRequestIdRef,
     historyLoadRequestIdRef,
+    realtimeMessageBufferRef,
   } = params;
 
   async function loadConversationMessages(
@@ -46,9 +50,33 @@ export function createConversationActions<Cursor = string>(params: {
       return;
     }
 
+    // Only the subscription of the adapter that serves this load holds messages for it.
+    const held =
+      realtimeMessageBufferRef.current?.adapter === runtimeRef.current.adapter
+        ? realtimeMessageBufferRef.current
+        : null;
+    // Not replayed (and kept for the next open) when this load is no longer the latest, e.g. a
+    // change callback opened another conversation, or when another adapter was rendered meanwhile.
+    const flushHeldMessages = (messages: ChatMessage[], hasMore: boolean) =>
+      held &&
+      realtimeMessageBufferRef.current === held &&
+      held.adapter === runtimeRef.current.adapter &&
+      requestId === conversationLoadRequestIdRef.current &&
+      store.state.activeConversationId === conversationId
+        ? held.buffer.flush(conversationId, messages, hasMore)
+        : messages;
     if (!runtimeRef.current.adapter.listMessages) {
       if (shouldResetMessages) {
         store.resetMessages();
+        // Held messages predate what the store holds now (e.g. a message sent from a change
+        // callback). For duplicate ids `setMessages` keeps the first position and the last value.
+        const heldMessages = flushHeldMessages([], false);
+        if (heldMessages.length > 0) {
+          store.setMessages([
+            ...heldMessages,
+            ...store.state.messageIds.map((id) => store.state.messagesById[id]),
+          ]);
+        }
       }
       store.setHistoryStatus('idle');
       return;
@@ -76,11 +104,9 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
-      store.setMessages(result.messages);
-      store.setHistoryState({
-        cursor: result.cursor,
-        hasMore: result.hasMore ?? false,
-      });
+      const hasMore = result.hasMore ?? false;
+      store.setMessages(flushHeldMessages(result.messages, hasMore));
+      store.setHistoryState({ cursor: result.cursor, hasMore });
       store.setHistoryStatus('loaded');
       store.setError(null);
     } catch (error) {
@@ -91,6 +117,9 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
+      // Nothing stays held for an open conversation: the retry fetches these from the backend,
+      // and a kept copy could later undo a change made to the visible thread.
+      flushHeldMessages([], false);
       store.setHistoryStatus('error');
       setRuntimeError(
         createRuntimeError(

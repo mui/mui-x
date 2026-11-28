@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { act, renderHook, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import type { ChatAdapter } from '../adapters';
+import type { ChatAdapter, ChatSubscribeInput } from '../adapters';
 import { createEchoAdapter } from '../adapters/createEchoAdapter';
 import { ChatProvider } from '../ChatProvider';
 import type { ChatProviderProps } from '../ChatProvider';
@@ -1784,5 +1784,203 @@ describe('useChat', () => {
     });
 
     expect(result.current.status.typingUserIds).toEqual(['u2']);
+  });
+
+  it('replays realtime messages for another conversation when it opens, until the adapter changes', async () => {
+    const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
+    function createSubscribingAdapter() {
+      return createAdapter({
+        subscribe({ onEvent }) {
+          onEventByAdapter.push(onEvent);
+          return () => {};
+        },
+      });
+    }
+    const message = (id: string): ChatMessage => ({
+      id,
+      role: 'user',
+      conversationId: 'c2',
+      parts: [{ type: 'text', text: id }],
+    });
+    const firstAdapter = createSubscribingAdapter();
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: firstAdapter,
+      initialActiveConversationId: 'c1',
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+    act(() => onEventByAdapter[0]({ type: 'message-added', message: message('m1') }));
+    expect(result.current.messages).toEqual([]);
+
+    await act(() => result.current.setActiveConversation('c2'));
+    expect(result.current.messages.map((item) => item.id)).toEqual(['m1']);
+
+    await act(() => result.current.setActiveConversation('c1'));
+    act(() => onEventByAdapter[0]({ type: 'message-added', message: message('m2') }));
+    setProps({ adapter: createSubscribingAdapter(), initialActiveConversationId: 'c1' });
+    rerender();
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(2));
+
+    await act(() => result.current.setActiveConversation('c2'));
+    expect(result.current.messages).toEqual([]);
+  });
+
+  it('does not replay a late message from a replaced adapter when its conversation opens', async () => {
+    const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
+    const firstAdapter = createAdapter({
+      subscribe({ onEvent }) {
+        onEventByAdapter.push(onEvent);
+        return new Promise(() => {});
+      },
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: firstAdapter,
+      initialActiveConversationId: 'c1',
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+    setProps({ adapter: createAdapter(), initialActiveConversationId: 'c1' });
+    rerender();
+    act(() =>
+      onEventByAdapter[0]({
+        type: 'message-added',
+        message: { id: 'm1', role: 'user', conversationId: 'c2', parts: [] },
+      }),
+    );
+
+    await act(() => result.current.setActiveConversation('c2'));
+    expect(result.current.messages).toEqual([]);
+  });
+
+  it("does not replay a replaced adapter's messages into a conversation opened in the same commit", async () => {
+    const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
+    const firstAdapter = createAdapter({
+      subscribe({ onEvent }) {
+        onEventByAdapter.push(onEvent);
+        return () => {};
+      },
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: firstAdapter,
+      initialActiveConversationId: 'c1',
+    });
+    const { result, rerender } = renderHook(
+      ({ open }: { open: boolean }) => {
+        const chat = useChat();
+        React.useLayoutEffect(() => {
+          if (open && chat.activeConversationId === 'c1') {
+            // The replaced subscription is still live until the passive cleanup.
+            onEventByAdapter[0]({
+              type: 'message-added',
+              message: { id: 'm2', role: 'user', conversationId: 'c2', parts: [] },
+            });
+            void chat.setActiveConversation('c2');
+          }
+        }, [chat, open]);
+        return chat;
+      },
+      { wrapper: Wrapper, initialProps: { open: false } },
+    );
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+    act(() =>
+      onEventByAdapter[0]({
+        type: 'message-added',
+        message: { id: 'm1', role: 'user', conversationId: 'c2', parts: [] },
+      }),
+    );
+    setProps({ adapter: createAdapter(), initialActiveConversationId: 'c1' });
+    rerender({ open: true });
+
+    await waitFor(() => expect(result.current.activeConversationId).toBe('c2'));
+    expect(result.current.messages).toEqual([]);
+  });
+
+  it.skipIf(!('Activity' in React))(
+    'keeps held messages when the provider reconnects to the same adapter',
+    async () => {
+      const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
+      const adapter = createAdapter({
+        subscribe({ onEvent }) {
+          onEventByAdapter.push(onEvent);
+          return () => {};
+        },
+      });
+      let setHidden: (hidden: boolean) => void = () => {};
+      function Wrapper({ children }: React.PropsWithChildren) {
+        const [hidden, setHiddenState] = React.useState(false);
+        setHidden = setHiddenState;
+        return (
+          <React.Activity mode={hidden ? 'hidden' : 'visible'}>
+            <ChatProvider adapter={adapter} initialActiveConversationId="c1">
+              {children}
+            </ChatProvider>
+          </React.Activity>
+        );
+      }
+      const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+      await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+      act(() =>
+        onEventByAdapter[0]({
+          type: 'message-added',
+          message: { id: 'm1', role: 'user', conversationId: 'c2', parts: [] },
+        }),
+      );
+      act(() => setHidden(true));
+      act(() => setHidden(false));
+      await waitFor(() => expect(onEventByAdapter).toHaveLength(2));
+
+      await act(() => result.current.setActiveConversation('c2'));
+      expect(result.current.messages.map((message) => message.id)).toEqual(['m1']);
+    },
+  );
+
+  it('keeps held messages when an adapter change is never committed', async () => {
+    const onEventByAdapter: Array<ChatSubscribeInput['onEvent']> = [];
+    const firstAdapter = createAdapter({
+      subscribe({ onEvent }) {
+        onEventByAdapter.push(onEvent);
+        return () => {};
+      },
+    });
+    const secondAdapter = createAdapter();
+    let setProps: (props: { adapter: ChatAdapter }) => void = () => {};
+    function SuspendWith({ adapter }: { adapter: ChatAdapter }) {
+      if (adapter === secondAdapter) {
+        throw new Promise(() => {});
+      }
+      return null;
+    }
+    function Wrapper({ children }: React.PropsWithChildren) {
+      const [{ adapter }, setPropsState] = React.useState({ adapter: firstAdapter });
+      setProps = setPropsState;
+      return (
+        <React.Suspense fallback={null}>
+          <ChatProvider adapter={adapter} initialActiveConversationId="c1">
+            <SuspendWith adapter={adapter} />
+            {children}
+          </ChatProvider>
+        </React.Suspense>
+      );
+    }
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+    await waitFor(() => expect(onEventByAdapter).toHaveLength(1));
+
+    act(() =>
+      onEventByAdapter[0]({
+        type: 'message-added',
+        message: { id: 'm1', role: 'user', conversationId: 'c2', parts: [] },
+      }),
+    );
+    // The transition suspends, so the first adapter stays committed; then the provider re-renders with it.
+    act(() => React.startTransition(() => setProps({ adapter: secondAdapter })));
+    act(() => setProps({ adapter: firstAdapter }));
+
+    await act(() => result.current.setActiveConversation('c2'));
+    expect(result.current.messages.map((message) => message.id)).toEqual(['m1']);
+    expect(onEventByAdapter).toHaveLength(1);
   });
 });

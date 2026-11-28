@@ -46,6 +46,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadConversationMessages(undefined);
@@ -63,6 +64,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadConversationMessages(undefined, { resetWhenUndefined: false });
@@ -85,6 +87,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       // Should not throw and should not add messages
@@ -106,6 +109,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadConversationMessages('c2');
@@ -127,6 +131,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadConversationMessages('c1', { resetWhenUndefined: false });
@@ -155,6 +160,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadConversationMessages('c1');
@@ -192,6 +198,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const promise = loadConversationMessages('c2');
@@ -235,6 +242,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const promise = loadConversationMessages('c1');
@@ -268,6 +276,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const promise = loadConversationMessages('c1');
@@ -296,6 +305,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadConversationMessages('c1');
@@ -329,6 +339,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef,
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const promise = loadConversationMessages('c1');
@@ -353,6 +364,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadMoreHistory();
@@ -383,6 +395,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadMoreHistory();
@@ -418,6 +431,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadMoreHistory();
@@ -443,6 +457,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await loadMoreHistory();
@@ -467,6 +482,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await setActiveConversation('c1');
@@ -494,6 +510,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await setActiveConversation('c2');
@@ -518,6 +535,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
       return { store, setRuntimeError, ...actions };
     }
@@ -598,6 +616,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       expect(store.state.isLoadingHistory).toBe(false);
@@ -634,6 +653,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const promise = loadConversationMessages('c1');
@@ -666,6 +686,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const promise = loadMoreHistory();
@@ -703,6 +724,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const promise = loadMoreHistory();
@@ -742,6 +764,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const promise = loadMoreHistory();
@@ -771,6 +794,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       // conversationId == null
@@ -796,6 +820,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await actionsWithoutConversation.loadMoreHistory();
@@ -816,6 +841,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       await actionsWithBareAdapter.loadMoreHistory();
@@ -845,6 +871,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const firstLoad = loadConversationMessages('c1');
@@ -888,6 +915,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const firstLoad = loadConversationMessages('c1');
@@ -923,6 +951,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const loadMorePromise = loadMoreHistory();
@@ -958,6 +987,7 @@ describe('createConversationActions', () => {
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
         historyLoadRequestIdRef: { current: 0 },
+        realtimeMessageBufferRef: { current: null },
       });
 
       const firstLoad = loadConversationMessages('c1');
